@@ -1,0 +1,163 @@
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+				EXAMPLE SESSION
+	PLEASE READ THE INSTALLATION INSTRUCTIONS IN THE FILE INSTALL
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+%-> set path=($path MyTopDir/ORT/Bins)
+(repalce MyTopDir by where you untarred the S/W)
+
+%-> rehash
+
+%-> cd MyTopDir/ORT/Data
+
+%-> make decode (if you got the distribution as a set of sharfiles)
+
+%-> chainpix -h
+USAGE : 
+ chainpix [-hv] [-r NoOfRows -c NoOfCols] < EdgeImage > ChainList
+WHERE: 
+ -h Gives usage information 
+ -v Gives version number 
+ -r NoOfRows for Raw (ie byte array) Edge Image 
+ -c NoOfCols for Raw (ie byte array) Edge Image 
+DEFAULTS : 
+ PGM format Edge Image Max 512x512
+ Edge pixels set to non-zero values and background set to 0.
+
+%-> chainpix < Blocks.canny.pgm > Blocks.str
+%-> chainpix < Fractal.pgm > Fractal.str
+
+%-> fex -h
+USAGE : 
+ fex [-hv] < Chain-File > OutFile
+
+WHERE : 
+ -h Gives usage information
+ -v Gives version number
+ InFile contains a list of strings produced by the program chainpix
+ OutFile will contain ASCII list of FEX line segments and circular arcs
+
+%-> fex < Blocks.str > Blocks.fex
+Number of LineSegments = 71
+Number of CircularArcs = 9
+
+%-> fex < Fractal.str > Fractal.fex
+Number of LineSegments = 558
+Number of CircularArcs = 0
+
+%-> lpeg -h
+USAGE :
+ lpeg [-pgjrck] [-w p0 ] [-l p1] [-t p2] [-q p3] < InFile > OutFile
+WHERE:
+ -h Gives usage information
+ -v Gives version number
+ -p Paral. only              -r Paral./Colin. only 
+ -c Junctions/Colin. only    -j Junctions only
+ -g Consider Collinear lines as real lines when forming junctions
+ -q Minimum allowed quality factor
+ -w Max(Width/Height) for Overlap. = Min(Width/Height) for NonOverlap. Parallel
+ p0: inf >  Max(Width/Height) >  0.0           default: 2.0
+ p1:        MinLineLength     >= 0.0 (pixels)  default: 8.0
+ p2: 0.1 >= MinDeltaTheta     >= 0.0 (radians) default: 0.06
+ p3: 1.0 >= MinQuality        >= 0.0           default: 0.8
+ InFile should contain an ASCII list of line segments in fex format
+ OutFile will contain an ASCII list of line segments and groupings.
+
+%-> lpeg < Blocks.fex > Blocks.lpeg
+ Number of Parallel OV pairs =  16
+ Number of Parallel NOV pairs =  15
+ Number of Collinear pairs =  4
+ Number of L junctions =  6
+ Number of V junctions =  24
+ Number of T junctions =  1
+ Number of Lambda junctions =  2
+
+%-> lpeg < Fractal.fex > Fractal.lpeg
+ Number of Parallel OV pairs =  32 
+ Number of Parallel NOV pairs =  828 
+ Number of Collinear pairs =  0 
+ Number of L junctions =  357 
+ Number of V junctions =  0 
+ Number of T junctions =  0 
+ Number of Lambda junctions =  0 
+
+%-> ipeg -h
+ -h Gives usage information
+ -v Gives version number
+ -t Triplets only
+ -c Corners  only
+ -p Polygons only
+ -w Whistle as you work (for polygons only)
+ InFile should contain ASCII lists of line segments grouped by lpeg
+ OutFile will contains separate ASCII lists for the following:
+         Triplets of connected segments
+         Y and T-Lambda Corners
+         N-Sided Closed Polygons (N>=3)
+
+%-> ipeg < Blocks.lpeg > Blocks.ipeg
+  Number of Triplets = 22
+  Number of Y Corners = 2
+  Number of TLambda Corners = 2
+  Number of Closed Polygons = 1
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ ALTERNATIVELY CHAIN THE WHOLE PROCESS TOGETHER USING PIPES
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+%-> chainpix < Blocks.canny.pgm | fex | lpeg | ipeg > Blocks.piped.ipeg
+Number of LineSegments = 71
+Number of CircularArcs = 9
+ Number of Parallel OV pairs =  16 
+ Number of Parallel NOV pairs =  15 
+ Number of Collinear pairs =  4 
+ Number of L junctions =  6 
+ Number of V junctions =  24 
+ Number of T junctions =  1 
+ Number of Lambda junctions =  2 
+  Number of Triplets = 22
+  Number of Y Corners = 2
+  Number of TLambda Corners = 2
+  Number of Closed Polygons = 1
+
+%-> diff Blocks.piped.ipeg Blocks.ipeg
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+ NOTE YOU CAN ALSO USE LPEG AND IPEG OUTPUT AS INPUT TO ort2image
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+%-> ort2image -h
+USAGE :
+  ort2image [-hvLCr] [-bclm Paramter List] < InFile > OutFile
+WHERE:
+ -h Gives usage information 
+ -v Gives version number 
+ -L Display line segments only (default all)
+ -C Display circular arc segments only (default all)
+ -r Output raw image instead of PGM
+ -b <Background intensity> (max 255, default 255)
+ -c <Intensity Thickness EndpointIntensity> for Arcs (default 0 2 128)
+ -l <Intensity Thickness EndpointIntensity> for Lines (default 0 1 128)
+ -m <Minimum length of segment> (default 5.0)
+   InFile should contain ASCII lists of line segments produced by FEX
+   OutFile will contain PGM or Raw image
+
+%-> ort2image < Fractal.fex > Fractal.fex.pgm
+%-> ort2image < Blocks.fex  > Blocks.fex.pgm   (OR)
+%-> ort2image < Blocks.lpeg > Blocks.lpeg.pgm  (OR)
+%-> ort2image < Blocks.ipeg > Blocks.ipeg.pgm
+
+ The lines and circular arcs are now converted to an image which you can 
+ display with any displayer which supports PGM format (eg xv, xloadimage).
+
+%-> DisplayGrps &  
+
+ Now load Blocks.fex or Blocks.lpeg, or Blocks.ipeg. Choose a feature from the 
+ menu (it will be highlighted) and press the Next button. If you can't see
+ the selected feature try playing with the colour menu. 
+
+ BUG Altert!! Sometimes a features remains higlighted for no reason that
+ I can figure out. In this case just select any another feature and then
+ re-select the feature you are interested in. If you see polygons with an
+ extra line its due to the displayer and not the actual grouping program.
+
+ 

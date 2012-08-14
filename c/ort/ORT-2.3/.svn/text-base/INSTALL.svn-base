@@ -1,0 +1,85 @@
+A. Etemadi, ICSTM, 14-Feb-1992
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+    ****  NOTE PROGRAMS GIVE USAGE INFO. WHEN RUN WITH -h SWITCH  ****
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+WHAT DO I NEED TO COMPILE THE STUFF ?
+
+	X11R4/5 which is only used for the displayer so if you
+	comment out the line 
+
+	(cd $(DSPDIR)/exe ; make -f Makefile CC="$(CC)" CFLAGS="$(CFLAGS)" OTHERLIB="$(OTHERLIB)" X11DIR="$(X11DIR)")
+
+	in the Makefile all should be OK.
+
+HOW DO I BUILD THE S/W ?
+
+	1. Decide whether you want to use the cc or gcc compiler
+	2. Edit the Makefile in this directory and set CC to 
+	   whatever you decided in 1. Eg if you want to use cc
+
+#CC	= gcc
+CC	= cc
+
+	3. Just type make in this directory.
+
+	4. If this fails then 
+
+		a) Try looking in the main makefile where there are
+		   some switches you can set
+
+		b) If it fails because you are on a Decstations and
+		   the X11 distribution is in a stupid place like 
+		   /usr/include/mit/X11 or such-like. Then set the
+		   correct path using X11DIR variable.
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+**** NOTE GCC VERSION 1.39 HAS A MAJOR BUG, USE GCC VERSION 1.37 OR 1.40 ****
+**** TO FIND OUT THE VERSION OF GCC YOU HAVE TYPE: gcc -v                ****
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+HOW DO I BUILD THE DOCUMENTATION?
+
+	A manpage is supplied for the Liste library. This is in Doc/man. 
+
+IF YOU GOT THE DISTRIBUTION AS A COMPRESSED TARFILE:
+
+	To make the papers you need
+
+		a) LaTeX and BibTeX
+		b) dvi2ps or some variation thereof which handles the
+                 \special LaTeX command (see the final section for more info).
+
+	If you have the above, edit the Makefile in the Doc/LaTeX directory
+	and set DVITOPS to whatever it is you have at your site which
+	does the job and DVIFLG to whatever flags your dvi converter needs. 
+	Then type 
+
+		make
+
+MY DVITOPS IGNORES THE \special DIRECTIVE. WHAT DO I DO ?
+
+	Either print out the postscript figures separately OR if you
+	have some time to spare try:
+
+	a) Add the command   \input{psfig}  just after   \documentstyle
+
+	b) Edit instances of \begin{figure} to \end{figure} such as:
+
+	\begin{figure}[htbp]
+	\vspace*{-10mm}
+	\special{psfile=Figures/Segmentation.ps}
+	\vspace*{10cm}
+	\vspace*{-5mm}
+	\caption{Application of the segmentation pass to a chained set of pixels.}
+	\label{fig:segmentation}
+	\end{figure}
+
+	And replace them thus:
+
+	\begin{figure}[h]
+	\psfig{figure=Figures/Segmentation.ps,width=12cm,height=10cm}
+	\caption{Application of the segmentation pass to a chained set of pixels.}
+	\label{fig:segmentation}
+	\end{figure}

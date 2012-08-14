@@ -1,0 +1,110 @@
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ORT - Object Recognition Toolkit
+
+Copyright (C) 1991,1992,1993
+
+	Ataollah Etemadi,
+	Space and Atmospheric Physics Group,
+	Blackett Laboratory,
+	Imperial College of Science, Technology and Medicine
+	Prince Consort Road,
+	London SW7 2BZ.
+
+    Software Contributors:
+
+	J-P. Schmidt,				(Liste, and Xwindows interface)
+	G.A.W. West and P.L. Rosin,		(Pixel Chainning S/W)
+	G. A. Jones,				(Least-squares circular-arc fitting)
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 1, or
+    any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+    Note: This program has been exempted from the requirement of
+	  paragraph 2c of the General Public License.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Name : LineSegThetaVar
+Type : double
+Written on   : 20-Nov-90     By : A. Etemadi
+Modified on  :               By : 
+Directory    : ~atae/ORT/ORT/LPEG/src/LineRoutines
+
+==============================================================================
+
+Input parameters    : 
+
+ Length		-- The Length of the line in pixels
+
+Output result       : 
+
+ ThetaVar		-- The variance in the angle of the line
+ pi/2			-- When length is <= 3
+
+
+Calling procedure:
+
+ double Length;
+
+ Variance_in_angle_of_my_bloody_line = LineSegThetaVar( Length);
+
+Functionality: 
+
+This function finds the variance in the oirntation of a line given its
+length. We are using the function derived experimentally by Graham Jones.
+
+	Variance = 6pi/Length_of_Line_squared   (in radians)
+
+The variance is pi/2 degrees when the length is < 3
+
+----------------------------------------------------------------------------*/
+
+#include <stdio.h>     /* Standard C I/O library */
+#include <math.h>      /* Standard C mathematics library */
+#include <errno.h>     /* Standard C error handling routines */
+/* #include <strings.h> */   /* Standard C string handling routines */
+#include <ctype.h>     /* Standard C type identification routines */
+
+#define PI     3.141593
+#define PIBY2  1.570796
+#define SIXPI  18.84956
+
+double LineSegThetaVar(Length)
+
+ double Length;
+
+{
+
+
+ double ThetaVar;
+
+#ifdef debug
+          fprintf(stderr," Start of function LineSegThetaVar \n");
+#endif
+
+  if (Length > 3.0) {
+
+        ThetaVar = ( SIXPI)/(Length*Length);
+        return(ThetaVar);
+  } else {
+        fprintf(stderr," Warning line has maximum variance \n");
+        return(PIBY2);
+  }
+
+#ifdef debug
+          fprintf(stderr," End of function LineSegThetaVar \n");
+#endif
+
+}

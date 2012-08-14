@@ -1,0 +1,55 @@
+%% Font sizes %%
+
+% text: 9/11
+\def\@normalsize{\@setsize\normalsize{10pt}\ixpt\@ixpt}
+
+% 10 for Title, authors' names and addresses, and section headings
+\def\large{\@setsize\large{10pt}\viiipt\@viiipt}
+
+%% Titles %%
+
+% We have to accumulate the title info into a box because \author
+% and \address may be called more than once if there are multiple
+% authors with different addresses.
+\newbox\@titlebox
+
+\def\title#1   {\setbox\@titlebox\vbox{
+  {\hsize 41pc \large #1\par} \addvspace{8mm}}}
+
+\def\author#1  {\setbox\@titlebox\vbox{\unvbox\@titlebox
+  {\hsize 41pc \large #1\par} \addvspace{11mm}}}
+
+\def\address#1 {\setbox\@titlebox\vbox{\unvbox\@titlebox
+  {\hsize 41pc \large #1\par} \addvspace{13mm}}}
+
+
+\def\maketitle{\par
+ \begingroup
+  \if@twocolumn 
+     \twocolumn[\@maketitle] 
+  \else \newpage
+     \global\@topnum\z@ \@maketitle \fi\thispagestyle{empty}
+ \endgroup
+ \let\maketitle\relax
+ \let\@maketitle\relax}
+ \def\@maketitle{\newpage \hbox{\vbox{\unvbox\@titlebox}}}
+
+%% Headings %%
+
+%   for level 1 heading use \section
+%   for level 2 heading use \subsection
+%   for level 3 heading use \subsubsection
+
+\setcounter{secnumdepth}{0}
+\def\section{\@startsection {section}{1}{\z@}{11pt}{6pt}{\sc}}
+\def\subsection{\@startsection {subsection}{2}{\z@}{11pt}{6pt}{\sc}}
+\def\subsubsection#1{\par #1.}
+
+% Round brackets instead of the square ones in citations
+%
+\def\@cite#1#2{({#1\if@tempswa , #2\fi})}
+
+% Undent first line of a reference by using negative \itemindent.
+% set \itemsep and \parsep to 0pt so there is no space between items.
+\def\@bibsetup{\itemindent=-leftmargin \itemsep=0pt \parsep=0pt \small}
+

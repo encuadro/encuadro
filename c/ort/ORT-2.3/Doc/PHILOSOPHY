@@ -1,0 +1,55 @@
+SOME WORDS ABOUT THE PHILOSOPHY BEHIND THE DESIGN.
+
+	I have implemented the routines as Filters, so if something better 
+	comes along its just a matter of changing formats, and plugging in 
+	the new S/W.
+
+	The idea behind the grouping S/W is simple. The groupings are built 
+	up hierarchicaly. In reality we would like to form the set of all 
+	possible groupings at a given level, and then the level above can 
+	decide whether any grouping at the lower level is significant or 
+	not based on its higher level contextual knowledge. For example 
+	let us consider trying to find the rectangle (a-b-c-d) using junction 
+	information:
+
+                                        x
+                  b                 b1  |  b2
+               --------             --- |  --
+              a|      | c         a |       |c
+               |      |             |       |
+               --------             ---------
+                  d                     d
+
+	If we ignore the junction (b-c) based on some euphemistic criterion
+	such as a threshold (a fudge-factor by any other name) on proximity 
+	we will never find the polygon a-b-c-d since the information has been 
+	lost to all higher levels. In the case of other techniques such as 
+	relaxation-labelling the polygon a-b1-b2-c-d may not be found since 
+	the line segment x will mean that such techniques may ignore b1-b2 
+	as an additional possible relationship, and consider only the 
+	junctions b1-x and x-b2.
+
+	Since finding all possible groupings at a given level will lead to
+	a combinatorial explosion, AND we wish to consider as many groupings 
+	as possible, the groupings produced here are ranked using a Quality 
+	factor based on comparison with perfect groupings. This Quality
+	factor decreases as we get further from a perfect grouping.
+	Limiting groupings to those above a certain Quality factor will
+	allow us to avoid combinatorial explosions. The choice of Quality 
+	factor is based on how much CPU time you want to spend. If you have 
+	only a minute to do all the groupings, and using only 1 processor, then 
+       it is simple to choose a Quality factor such that the system will 
+	consider all the groupings it can in this time. A relaxation
+	labelling approach gives you no control over how many hypotheses
+	you can handle. If you had 10000 years, and 10000 processors you
+	would still end up with very nearly the same answer, hence ignoring
+	possibilities which may have been contextually very significant indeed.
+
+	Its essential to understad that the mathematical form of the Quality
+	factor is not the crucial concept, and may (or even should) be 
+	changed to fit the problem. In the paper on LPEG I describe the
+	form which I considered most suitable given a number of boundary
+	conditions (eg. scale independence).
+
+	All algorithms here are highly parallel (SIMD or MIMD is irrelevant).
+

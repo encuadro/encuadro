@@ -1,0 +1,179 @@
+.\" @(#)Liste.3 90/01/12
+.TH Liste 3  "12 Febuary 1990"
+.SH NAME
+CreatList, AddElmList, AppendList, CopyList, DestElmList,
+DestList, ElmNumList, EmptyList, FirstElmList, InsertSortList,
+MapList, NextElmList, PrintList, SizeList , SortList \- List handler
+.SH SYNOPSIS
+.nf
+.B "#include ''Liste.h''
+.LP
+.B "long AddElmList (s_idliste, el)"
+.B "long s_idliste ;"
+.B "long el ;"
+.LP
+.B "Liste AppendList (s_idliste1, s_idliste2)"
+.B "long s_idliste1, s_idliste2 ;"
+.LP
+.B "Liste CopyList (s_idliste)"
+.B "long s_idliste ;"
+.LP
+.B "Liste CreatList ()"
+.LP
+.B "long DestElmList (s_idliste, el)"
+.B "long s_idliste ;"
+.B "long el ;"
+.LP
+.B "long DestList (s_idliste)"
+.B "long *s_idliste ;"
+.LP
+.B "long ElmNumList (s_idliste, j)"
+.B "long s_idliste ;"
+.B "long  j ;"
+.LP
+.B "int EmptyList (s_idliste)"
+.B "long s_idliste ;"
+.LP
+.B "long FirstElmList (s_idliste)"
+.B "long s_idliste ;"
+.LP
+.B "long InsertSortList (s_idliste, el, function)"
+.B "long s_idliste ;"
+.B "long el ;"
+.B "long (*function)() ;"
+.LP
+.B "long MapList (s_idliste, function)"
+.B "long s_idliste ;"
+.B "long  (*function)() ;"
+.LP
+.B "long NextElmList (s_idliste)"
+.B "long s_idliste ;"
+.LP
+.B "long PrintList (s_idliste, fptr)"
+.B "long s_idliste ;"
+.B "FILE * fptr ;"
+.LP
+.B "long SizeList (s_idliste)"
+.B "long s_idliste ;"
+.LP
+.B "long SortList (s_idliste, function)"
+.B "long s_idliste ;"
+.B "long  (*function)() ;"
+.fi
+.SH DESCRIPTION
+.IX Liste "" "\fLfew function\fR \(em integer list handler
+These routines provide an integer lists handler :
+.LP
+.B CreatList 
+Create a list of integers, and return a unique list identifier.
+.LP
+.B AjoutElmList
+put the element 
+.I el
+at the end of the existing list denoted by
+.I s_idliste.
+.LP
+.B AppendList
+concatenate the 2 existing lists denoted by 
+.I s_idliste1
+and
+.I s_islidte2
+in a third list and return a new unique list identifier.
+.LP
+.B CopyList
+copy an existing list denoted by
+.I s_idliste
+in a new one, and return a new unique list identifier.
+.LP
+.B DestElmList 
+Remove the element
+.I el
+from the list denoted by
+.I s_idliste.
+and return ERRVI if the el is not found.
+.LP
+.B DestList
+remove the existing list denoted by
+.I s_id_liste.
+.LP
+.B ElmNumList
+return the 
+.I jth 
+element of the existing list defined by
+.I s_idliste
+or return ERRVI if the el is not found.
+.LP
+.B PrintList
+print the list denoted by
+.I s_idliste
+in the file described by
+.I fptr.
+.LP
+.B InserSortList
+insert the element
+.I el
+in the existed
+.B sorted
+list dennoted by
+s_idliste. The sort is operated by testing the returned value of
+.I function (el, element_of_the_list).
+function (a, b) should return : an integer less than, equal to, or greater than
+zero, so must the a (first argument) to be  considered  be  less than, equal
+to, or greater than b (the second argument).
+function (a, b) is called with the address of a and b i.e function's parameters
+must be pointers.
+.LP
+.B EmptyList
+return true (1) if the list denoted by
+.I s_idliste
+is empty, and else return false (0).
+.LP
+.B MapList
+apply the function
+.I function
+to all the elements of the list defined by
+.I s_idliste.
+.LP
+.B FirstElmList
+return the first element of an existing list denoted by
+.I s_idliste
+or ERRVI if the list is empty.
+.LP
+.B NextElmList
+return the next element of an existing list denoted by
+.I s_idliste.
+or ERRVI if there aren't so many elements.
+.LP
+.B SizeList
+return the number of element from an existing list denoted by
+.I s_idliste.
+.LP
+.B SortList
+sort the list denoted by 
+.I s_idliste
+, by testing the result of 
+.I function (one_element_of_the_list, next_element_of_the_list).
+function (a, b) is called with the address of a and b i.e function's parameters
+must be pointers.
+.SH FILES
+.PD 0
+.TP 20
+.B ORT/Libs/libListe.a
+.LP
+.B ORT/Incs/Liste.h
+.PD
+.SH ERRORS
+each function return :
+.LP
+ERRVI (-98989898) if a routine which can't accept it is called with an empty
+list (ex : SuivElmList).
+.LP
+ERRNU (-7897889789) if an null list identifier is given to any routine.
+.LP
+PASERR 0 is returned, if no error appened, by the functions which are
+not suppose to return a list identifier or an element. (Ex : MapList).
+
+.SH AUTHOR
+Jean Paul Schmidt, Laboratoire de Genie Informatique, 38 Grenoble, France.
+.SH DIAGNOSTICS
+Please report problems to A. Etemadi.

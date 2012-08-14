@@ -1,0 +1,24 @@
+Version 2.1:
+   1. All programs are now default driven
+   2. PGM format as standard with option for raw images
+   3. Added new options to LPEG and IPEG
+   4. IPEG is fully general and very much faster
+   5. LPEG now has option to consider pairs of collinear lines as real lines
+
+Version 2.3:
+   1. Changed names of programs and converted to lowercase characters
+   2. Added support for rectangular images
+   3. Fixed problem with HUGE value being too big for some compilers (eg
+      gcc on x86 PCs.)
+   4. Now all programs (except ort2image) may be chained using Unix pipes
+   5. The ID number assigned to Lines and Circular arcs is constant. Before I 
+      used to change ID numbers when grouping the lines. This caused some
+      people problems.
+   6. All programs are faster (specially ipeg).
+   7. Fixed problem (actually a C bug I think :) in ipeg which made it give
+      segmentation fault for no reason. This was due the use of bcopy.
+      Now only if you set the quality factor very low (eg 0.3) it usually 
+      requires too much memory for average machines and crashes. Since I don't 
+      know how to check for available memory on-the-fly I left this bug alone.
+   8. Restructured the directories
+   9. Added COPYRIGHT Notice to top of all C programs

@@ -1,0 +1,28 @@
+* OpenCv Samples
+
+This directory contains examples for testing the board detection capability of the aruco library.
+It contains the following files:
+ - video.avi: video that shows a board
+ - intrinsics.int: intrinsic information of the camera that recorded the video
+ - intrinsics.yml: intrinsic information of the camera in the OpenCv format
+ - boardinfo.abc: configuration of the board shown in the video. It contains the id of the markers in the boards as well as its arrangement
+ - board.png: printable image of the board
+ - image-test.png: a sample image
+
+
+
+In order to test the library with these files you can use :
+
+- aruco_simple_board: the simplest example. 
+      Run it as:  > aruco_simple_board image-test.png boardinfo.abc intrinsics.yml 0.039
+- aruco_test_board: a more sohpisticated example
+     Run it as:  > aruco_test_board -i  video.avi -b  boardinfo.abc -i  intrinsics.int -s 0.039
+     or as :  > aruco_test_board -i  video.avi -b  boardinfo.abc -y  intrinsics.yml -s 0.039
+- aruco_test_board_gl: example showing how to use OpenGL
+     Run it as:  > aruco_test_board_gl -i video.avi -b boardinfo.abc -f intrinsics.int -s 0.039
+     or   as:  > aruco_test_board_gl -i video.avi -b boardinfo.abc -y intrinsics.yml -s 0.039
+
+
+
+Enjoy!
+  

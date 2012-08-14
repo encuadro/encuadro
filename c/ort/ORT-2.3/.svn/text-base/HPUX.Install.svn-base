@@ -1,0 +1,87 @@
+Package name:     ORT
+Version number:   2.3
+Original author:  A. Etemadi, ICSTM <atae@uk.ac.ic.ph.spva>
+Original URL:     ftp://ftp.funet.fi/pub/sci/graphics/packages/
+HP-UX URL:        http://hpux.connect.org.uk/hppd/cgi-bin/search?package=&term=ORT-
+Install tree:     /opt/ORT
+Report bugs to:   stephie@connect.org.uk
+Tested on:        HP 9000/780/C160 running HP-UX 11.00
+C compiler used:  Version A.11.01.21505.GP
+Purpose:
+The Object Recognition Toolkit for pixel grouping. ORT is a collection of pixel
+grouping programs. The starting point for ORT is an edge detected image. The
+programs are a set of filters and includes a displayer for use on colour
+workstations.
+Date archived:    Wed 14 Mar 2001
+
+-------------------------------------------------------------------------------
+
+System:
+======
+	HP-UX shin B.11.00 A 9000/780
+
+URL:
+====
+	ftp://ftp.funet.fi/pub/sci/graphics/packages/ort	
+
+HP Porting Changes:
+===================
+
+  Configuration Files:
+    Makefile ------------->  Added HP Install rule.
+
+
+  For 10.20 Machines:
+   Chain/exe/Makefile & ---> Added test script (11TesT) for 10.20 systems 
+                             where round() is not defined in math.h.
+                             The script simply echos -DHPUX11 if true.
+
+
+   Chain/exe/chanipix.c ->    
+
+	|
+	|#ifndef HPUX11
+	|int round(x)
+	|float x;
+	|{
+	|   return floor(x + 0.5);
+	|}
+	|#endif
+	|
+
+
+Building:
+=========
+
+  First unpack the software:
+
+  	% gunzip -c pkg-version.tar.gz | tar -xvf -
+
+  Run "make" in the top level dir.
+
+  Use "make -n install" to check the defaults, then "make install"
+
+
+
+
+Running:
+========
+
+  I followed some of the tips in Doc/EXAMPLE to produce .fex and
+  .str output (which could then be viewed using "DisplayGrps").
+
+
+Installed:
+==========
+ By
+ --     [stephie@connect.org.uk]
+ On
+ --	[ 13/03/01 ]
+ 
+
+
+       ©HPUX Porting and Archive Centre, Connect, Liverpool University.
+
+    __/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
+  __/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/__/
+

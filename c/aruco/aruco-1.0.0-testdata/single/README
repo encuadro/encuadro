@@ -1,0 +1,23 @@
+This directory contains data for testing the aruco library.
+The directory contains:
+  - video.avi: video showing a piece of paper with six diferent markers
+  - intrinsics.int: file with the intrisic parameters of the camera that recoded the video
+  - intrinsics.yml: file with the intrisic parameters, in YAML format as provided by the calibration.cpp application of OpenCv2.2
+
+
+In order to test the library with these files you can use :
+
+- aruco_simple: the simplest example. 
+      Run it as:  > aruco_simple image-test.png intrinsics.yml 0.05
+- aruco_test: a more sohpisticated example
+     Run it as:  > aruco_test -i video.avi -f intrinsics.int -s 0.05  
+     or as :  > aruco_test -i video.avi -y intrinsics.yml -s 0.05  
+- aruco_test_gl: example showing how to use OpenGL
+     Run it as:  > aruco_test_gl -i video.avi -f intrinsics.int -s 0.05   
+     or as :  > aruco_test_gl -i video.avi -y intrinsics.yml -s 0.05  
+
+
+NOTE:The option -s 0.05 indicates that the real size of the marker's sides is 5 cm.
+
+
+Enjoy!

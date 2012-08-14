@@ -1,0 +1,467 @@
+\documentstyle[twocolumn,IEE]{article}
+
+\pagestyle{empty}
+\setlength{\evensidemargin} {0mm}
+\setlength{\oddsidemargin}  {-3.5mm}
+\setlength{\topmargin}      {-12.5mm}
+\setlength{\textwidth}      {170mm}
+\setlength{\textheight}     {249mm}
+\setlength{\columnsep}      {11mm}
+\setlength{\unitlength}     {1mm}
+
+\begin{document}
+\title{ROBUST SEGMENTATION OF EDGE DATA}
+\author{A. Etemadi}
+\address{University of Surrey, UK}
+
+\maketitle
+
+\section{\underline{Abstract}}
+
+ In this paper we describe a new, robust, parallel algorithm for the 
+segmentation of edge data. The segmentation is in the form of straight-lines 
+and circular arcs. No user-supplied thresholds are necessary, and additionally 
+the further grouping of the segments is simplified. The algorithm has been 
+implemented within the ``FEX'' software package for use on sequential 
+machines. Using a number of complex edge maps, we compare the results of the 
+application of our algorithm with that developed by West and Rosin 
+\cite{west91} based on a technique suggested by Lowe \cite{lowe87}.
+
+\section{\underline{Introduction}}
+
+ The creation of edge maps is generally the first step in most image 
+understanding systems. An edge map however is no more than a list of the 
+pixels which delimit image boundaries between regions of differing intensity 
+or colour. These pixels may be linked together on the basis of image 
+connectivity, but such a representation is of limited use in image 
+understanding since it lacks the compact analytic description of image 
+features required for many vision tasks. The required description must also 
+overcome the problems of noise and scatter in the position of edge pixels. 
+A great many approaches for obtaining straight-line descriptions of edge data 
+have been proposed in the literature  \cite{hough62}, \cite{pridmore87} (and 
+references therein). Less attention has been paid to higher order 
+representations such as circular or conic arcs \cite{albano74}, 
+\cite{thomas89} (and references therein). 
+
+ The crucial problem addressed by all these techniques is to determine
+the points along the space curve, appropriate to a given description, at which 
+it must be broken. Most techniques make use of curvature extrema, or points of 
+maximum deviation from some ``goodness-of-fit'' criterion. These approaches 
+generally require a number of thresholds related to the accuracy and
+complexity of the desired representation. In the context of image
+understanding a desirable property of the segmentation procedure is that of 
+scale independence. Fixing the thresholds for these segmentation techniques 
+generally leads to a different representation, for a string of pixels of a 
+given shape, at different scales. 
+
+ In this paper we present a new self consistent approach based on local 
+symmetry which is inherently scale independent and requires no thresholds. 
+The use of symmetry considerably simplifies the segmentation procedure leading 
+to a robust, parallel, algorithm. Also the position of the end points of 
+segments found by this technique is generally far less prone to noise. In the 
+next section we will outline the segmentation algorithm. The following three 
+sections contain a more detailed description of the various stages in the
+processing. In the penultimate section we will present the results of the 
+application of this algorithm to a number of complex images. Here we will also 
+compare our algorithm with that developed by West and Rosin \cite{west91} 
+based on a technique proposed by Lowe \cite{lowe87}. The final section is 
+devoted to a summary of our results, and conclusions.
+
+\section{\underline{The Segmentation Algorithm}}
+
+ The segmentation algorithm, dubbed ``Strider'', operates on thin (single 
+pixel width) chained sets of three or more edge pixels and extracts 
+straight-line segments and circular arcs. For edge detectors using the second 
+spatial derivative, the output is already an edge contour of single pixel 
+width. Fast edge-thinning algorithms \cite{dyer79} may be implemented to 
+reduce the broad ridge-like boundaries resulting from the application of 
+first spatial derivative operators such as the Sobel or Boxes operators. There 
+are many pixel chaining algorithms reported in the literature. A detailed 
+discussion of a number of such algorithms may be found in \cite{rosenfeld82}, 
+and \cite{ballard82}. 
+
+ Strider is a three pass algorithm which operates on individual chained sets
+of pixels. We may therefore process each chain in parallel. The processing
+speed increases by at least an order of magnitude on each successive pass. 
+On the first pass the chained sets are broken into subsets which are
+near-symmetric about an axis passing through the mid point of the subset, and 
+in a direction perpendicular to the line joining its end points. On the second 
+pass these subsets are linked to form co-curvilinear and collinear segments. 
+Finally, these segments are classified as straight-lines or circular arcs 
+based on a simple criterion. In the next three sections we will discuss each 
+pass of the algorithm in greater detail, and explain more fully the 
+near-symmetry, linking, and classification criteria.
+
+\section{\underline{Segmentation Pass}}
+
+ We may begin the segmentation of a chain at any pixel more than two pixels
+away from the end points of the chain, so long as the starting pixel is
+thereafter effectively treated as an end point of the chain. This has the 
+advantage of allowing the parallel processing of separate segments of the 
+chain. Any ambiguity at this stage is later resolved by the linking pass. 
+It is generally however more efficient to begin at an actual end point of a 
+chain, since this reduces the additional processing required for linking the 
+separate segments along the chain. 
+
+ The top half of Figure~\ref{fig:segmentation} contains a graphical 
+representation of a set of 16 chained pixels (open boxes). For simplicity we 
+begin processing this chain at the end pixel labeled {\bf P}. The end points 
+of the sub-chain are labeled by the symbols {\bf P} and {\bf Q}, respectively. 
+The initial length, in pixels, of the sub-chain used for processing must be 
+three pixels since any chain of smaller size is always symmetric. We first 
+find the position of the point {\bf R} by determining the average position of 
+the pixels on either side of the mid point of the chain. Next we compute the 
+position of the point {\bf S} by dropping a perpendicular from the point 
+{\bf R} on to the line joining the end pixels of the sub-chain. We now 
+determine the lengths of the two line segments joining the point {\bf S} to 
+the end points of the sub-chain. The sub-chain is said to be in a 
+symmetric state if the difference between these two lengths is less than 
+$\frac{1}{\sqrt{1+L^2}}$, where L is the current length of the sub-chain in 
+pixels. This equation is derived based on a one pixel deviation from a 
+perfectly straight-line, and is therefore the difference between the lengths 
+{\bf PS} and {\bf SQ} in Figure~\ref{fig:segmentation}.
+
+\begin{figure}[htbp]
+\vspace*{-10mm}
+\special{psfile=Figures/Segmentation.ps}
+\vspace*{10cm}
+\vspace*{-5mm}
+\caption{Application of the segmentation pass to a chained set of pixels.}
+\label{fig:segmentation}
+\end{figure}
+
+ We now proceed to the next pixel along the chain, and again determine the 
+symmetry state of the sub-chain. In Figure~\ref{fig:segmentation} we have
+expanded the processing region for clarity. The symmetry states of the pixels 
+along the sub-chain are indicated by {\it s} (symmetric state) and {\it a} 
+(asymmetric state) symbols within each of the boxes representing pixels. 
+Processing continues until the sub-chain has been in an asymmetric state three
+consecutive times, since any sub-chain of three pixels is again a candidate 
+as the possible start of a new segment. The set of pixels from the start 
+of the chain to the last point at which it was in a symmetric state is labeled 
+as a segment. The reader may have earlier been puzzled by the way the position 
+of the point {\bf R} was computed. This was to limit the propagation of the 
+effect of small asymmetric regions along the chain. The results of the 
+application of this algorithm to the displayed chain are shown at the bottom 
+of the figure. The light gray and black pixels belong to two different 
+segments. In the next section we describe the next stage of the algorithm in 
+which the various segments belonging to the same original chain are linked to 
+form larger, still near-symmetric, segments.
+
+\section{\underline{Linking Pass}}
+
+ Since each segment is associated with a unique chain, we have also retained 
+the connectivity information which greatly simplifies the linking procedure.  
+If two adjacent segments are to be linked, we have to ensure that they 
+have the same relative direction of curvature. The solid curves in 
+Figure~\ref{fig:linking} represent two adjacent segments along a chain. 
+The end points of these segments are marked by the symbols {\bf E1}, {\bf E2}, 
+{\bf E3}, and {\bf E4}. We first determine the positions of the points 
+{\bf P}, and {\bf Q} which are the mid points of line segments joining the end 
+points of each adjacent segment, respectively. The position of the combined 
+center of curvature of the two adjacent segments ({\bf O}) is now determined 
+by fitting a least-squared circular arc to the pixel data. It is now a simple 
+matter to determine the relative direction of curvature of the two segments by 
+comparing the lengths of the line segments {\bf OP}, and {\bf OQ}. 
+
+\begin{figure}[htbp]
+\vspace*{-15mm}
+\special{psfile=Figures/Linking.ps}
+\vspace*{6cm}
+\caption{Linking two adjacent segments along a chain.}
+\label{fig:linking}
+\end{figure}
+
+  We combine those segments whose adjacent end points are within three pixels, 
+have the same relative direction of curvature, and where any pair of the 
+lengths {\bf L1, L2, L3, L4, L5}, and {\bf L6}, differ by less than 
+$\sqrt{2}$. Given our segmentation procedure $\sqrt{2}$ is the limiting 
+distance of any pixel belonging to the two segments, from a circular arc with 
+the same curvature as the linked segment. The new segment formed by the 
+combination of these segments is 
+still near-symmetric about its mid point. We also combine those segments whose 
+adjacent end points are within three pixels and which satisfy the 
+collinearity condition detailed in the next section. If the above conditions 
+for co-curvilinearity and collinearity are satisfied, we replace the two 
+adjacent segments by the linked segment, and repeat the linking procedure 
+until no more adjacent segments along a chain may be combined. Note that for a 
+closed chain we continue the linking procedure cyclically around the chain.
+
+ In the next section we describe how, in the final stage of the three pass 
+algorithm, the segments produced by the previous two stages are classified 
+as straight-lines or circular arcs.
+
+\section{\underline{Classification Pass}}
+
+ All that is now required is to join the end points of a given segment by a 
+straight-line, and check whether the middle pixel of the segment deviates by 
+more than two pixels from this line. If no such deviation exists the symmetry 
+property of the segment also ensures that no other pixels along the segment 
+deviates by more than two pixels from this line. These segments are therefore 
+classified as straight-line segments. This criterion is also the collinearity
+criterion used in the linking procedure. Any segment for which this condition 
+is violated must have a uniform non-zero curvature and is therefore 
+classified as a circular arc. Given this classification procedure the minimum 
+length of a segment which may be unambiguously classified is five pixels.
+
+\section{\underline{Experimental Results}}
+
+ In this section we present and compare the results of applying the Strider 
+and West \& Rosin algorithms to chained sets of pixels from 
+a number of edge maps. The same pixel chaining procedure was used in both 
+cases in order to simplify the comparison. The author is most grateful to 
+West \& Rosin for the supply of their software, and their kind help in the 
+preparation of this work. The set of five images in the left-hand column of 
+Figure 3 are the edge maps used to test the algorithms. The top 
+three images in this column are synthetic images of digital circles, 
+rectangles, and ellipses, and the bottom two images are the results of the 
+application of the Canny \cite{canny86} edge detector to test images. The 
+images will be referred to, from top to bottom, by the labels {\it Circles}, 
+{\it Rectangles}, {\it Ellipses}, {\it Blocks}, and {\it Lenna}. The Canny 
+edge detector was chosen for this study since it implicitly produces long 
+connected chains of pixels appropriate for use with both algorithms. The 
+middle and right-hand columns contain the results of the application of the 
+Strider and West \& Rosin algorithms, respectively. The end points of all segments are 
+marked by small gray squares. The circular arc segments are drawn using a 
+thicker line type in order to simplify the distinction between line segments 
+and circular arcs in the complex images.
+
+ In order to perform a quantitative comparison between the two algorithms we
+have introduced two of measures of their performance. We base our 
+comparison upon the performance of the algorithms relative to an ``ideal'' 
+segmentation. We will therefore use the results obtained by the 
+application of the algorithms to the synthetic {\it Circles} and 
+{\it Rectangles} images since in these cases the result of an ideal 
+segmentation is easily determined. As neither algorithm is designed to detect 
+elliptical arcs we have not used the results on the {\it Ellipses} image for a
+quantitative comparison.
+
+ The performance characteristics we wish to address are the compression of the 
+information contained within the edge maps, and the completeness of the 
+description. A single measure is therefore insufficient to highlight the 
+deficiencies of the algorithms with respect to both aspects. These aspects 
+were chosen since they are highly relevant with respect to image interpretation
+applications. We have not introduced a measure of the accuracy of the 
+segmentation since neither implementation is aimed at obtaining results of 
+high accuracy. The edge maps obtained by processing the {\it Blocks}, and 
+{\it Lenna} images are presented to allow a qualitative comparison of the 
+results using data which includes the effects of noise and scatter. In all 
+cases both algorithms performed the segmentation in less than six Sun-IV Sparc 
+CPU seconds.
+
+ Now let $N_T$ denote the total number of segments resulting from an ideal
+segmentation, and $N_c$, $N_w$ denote the total number of correctly, and
+incorrectly, classified extracted segments, respectively. The compression
+measure denoted by the symbol {\bf $C_p$} is given by the equation
+$\frac{N_T}{N_c + N_w}$. The completeness measure, denoted by {\bf $C_t$}, 
+is given by $\frac{L_c - L_w}{L_T}$, where $L_T$ is the total number of edge
+pixels in the image, and $L_c$, $L_w$ denote the total length in pixels of 
+correctly, and incorrectly classified extracted segments, respectively. These
+forms of {\bf $C_p$}, and {\bf $C_t$}, were chosen so as to penalize 
+misclassification, and remain approximately independent of the scale of the 
+structures. In general the values of both {\bf $C_p$} and {\bf $C_t$} are 
+between 0 and 1. The more closely the values of these measures approach 1, 
+the better the performance of the segmentation algorithm. The table
+presented below contains the results of the comparison using these measures. 
+
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Image            & \multicolumn{2}{c|}{Strider} & \multicolumn{2}{c|}{West}\\
+\cline{2-5}
+Label            &{\bf $C_p$}   &{\bf $C_t$}   & {\bf $C_p$}   & {\bf $C_t$} \\
+\hline
+{\it Circles}    &     0.80     &     0.87     &     0.44      &   0.85   \\
+\hline
+{\it Rectangles} &     1.00     &     0.980    &     1.00      &   0.986   \\
+\hline
+\end{tabular}
+\label{tbl:performance}
+\end{center}
+\end{table}
+
+ Based on these measures the performance of the Strider algorithm on circular
+arcs is significantly better than the West \& Rosin algorithm. Unlike the new 
+algorithm, the West \& Rosin algorithm fails to detect small-scale circles 
+and circular arcs. The 
+application of the Strider algorithm to the {\it Ellipses} image leads to 
+near-complete segmentation of the ellipses in terms of circular arcs, which 
+is arguably more desirable than the largely linear segmentation achieved by 
+the West \& Rosin algorithm. Furthermore the West \& Rosin algorithm fails to detect a number of 
+prominent circular arcs within the  {\it Blocks}, and {\it Lenna} images. 
+In these cases the Strider algorithm succeeds in detecting the vast majority 
+of the circular arcs, and the resulting representation is perceptually more 
+pleasing. 
+
+\section{\underline{Conclusions}}
+
+ In summary we have described a new, parallel, robust, scale independent
+algorithm for the segmentation of edge data, which requires no user-supplied
+thresholds. The results of the segmentation on a number of synthetic, and real 
+edge maps have been presented, and compared with the results obtained by the 
+West \& Rosin algorithm. We have shown that the 
+performance of the new algorithm is generally significantly better when 
+compared with the West \& Rosin algorithm, and is less prone to the effects of
+noise and scatter in the edge data. The new algorithm succeeds in producing a 
+highly compact, and near-complete representation of edge data in terms of 
+straight-line segments and circular arcs. The implementation of the new 
+algorithm in the C language within the FEX software package is available by 
+request. 
+
+\begin{thebibliography}{unsrt}
+
+\bibitem {west91}
+West, G. A. W., and Rosin, P. L., 1991, ``Techniques for segmenting image
+curves into meaningful descriptions'', \underline{Pattern Recognition},
+\underline{24}, 7, 643-652.
+
+\bibitem {lowe87}
+Lowe, D. G., 1987, ``Three-dimensional object recognition from single 
+two-dimensional images'', \underline{Artificial Intelligence}, \underline{31}, 
+3, 355-395.
+
+\bibitem {hough62}
+Hough, P. V. C., 1962, ``A method and means for recognizing complex patterns, 
+US patent 3069654.
+
+\bibitem {pridmore87}
+Pridmore, A. P., Porrill, J., and Mayhew, J. E. W., 1987, ``Segmentation and 
+description of binocularly viewed contours'', \underline{Image and Vision 
+Computing}, \underline{5}, 2, 132-138.
+
+\bibitem {albano74}
+Albano, A., 1974, ``Representation of digitised contours in terms of conic arcs
+and straight-line segments'', \underline{Comput. Vision Graphics Image} \\
+\underline{Process.}, \underline{3}, 23-33.
+
+\bibitem {thomas89}
+Thomas, S. M., and Chan, Y. T., 1989, ``A simple approach to the estimation of
+circular arc center and its radius'', \underline{Comput. Vision} 
+\underline{Graphics Image Process.}, \underline{45}, 362-370.
+
+\bibitem {dyer79}
+Dyer, C. R., and Rosenfeld, A., 1979, ``Thinning algorithms for gray-scale 
+pictures'', \underline{PAMI}, \underline{1}, 87-89.
+
+\bibitem {rosenfeld82}
+Rosenfeld, A., and Kak, A. C., 1982, Digital picture processing, 
+Academic Press.
+
+\bibitem {ballard82}
+Ballard, D. H., and Brown, C. M., 1982, Computer vision, Englewood Cliffs: 
+Prentice Hall. 
+
+\bibitem {canny86}
+Canny, J., 1986, ``A computational approach to edge detection'', 
+\underline{PAMI}, \underline{6}, 6, 679-698.
+
+\end{thebibliography}
+
+\clearpage
+
+\setlength{\evensidemargin} {0mm}
+\setlength{\oddsidemargin}  {-9.5mm}
+\setlength{\topmargin} {-27mm}
+
+\begin{figure}[htbp]
+\begin{picture}(60,60)
+\vspace*{6cm}
+%
+% Circles
+%
+\put(-10,-48){
+\special{psfile=Figures/Circles.ps hscale=0.5 vscale=0.5}
+}
+\put(22,-1){\framebox(45,45){}}
+
+\put(37,-48){
+\special{psfile=Figures/Circles.FEX.arclin.ps hscale=0.5 vscale=0.5}
+}
+\put(69,-1){\framebox(45,45){}}
+
+\put(84,-48){
+\special{psfile=Figures/Circles.RW.arclin.ps hscale=0.5 vscale=0.5}
+}
+\put(116,-1){\framebox(45,45){}}
+
+%
+% Rectangles
+%
+\put(-10,-96){
+\special{psfile=Figures/Rectangles.ps hscale=0.5 vscale=0.5}
+}
+\put(22,-48){\framebox(45,45){}}
+
+\put(37,-96){
+\special{psfile=Figures/Rectangles.FEX.arclin.ps hscale=0.5 vscale=0.5}
+}
+\put(69,-48){\framebox(45,45){}}
+
+\put(84,-96){
+\special{psfile=Figures/Rectangles.RW.arclin.ps hscale=0.5 vscale=0.5}
+}
+\put(116,-48){\framebox(45,45){}}
+
+%
+% Ellipses
+%
+\put(11.5,-114){
+\special{psfile=Figures/Elipses.ps hscale=0.3 vscale=0.3}
+}
+\put(22,-95){\framebox(45,45){}}
+
+\put(58.5,-114){
+\special{psfile=Figures/Elipses.FEX.arclin.ps hscale=0.3 vscale=0.3}
+}
+\put(69,-95){\framebox(45,45){}}
+
+\put(105.5,-114){
+\special{psfile=Figures/Elipses.RW.arclin.ps hscale=0.3 vscale=0.3}
+}
+\put(116,-95){\framebox(45,45){}}
+
+%
+% Blocks
+%
+\put(-10,-190){
+\special{psfile=Figures/Blocks.canny.ps hscale=0.5 vscale=0.5}
+}
+\put(22,-142){\framebox(45,45){}}
+
+\put(37,-190){
+\special{psfile=Figures/Blocks.FEX.arclin.ps hscale=0.5 vscale=0.5}
+}
+\put(69,-142){\framebox(45,45){}}
+
+\put(84,-190){
+\special{psfile=Figures/Blocks.RW.arclin.ps hscale=0.5 vscale=0.5}
+}
+\put(116,-142){\framebox(45,45){}}
+
+%
+% Lenna
+%
+\put(1,-222){
+\special{psfile=Figures/Lenna.canny.ps hscale=0.4 vscale=0.4}
+}
+\put(22,-189){\framebox(45,45){}}
+
+\put(48,-222){
+\special{psfile=Figures/Lenna.FEX.arclin.ps hscale=0.4 vscale=0.4}
+}
+\put(69,-189){\framebox(45,45){}}
+
+\put(95,-222){
+\special{psfile=Figures/Lenna.RW.arclin.ps hscale=0.4 vscale=0.4}
+}
+\put(116,-189){\framebox(45,45){}}
+\put(12,-194){Figure 3: Left-hand column contains edge maps used for testing
+purposes. Middle column contains the results}
+\put(12,-198){of the Strider segmentation algorithm. Right-hand column 
+contains the results of the West and Rosin \cite{west91} algorithm}
+\end{picture}
+\label{fig:main}
+\end{figure}
+
+\end{document}

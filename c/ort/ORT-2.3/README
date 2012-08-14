@@ -1,0 +1,101 @@
+A. Etemadi, ICSTM, Feb 17th 1993
+
+These directories contain the elements for creating, testing, and running 
+the Object Recogition Toolkit (ORT). Contact me (address at the end of
+this file) if you have any problems.
+
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+       INSTALL file contains Installation info.
+       The Doc/FAQ file contains frequently asked questions and usage info. 
+       The Doc/EXAMPLE file contains an example session
+       The Doc/PHILOSOPHY file describes the philosophy behind the design
+*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+
+         ============================================
+         Object Recognition Toolkit (ORT) Version 2.3
+         ============================================
+
+ORT is a collection of pixel grouping S/W in C aimed for use on Unix
+platforms (Sun4, Decstation, Iris, X86 under Linux). Currently the 
+starting point for ORT is an edge detected image. The S/W is in the 
+form of filters and includes a displayer for use on COLOUR workstations 
+under X11R4/5. All the S/W comes with the GNU general public licence. 
+Also included are LaTeX copies of papers on some of the S/W (FEX, LPEG). 
+Basically ORT allows you to create progressively more complex groupings 
+of a set of edge pixels [lines/arcs -> parallel/collinear/junctions ->
+triplets/corners/polygons]. Changes from previous versions are:
+
+Version 2.1:
+   1. All programs are now default driven
+   2. PGM format as standard with option for raw images
+   3. Added new options to LPEG and IPEG
+   4. IPEG is fully general and very much faster
+   5. LPEG now has option to consider pairs of collinear lines as real lines
+
+Version 2.3:
+   1. Changed names of programs and converted to lowercase characters
+   2. Added support for rectangular images
+   3. Fixed problem with HUGE value being too big for some compilers (eg
+      gcc on 386 and 486PCs.)
+   4. Now all programs (except ort2image) may be chained using Unix pipes
+   5. The ID number assigned to Lines and Circular arcs is constant. Before I 
+      used to change ID numbers when grouping the lines. This caused some
+      people problems.
+   6. All programs are faster (specially ipeg).
+   7. Fixed problem (actually a C bug I think :) in ipeg which made it give
+      segmentation fault for no reason. This was due the use of bcopy.
+      Now only if you set the quality factor very low (eg 0.3) it usually 
+      requires too much memory for average machines and crashes. Since I don't 
+      know how to check for available memory on-the-fly I left this bug alone.
+   8. Restructured the directories
+
+The features defined within ORT represent the complete set required to 
+recognize any polyhedral object (view point independently) starting from edge 
+information. Available later this year will be an Edge detection module,
+and hopefully also a generalised curve grouping system.
+
+    Code                              Description
+--------------     ----------------------------------------------------------
+Liste              List handling library in C by Jean-Paul Schmidt formerly
+                   of University of Surrey, UK. [Version 1.2]
+
+chainpix           Pixel Chainning code by Geoff A.W. West and Paul L. Rosin
+                   of Curtin University, Australia [Version 1.2]
+
+fex                Segments chained pixel lists produced by chainpix
+                   into straight-line segments and circular arcs. [Version 1.7]
+
+lpeg               Low-level straight-line grouping [Version 1.9]. Groups 
+		     straight-line segments produced by fex into:
+
+                         Parallel overlapping   Parallel non-overlapping
+                         Collinear              V,L,T, and Lambda Junctions
+
+ipeg               Intermediate-level grouping [Version 2.1]. Groups sets 
+		     produced by lpeg into:
+
+                         Triplets (barends, Z)
+                         Corners  (3 lines sharing a junction point)
+                         Polygons 
+
+DisplayGrps        X11R4/5 viewer for the above groupings/segments by
+                   Jean-Paul Schmidt and Ata Etemadi [Version 1.2]
+
+I would appreciate it if people who obtain the S/W drop me a line. All
+contributions/comments to the distribution are most welcome. If you have
+any problems I'll be glad to help.
+
+       regards
+                Ata <(|)>.
+
+| Mail          Dr Ata Etemadi, Blackett Laboratory,                          |
+|               Space and Atmospheric Physics Group,                          |
+|               Imperial College of Science, Technology, and Medicine,        |
+|               Prince Consort Road, London SW7 2BZ, ENGLAND                  |
+| Phone         +44 (0)71 589 5111 Ext 6751 or 6752 (secretary/answer phone)  |
+| Fax           +44 (0)71 823 8250 Attn. Dr Ata Etemadi,                      |
+| Telex         929484 (IMPCOL G)  Attn. Dr Ata Etemadi,                      |
+| Janet                        atae@uk.ac.ic.ph.spva or ata@uk.ac.ucl.mssl.c  |
+| Internet/Arpanet/Earn/Bitnet atae@spva.ph.ic.ac.uk or ata@c.mssl.ucl.ac.uk  |
+| Span                              SPVA::atae       or     MSSLC:atae        |
+| UUCP/Usenet                       atae%spva.ph.ic@nsfnet-relay.ac.uk        |

@@ -1,0 +1,526 @@
+\documentstyle[twoside,WICSBOOK]{article}
+\setlength{\unitlength}{1mm}
+
+\title{\vspace{-3pc}\titlesize\bf Low-level Grouping of Straight Line Segments}
+
+\author{\large A. Etemadi\\ 
+\large J-P. Schmidt, G. Matas, J. Illingworth, and J. Kittler\\ 
+\normalsize Department of Electronic and Electrical Engineering, University of Surrey\\ \normalsize Guildford, United Kingdom \date{}}
+\begin{document}
+\maketitle
+
+\begin{abstract}\ninesize 
+\noindent  In this paper we present a formalism for the formation of self 
+consistent, hierarchical, ``Low-Level'' groupings of pairs of straight line 
+segments from which all higher level groupings may be derived. Additionally, 
+each low-level grouping is associated with a ``Quality'' factor, based on 
+evidential reasoning, which reflects how much the groupings differ from 
+mathematically perfect ones. This formalism has been incorporated into 
+algorithms within the ``LPEG'' software package produced at the University of 
+Surrey. LPEG was developed as part of the Vision As Process \cite{crowley89} 
+project. We present results of the application of these algorithms to sets of 
+line segments extracted from a test image. 
+
+\end{abstract}
+
+\section{Introduction}
+
+ Grouping of straight line segments has been the subject of much 
+investigation. Most research in this field has been concentrated on forming 
+perceptually significant groupings. The reader is 
+therefore referred to commonly available bibliographic databases on the 
+subject with special reference to \cite{weiss86}, \cite{lowe87}, 
+\cite{mohan89}, \cite{horaud90}, and \cite{faugeras90} and references 
+therein. Many types of groupings of two or more line segments have been 
+proposed in the literature. In general the proposed groupings either fail to 
+allow the consistent formation of higher level groupings or involve 
+heuristics. 
+
+ Let us first consider the possible relationship between any pair of 
+lines. Clearly they may either be collinear, parallel, or intersecting. When we
+consider line segments we may further subdivide the parallelism relationship
+into overlapping, and non-overlapping. The intersecting pairs may also be 
+divided according to whether the intersection point lies on either, both, or
+only one of the line segments. These then are the complete set of 
+relationships between two line segments. Clearly all higher level groupings may
+be formed by combining subsets of this set. 
+
+ In this paper it is our aim to first define a formalism for the formation of 
+this set, and show how this formalism allows us to implement these groupings
+in a manner useful for vision. In the first section we discuss what properties 
+are imposed on algorithms for the formation of these groupings if 
+they are to be useful for vision purposes. In the following sections we discuss
+each of the proposed groupings in turn. Associated with each grouping is a
+``Quality'' factor based on comparing the observed grouping with an ideal 
+case. This factor greatly simplifies the control of image interpretation tasks
+and is defined separately for each grouping in turn. We present results 
+obtained using the ``LPEG'' software package within which these algorithms 
+have been implemented. Finally we summarize our findings, and discuss this 
+work in the context of a complete vision system.
+
+\section{Low-Level Groupings}
+
+ The most desirable feature of any proposed grouping is consistency.
+Strictly mathematical definitions of parallelism, collinearity, and 
+intersection ensure this property. However so long as our definitions are 
+consistent we need not adhere to these mathematical definitions. We may choose 
+for example to label any pair of line segments forming an acute angle of 10 
+degrees as ``parallel''. To ensure consistency we define ``non-parallel'' 
+segments as those forming acute angles greater than 10 degrees.
+
+ Self consistency is an essential requirement since it ensures that the 
+proposed grouping relations are independent of the order in which the line 
+segments are chosen.  For the purposes of computer vision, scale independence 
+is another important requirement, since in general the conversion factor 
+between distances in pixels measured across an image is not known or is 
+poorly defined. Finally we also wish to be able to form a hierarchy of 
+groupings which will allow us to filter unlikely combinations at an early 
+stage. 
+
+\begin{figure}[htbp]
+\vspace*{-10mm}
+\special{psfile=Figures/Groupings.ps}
+\vspace*{4cm}
+\vspace*{-5mm}
+\caption{Low-Level groupings within the LPEG system}
+\label{fig:groupings}
+\end{figure}
+
+ Based on these requirements we have defined the Low-Level groupings shown in
+the form of a tree structure in Figure~\ref{fig:groupings}. The set of straight
+line segments forms the top level of the tree. In the first level there are 
+the three main groupings, namely Parallel, Collinear, and Junction. At the 
+next level the Parallel grouping is separated into two further types based on 
+whether the line segments overlap. The Junctions are also separated at this 
+level into Intersecting and Non-intersecting types, based on whether the 
+junction point resides on either, both, or neither of the line segments 
+forming the junction. The most important distinctions are between the 
+groupings at this level of the tree. The Junction types are finally separated 
+to form the lowest level of the tree according to the acute angle between the 
+line segments forming the junction. The characters used to denote the junction
+types also reflect their form. These junction types are especially useful when 
+considering particular applications. For example if we know apriori that the 
+image may contain an L shape, such as for character recognition purposes, the 
+inclusion of L junctions as part of the hierarchy will allow us to rapidly 
+identify this structure. The distinction between intersecting and 
+non-intersecting junction types is an important one since it also allows us to 
+hypothesize junctions between surfaces. Due to the generally poor segmentation 
+the formation of all these groupings requires a statistical model of the 
+feature extraction process, or at least a worst-case knowledge of the errors 
+involved. 
+
+ The next four sections are devoted to the discussion of the various 
+groupings at the lowest levels of the tree. In each case we present, and 
+discuss, the definition used in the formation of the grouping in the context of
+the above requirements. Associated with each grouping is a ``Quality'' factor 
+which enables us to filter unlikely groupings at an early stage. We also show 
+how this ``Quality''factor is computed and discuss its relevance in each case.
+
+\subsection{Overlapping Parallel Line Pairs}
+
+ When the acute angle between any pair of straight line segments is below a 
+specified value, the line segments are considered as candidates for 
+parallelism or collinearity. Note that so long as we are consistent, this 
+value is not important. We have chosen a value of 0.06 Radians for this angle
+based on digital straight line properties. Having filtered line segments 
+which may form parallel or collinear pairs, using the acute angle criterion 
+alone, we now show how these pairs may be classified as overlapping parallel.
+
+\begin{figure}[htbp]
+\vspace*{-10mm}
+\special{psfile=Figures/Parallel.ps}
+\vspace*{6cm}
+\vspace*{-5mm}
+\caption{Overlapping (2a) and non-overlapping (2b) parallel line segments}
+\label{fig:parallel}
+\end{figure}
+
+ In the following discussion we shall make use of the parameters $L_{i}$, 
+$LP_{i}$, $\theta_{i}$, $\sigma^{\parallel}_{i}$, and $\sigma^{\perp}_{i}$, 
+which represent the length, the projected length onto the``Virtual Line'', 
+orientation angle, and standard deviation of the position of the end points of 
+the line segment along and perpendicular to its direction, respectively. 
+The subscript {\it i} is used for referencing the line segments. In general the 
+standard deviations are used as a means of incorporating the uncertainties in 
+the line segment extraction process into the labeling of the groupings at the 
+lowest level of the grouping tree. These standard deviations may be replaced 
+by constants without affecting the basic grouping algorithms. In order to avoid
+ambiguity in the formation of the groupings we have restricted our analysis to
+those line segments whose length is greater than the largest sum of any
+combination of their $\sigma^{\parallel}_{i}$, and $\sigma^{\perp}_{i}$.
+
+ Given the line segment pair {\it L}1 and {\it L}2 in 
+Figure 2a we first attempt to find the ``Virtual Line'' 
+{\it VL}. {\it VL} is initially 
+defined through its orientation and the point {\bf P} through which it passes. 
+The orientation angle of the {\it VL} is given 
+by the weighted mean of the orientation of the two line segments as defined by
+the equation:
+\vspace{-2mm}
+\begin{equation}
+ \theta_{\it VL} = \frac 
+{ L_{1} \times \theta_{1} + L_{2} \times \theta_{2} }
+{ L_{1} + L_{2} }
+\end{equation}
+\vspace{-2mm}
+ Note that we have not used the standard deviation of the orientation angles 
+of the line segments in the above equation since they are generally a 
+function of the line length. Now the x, y position of the point {\bf P} 
+through which the Virtual Line passes are similarly defined by:
+\vspace{-2mm}
+\begin{equation}
+ x_{\it VL} = \frac 
+{ L_{1} \times x_{1} + L_{2} \times x_{2} }
+{ L_{1} + L_{2} }
+~~and~~
+ y_{\it VL} = \frac 
+{ L_{1} \times y_{1} + L_{2} \times y_{2} }
+{ L_{1} + L_{2} }
+\end{equation}
+\vspace{-2mm}
+where $x_{i}$, and $y_{i}$ indicate the x, y positions of the midpoints, 
+{\bf M}i, of line {\it L}i, respectively. We now compute the positions of the
+points P1, P2, P3, and P4 which as defined by the intersection points of
+perpendiculars dropped from the end points of the line segments onto the
+Virtual Line. The end points of {\it VL} are defined by the pair of
+points Pi, and Pj, from the set P1, P2, P3, and P4, separated by the largest 
+distance. These points define the length $L^{\it VL}_{1,2}$ of the Virtual 
+Line. The line segments {\it L1}, and {\it L2} are defined to be overlapping 
+parallel if
+\vspace{-2mm}
+\begin{equation}
+ L^{\it VL}_{1,2} \leq LP_{1} + LP_{2} + 
+   \sigma^{\parallel}_{1} + \sigma^{\parallel}_{2}
+\end{equation}
+\vspace{-2mm}
+ The symmetrical nature of the definition of such a grouping ensures self 
+consistency. 
+
+ If the sum of the lengths of the two line segments is equal to twice the 
+length of the Virtual Line, and the orientations of the line segments are 
+equal these segments form a perfect overlapping parallel pair in a strictly 
+mathematical sense. For vision purposes we wish to determine how closely the
+observed pair deviates from this perfect pairing. Essentially we are 
+attempting to determine how much evidence is available for such a perfect
+pairing by comparing measured quantities with the ideal case. We now define a 
+``Quality'' factor for overlapping parallel line segments which allows such a 
+determination.
+\vspace{-2mm}
+\begin{equation}
+ Quality_{OVP} = \frac {LP_{1} + LP_{2}
+         - \sigma^{\parallel}_{1} - \sigma^{\parallel}_{2} }
+{2.0 \times L^{\it VL}_{1,2}}
+\label{equ:qualovp}
+\end{equation}
+\vspace{-2mm}
+ Our definition also ensures that this dimensionless parameter is always in 
+the range zero to one. A value of 1.0 for the Quality factor implies a perfect
+grouping. This form of the definition implies that the Quality factor for 
+parallel overlapping line segments will generally be $\geq$ 0.5. The above 
+definition is again self consistent and has the desirable property that it 
+degrades monotonically as we move further away from the ideal case. Finally, 
+as we shall shortly see, the computation of the Quality factor for groupings 
+involving more than two line segments becomes greatly simplified.
+
+The Quality factor, independent of the associated grouping, allows us to 
+condense a great deal of information. Since this factor has the specific 
+meaning above, it may be used for quickly indexing other types of symmetries 
+or asymmetries within the grouped set by simply calculating the required 
+range in Quality factor. 
+
+ Sets of N overlapping parallel line segments in which all possible pairings 
+satisfy the overlapping parallelism criterion may be combined to form a larger 
+set which we shall call an overlapping parallel bundle of order N. The 
+associated Quality factor is defined by:
+\vspace{-2mm}
+\begin{equation}
+ Quality_{OVP}^{N} = 
+\frac { \sum^{N}_{j} \sum^{N}_{i>j} LP_{i} + LP_{i} - 
+        \sigma^{\parallel}_{i} - \sigma^{\parallel}_{j} }
+{
+2.0 \times \sum^{N}_{j} \sum^{N}_{i>j} {L^{\it VL}_{i,j}}
+}
+\label{equ:qualbundle}
+\end{equation}
+\vspace{-2mm}
+ The denominator is essentially twice the sum of the lengths of the Virtual 
+Lines associated with each pair. This form of the definition for bundles 
+retains the self consistency property associated with pairs as described 
+above. Note that for the Quality factor to be meaningful for arbitrarily large
+bundles, the choice of the type of overlapping parallel pairs must be uniform 
+ie, all fully overlapping, or all partially overlapping. If we 
+store the Virtual Line parameters for the overlapping parallel pairs we may 
+compute this new quality factor directly from information already available. 
+
+\subsection{Non-overlapping Parallel and Collinear Pairs}
+
+ Given the frame work described in the last section, the definition of
+non-overlapping parallel lines follows naturally. In addition to the criterion
+involving the acute angle between the two line segments, non-overlapping 
+parallel lines must also satisfy 
+\vspace{-2mm}
+\begin{equation}
+ L^{\it VL}_{1,2} > LP_{1} + LP_{2} + 
+          \sigma^{\parallel}_{1} + \sigma^{\parallel}_{2}
+\end{equation}
+\vspace{-2mm}
+and the perpendicular distances from the point {\bf P} in 
+Figure 2b to the lines of which {\it L1} and {\it L2} are
+segments must be greater than the largest standard deviation in the position 
+of the line segments perpendicular to their direction ($\sigma^{\perp}_{i}$). 
+This additional criterion allows us to distinguish between non-overlapping 
+parallel, and collinear line segment pairs. A collinear pair is essentially a 
+modified non-overlapping parallel pair such that the perpendicular distance 
+from the point {\bf P} to both line segments is less than or equal to 
+$\sigma^{\perp}_{i}$.
+
+ We define a perfect non-overlapping parallel pair as one for which the sum of 
+the lengths of the line segments is equal to the length of the Virtual Line,
+and the orientations of the line segments are equal. The Quality factor for 
+this grouping is given by 
+\vspace{-2mm}
+\begin{equation}
+ Quality_{NOVP} = 
+\frac 
+{ LP_{1} + LP_{2} - \sigma^{\parallel}_{1} - \sigma^{\parallel}_{2} }
+{ L^{\it VL}_{1,2} }
+\end{equation}
+\vspace{-2mm}
+ We may also form bundles of N non-overlapping parallel line segments, using 
+the same pairwise criterion as for overlapping parallel lines. In this case 
+however equation~\ref{equ:qualbundle} is no longer appropriate since the 
+Quality factor for the bundle would inevitably decrease as we increase the 
+number of lines forming the bundle. The appropriate form which still retains 
+the self consistency, and monotonicity property associated with the Quality 
+factor for parallel overlapping bundles is:
+\vspace{-2mm}
+\begin{equation}
+ Quality_{NOVP}^{N} = 
+\frac { \sum^{N}_{j} \sum^{N}_{i>j} LP_{i} + LP_{i} - 
+        \sigma^{\parallel}_{i} - \sigma^{\parallel}_{j} }
+{
+\max_{i \neq j} {L^{\it VL}_{i,j}}
+}
+\end{equation}
+\vspace{-2mm}
+ The choice of the type of bundle (step like, or staggered) is application 
+specific. Bundles of collinear lines and their associated Quality 
+factor are also formed in the same way. Pairs and bundles of collinear lines 
+may be replaced by their associated Virtual Line and such lines 
+may be treated as physical lines for the purpose of performing further 
+grouping operations.
+
+\subsection{V and L Junctions}
+
+ A V junction is defined as any pair of line segments which intersect, and
+whose intersection point either lies on one of the line segments and is
+less than $\sigma^{\parallel}_{i} + \sigma^{\perp}_{j}$  away from the end 
+points of the line segment, or does not lie on either of the line segments.  
+An additional requirement is that the acute angle between the two lines must 
+lie in the range $\theta_{min}$ to $\theta_{max}$. In order to avoid 
+ambiguity with parallel or collinear pairs, $\theta_{min}$ is chosen to be the
+same as the limiting angle used to filter line pairs forming possible parallel 
+or collinear groups. L junctions are a special case of a V junction where 
+$\theta_{min}$ for L junctions is greater than  $\theta_{max}$ for the V 
+junctions, and $\theta_{max}$ for L junctions is $\frac {\pi}{2}$. 
+In order to avoid ambiguity with $\lambda$ junctions we also label 
+as V junctions any line segment pairs, satisfying the above criteria for V 
+junctions, the distance between whose closest end points is less than the 
+larger of $\sigma^{\parallel}_{i}$ or $\sigma^{\perp}_{i}$.
+
+ Now a perfect V junction is defined as one in which the intersection point 
+{\bf P}, shown in Figure 3a, lies precisely at the end 
+points of the line segments. Note that there are now two Virtual Lines which 
+share the end point {\bf P}. The points  P1, and P4, denote the remaining end 
+points of the Virtual Lines respectively. We now define the Quality factor as
+\vspace{-2mm}
+\begin{equation}
+ Quality_{V Junction} = 
+\frac {L_{1} - \sigma^{\parallel}_{1} - \sigma^{\perp}_{2}}{L^{\it VL1}} 
+\times 
+\frac {L_{2} - \sigma^{\parallel}_{2} - \sigma^{\perp}_{1}}{L^{\it VL2}}
+\end{equation}
+\vspace{-2mm}
+where $L^{\it VLi} (i=1,2)$ are the lengths of the Virtual Lines VL1 and VL2
+displayed in Figure 3a. In this case 
+we have chosen to multiply the ratios of the lengths of the lines to the 
+lengths of the Virtual Lines since we are trying to penalize pairings in which
+either line is far away from the junction point. The Quality factor
+nevertheless retains the symmetry property described for parallel line 
+segment pairs. The Quality factor for L junctions is defined in precisely the
+same manor. 
+
+\begin{figure}[htbp]
+\vspace*{-10mm}
+\special{psfile=Figures/Junction.ps}
+\vspace*{6cm}
+\vspace*{-5mm}
+\caption{V (3a) and $\lambda$ (3b) Junctions}
+\label{fig:junction}
+\end{figure}
+
+ Since an infinity of shapes may be created using V junctions, the concept of 
+Quality as applied to an arbitrary bundle of N junctions becomes meaningless. 
+For closed sets of junctions however, such a definition is possible. The 
+formation of the closed sets is much simplified by flagging the end points 
+of the lines as the closer to, and the further away from, the junction point, 
+respectively. The flagging of the end points simplifies the the search for 
+other types of bundles such as triplets of lines sharing a common junction 
+point. The Quality factor for closed sets of combinations of V and L 
+junctions, denoted as $S_{N}$ where N is the number of lines in the set, is 
+defined so as to reflect the amount of missing information in the hypothesized 
+closed set. The precise steps in the formation of the closed sets is outside
+the scope of this article. However it suffices to say that all relevant
+junction points required to close the set (eg. to form a square or hexagon 
+etc..) are first computed. This then allows us to compute the circumference of 
+the hypothesized perfect closed set, and hence the Quality factor as 
+\vspace{-2mm}
+\begin{equation}
+ Quality_{S_{N}} = 
+\frac { \sum^{N}_{j}\sum^{N}_{i>j} L_{i}  - \sigma^{\parallel}_{i} - \sigma^{\perp}_{j}}
+{
+2.0 \times Circumference
+}
+\end{equation}
+\vspace{-1mm}
+ Where the subscripts i, j refer only to those pairs of line segments which
+form the sides of the closed set. Note that collinear line segment pairs may be
+also be used in the formation of the closed set. 
+
+\subsection{$\lambda$ and T Junctions}
+ 
+ A $\lambda$ junction is one where the intercept point lies on one of the line 
+segments, and the line segments do not form a V or L Junction. Choosing 
+$\theta_{min}$ and $\theta_{max}$ so that they have the same values 
+as those used for V Junctions assures consistency. T junctions are a special 
+case of $\lambda$ junctions where $\theta_{min}$ for T junctions is equivalent 
+to $\theta_{max}$ for the $\lambda$ junctions, and $\theta_{max}$ for T 
+junctions is $\frac {\pi}{2}$. There is only one Virtual Line involved in the 
+definition of $\lambda$ and T junctions as shown in 
+Figure 3b. A perfect $\lambda$ or T junction is one in
+which the intersection point lies precisely at the end point of only one of
+the line segments. We define the Quality factor for $\lambda$ junctions as
+\vspace{-2mm}
+\begin{equation}
+ Quality_{\lambda Junction} = 
+\frac {L_{1} - \sigma^{\parallel}_{1} - \sigma^{\perp}_{2}}{L_{\it VL1}}
+\end{equation}
+\vspace{-2mm}
+where $L_{1}$ is the length of the line which does not include the junction
+point, and $L_{\it VL1}$ is the length of the Virtual Line. The Quality 
+factor for T junctions is defined in precisely the same manor as for 
+$\lambda$ Junctions. It is more important that we do not mislabel possible V 
+or L junctions as 
+$\lambda$ or T junctions, than vice versa, since the latter may be easily 
+rectified when we form higher level groupings, but the former tends to 
+propagate to higher levels. This is the main reason for the inclusion of the 
+additional criterion, based on proximity of end points, stated in the last 
+section. 
+
+\section{Experimental Results}
+
+ The above groupings have been implemented within the LPEG system. 
+The form of the definitions of the groupings allows many of the 
+computations to be performed in parallel. In addition each of the groupings 
+themselves may be computed independently. The best implementation of LPEG 
+would therefore be in a massively parallel environment. The left-most image in 
+Figure~\ref{fig:poly}, kindly supplied by Dr. R. 
+Horaud at the LIFIA institute in Grenoble, is that of a Widget used for test 
+purposes. The next two images are the results of the 
+Canny edge detector, and annotated extracted line segments using the Hough 
+transform, respectively. The extracted line segments have been allocated an 
+identification number which is displayed as the annotation in the 
+corresponding image. 
+\vspace{-18mm}
+\begin{figure}[htbp]
+\begin{picture}(60,60)
+\vspace*{5cm}
+\put(0,-1){\framebox(39,45){}}
+\put(-1,-1){
+\special{psfile=Figures/Polyhedron.PS hscale=0.45 vscale=0.515}
+}
+\put(0,-1){\framebox(39,45){}}
+\put(41,-1){\framebox(39,45){}}
+\put(41,0){
+\special{psfile=Figures/Polyhedron.canny.PS  hscale=0.45 vscale=0.515}
+}
+\put(41,-1){\framebox(39,45){}}
+\put(82,-1){\framebox(39,45){}}
+\put(82,0){
+\special{psfile=Figures/Polyhedron.hough.lines.annotated.PS  hscale=0.45 vscale=0.515}
+}
+\put(82,-1){\framebox(39,45){}}
+\end{picture}
+\caption{Image used for testing ``Low-Level'' grouping algorithms}
+\label{fig:poly}
+\end{figure}
+
+ The results of groupings with associated Quality factor greater than or equal 
+to 0.5, and using a limiting angle of 0.06 radians, are displayed in 
+Table 1. The length of the line segments extracted using the
+Hough transform were constrained to be above 10 pixels. Starting with an 
+ASCII list of 39 extracted line segments the  
+grouping was performed in 0.66 CPU seconds (excluding I/O) on a Sun SLC. 
+Each column in the table contains the identification numbers associated with
+line segments forming the grouping type indicated at the top of the table. In order
+to show how the Quality factor may be used effectively in filtering unlikely
+groupings, we have applied the algorithm to the same set of lines and
+limiting angles used in the formation of Table 1, but 
+using a limiting Quality factor of 0.3. The results  are presented 
+in Table 2 and the corresponding processing time was 
+0.57 CPU seconds. 
+
+\section{Summary and Conclusions}
+
+ We have also applied the algorithm to other lists of line segments extracted
+from images of various indoor scenes. The computation time, using the same 
+limiting angle and, for limiting Quality factors of 0.5, range from 3 to 60
+seconds for a lists containing approximately 100 to 320 line segments. 
+In conclusion we
+believe that the formalism presented is sufficiently flexible that it may be
+used in varied applications in which the user wishes to extract a limited set
+of groupings from a set of line segments. The most important attribute of the
+proposed groupings is the Quality factor. This parameter allows us to handle
+the combinatorial explosion of groupings by focusing the attention of the
+system on those groupings which are near ideal. In general we would initially
+look for high Quality groupings, and use these to initiate new image
+understanding tasks. Since we may determine a worst-case time scale for the
+formation of the groupings, given the number of line segments in the image, the
+resources which need to be allocated to the grouping process, and the limiting
+Quality factor, may be easily determined. Current work involves the construction
+of the intermediate level of the LPEG system which uses these groupings in the
+formation of closed sets. 
+
+\begin{thebibliography}{1}
+
+\vspace*{-2mm}
+\bibitem[{\em Crowley et al.,} 1989] {crowley89} 
+J.L. Crowley, A. Chehikian, J. Kittler, J. Illingworth, J.O. Eklundh, 
+G. Granlund, J. Wiklund, E. Granum and H.I. Christensen, Vision as Process 
+Technical Annex ESPRIT-BRA 3038, University of Aalborg,1989.
+\vspace*{-2mm}
+\bibitem[{\em Faugeras,} 1990] {faugeras90}
+O. Faugeras (Ed.), Computer Vision, ECCV 90.
+\vspace*{-2mm}
+\bibitem[{\em Horaud et al.,} 1990] {horaud90}
+R. Horaud, and F. Veillon, Finding geometric and relational structures in an
+image, First ECCV, 52, 57-77, 1990.
+\vspace*{-2mm}
+\bibitem[{\em Lowe} 1987] {lowe87}
+D.G. Lowe, Three-dimensional object recognition from single two-dimensional 
+images, AI 31, 355-395, 1987.
+\vspace*{-2mm}
+\bibitem[{\em Mohan et al.,} 1989] {mohan89}
+R. Mohan and R. Nevatia, Using perceptual organization to extract 3-D 
+structures, T-PAMI 11, 1121-1139, 1989.
+\vspace*{-2mm}
+\bibitem[{\em Weiss et al.,} 1986] {weiss86}
+R. Weiss and M. Boldt, Geometric grouping applied to straight lines, 
+CVPR, 489-495, 1986.
+
+\end{thebibliography}
+
+\input Tables/Polyhedron1
+\input Tables/Polyhedron2
+
+\end{document}
