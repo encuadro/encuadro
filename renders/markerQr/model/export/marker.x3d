@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D version="3.0" profile="Immersive" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="http://www.web3d.org/specifications/x3d-3.0.xsd">
+	<head>
+		<meta name="filename" content="marker.x3d" />
+		<meta name="generator" content="Blender 2.58 (sub 0)" />
+	</head>
+	<Scene>
+		<NavigationInfo headlight="false"
+		                visibilityLimit="0.0"
+		                type='"EXAMINE", "ANY"'
+		                avatarSize="0.25, 1.75, 0.75"
+		                />
+		<Background DEF="WO_World"
+		            groundColor="0.0509 0.0509 0.0509"
+		            skyColor="0.0509 0.0509 0.0509"
+		            />
+		<Transform DEF="Cube"
+		           translation="0 0 0"
+		           scale="1 1 1"
+		           rotation="0 0.707107 0.707107 3.14159"
+		           >
+			<Transform 
+			           translation="0 0 0"
+			           scale="1 1 1"
+			           rotation="1 0 0 0"
+			           >
+				<Group DEF="group_ME_Cube">
+					<Shape>
+						<Appearance>
+							<Material DEF="MA_Material"
+							          diffuseColor="0.8 0.8 0.8"
+							          specularColor="0.401 0.401 0.401"
+							          emissiveColor="0 0 0"
+							          ambientIntensity="0.333"
+							          shininess="0.0977"
+							          transparency="0.0"
+							          />
+						</Appearance>
+						<IndexedTriangleSet solid="true"
+						                    index="0 1 2 0 2 3 4 5 6 4 6 7 0 4 7 0 7 1 1 7 6 1 6 2 2 6 5 2 5 3 4 0 3 4 3 5 "
+						                    >
+							<Coordinate point="1 1 -1 1 -1 -1 -1 -1 -1 -1 1 -1 1 0.999999 1 -1 1 1 -1 -1 1 0.999999 -1 1 " />
+						</IndexedTriangleSet>
+					</Shape>
+				</Group>
+			</Transform>
+		</Transform>
+		<Transform DEF="Lamp"
+		           translation="-4.07625 5.90386 1.00545"
+		           scale="1 1 1"
+		           rotation="-0.498084 -0.762016 -0.413815 1.51388"
+		           >
+			<PointLight DEF="LA_Lamp"
+			            ambientIntensity="0"
+			            color="1 1 1"
+			            intensity="0.5714"
+			            radius="30" 
+			            location="-8.941e-08 -3.576e-07 4.619e-07"
+			            />
+		</Transform>
+		<Transform DEF="Camera"
+		           translation="-7.48113 5.34367 -6.50764"
+		           scale="1 1 1"
+		           rotation="-0.0930392 -0.968741 -0.229967 2.34704"
+		           >
+			<Viewpoint DEF="CA_Camera"
+			           centerOfRotation="0 0 0"
+			           position="0.00 0.00 -0.00"
+			           orientation="-0.00 0.00 0.00 0.00"
+			           fieldOfView="0.858"
+			           />
+		</Transform>
+	</Scene>
+</X3D>
