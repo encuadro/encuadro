@@ -53,18 +53,19 @@ double* list;
 double*listFiltrada;
 //double** esquinas;
 
-double **imagePoints;
+double **imagePoints,**imagePointsCrop;
 int listSize;
 int listFiltradaSize;
-float distance_thr=16;
+float distance_thr=20;
 double rotacion[9];
 double traslacion[3];
 bool bandera;
 
 /*Variables para el Coplanar*/
-int NumberOfPoints=36;  
+int NumberOfPoints=36;
+int cantPtosDetectados;
 long int i;
-double **object, f=460.43; /*f: focal length en pixels*/
+double **object, **objectCrop, f=460.43; /*f: focal length en pixels*/
 bool PosJuani=true;
 bool errFlag1=false,errFlag2=false,errFlag=false;/*bandera para control de errores del filtro*/
 
@@ -170,7 +171,7 @@ double **imagePointsCambiados;
             
             /*Se corre el LSD*/	
             
-            list = lsd_scale(&listSize, luminancia, width, height,0.6);
+            list = lsd_scale(&listSize, luminancia, width, height,0.8);
             
             /************************************************FILTRADO*/
             
@@ -189,10 +190,10 @@ double **imagePointsCambiados;
             /* Verificacion de salida filtro*/
             for (int j=0;j<NumberOfPoints;j++){
                 if (!errFlag1) {
-                    errFlag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000)||(imagePoints[j][0]<0.1)||(imagePoints[j][1]<0.1);
+                    errFlag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000);
                 }    
                 else {
-                    errFlag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000)||(imagePoints[j][0]<0.1)||(imagePoints[j][1]<0.1);
+                    errFlag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000);
                     
                 }
                 errFlag=errFlag1&&errFlag2;
@@ -202,9 +203,12 @@ double **imagePointsCambiados;
             
             
             if (!errFlag) {
+                
+                cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
+                
                 /* eleccion de algoritmo de pose*/
                 if (PosJuani){
-                    CoplanarPosit(NumberOfPoints, imagePoints, object, f, center, Rotmodern, Tras);
+                    CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
                     for(int i=0;i<3;i++){
                         for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
                         Transa[i]=Tras[i];
@@ -214,10 +218,10 @@ double **imagePointsCambiados;
                 else {
                     for (int k=0;k<36;k++)
                     {
-                        imagePoints[k][0]=imagePoints[k][0]-center[0];
-                        imagePoints[k][1]=imagePoints[k][1]-center[1];
+                        imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
+                        imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
                     }
-                    Composit(NumberOfPoints,imagePoints,object,f,Rota,Transa);
+                    Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rota,Transa);
                 }
             }
             printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
@@ -289,8 +293,16 @@ double **imagePointsCambiados;
 - (void) reservarMemoria {
     
     printf("Reservamos memoria");
-    free(object);
-//    free(coplMatrix);
+//    for(int i=0;i<NumberOfPoints;i++){
+//        free(objectCrop[i]);
+//        free(object[i]);
+//        free(imagePoints[i]);
+//        free(imagePointsCrop[i]);
+//    }
+//    free(object);
+//    free(objectCrop);
+//    free(imagePoints);
+//    free(imagePointsCrop);
     free(pixels);
     free(Rotmodern);
     free(Tras);
@@ -303,7 +315,13 @@ double **imagePointsCambiados;
     
     object=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) object[i]=(double *)malloc(3 * sizeof(double));
+
+    objectCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
+    for (i=0;i<NumberOfPoints;i++) objectCrop[i]=(double *)malloc(3 * sizeof(double));
     
+    imagePointsCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
+    for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(double *)malloc(2 * sizeof(double));
+
 //    coplMatrix=(double **)malloc(3 * sizeof(double *));
 //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));
     

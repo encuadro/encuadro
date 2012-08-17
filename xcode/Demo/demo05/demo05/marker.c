@@ -2,12 +2,20 @@
 #include "marker.h"
 #include "segments.h"
 #include <math.h>
+#include <stdlib.h>
 
 int QlId = 1;
 
 #define ANGLE_TH 15
+#define PERIMETER_TH 10
 
-quadrilateral quadrilateralNew(double vertices[4][2]){
+int compare_quadrilateral_perimeter(const void* a, const void* b) {
+    struct quadrilateral* qa = (struct quadrilateral *)a;
+	struct quadrilateral* qb = (struct quadrilateral *)b;
+	return (int)( ( (*qa).perimeter > (*qb).perimeter ) - ( (*qa).perimeter < (*qb).perimeter) ) ;
+}
+
+quadrilateral quadrilateralNew(double vertices[QL_NB_VERTICES][2]){
 
 	quadrilateral ql;
 	double sidelength;
@@ -39,11 +47,17 @@ quadrilateralSet quadrilateralSetNew(quadrilateral ql[QLSET_NB_QLS]){
 
 	VEC_ZERO_2(qlSet.center);
 
+	double count = 0;
 	for (int i=0;i<QLSET_NB_QLS;i++){
 		qlSet.ql[i] = ql[i];
-		qlSet.center[0]+=(1.0/QLSET_NB_QLS)*qlSet.ql[i].center[0];
-		qlSet.center[1]+=(1.0/QLSET_NB_QLS)*qlSet.ql[i].center[1];
+		if (qlSet.ql[i].id!=-1){
+			qlSet.center[0]+=qlSet.ql[i].center[0];
+			qlSet.center[1]+=qlSet.ql[i].center[1];
+			count++;
+		}
 	}
+	qlSet.center[0]/=count;
+	qlSet.center[1]/=count;
 
 	qlSet.id = 0; //constructed - not assigned
 
@@ -87,21 +101,26 @@ int orderMarkerVertices(markerQr *marker){
 	for (int i=0;i<MRKR_NB_QLSETS;i++){
 		for (int j=0;j<QLSET_NB_QLS;j++){
 
+
 			/*FIXME: implement circular shift for less general but better performance (?) */
 			for(int k=0;k<QL_NB_VERTICES;k++){
 
-				VEC_DIFF_2(vect, marker->qlSet[i].ql[j].vertices[k],marker->qlSet[i].center);
-				VEC_DOT_PRODUCT_2(px,vect,marker->directions[0]);
-				VEC_DOT_PRODUCT_2(py,vect,marker->directions[1]);
+				if ((marker->qlSet[i].ql[j].id) == -1){
+					VEC_COPY_2(temp_vertices[k], marker->qlSet[i].ql[j].vertices[k]);
+				} else {
+					VEC_DIFF_2(vect, marker->qlSet[i].ql[j].vertices[k],marker->qlSet[i].center);
+					VEC_DOT_PRODUCT_2(px,vect,marker->directions[0]);
+					VEC_DOT_PRODUCT_2(py,vect,marker->directions[1]);
 
-				if (px>=0 && py>=0){
-					VEC_COPY_2(temp_vertices[0],marker->qlSet[i].ql[j].vertices[k]);
-				} else if (px>=0 && py<=0){
-					VEC_COPY_2(temp_vertices[1],marker->qlSet[i].ql[j].vertices[k]);
-				} else if (px<=0 && py<=0){
-					VEC_COPY_2(temp_vertices[2],marker->qlSet[i].ql[j].vertices[k]);
-				} else if (px<=0 && py>=0){
-					VEC_COPY_2(temp_vertices[3],marker->qlSet[i].ql[j].vertices[k]);
+					if (px>=0 && py>=0){
+						VEC_COPY_2(temp_vertices[0],marker->qlSet[i].ql[j].vertices[k]);
+					} else if (px>=0 && py<=0){
+						VEC_COPY_2(temp_vertices[1],marker->qlSet[i].ql[j].vertices[k]);
+					} else if (px<=0 && py<=0){
+						VEC_COPY_2(temp_vertices[2],marker->qlSet[i].ql[j].vertices[k]);
+					} else if (px<=0 && py>=0){
+						VEC_COPY_2(temp_vertices[3],marker->qlSet[i].ql[j].vertices[k]);
+					}
 				}
 			}
 			for(int l=0;l<QL_NB_VERTICES;l++)
@@ -111,7 +130,7 @@ int orderMarkerVertices(markerQr *marker){
 	return 0;
 }
 
-quadrilateral* getQlList(int listSize, double *list){
+int getQlList(int listSize, double *list, quadrilateral *qlList){
 
 	double center_thr = 25;
 	int listDim = 7;
@@ -120,10 +139,6 @@ quadrilateral* getQlList(int listSize, double *list){
 	int I[4];
 
 	double vertices[4][2];
-
-	quadrilateral *qlList;
-	qlList=(quadrilateral *)malloc((NP/4) * sizeof(quadrilateral));
-
 
 	for (i=0;i<NP;i+=QL_NB_VERTICES){
 		I[0]=i; I[1]=i+1; I[2]=i+2; I[3]=i+3;
@@ -166,15 +181,147 @@ quadrilateral* getQlList(int listSize, double *list){
 		qlList[i/QL_NB_VERTICES] = quadrilateralNew(vertices);
 	}
 
-	return qlList;
+	return 0;
 }
 
-quadrilateralSet getQlSet(int qlListSize, quadrilateral *qlList ){
+int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet){
 
-	quadrilateral *ql;
-	ql=(quadrilateral *)malloc(QLSET_NB_QLS * sizeof(quadrilateral));
+	/*sanity check*/
+	int markerIsComplete=1;
+	int markerIsSufficient=0;
+	int count=0;
+	for (int i=0;i<MRKR_NB_QLSETS;i++){
+		markerIsComplete&=(qlSet[i].id==1);
+		markerIsSufficient|=(qlSet[i].id==1);
+		count+=(qlSet[i].id==1);
+	}
 
-	quadrilateralSet qlSet;
+	printf("markerIsComplete: %d\n",markerIsComplete);
+	printf("markerIsSufficient: %d\n",markerIsSufficient);
+
+	if (markerIsComplete==1)
+		return 1;
+	else if (markerIsSufficient==0)
+		return -1;
+
+	/*get mean perimeters*/
+	double perimeter[3] = { 0 , 0 , 0 };
+	for (int i=0;i<MRKR_NB_QLSETS;i++){
+		if (qlSet[i].id==1){
+			for (int j=0;j<QLSET_NB_QLS;j++)
+				perimeter[j]+=qlSet[i].ql[j].perimeter;
+		}
+	}
+	for (int j=0;j<QLSET_NB_QLS;j++) perimeter[j]/=count;
+
+	printf("perimeters: %f %f %f\n",perimeter[0],perimeter[1],perimeter[2]);
+
+	/*get QlSet*/
+	for (int i=0;i<MRKR_NB_QLSETS;i++){
+		if (qlSet[i].id==-1){
+			getIncompleteQlSet(qlListSize, qlList, &qlSet[i], perimeter);
+		}
+
+		printf("id %d: %d\n",i,(qlSet[i].id));
+		printf("ql ids: %d %d %d\n", qlSet[i].ql[0].id, qlSet[i].ql[1].id, qlSet[i].ql[2].id);
+		printf("perimeters good: %f %f %f\n", qlSet[i].ql[0].perimeter, qlSet[i].ql[1].perimeter, qlSet[i].ql[2].perimeter);
+
+	}
+
+	return 0;
+}
+
+int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]){
+
+	quadrilateral ql[QLSET_NB_QLS];
+
+	double cicj[2];
+	double dist_cicj;
+	int found=0;
+
+	for(int i=0;i<qlListSize;i++){
+		if (qlList[i].id<1){
+
+			for (int j=i+1;j<qlListSize;j++){
+				if (qlList[j].id<1){
+					VEC_DIFF_2(cicj, qlList[i].center, qlList[j].center);
+					VEC_LENGTH_2(dist_cicj,cicj);
+					if (dist_cicj<QL_CENTER_TH){
+
+									qlList[i].id=QlId++; qlList[j].id=QlId++;
+									ql[0]=qlList[i]; ql[1]=qlList[j];
+
+									orderIncompleteQlArr(ql,perimeter);
+									(*qlSet) = quadrilateralSetNew(ql);
+									(*qlSet).id = 2;
+									found = 1;
+									printf("found incomplete\n");
+									return 0;
+						}
+					}
+				}
+			}
+		}
+	return -1;
+}
+
+int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]){
+
+	double verticesDummy[4][2] = {{-1,-1},{-1,-1},{-1,-1},{-1,-1}};
+	quadrilateral qlTemp, qlDummy;
+	qlDummy = quadrilateralNew(verticesDummy);
+	qlDummy.id = -1;
+
+	int checks[QLSET_NB_QLS] = {0,0,0};
+	/*match ql[0-1].perimeter with corresponding perimeters*/
+	for(int i=0;i<QLSET_NB_QLS-1;i++){
+		for(int j=0;j<QLSET_NB_QLS;j++){
+			if (fabs(ql[i].perimeter-perimeter[j]<PERIMETER_TH)){
+				checks[i] = 1;
+				break;
+			}
+		}
+	}
+	/*the one unmatched is assigned to qlDummy for correct sorting*/
+	int found = 1;
+	for(int i=0;i<QLSET_NB_QLS;i++){
+		if (checks[i]!=1){
+			ql[2] = qlDummy;
+			ql[2].perimeter = perimeter[i];
+			found = 1;
+			break;
+		}
+
+	}
+
+	/*sort*/
+	if (found==1)
+		qsort (ql, 3, sizeof(quadrilateral), compare_quadrilateral_perimeter);
+	else
+		return -1;
+
+	return 0;
+}
+
+int getQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet){
+
+	for (int i=0;i<MRKR_NB_QLSETS;i++){
+		qlSet[i].id = -1;
+		getQlSet(qlListSize, qlList, &qlSet[i]);
+
+		printf("id %d: %d\n",i,(qlSet[i].id));
+		printf("ql ids: %d %d %d\n", qlSet[i].ql[0].id, qlSet[i].ql[1].id, qlSet[i].ql[2].id);
+		printf("perimeters good: %f %f %f\n", qlSet[i].ql[0].perimeter, qlSet[i].ql[1].perimeter, qlSet[i].ql[2].perimeter);
+
+	}
+
+	return 0;
+}
+
+int getQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet ){
+
+	quadrilateral ql[QLSET_NB_QLS];
+	//ql=(quadrilateral *)malloc(QLSET_NB_QLS * sizeof(quadrilateral));
 
 	double cicj[2], cick[2];
 	double dist_cicj, dist_cick;
@@ -183,11 +330,13 @@ quadrilateralSet getQlSet(int qlListSize, quadrilateral *qlList ){
 	/*FIXME: find a more general way. store indexes. two nested for's not three*/
 	for(int i=0;i<qlListSize;i++){
 		if (qlList[i].id<1){
+
 			for (int j=i+1;j<qlListSize;j++){
 				if (qlList[j].id<1){
 					VEC_DIFF_2(cicj, qlList[i].center, qlList[j].center);
 					VEC_LENGTH_2(dist_cicj,cicj);
 					if (dist_cicj<QL_CENTER_TH){
+
 						for (int k=j+1;k<qlListSize;k++){
 							if (qlList[k].id<1){
 								VEC_DIFF_2(cick, qlList[i].center, qlList[k].center);
@@ -198,23 +347,22 @@ quadrilateralSet getQlSet(int qlListSize, quadrilateral *qlList ){
 									ql[0]=qlList[i]; ql[1]=qlList[j]; ql[2]=qlList[k];
 
 									orderQlArr(ql);
-									qlSet = quadrilateralSetNew(ql);
+									(*qlSet) = quadrilateralSetNew(ql);
+									(*qlSet).id = 1;
 									found = 1;
-									break;
+									printf("found\n");
 
+									return 0;
 								}
 							}
-						if (found > 0) break;
 						}
 					}
 				}
-				if (found > 0) break;
 			}
 		}
-		if (found > 0) break;
 	}
 
-	return qlSet;
+	return -1;
 }
 
 int orderQlArr(quadrilateral *ql){
@@ -227,19 +375,22 @@ int orderQlArr(quadrilateral *ql){
 	 * 		int comparison_fn_t (const void *, const void *)
 	 *
 	 * Usage:
-	 * 		qsort (&ql, 3, 3*sizeof(quadrilateral), compare_qlarray_perimeter);
+	 * 		qsort (ql, 3, sizeof(quadrilateral), compare_qlarray_perimeter);
 	 *
-	 * 		int compare_qlarray_perimeter(const void* a, const void* b) {
-	 * 		    struct quadrilateral* q0 = (struct quadrilateral *)a;
-     *			struct quadrilateral* q1 = (struct quadrilateral *)b;
-     *			return (int)( (*q0).perimeter - (*q1).perimeter);
+	 * 		int compare_quadrilateral_perimeter(const void* a, const void* b) {
+	 * 		    struct quadrilateral* qa = (struct quadrilateral *)a;
+     *			struct quadrilateral* qb = (struct quadrilateral *)b;
+     *			return (int)( ( (*qa).perimeter > (*qb).perimeter ) - ( (*qa).perimeter < (*qb).perimeter) ) ;
 	 * 		}
 	 */
+
+	qsort (ql, 3, sizeof(quadrilateral), compare_quadrilateral_perimeter);
+
 	quadrilateral qlTemp;
 
 	/*order quadrilaterals*/
-	if (( ql[0].perimeter < ql[1].perimeter) && ( ql[1].perimeter < ql[2].perimeter )){
-		/* order already done */
+/*	if (( ql[0].perimeter < ql[1].perimeter) && ( ql[1].perimeter < ql[2].perimeter )){
+		// order already done
 	} else if (( ql[0].perimeter < ql[2].perimeter) && ( ql[2].perimeter < ql[1].perimeter )){
 		qlTemp = ql[1];
 		ql[1] = ql[2];
@@ -263,19 +414,17 @@ int orderQlArr(quadrilateral *ql){
 		ql[0] = ql[2];
 		ql[2] = qlTemp;
 	} else	{	return 1;	}
-
+*/
 	return 0;
 }
 
-markerQr getMarker(quadrilateralSet qlSet[MRKR_NB_QLSETS]){
+int getMarker(quadrilateralSet *qlSet, markerQr *marker){
 
-	markerQr marker;
-
-	//orderQlSetArr(qlSet);
 	orderQlSetArr2(qlSet);
-	marker = markerQrNew(qlSet);
+	*marker = markerQrNew(qlSet);
+	orderMarkerVertices(marker);
 
-	return marker;
+	return 0;
 }
 
 int orderQlSetArr2(quadrilateralSet *qlSet){
@@ -388,10 +537,13 @@ int orderQlSetArr(quadrilateralSet *qlSet){
 			break;
 		}
 	}
-
-	for (int i=0;i<MRKR_NB_QLSETS;i++)
+/*
+	idx
+	for (int i=0;i<MRKR_NB_QLSETS;i++) {
 		qlSet[i] = qlSetTemp[i];
-
+		if (qlSet[i].id == -1)
+	}
+*/
 	if (ref_index!=-1)
 		return 0;
 	else
@@ -402,64 +554,81 @@ double** findPointCorrespondances(int *listSize, double *list){
 
 	double** imgPts;
 
-	if (*listSize<36){
-		/*get memory*/
-		imgPts=(double **)malloc(36* sizeof(double *));
-		for (int i=0;i<36;i++){
-			imgPts[i]=(double *)malloc(2 * sizeof(double));
-			imgPts[i][0] = 0; imgPts[i][1] = 0;
-		}
-		return imgPts;
+	/*get memory*/
+	imgPts=(double **)malloc(36* sizeof(double *));
+	for (int i=0;i<36;i++){
+		imgPts[i]=(double *)malloc(2 * sizeof(double));
+		imgPts[i][0] = 0; imgPts[i][1] = 0;
 	}
 
-	quadrilateral *qlList;
-	//quadrilateralSet qlSet[QLSET_NB_QLS];
-	quadrilateralSet *qlSet;
-	qlSet=(quadrilateralSet *)malloc(QLSET_NB_QLS * sizeof(quadrilateralSet));
-	markerQr marker;
+	printf("-------\n");
+	printf("number of segments: %d\n",*listSize);
 
-	qlList = getQlList(*listSize, list);
+	if (*listSize>=28){
+		quadrilateral qlList[*listSize/4];
+		quadrilateralSet qlSet[QLSET_NB_QLS];
+		markerQr marker;
 
-	for (int i=0;i<MRKR_NB_QLSETS;i++)
-		qlSet[i] = getQlSet(*listSize, qlList);
+		getQlList(*listSize, list, qlList);
+		getQlSetArr(*listSize/4, qlList, qlSet);
 
-	marker = getMarker(qlSet);
-	orderMarkerVertices(&marker);
+		int check;
+		check = getIncompleteQlSetArr(*listSize/4, qlList, qlSet);
+		if (check ==-1)
+				return imgPts;
 
-	//free((void *)qlList);
-	//free((void *)qlSet);
-
-	imgPts = getMarkerVertices(marker);
+		getMarker(qlSet, &marker);
+		getMarkerVertices(marker,imgPts);
+	}
 
 	return imgPts;
 
 }
 
-double** getMarkerVertices(markerQr marker){
+int getMarkerVertices(markerQr marker,double **imgPts){
 
-	double** imgPts;
 	int NP = MRKR_NB_QLSETS*QLSET_NB_QLS*QL_NB_VERTICES;
-
-	/*get memory*/
-	imgPts=(double **)malloc(NP* sizeof(double *));
-	for (int i=0;i<NP;i++){
-		imgPts[i]=(double *)malloc(2 * sizeof(double));
-		imgPts[i][0] = 0; imgPts[i][1] = 0;
-	}
 
 	int contador = 0;
 	for(int i=0;i<MRKR_NB_QLSETS;i++){
 		for(int j=0;j<QLSET_NB_QLS;j++){
 			for(int k=0;k<QL_NB_VERTICES;k++){
-				//printf("%d\n",i*MRKR_NB_QLSETS+j*QLSET_NB_QLS+k);
-				//VEC_COPY_2(imgPts[i*MRKR_NB_QLSETS+j*QLSET_NB_QLS+k], marker.qlSet[i].ql[j].vertices[k]);
 				VEC_COPY_2(imgPts[contador], marker.qlSet[i].ql[j].vertices[k]);
 				contador++;
 			}
 		}
 	}
 
-	return imgPts;
+	return 0;
+}
+
+int getCropLists(double** imagePts, double** worldPts, double
+                 **imagePtsCrop, double **worldPtsCrop){
+    int k=0;
+    for (int i=0; i<36; i++) {
+        if ((imagePts[i][0]!=-1)&&(imagePts[i][1]!=-1)) {
+            imagePtsCrop[k][0]=imagePts[i][0];
+            imagePtsCrop[k][1]=imagePts[i][1];
+            
+            worldPtsCrop[k][0]=worldPts[i][0];
+            worldPtsCrop[k][1]=worldPts[i][1];
+            worldPtsCrop[k][2]=worldPts[i][2];
+            k++;
+        }
+    }
+//    printf("IMG POINTS CROP: \n");
+//    for (int i=0; i<k; i++) {
+//        printf("%g\t%g\n",imagePtsCrop[i][0],imagePtsCrop[i][1]);
+//    }
+//    
+//    printf("\nWORLD POINTS CROP: \n");
+//    
+//    for (int i=0; i<k; i++) {
+//        printf("%g\t%g\t%g\n",worldPtsCrop[i][0],worldPtsCrop[i][1],worldPtsCrop[i][2]);
+//    }
+    
+    return k;
+    
 }
 
 

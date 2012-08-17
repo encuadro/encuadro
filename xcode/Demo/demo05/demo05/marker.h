@@ -5,7 +5,7 @@
 #define QL_NB_VERTICES 4
 #define QLSET_NB_QLS 3
 #define MRKR_NB_QLSETS 3
-#define QL_CENTER_TH 5
+#define QL_CENTER_TH 10
 
 #define MY_PI 3.14159265358979323846
 
@@ -56,11 +56,12 @@ markerQr markerQrNew(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
 
 /*-----functions------*/
 double** findPointCorrespondances(int *listSize, double *list);
-double** getMarkerVertices(markerQr marker);
+int getMarkerVertices(markerQr marker, double **imgPts);
 
-quadrilateral* getQlList(int listSize, double *list);
-quadrilateralSet getQlSet(int qlListSize, quadrilateral *qlList);
-markerQr getMarker(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
+int getQlList(int listSize, double *list, quadrilateral *qlList);
+int getQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet );
+int getQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet);
+int getMarker(quadrilateralSet *qlSet, markerQr *marker);
 int getQlSetArrDirections(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
 
 int orderQlArr(quadrilateral *ql);
@@ -68,4 +69,8 @@ int orderQlSetArr(quadrilateralSet *qlSet);
 int orderQlSetArr2(quadrilateralSet *qlSet);
 int orderMarkerVertices(markerQr *marker);
 
+int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]);
+int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet);
+int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]);
+int getCropLists(double **imagePts, double **worldPts, double **imagePtsCrop, double **worldPtsCrop);
 
