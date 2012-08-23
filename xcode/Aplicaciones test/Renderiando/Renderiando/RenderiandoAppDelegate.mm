@@ -9,7 +9,6 @@
 
 #import "RenderiandoAppDelegate.h"
 #import "Isgl3dViewController.h"
-#import "HelloWorldView.h"
 #import "Isgl3d.h"
 
 @implementation RenderiandoAppDelegate
@@ -17,26 +16,23 @@
 @synthesize window = _window;
 
 - (void) applicationDidFinishLaunching:(UIApplication*)application {
-
+    
 	// Create the UIWindow
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	
 	// Instantiate the Isgl3dDirector and set background color
-	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff"; 
-
-	// Set the device orientation
-	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
-
+	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
+    
 	// Set the director to display the FPS
-	[Isgl3dDirector sharedInstance].displayFPS = YES; 
-
+	[Isgl3dDirector sharedInstance].displayFPS = YES;
+    
 	// Create the UIViewController
 	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
 	_viewController.wantsFullScreenLayout = YES;
 	
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
-
+    
 	// Set view in director
 	[Isgl3dDirector sharedInstance].openGLView = glView;
 	
@@ -45,23 +41,23 @@
 	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
 	
 	// Enable retina display : uncomment if desired
-//	[[Isgl3dDirector sharedInstance] enableRetinaDisplay:YES];
-
+    //	[[Isgl3dDirector sharedInstance] enableRetinaDisplay:YES];
+    
 	// Enables anti aliasing (MSAA) : uncomment if desired (note may not be available on all devices and can have performance cost)
-//	[Isgl3dDirector sharedInstance].antiAliasingEnabled = YES;
+    //	[Isgl3dDirector sharedInstance].antiAliasingEnabled = YES;
 	
 	// Set the animation frame rate
 	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
-
+    
 	// Add the OpenGL view to the view controller
 	_viewController.view = glView;
-
+    
 	// Add view to window and make visible
-	[_window addSubview:_viewController.view];
+	[_window addSubview:glView];
 	[_window makeKeyAndVisible];
-
+    
 	// Creates the view(s) and adds them to the director
-	[[Isgl3dDirector sharedInstance] addView:[HelloWorldView view]];
+	[self createViews];
 	
 	// Run the director
 	[[Isgl3dDirector sharedInstance] run];
@@ -76,6 +72,10 @@
 	}
 	
 	[super dealloc];
+}
+
+- (void) createViews {
+	// Implement in sub-classes
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application {
@@ -98,7 +98,7 @@
 	// Remove the OpenGL view from the view controller
 	[[Isgl3dDirector sharedInstance].openGLView removeFromSuperview];
 	
-	// End and reset the director	
+	// End and reset the director
 	[Isgl3dDirector resetInstance];
 	
 	// Release

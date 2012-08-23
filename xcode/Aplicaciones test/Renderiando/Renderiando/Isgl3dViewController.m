@@ -11,34 +11,34 @@
 
 @implementation Isgl3dViewController
 
-- (void) dealloc {    
+- (void) dealloc {
     [super dealloc];
 }
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-
+    
 	isgl3dAllowedAutoRotations allowedAutoRotations = [Isgl3dDirector sharedInstance].allowedAutoRotations;
 	if ([Isgl3dDirector sharedInstance].autoRotationStrategy == Isgl3dAutoRotationNone) {
 		return NO;
-	
+        
 	} else if ([Isgl3dDirector sharedInstance].autoRotationStrategy == Isgl3dAutoRotationByIsgl3dDirector) {
 		
 		if (interfaceOrientation == UIInterfaceOrientationLandscapeLeft && allowedAutoRotations != Isgl3dAllowedAutoRotationsPortraitOnly) {
 			[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeRight;
-	
+            
 		} else if (interfaceOrientation == UIInterfaceOrientationLandscapeRight && allowedAutoRotations != Isgl3dAllowedAutoRotationsPortraitOnly) {
 			[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
-	
+            
 		} else if (interfaceOrientation == UIInterfaceOrientationPortrait && allowedAutoRotations != Isgl3dAllowedAutoRotationsLandscapeOnly) {
 			[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortrait;
-	
+            
 		} else if (interfaceOrientation == UIDeviceOrientationPortraitUpsideDown && allowedAutoRotations != Isgl3dAllowedAutoRotationsLandscapeOnly) {
 			[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortraitUpsideDown;
 		}
-	
+        
 		// Return true only for portrait
 		return  (interfaceOrientation == UIInterfaceOrientationPortrait);
-
+        
 	} else if ([Isgl3dDirector sharedInstance].autoRotationStrategy == Isgl3dAutoRotationByUIViewController) {
 		if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && allowedAutoRotations != Isgl3dAllowedAutoRotationsPortraitOnly) {
 			return YES;
@@ -62,9 +62,9 @@
 		CGRect screenRect = [[UIScreen mainScreen] bounds];
 		CGRect rect = CGRectZero;
 		
-		if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {		
+		if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			rect = screenRect;
-		
+            
 		} else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			rect.size = CGSizeMake( screenRect.size.height, screenRect.size.width );
 		}
@@ -77,7 +77,7 @@
 			rect.size.height *= contentScaleFactor;
 		}
 		glView.frame = rect;
-	}	
+	}
 }
 
 - (void) viewWillAppear:(BOOL)animated {
