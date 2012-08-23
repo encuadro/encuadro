@@ -10,8 +10,8 @@
 #ifdef __cplusplus
 #define demo04_simple_h
 
-#include "cml_config.h"   
-#include <cml/cml.h>
+//#include "cml_config.h"
+//#include <cml/cml.h>
 
 double* euler(double MatrizRotacion[3][3]);
 

@@ -15,7 +15,7 @@
 
 double* rgb2gray(unsigned char *pixels, int w, int h, int d)
 {
-       // printf("w: %-3d h: %-3d\n",w,h);
+        printf("w: %-3d h: %-3d\n",w,h);
         double* luminancia;
         luminancia = (double *) malloc(w*h*sizeof(double));
         
