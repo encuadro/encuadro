@@ -19,7 +19,7 @@
 #import "Composit.h"
 #import "CoplanarPosit.h"
 #import <stdlib.h>
-
+#import "configuration.h"
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     

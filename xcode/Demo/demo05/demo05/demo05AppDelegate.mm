@@ -10,12 +10,13 @@
 #import "demo05AppDelegate.h"
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
-//#import "simple.h"
+
 
 @implementation demo05AppDelegate
 
 @synthesize window = _window;
 
+bool verbose = FALSE;
 
 - (void) applicationDidFinishLaunching:(UIApplication*)application {
     /*Lo primero que se corre es este metodo*/

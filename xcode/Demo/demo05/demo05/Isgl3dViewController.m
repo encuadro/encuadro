@@ -65,7 +65,7 @@ bool bandera;
 int NumberOfPoints=36;
 int cantPtosDetectados;
 long int i;
-double **object, **objectCrop, f=460.43; /*f: focal length en pixels*/
+double **object, **objectCrop, f=615; //con 630 andaba bien /*f: focal length en pixels*/
 bool PosJuani=true;
 bool errFlag1=false,errFlag2=false,errFlag=false;/*bandera para control de errores del filtro*/
 
@@ -74,8 +74,8 @@ double Rota[3][3],Transa[3],Rot2[3][3],Trans2[3], Matriz[4][4];
 //modern coplanar requiere double** en lugar de [][]
 double *Tras;
 double **Rotmodern;                                 ///modern coplanar
-double center[2]={141.5, 134.5};           ///modern coplanar
-
+double center[2]={240, 180};           ///modern coplanar
+bool verbose;
 
 
 
@@ -97,9 +97,10 @@ double **imagePointsCambiados;
 
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
-    //  NSLog(time(tiempo));
-    //printf("captureOutput\n");
-    // NSLog(@"Empieza");
+     
+    if (verbose) NSLog(@"Capture output");
+   
+
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);  
     CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
@@ -155,7 +156,6 @@ double **imagePointsCambiados;
             /***************************************************************************/
             /*Esto es para solucionar el problema de memoria*/
             free(luminancia);
-            printf("width: %lu\n",width);
             /*Obtengo la imagen en nivel de grises en luminancia*/
             luminancia = rgb2gray(pixels,width,height,d);
             bandera = false;
@@ -170,9 +170,9 @@ double **imagePointsCambiados;
             /************************************************LSD*/
             
             /*Se corre el LSD*/	
-            
-            list = lsd_scale(&listSize, luminancia, width, height,0.8);
-            
+            NSLog(@"LSD in\n");
+            list = lsd_scale(&listSize, luminancia, width, height,0.55);
+            NSLog(@"LSD out\n");
             /************************************************FILTRADO*/
             
             /*Filtrado de segmentos detectados por el LSD */	
@@ -183,9 +183,10 @@ double **imagePointsCambiados;
             /*Correspondencias entre marcador real y puntos detectados*/
             imagePoints = findPointCorrespondances(&listFiltradaSize, listFiltrada);  
             
+            if (verbose){
             printf("Tamano: %d\n", listSize);
             printf("Tamano filtrada: %d\n", listFiltradaSize);           
-           
+            }
             
             /* Verificacion de salida filtro*/
             for (int j=0;j<NumberOfPoints;j++){
@@ -224,6 +225,8 @@ double **imagePointsCambiados;
                     Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rota,Transa);
                 }
             }
+            
+            if (verbose){
             printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
             printf("\nRotacion: \n");
             printf("%f\t %f\t %f\n",Rota[0][0],Rota[0][1],Rota[0][2]);
@@ -231,7 +234,7 @@ double **imagePointsCambiados;
             printf("%f\t %f\t %f\n",Rota[2][0],Rota[2][1],Rota[2][2]);
             printf("Traslacion: \n");
             printf("%f\t %f\t %f\n",Transa[0],Transa[1],Transa[2]);
-            
+            }
             
             /************************************************POSIT COPLANAR*/
             /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
@@ -252,11 +255,6 @@ double **imagePointsCambiados;
             /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
             
             
-            
-            //                printf("Solo declaro\n");
-            //                double rotacion[9];
-            //                printf("declare\n");
-            
             rotacion[0]=Rota[0][0];
             rotacion[1]=Rota[0][1];
             rotacion[2]=Rota[0][2];
@@ -272,17 +270,14 @@ double **imagePointsCambiados;
             Matrix2Euler(Rotmodern,angles1,angles2);
 //            self.isgl3DView.eulerAngles = angles1;
 
-            
-            printf("\nPrimera solicion\n");
+            if (verbose){
+            printf("\nPrimera solucion\n");
             printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             printf("\nSegunda solicion\n");
             printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+            }
             
             [self.isgl3DView setRotacion:rotacion];
-            
-            
-            
-            printf("Nueva traslacion\n");
             [self.isgl3DView setTraslacion:Transa];
                 
             
@@ -301,17 +296,8 @@ double **imagePointsCambiados;
 
 - (void) reservarMemoria {
     
-    printf("Reservamos memoria");
-//    for(int i=0;i<NumberOfPoints;i++){
-//        free(objectCrop[i]);
-//        free(object[i]);
-//        free(imagePoints[i]);
-//        free(imagePointsCrop[i]);
-//    }
-//    free(object);
-//    free(objectCrop);
-//    free(imagePoints);
-//    free(imagePointsCrop);
+    if (verbose) printf("Reservamos memoria");
+
     free(pixels);
     free(Rotmodern);
     free(Tras);
@@ -334,8 +320,8 @@ double **imagePointsCambiados;
 //    coplMatrix=(double **)malloc(3 * sizeof(double *));
 //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));
     
-    pixels = (unsigned char*) malloc(352*288*4*sizeof(unsigned char));
-    for (int i=0;i<288*352*4;i++)
+    pixels = (unsigned char*) malloc(480*360*4*sizeof(unsigned char));
+    for (int i=0;i<360*480*4;i++)
     {
         pixels[i]= INFINITY;
     }
@@ -537,13 +523,13 @@ double **imagePointsCambiados;
 
 - (void) viewDidLoad{
     
-    printf("viewDidLoad\n");
+    if (verbose) printf("viewDidLoad\n");
     
     [super viewDidLoad];    
     
     /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];
-    self.session.sessionPreset = AVCaptureSessionPreset352x288;
+    self.session.sessionPreset = AVCaptureSessionPresetMedium;
     
     /*Creamos al videoDevice*/
     self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];

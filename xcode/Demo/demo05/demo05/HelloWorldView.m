@@ -54,12 +54,13 @@
 @synthesize eulerAngles = _eulerAngles;
 
 
-double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-65/2,1}, puntoModelo3D2[4] = {-30,-30,-65,1}, puntoModelo3D3[4] = {30,30,-65,1}, puntoModelo3D4[4] = {0,0,-65,1};
+double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
 Isgl3dVector3 angles;
 double rotacion[3][3];
+bool verbose;
 
 - (void) setRotacion:(double*) rot
 {
@@ -80,44 +81,38 @@ double rotacion[3][3];
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
         
-        printf("init del HelloWorldView\n");
+        if (verbose) printf("init del HelloWorldView\n");
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:65 height:65 depth:65 nx:40 ny:40];       
+        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
         _cubito1 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
-        //        _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
-        //        _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+        _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+        _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         
         Isgl3dSphere * sphereMesh = [Isgl3dSphere meshWithGeometry:5 longs:40 lats:40];
         
-        _redondel1 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
-        _redondel2 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
-        _redondel3 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
+//        _redondel1 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
+//        _redondel2 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
+//        _redondel3 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
         
-        _cubito1.position = iv3(100,100,-1000);
-        //        _cubito2.position = iv3(-100,-100,-1000);
-        //        _cubito3.position = iv3(0,0,-1000);
-        _redondel1.position =  iv3(0,0,-1000);
-        _redondel2.position =  iv3(0,0,-1000);
-        _redondel3.position =  iv3(0,0,-1000);
+        _cubito1.position = iv3(0,0,-1000);
+        _cubito2.position = iv3(0,0,-1000);
+        _cubito3.position = iv3(0,0,-1000);
+//        _redondel1.position =  iv3(0,0,-1000);
+//        _redondel2.position =  iv3(0,0,-1000);
+//        _redondel3.position =  iv3(0,0,-1000);
         
         
         // Defnimos el lookAt de la camara.
         
-        self.camera.position = iv3(42,-2,0.1);
+        self.camera.position = iv3(0,0,0.1);
         //self.camera.position = iv3(0,0,0.1);
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];
         
         /*Seteamos el fov.*/
-        self.camera.fov = 36;
+        self.camera.fov = 32;
         
-        /*Seteamos las dimensiones de la imagen*/
-        //        self.camera.height = 288;
-        //        self.camera.width = 352;
-        //   printf("%f",self.camera.aspect);
-        
-        // Esto originalmente estaba descomentado
         [self schedule:@selector(tick:)];
 	}
 	return self;
@@ -131,7 +126,7 @@ double rotacion[3][3];
 
 - (void) tick:(float)dt {
 	// Rotate the text around the y axis
-    // NSLog(@"tick\n"); 
+     //NSLog(@"tick\n");
     if (self.traslacion != nil & rotacion!=nil)        
     {
         Matriz.sxx = rotacion[0][0];
@@ -155,10 +150,10 @@ double rotacion[3][3];
         Matriz.tw = 1;
         
         angles = im4ToEulerAngles(&Matriz);
-        
+        if (verbose){
         printf("\nisgl3d solucion\n");
         printf("psi1: %f\ntheta1: %f\nphi1: %f\n",angles.x,angles.y,angles.z);
-
+        }
         
         /*project CoplanarPosit*/
         float a[3],b[3];
@@ -185,68 +180,50 @@ double rotacion[3][3];
         VEC_SUM(punto3D3,a,self.traslacion);
        
         /*project CoplanarPosit*/
-        b[0]=puntoModelo3D4[0];
-        b[1]=puntoModelo3D4[1];
-        b[2]=puntoModelo3D4[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D4,a,self.traslacion);
+//        b[0]=puntoModelo3D4[0];
+//        b[1]=puntoModelo3D4[1];
+//        b[2]=puntoModelo3D4[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D4,a,self.traslacion);
         
-//        punto3D1 = mult(Matriz, puntoModelo3D1);
-//        
-//        punto3D2 = mult(Matriz, puntoModelo3D2);
-//        
-//        punto3D3 = mult(Matriz, puntoModelo3D3);
-//        
-//        punto3D4 = mult(Matriz, puntoModelo3D4);
-        
-        
+      
         if (punto3D1[0] < INFINITY)
         {
             
             _cubito1.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
-            //            _cubito2.position = iv3(punto3D2[1], -punto3D2[0], -punto3D2[2]);
-            //            _cubito3.position = iv3(punto3D3[1], -punto3D3[0], -punto3D3[2]);
-            _redondel1.position = iv3(punto3D4[0], -punto3D4[1], -punto3D4[2]);
-            _redondel2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
-            _redondel3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
-            //            printf("%f \t %f \t %f \n", punto3D3[1],-punto3D3[0],-punto3D3[2]);
-            //            printf("%f \t %f \t %f \n", punto3D1[1],-punto3D1[0],-punto3D1[2]);
+            _cubito2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
+            _cubito3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
+            
+//            _redondel1.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
+//            _redondel2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
+//            _redondel3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
+
             
             _cubito1.rotationX = 0;
             _cubito1.rotationY = 0;
             _cubito1.rotationZ = 0;
             
-            //            _cubito2.rotationX = 0;
-            //            _cubito2.rotationY = 0;
-            //            _cubito2.rotationZ = 0;
-            //               
-            //            _cubito3.rotationX = 0;
-            //            _cubito3.rotationY = 0;
-            //            _cubito3.rotationZ = 0;
+            _cubito2.rotationX = 0;
+            _cubito2.rotationY = 0;
+            _cubito2.rotationZ = 0;
+                           
+            _cubito3.rotationX = 0;
+            _cubito3.rotationY = 0;
+            _cubito3.rotationZ = 0;
             
-
-// Juani
-//            [self.cubito1 yaw:-self.eulerAngles[1]];
-//            [self.cubito1 pitch:self.eulerAngles[0]];
-//            [self.cubito1 roll:-self.eulerAngles[2]];
-
-            
-// Mauri
-//            [self.cubito1 yaw:self.eulerAngles[1]];
-//            [self.cubito1 pitch:-self.eulerAngles[0]];
-//            [self.cubito1 roll:self.eulerAngles[2]];
             
             [self.cubito1 pitch:angles.x];
             [self.cubito1 yaw:-angles.y];
             [self.cubito1 roll:-angles.z];
-            //
-            //            [self.cubito2 yaw:self.eulerAngles[1]];
-            //            [self.cubito2 pitch:self.eulerAngles[0]];
-            //            [self.cubito2 roll:self.eulerAngles[2]];
-            //               
-            //            [self.cubito3 yaw:self.eulerAngles[1]];
-            //            [self.cubito3 pitch:self.eulerAngles[0]];
-            //            [self.cubito3 roll:self.eulerAngles[2]];
+            
+            [self.cubito2 pitch:angles.x];
+            [self.cubito2 yaw:-angles.y];
+            [self.cubito2 roll:-angles.z];
+            
+            [self.cubito3 pitch:angles.x];
+            [self.cubito3 yaw:-angles.y];
+            [self.cubito3 roll:-angles.z];
+
             
         }
     }

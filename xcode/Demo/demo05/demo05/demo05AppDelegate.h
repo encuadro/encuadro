@@ -8,6 +8,7 @@
 
 #import "claseDibujar.h"
 #import "simple.h"
+#import "configuration.h"
 
 @class Isgl3dViewController;
 
