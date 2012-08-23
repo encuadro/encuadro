@@ -262,7 +262,8 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
 
     descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes1.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
-    imagen = "Blanes1.pgm";
+    //imagen = "Blanes - Retrato de la Sra. Carlota F. de R.";
+    imagen = "Blanes1.jpg";
     final_matches = correspondences;
     free(descriptors_base);
     
@@ -270,8 +271,9 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
-    imagen = "Blanes2.pgm";
-    final_matches = correspondences;
+    //imagen = "Blanes - Un episodio de la fiebre amarilla en Buenos Aires, c.1871";
+    imagen = "Blanes2.jpg";
+        final_matches = correspondences;
     }
     free(descriptors_base);
     
@@ -279,7 +281,8 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
-        imagen = "Figari1.pgm";
+    //imagen = "Figari - Toque de oración, c.1925";
+    imagen = "Figari1.jpg";
         final_matches = correspondences;
     }
     free(descriptors_base);
@@ -288,7 +291,8 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
-        imagen = "Figari2.pgm";
+    //imagen = "Figari - Candombe, c.1925";
+    imagen = "Figari2.jpg";
         final_matches = correspondences;
     }
     free(descriptors_base);
@@ -297,7 +301,8 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
-        imagen = "Torres1.pgm";
+    //imagen = "Torres Garcia - Arte universal, 1943";
+    imagen = "Torres1.jpg";
         final_matches = correspondences;
     }
    free(descriptors_base);
@@ -306,7 +311,8 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
-        imagen = "Torres2.pgm";
+    //imagen = "Torres Garcia - Interior, 1924";
+    imagen = "Torres2.jpg";
         final_matches = correspondences;
     }
     free(descriptors_base);
@@ -335,11 +341,10 @@ int main(int argc, const char * argv[])
     int* descriptors = 0;
     
     
-    const char* direccion = "/Users/pablofloresguridi/Desktop/images/Figari2.pgm";
+    //const char* direccion = "/Users/pablofloresguridi/Desktop/images/Figari2.pgm";
 
-    //const char* direccion = argv[1];
-    printf("La imagen %s ",direccion);
-    /*---------------------------------------------------Levantamos la imagen PNG y obtenemos los pixels--------------------------------------------*/
+    const char* direccion = argv[1];
+        /*---------------------------------------------------Levantamos la imagen PNG y obtenemos los pixels--------------------------------------------*/
     
     in = fopen (direccion, "rb") ;
     
@@ -369,7 +374,7 @@ int main(int argc, const char * argv[])
     sift(fdata, width, height,&nKeyPoints,&keyPoints,&descriptors);
 
     const char* image_out = buscarBaseDeDatos(nKeyPoints, descriptors);
-    printf("es igual a %s.\n",image_out);
+    printf("images/%s\n",image_out);
 //    descriptors2 = levantarDescriptor("/Users/pablofloresguridi/Desktop/descriptors/Blanes1.txt", &nKeyPoints2);
 //    
 //    Pair* pairs_begin = (Pair*) malloc(sizeof(Pair) * (nKeyPoints+nKeyPoints)) ;
