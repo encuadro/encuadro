@@ -11,7 +11,7 @@
 #import "HelloWorldView.h"
 #import "simple.h"
 
-extern "C" {    
+  
 #import "processing.h"
 #import "lsd.h"
 #import "segments.h"
@@ -19,7 +19,7 @@ extern "C" {
 #import "Composit.h"
 #import "CoplanarPosit.h"
 #import <stdlib.h>
-}
+
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     

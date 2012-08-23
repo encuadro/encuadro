@@ -54,12 +54,12 @@
 @synthesize eulerAngles = _eulerAngles;
 
 
-double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-65/2,1}, puntoModelo3D2[4] = {-32.5,-32.5,-65,1}, puntoModelo3D3[4] = {32.5,32.5,-65,1}, puntoModelo3D4[4] = {0,0,-65,1};
+double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-65/2,1}, puntoModelo3D2[4] = {-30,-30,-65,1}, puntoModelo3D3[4] = {30,30,-65,1}, puntoModelo3D4[4] = {0,0,-65,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
-double Matriz[4][4];
+Isgl3dMatrix4 Matriz;
+Isgl3dVector3 angles;
 double rotacion[3][3];
-
 
 - (void) setRotacion:(double*) rot
 {
@@ -132,27 +132,33 @@ double rotacion[3][3];
 - (void) tick:(float)dt {
 	// Rotate the text around the y axis
     // NSLog(@"tick\n"); 
-    if (self.traslacion != nil & rotacion!=nil) 
+    if (self.traslacion != nil & rotacion!=nil)        
     {
-        Matriz[0][0] = rotacion[0][0];
-        Matriz[0][1] = rotacion[0][1];
-        Matriz[0][2] = rotacion[0][2];
-        Matriz[0][3] = self.traslacion[0];
+        Matriz.sxx = rotacion[0][0];
+        Matriz.sxy = rotacion[0][1];
+        Matriz.sxz = rotacion[0][2];
+        Matriz.tx = self.traslacion[0];
         
-        Matriz[1][0] = rotacion[1][0];
-        Matriz[1][1] = rotacion[1][1];
-        Matriz[1][2] = rotacion[1][2];
-        Matriz[1][3] = self.traslacion[1];
+        Matriz.syx = rotacion[1][0];
+        Matriz.syy = rotacion[1][1];
+        Matriz.syz = rotacion[1][2];
+        Matriz.ty = self.traslacion[1];
         
-        Matriz[2][0] = rotacion[2][0];
-        Matriz[2][1] = rotacion[2][1];
-        Matriz[2][2] = rotacion[2][2];
-        Matriz[2][3] = self.traslacion[2];
+        Matriz.szx = rotacion[2][0];
+        Matriz.szy = rotacion[2][1];
+        Matriz.szz = rotacion[2][2];
+        Matriz.tz = self.traslacion[2];
         
-        Matriz[3][0] = 0;
-        Matriz[3][1] = 0;
-        Matriz[3][2] = 0;
-        Matriz[3][3] = 1;
+        Matriz.swx = 0;
+        Matriz.swy = 0;
+        Matriz.swz = 0;
+        Matriz.tw = 1;
+        
+        angles = im4ToEulerAngles(&Matriz);
+        
+        printf("\nisgl3d solucion\n");
+        printf("psi1: %f\ntheta1: %f\nphi1: %f\n",angles.x,angles.y,angles.z);
+
         
         /*project CoplanarPosit*/
         float a[3],b[3];
@@ -218,11 +224,22 @@ double rotacion[3][3];
             //            _cubito3.rotationY = 0;
             //            _cubito3.rotationZ = 0;
             
+
+// Juani
+//            [self.cubito1 yaw:-self.eulerAngles[1]];
+//            [self.cubito1 pitch:self.eulerAngles[0]];
+//            [self.cubito1 roll:-self.eulerAngles[2]];
+
             
-            [self.cubito1 yaw:self.eulerAngles[1]];
-            [self.cubito1 pitch:-self.eulerAngles[0]];
-            [self.cubito1 roll:self.eulerAngles[2]];
-            //               
+// Mauri
+//            [self.cubito1 yaw:self.eulerAngles[1]];
+//            [self.cubito1 pitch:-self.eulerAngles[0]];
+//            [self.cubito1 roll:self.eulerAngles[2]];
+            
+            [self.cubito1 pitch:angles.x];
+            [self.cubito1 yaw:-angles.y];
+            [self.cubito1 roll:-angles.z];
+            //
             //            [self.cubito2 yaw:self.eulerAngles[1]];
             //            [self.cubito2 pitch:self.eulerAngles[0]];
             //            [self.cubito2 roll:self.eulerAngles[2]];

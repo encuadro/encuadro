@@ -267,7 +267,16 @@ double **imagePointsCambiados;
             rotacion[7]=Rota[2][1];
             rotacion[8]=Rota[2][2];
             
-            self.isgl3DView.eulerAngles = euler(Rota);
+            
+            double angles1[3],angles2[3];
+            Matrix2Euler(Rotmodern,angles1,angles2);
+//            self.isgl3DView.eulerAngles = angles1;
+
+            
+            printf("\nPrimera solicion\n");
+            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+            printf("\nSegunda solicion\n");
+            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
             
             [self.isgl3DView setRotacion:rotacion];
             
@@ -334,159 +343,119 @@ double **imagePointsCambiados;
 
     
     
-    int a=182, b=98;
-    
-    /* MODELO MARCADOR */
-    
-    // Marcador 0
-    
-    object[0][0]=17.5;
-    object[0][1]=17.5;
-    object[0][2]=0.0;
-    
-    object[1][0]=17.5;   
-    object[1][1]=-17.5;
-    object[1][2]=0.0;
-    
-    object[2][0]=-17.5;
-    object[2][1]=-17.5;
-    object[2][2]=0.0;
-    
-    object[3][0]=-17.5; 
-    object[3][1]=17.5;   
-    object[3][2]=0.0;
-    
-    object[4][0]=32.5;
-    object[4][1]=32.5;
-    object[4][2]=0.0;
-    
-    object[5][0]=32.5;
-    object[5][1]=-32.5;
-    object[5][2]=0.0;
-    
-    object[6][0]=-32.5;
-    object[6][1]=-32.5;
-    object[6][2]=0.0;
-    
-    object[7][0]=-32.5;
-    object[7][1]=32.5;
-    object[7][2]=0.0;
-    
-    object[8][0]=47.5;
-    object[8][1]=47.5;
-    object[8][2]=0.0;
-    
-    object[9][0]=47.5;   
-    object[9][1]=-47.5;
-    object[9][2]=0.0;
-    
-    object[10][0]=-47.5;
-    object[10][1]=-47.5;
-    object[10][2]=0.0;
-    
-    object[11][0]=-47.5; 
-    object[11][1]=47.5;  
-    object[11][2]=0.0;
-    
-    // Marcador 1 
-    
-    object[12][0]=17.5+a;
-    object[12][1]=17.5;
-    object[12][2]=0.0;
-    
-    object[13][0]=17.5+a;   
-    object[13][1]=-17.5;
-    object[13][2]=0.0;
-    
-    object[14][0]=-17.5+a;
-    object[14][1]=-17.5;
-    object[14][2]=0.0;
-    
-    object[15][0]=-17.5+a; 
-    object[15][1]=17.5;   
-    object[15][2]=0.0;
-    
-    object[16][0]=32.5+a;
-    object[16][1]=32.5;
-    object[16][2]=0.0;
-    
-    object[17][0]=32.5+a;
-    object[17][1]=-32.5;
-    object[17][2]=0.0;
-    
-    object[18][0]=-32.5+a;
-    object[18][1]=-32.5;
-    object[18][2]=0.0;
-    
-    object[19][0]=-32.5+a;
-    object[19][1]=32.5;
-    object[19][2]=0.0;
-    
-    object[20][0]=47.5+a;
-    object[20][1]=47.5;
-    object[20][2]=0.0;
-    
-    object[21][0]=47.5+a;   
-    object[21][1]=-47.5;
-    object[21][2]=0.0;
-    
-    object[22][0]=-47.5+a;
-    object[22][1]=-47.5;
-    object[22][2]=0.0;
-    
-    object[23][0]=-47.5+a; 
-    object[23][1]=47.5;  
-    object[23][2]=0.0;    
-    
-    // Marcador 2 
-    
-    object[24][0]=17.5;
-    object[24][1]=17.5+b;
-    object[24][2]=0.0;
-    
-    object[25][0]=17.5;   
-    object[25][1]=-17.5+b;
-    object[25][2]=0.0;
-    
-    object[26][0]=-17.5;
-    object[26][1]=-17.5+b;
-    object[26][2]=0.0;
-    
-    object[27][0]=-17.5; 
-    object[27][1]=17.5+b;   
-    object[27][2]=0.0;
-    
-    object[28][0]=32.5;
-    object[28][1]=32.5+b;
-    object[28][2]=0.0;
-    
-    object[29][0]=32.5;
-    object[29][1]=-32.5+b;
-    object[29][2]=0.0;
-    
-    object[30][0]=-32.5;
-    object[30][1]=-32.5+b;
-    object[30][2]=0.0;
-    
-    object[31][0]=-32.5;
-    object[31][1]=32.5+b;
-    object[31][2]=0.0;
-    
-    object[32][0]=47.5;
-    object[32][1]=47.5+b;
-    object[32][2]=0.0;
-    
-    object[33][0]=47.5;   
-    object[33][1]=-47.5+b;
-    object[33][2]=0.0;
-    
-    object[34][0]=-47.5;
-    object[34][1]=-47.5+b;
-    object[34][2]=0.0;
-    
-    object[35][0]=-47.5; 
-    object[35][1]=47.5+b;  
-    object[35][2]=0.0;
+    /* BEGIN MARKER */
+    //QlSet0
+    object[0][0] = 15;
+    object[0][1] = 15;
+    object[0][2] = 0;
+    object[1][0] = 15;
+    object[1][1] = -15;
+    object[1][2] = 0;
+    object[2][0] = -15;
+    object[2][1] = -15;
+    object[2][2] = 0;
+    object[3][0] = -15;
+    object[3][1] = 15;
+    object[3][2] = 0;
+    object[4][0] = 30;
+    object[4][1] = 30;
+    object[4][2] = 0;
+    object[5][0] = 30;
+    object[5][1] = -30;
+    object[5][2] = 0;
+    object[6][0] = -30;
+    object[6][1] = -30;
+    object[6][2] = 0;
+    object[7][0] = -30;
+    object[7][1] = 30;
+    object[7][2] = 0;
+    object[8][0] = 45;
+    object[8][1] = 45;
+    object[8][2] = 0;
+    object[9][0] = 45;
+    object[9][1] = -45;
+    object[9][2] = 0;
+    object[10][0] = -45;
+    object[10][1] = -45;
+    object[10][2] = 0;
+    object[11][0] = -45;
+    object[11][1] = 45;
+    object[11][2] = 0;
+    //QlSet1
+    object[12][0] = 205;
+    object[12][1] = 15;
+    object[12][2] = 0;
+    object[13][0] = 205;
+    object[13][1] = -15;
+    object[13][2] = 0;
+    object[14][0] = 175;
+    object[14][1] = -15;
+    object[14][2] = 0;
+    object[15][0] = 175;
+    object[15][1] = 15;
+    object[15][2] = 0;
+    object[16][0] = 220;
+    object[16][1] = 30;
+    object[16][2] = 0;
+    object[17][0] = 220;
+    object[17][1] = -30;
+    object[17][2] = 0;
+    object[18][0] = 160;
+    object[18][1] = -30;
+    object[18][2] = 0;
+    object[19][0] = 160;
+    object[19][1] = 30;
+    object[19][2] = 0;
+    object[20][0] = 235;
+    object[20][1] = 45;
+    object[20][2] = 0;
+    object[21][0] = 235;
+    object[21][1] = -45;
+    object[21][2] = 0;
+    object[22][0] = 145;
+    object[22][1] = -45;
+    object[22][2] = 0;
+    object[23][0] = 145;
+    object[23][1] = 45;
+    object[23][2] = 0;
+    //QlSet2
+    object[24][0] = 15;
+    object[24][1] = 115;
+    object[24][2] = 0;
+    object[25][0] = 15;
+    object[25][1] = 85;
+    object[25][2] = 0;
+    object[26][0] = -15;
+    object[26][1] = 85;
+    object[26][2] = 0;
+    object[27][0] = -15;
+    object[27][1] = 115;
+    object[27][2] = 0;
+    object[28][0] = 30;
+    object[28][1] = 130;
+    object[28][2] = 0;
+    object[29][0] = 30;
+    object[29][1] = 70;
+    object[29][2] = 0;
+    object[30][0] = -30;
+    object[30][1] = 70;
+    object[30][2] = 0;
+    object[31][0] = -30;
+    object[31][1] = 130;
+    object[31][2] = 0;
+    object[32][0] = 45;
+    object[32][1] = 145;
+    object[32][2] = 0;
+    object[33][0] = 45;
+    object[33][1] = 55;
+    object[33][2] = 0;
+    object[34][0] = -45;
+    object[34][1] = 55;
+    object[34][2] = 0;
+    object[35][0] = -45;
+    object[35][1] = 145;
+    object[35][2] = 0;
+    /* END MARKER*/
     
     
     

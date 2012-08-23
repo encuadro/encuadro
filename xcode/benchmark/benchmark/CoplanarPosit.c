@@ -12,7 +12,7 @@
 #include <stdbool.h>
 #include "svd.h"
 #include "CoplanarPosit.h"
-#define PI 3.14159265
+#define MY_PI 3.14159265
 
 void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLength, double center[2], double** Rot, double* Trans){
     
@@ -845,7 +845,7 @@ void Matrix2Euler(double** Rot, double* angles1,double* angles2){
     double psi1, psi2;
     
     theta1=-asin(Rot[2][0]);
-    theta2= PI - theta1;
+    theta2= MY_PI - theta1;
     
     if(abs(Rot[2][0])!=1){
         psi1=atan2(Rot[2][1]/cos(theta1),Rot[2][2]/cos(theta1));
@@ -858,22 +858,23 @@ void Matrix2Euler(double** Rot, double* angles1,double* angles2){
         phi1=0;
         phi2=0;
         if (Rot[2][0]==-1) {
-            theta1=PI/2;
+            theta1=MY_PI/2;
             psi1=phi1+atan2(Rot[0][1], Rot[0][2]);
         }
         else {
-            theta1=-PI/2;
+            theta1=-MY_PI/2;
             psi1=-phi1+atan2(-Rot[0][1], -Rot[0][2]);
         }
         theta2=0;
         psi2=0;
     }
-    angles1[0]=psi1*180/PI;
-    angles1[1]=theta1*180/PI;
-    angles1[2]=phi1*180/PI;
     
-    angles2[0]=psi2*180/PI;
-    angles2[1]=theta2*180/PI;
-    angles2[2]=phi2*180/PI;
+    angles1[0]=psi1;
+    angles1[1]=theta1;
+    angles1[2]=phi1;
+    
+    angles2[0]=psi2;
+    angles2[1]=theta2;
+    angles2[2]=phi2;
 }
 
