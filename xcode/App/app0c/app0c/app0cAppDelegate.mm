@@ -29,7 +29,7 @@
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff"; 
     
 	// Set the device orientation
-	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
+//TOUCH//	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES; 
@@ -49,9 +49,10 @@
 	[Isgl3dDirector sharedInstance].openGLView = glView;
     
 	// Specify auto-rotation strategy if required (for example via the UIViewController and only landscape)
-	[Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
-	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
-	
+		[Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
+//TOUCH	//	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
+	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsAll;
+    
 	// Set the animation frame rate
 	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
     
@@ -94,17 +95,7 @@
 	[self.window sendSubviewToBack:vistaImg];
     
     
-    
-    
-    //    claseDibujar *view = [[claseDibujar alloc] initWithFrame:[self.window frame]];
-    //    [self.window addSubview:view];
-    //    [view release];
-    //    [self.window makeKeyAndVisible];
-    //    [self.window sendSubviewToBack:view];
-    
-    
-    
-    
+     
     
     _viewController.videoView = vistaImg;
     
@@ -117,7 +108,7 @@
     /*Corremos el metodo viewDidLoad del ViewController*/
     
     
-    [_viewController viewDidLoad];
+    //[_viewController viewDidLoad];
 }
 
 - (void) dealloc 

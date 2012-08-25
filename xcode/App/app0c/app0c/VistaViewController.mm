@@ -105,9 +105,17 @@
 {
 
     
-    
+ 
     app0cAppDelegate *appDelegate = (app0cAppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
+    
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    [_viewController viewDidLoad];
+        ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
     
     //agrego video
     [self.view addSubview:self.viewController.videoView];
@@ -126,18 +134,18 @@
     
     ////////BOTON
     
-    self.button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.button addTarget:self 
-               action:@selector(buttonClicked:)
-     forControlEvents:UIControlEventTouchDown];
-    [self.button setTitle:@"Back to Story" forState:UIControlStateNormal];
-    self.button.frame = CGRectMake(50,50, 120.0, 50.0);
-    [self.viewController.view addSubview:self.button];
+//    self.button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//    [self.button addTarget:self 
+//               action:@selector(buttonClicked:)
+//     forControlEvents:UIControlEventTouchDown];
+//    [self.button setTitle:@"Back to Story" forState:UIControlStateNormal];
+//    self.button.frame = CGRectMake(50,50, 120.0, 50.0);
+//    [self.viewController.view addSubview:self.button];
   
 
     ////////BOTON
     
-    
+   // [[Isgl3dDirector sharedInstance] startAnimation];
 }
 
 
@@ -261,23 +269,34 @@ _button=nil;
 //[self buttonBACK];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-        //[self.delegate setParentSelectedCity:self.selectedCity];
-        [self buttonBACK];
-    }
-    [super viewWillDisappear:animated];
-}
-
 //- (void)viewWillDisappear:(BOOL)animated
 //{
-//    [super viewWillDisappear:animated];
-//    
-//   // [self.navigationController setNavigationBarHidden:YES animated:animated];
+//    NSLog(@"TERMINANDO AR");
+//    NSLog(@"TERMINANDO AR");
+//    NSLog(@"TERMINANDO AR");
+//    NSLog(@"TERMINANDO AR");
 //    
 //    [self buttonBACK];
+////    if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
+////        //[self.delegate setParentSelectedCity:self.selectedCity];
+////        NSLog(@"TERMINANDO AR");
+////        NSLog(@"TERMINANDO AR");
+////        NSLog(@"TERMINANDO AR");
+////        NSLog(@"TERMINANDO AR");
+////        
+////        [self buttonBACK];
+////    }
+//    [super viewWillDisappear:animated];
 //}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+   // [self.navigationController setNavigationBarHidden:YES animated:animated];
+    
+    [self buttonBACK];
+}
 //
 //
 //- (void)viewWillAppear:(BOOL)animated

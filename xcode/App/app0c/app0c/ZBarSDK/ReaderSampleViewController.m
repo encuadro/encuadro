@@ -29,9 +29,10 @@
                        to: 0];
     
     // present and release the controller
-    [self presentModalViewController: reader
-                            animated: YES];
+    [self presentModalViewController: reader animated: YES];
+    
 
+   // [reader release];
 }
 
 - (IBAction) play{
@@ -67,6 +68,7 @@
  didFinishPickingMediaWithInfo: (NSDictionary*) info
 {
     
+
     
     // ADD: get the decode results
     id<NSFastEnumeration> results = [info objectForKey: ZBarReaderControllerResults];
@@ -127,8 +129,17 @@
     
   
     NSLog(@"opcionAutor en picker es %d",opcionAutor);
+    
+    [reader release];
+    
 }
 
+
+//- (void) imagePickerControllerDidCancel: (UIImagePickerController *) picker {
+//    
+//    //[[picker parentViewController] dismissModalViewControllerAnimated: YES];
+//    //[picker release];
+//}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

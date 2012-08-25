@@ -112,9 +112,9 @@ double **imagePointsCambiados;
     bitsPerPixel         = CGImageGetBitsPerPixel(ref);
     d= bitsPerPixel/bitsPerComponent;
     
-    
-    if (bandera == false)
-    {
+    //ESTA APP NO PROCESA, NO ESTIMA POSE, MUESTRA CUBO SOBRE VIDEO SOLAMENTE
+//    if (bandera == false)
+//    {
         /*Esto es para solucionar el problema de memoria*/
         free(pixels); 
         
@@ -125,7 +125,7 @@ double **imagePointsCambiados;
         
         pixels = (unsigned char *)[data bytes];
         
-    }
+//    }
     
     
     /*El procesamiento se hace en otro hilo de ejecucion*/
@@ -584,17 +584,23 @@ double **imagePointsCambiados;
     //    /*Para probar con el simulador*/
     //    self.videoView.image = [UIImage imageNamed:@"Calibrar10.jpg"];
     [self reservarMemoria];
-    /*Mandamos el procesamiento a otro thread*/
-    dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
-    dispatch_async(processQueue, ^{[self procesamiento];});
-    /*Comenzamos a capturar*/
     
+    //ESTA APP NO PROCESA, NO ESTIMA POSE, MUESTRA CUBO SOBRE VIDEO SOLAMENTE
+//    /*Mandamos el procesamiento a otro thread*/
+//    dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
+//    dispatch_async(processQueue, ^{[self procesamiento];});
+    
+    
+    /*Comenzamos a capturar*/
     [self.session startRunning]; 
     
 }
 
 - (void) viewDidUnload {
 	[super viewDidUnload];
+    
+     [self.session stopRunning];
+    [self.session release];
 }
 
 - (void) didReceiveMemoryWarning {
