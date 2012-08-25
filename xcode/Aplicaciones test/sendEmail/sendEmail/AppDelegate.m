@@ -1,14 +1,15 @@
 //
 //  AppDelegate.m
-//  imagenServer
+//  sendEmail
 //
-//  Created by Pablo Flores Guridi on 16/08/12.
-//  Copyright (c) 2012 Pablo Flores Guridi. All rights reserved.
+//  Created by encuadro augmented reality on 8/20/12.
+//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import "AppDelegate.h"
 
 @implementation AppDelegate
+
 @synthesize window = _window;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
