@@ -10,7 +10,7 @@
 #import "app0cAppDelegate.h"
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
-//#import "simple.h"
+
 
 @implementation app0cAppDelegate
 

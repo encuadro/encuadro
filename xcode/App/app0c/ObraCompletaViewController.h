@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 
+#import "Isgl3dViewController.h"
+#import "Isgl3d.h"
+#import "app0cAppDelegate.h"
+#import "HelloWorldView.h"
+
 int click;
 bool justLoaded;
 
@@ -22,6 +27,7 @@ bool justLoaded;
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) IBOutlet UIButton *start;
+
 
 - (IBAction) play;
 

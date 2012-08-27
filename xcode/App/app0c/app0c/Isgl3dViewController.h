@@ -9,17 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "HelloWorldView.h"
-#import "simple.h"
 
-extern "C" {    
-#import "processing.h"
-#import "lsd.h"
-#import "segments.h"
-#import "marker.h"
-#import "Composit.h"
-#import "CoplanarPosit.h"
-#import <stdlib.h>
-}
+
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     

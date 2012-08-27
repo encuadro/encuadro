@@ -7,7 +7,7 @@
 //
 #import "Isgl3dViewController.h"
 #import "isgl3d.h"
-//#import "simple.h"
+
 
 @interface Isgl3dViewController()
 
@@ -34,8 +34,7 @@
 @synthesize isgl3DView = _isgl3DView;
 
 
-//para DIBUJAR
-claseDibujar *cgvista;
+
 
 
 /*Variables para la imagen*/
@@ -48,10 +47,6 @@ double* luminancia;
 int d;
 int dProcesamiento;
 
-/*Variables para el procesamiento*/
-double* list;
-double*listFiltrada;
-//double** esquinas;
 
 double **imagePoints;
 int listSize;
@@ -139,152 +134,6 @@ double **imagePointsCambiados;
     
 }
 
-- (void) procesamiento
-{
-    while(1){
-        
-        
-        if((pixels!=nil) & (height!=0))
-        {
-            bandera = true;
-            
-            NSLog(@"Procesando!\n");
-            
-            /******************PROCESAMIENTO********************************************/
-            /***************************************************************************/
-            /*Esto es para solucionar el problema de memoria*/
-            free(luminancia);
-            printf("width: %lu\n",width);
-            /*Obtengo la imagen en nivel de grises en luminancia*/
-            luminancia = rgb2gray(pixels,width,height,d);
-            bandera = false;
-            free(list);
-            free(listFiltrada);
-            // free(esquinas);
-            free(imagePoints);
-            
-            listSize =0;
-            listFiltradaSize =0;
-            
-            /************************************************LSD*/
-            
-            /*Se corre el LSD*/	
-            
-            list = lsd_scale(&listSize, luminancia, width, height,0.6);
-            
-            /************************************************FILTRADO*/
-            
-            /*Filtrado de segmentos detectados por el LSD */	
-            listFiltrada = filterSegments(&listFiltradaSize , &listSize ,list, distance_thr);
-            //    esquinas = getMarkerCorners(&listFiltradaSize, listFiltrada);
-            
-            /************************************************CORRESPONDENCIAS*/
-            /*Correspondencias entre marcador real y puntos detectados*/
-            imagePoints = findPointCorrespondances(&listFiltradaSize, listFiltrada);  
-            
-            printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);           
-            
-            
-            /* Verificacion de salida filtro*/
-            for (int j=0;j<NumberOfPoints;j++){
-                if (!errFlag1) {
-                    errFlag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000)||(imagePoints[j][0]<0.1)||(imagePoints[j][1]<0.1);
-                }    
-                else {
-                    errFlag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000)||(imagePoints[j][0]<0.1)||(imagePoints[j][1]<0.1);
-                    
-                }
-                errFlag=errFlag1&&errFlag2;
-                if (errFlag) break;
-            }
-            
-            
-            
-            if (!errFlag) {
-                /* eleccion de algoritmo de pose*/
-                if (PosJuani){
-                    CoplanarPosit(NumberOfPoints, imagePoints, object, f, center, Rotmodern, Tras);
-                    for(int i=0;i<3;i++){
-                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-                        Transa[i]=Tras[i];
-                    }
-                    
-                }
-                else {
-                    for (int k=0;k<36;k++)
-                    {
-                        imagePoints[k][0]=imagePoints[k][0]-center[0];
-                        imagePoints[k][1]=imagePoints[k][1]-center[1];
-                    }
-                    Composit(NumberOfPoints,imagePoints,object,f,Rota,Transa);
-                }
-            }
-            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-            printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rota[0][0],Rota[0][1],Rota[0][2]);
-            printf("%f\t %f\t %f\n",Rota[1][0],Rota[1][1],Rota[1][2]);
-            printf("%f\t %f\t %f\n",Rota[2][0],Rota[2][1],Rota[2][2]);
-            printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Transa[0],Transa[1],Transa[2]);
-            
-            
-            /************************************************POSIT COPLANAR*/
-            /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
-            /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
-            //
-            //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
-            //            free(imagePointsCambiados);
-            // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1); 
-            
-            
-            
-            
-            /************************************************SPINCALC*/
-            /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
-            
-            
-            
-            /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
-            
-            
-            
-            //                printf("Solo declaro\n");
-            //                double rotacion[9];
-            //                printf("declare\n");
-            
-            rotacion[0]=Rota[0][0];
-            rotacion[1]=Rota[0][1];
-            rotacion[2]=Rota[0][2];
-            rotacion[3]=Rota[1][0];
-            rotacion[4]=Rota[1][1];
-            rotacion[5]=Rota[1][2];
-            rotacion[6]=Rota[2][0];
-            rotacion[7]=Rota[2][1];
-            rotacion[8]=Rota[2][2];
-            
-            self.isgl3DView.eulerAngles = euler(Rota);
-            
-            [self.isgl3DView setRotacion:rotacion];
-            
-            
-            
-            printf("Nueva traslacion\n");
-            [self.isgl3DView setTraslacion:Transa];
-            
-            
-            //self.traslacion = traslacion;
-            
-            /*************FIN DEL PROCESAMIENTO********************************************/
-            /******************************************************************************/
-            bandera = false;
-            errFlag=false;
-            errFlag1=false;
-            errFlag2=false;
-        }
-        
-    }
-}
 
 - (void) reservarMemoria {
     

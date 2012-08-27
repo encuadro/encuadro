@@ -7,8 +7,7 @@
 //
 
 #import "isgl3d.h"
-#import "mult.h"
-#include "vvector.h"
+
 
 
 @interface videoView : UIImageView {

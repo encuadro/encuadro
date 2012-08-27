@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "Isgl3dViewController.h"
+#import "Isgl3d.h"
 #import "app0cAppDelegate.h"
+#import "HelloWorldView.h"
+
 
 @interface VistaViewController : UIViewController{
     

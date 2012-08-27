@@ -7,9 +7,7 @@
 //
 
 #import "VistaViewController.h"
-#import "Isgl3dViewController.h"
-#import "HelloWorldView.h"
-#import "Isgl3d.h"
+
 
 
 @interface VistaViewController ()
@@ -101,7 +99,8 @@
 }
 
 
-- (IBAction)hacerRender:(id)sender
+//- (IBAction)hacerRender:(id)sender
+- (void) hacerRender 
 {
 
     
@@ -248,6 +247,7 @@ _button=nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+  //  [self hacerRender];
 	// Do any additional setup after loading the view.
     // Override back button action
 //    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"backacka" style:UIBarButtonItemStyleBordered target:self action:@selector(buttonClicked:)];
@@ -299,13 +299,13 @@ _button=nil;
 }
 //
 //
-//- (void)viewWillAppear:(BOOL)animated
-//{
-//    [super viewWillAppear:animated];
-//    
-//    
-//   // [self.navigationController setNavigationBarHidden:NO animated:animated];
-//}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self hacerRender];
+    
+   // [self.navigationController setNavigationBarHidden:NO animated:animated];
+}
 
 
 

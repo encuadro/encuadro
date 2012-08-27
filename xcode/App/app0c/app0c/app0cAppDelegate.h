@@ -6,8 +6,7 @@
 //  Copyright 2012 pablofloresguridi@gmail.com. All rights reserved.
 //
 
-#import "claseDibujar.h"
-#import "simple.h"
+
 
 @class Isgl3dViewController;
 
