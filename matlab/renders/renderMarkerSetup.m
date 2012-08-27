@@ -30,8 +30,8 @@ setup.repo_path = repo_path;
 
 %% blender setup
 if (strcmp(computer,'GLNX86') || strcmp(computer,'GLNXA64'))
-	setup.blender_path = '';
-	% 	setup.blender_path = [setup.repo_path '../../Descargas/Software/blender-2.61-linux-glibc27-x86_64/'];
+% 	setup.blender_path = '';
+	setup.blender_path = [setup.repo_path '../../Descargas/Software/blender-2.61-linux-glibc27-x86_64/'];
 elseif (strcmp(computer,'MACI') || strcmp(computer,'MACI64'))
 	setup.blender_path = '/Applications/blender/Blender.app/Contents/MacOS/';
 end
