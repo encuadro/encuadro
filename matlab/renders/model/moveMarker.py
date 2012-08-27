@@ -61,7 +61,7 @@ marker.location = t
 
 
 # Set Scenes camera and output filename 
-bpy.data.scenes["Scene"].render.file_format = 'PNG'
+#bpy.data.scenes["Scene"].render.file_format = 'PNG'
 bpy.data.scenes["Scene"].render.filepath = str(fname)
 # Render Scene and store the scene 
 bpy.ops.render.render( write_still=True ) 

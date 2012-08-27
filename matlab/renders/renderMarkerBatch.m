@@ -7,7 +7,7 @@ clc;
 %colorado setup
 setup = renderMarkerSetup(	'/home/roho/workspace/encuadro/',...
 							'/home/roho/Dropbox/encuadro/renders/',...
-							3);
+							30);
 
 %% configure camera
 camera = pinholeCamera(46.4343,480,360,zeros(5,1),0);
