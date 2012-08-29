@@ -25,4 +25,5 @@ void transposeDescriptor(vl_sift_pix* dst, vl_sift_pix* src);
 void compare (Pair* pairs_iterator, int * L1_pt, int* L2_pt, int K1, int K2, int ND, float thresh, int* matches);
 int* levantarDescriptor(char* nombre, int*);
 const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors);
+const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* ala);
 #endif

@@ -75,10 +75,11 @@ vl_sift_pix     *fdata = 0 ;
 
     
     sift(fdata, width, height,&nKeyPoints,&keyPoints,&descriptors);
+    printf("%d \t %d \t %d\n",nKeyPoints,width, height);
     //sift(fdata, width, height,&nKeyPoints2,&keyPoints2,&descriptors2);
-   /* 
-    escribirDescriptor("/Users/pablofloresguridi/Desktop/descriptors/Torres2.txt", descriptors, nKeyPoints*128);
-    */
+    
+    escribirDescriptor("/Users/pablofloresguridi/Desktop/Figari1.txt", descriptors, nKeyPoints*128);
+    
     //descriptors = levantarDescriptor("/Users/pablofloresguridi/Desktop/descriptors/Blanes1.txt", &nKeyPoints);
     descriptors2 = levantarDescriptor("/Users/pablofloresguridi/Desktop/descriptors/Blanes2.txt", &nKeyPoints2);
  
