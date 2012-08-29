@@ -8,6 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+{
+    
+    UIImageView *imagenView;
+    UIButton *tomarFoto;
+    
+    
+}
+
+
+@property (nonatomic,retain)IBOutlet UIImageView *imagenView;
+@property (nonatomic,retain)IBOutlet UIButton *tomarFoto;
+
+
+-(IBAction)tomarFoto:(id)sender;
 
 @end

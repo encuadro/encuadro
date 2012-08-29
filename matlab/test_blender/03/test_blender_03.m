@@ -20,7 +20,7 @@ setup.img_path = '';						% output_path
 
 %% camera
 
-camera = pinholeCamera(46.4343,480,360,zeros(5,1),0);
+camera = pinholeCamera(46.4343,640,480,zeros(5,1),0);
 
 %% object pose
 
