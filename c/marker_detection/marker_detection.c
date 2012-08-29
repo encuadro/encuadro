@@ -12,8 +12,8 @@ Both programs hosted on:
 http://code.google.com/p/encuadro/
 */
 
-#include "highgui.h"
-#include "cv.h"
+#include "opencv/highgui.h"
+#include "opencv/cv.h"
 #include "lsd.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -69,6 +69,12 @@ int main( int argc, char** argv){
 		exit(EXIT_FAILURE);
     }
     
+	/*get memory*/
+	imagePoints=(double **)malloc(36* sizeof(double *));
+	for (int i=0;i<MRKR_NP;i++){
+		imagePoints[i]=(double *)malloc(2 * sizeof(double));
+	}
+
     /*get memory for output list*/
     double *listFilt;
 	listFilt=(double *) malloc ( 100 * listDim * sizeof(double));
@@ -95,12 +101,13 @@ int main( int argc, char** argv){
 		
 		/*run LSD*/
 		double *list;
+		//list = lsd( &listSize, image, width, height );
 		list = lsd( &listSize, image, width, height );
 		
 		/*filter LSD segments*/		
 		listFilt = filterSegments( &listFiltSize , &listSize, list, distance_thr);
 		//imagePoints = getCorners( &listFiltSize, listFilt);
-		imagePoints = findPointCorrespondances(&listFiltSize, listFilt);
+		int error_code = findPointCorrespondances(&listFiltSize, listFilt, imagePoints);
 		/********************/
 		
 		/*draw segments on frame and frameLsd*/
@@ -124,20 +131,19 @@ int main( int argc, char** argv){
 			//define segment end-points
 			pt1 = cvPoint(listFilt[ 0 + j * listDim ],listFilt[ 1 + j * listDim ]);
 			pt2 = cvPoint(listFilt[ 2 + j * listDim ],listFilt[ 3 + j * listDim ]);
-			
 			// draw line on frameLsd
 			cvLine(frameLsdFilt,pt1,pt2,white,1.5,8,0);
-
-			if (j<36){
-				//define marker corners
-				pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
-				// draw small corner circle
-				cvCircle(frameLsdFilt, pt3, 3, green, 1, 8, 0);
-				char *ind;
-				sprintf(ind,"%d",j);
-				cvPutText(frameLsdFilt, ind, pt3, &font1 , blue);
-			}
-		}		
+		}
+		/*draw imgPts*/
+		for (j=0; j<36; j++){
+			//define marker corners
+			pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
+			// draw small corner circle
+			cvCircle(frameLsdFilt, pt3, 3, green, 1, 8, 0);
+			char ind[2];
+			sprintf(ind,"%d",j);
+			cvPutText(frameLsdFilt, ind, pt3, &font1 , blue);
+		}
 		
 		//printf("Numero de segmentos LSD: %d\n",listSize);
 		//printf("Numero de segmentos FILTRADOS: %d\n\n",listFiltSize);
@@ -148,9 +154,10 @@ int main( int argc, char** argv){
 		listSize = 0;
 		
 		/*free imagePoints memory*/
-		for(i = 0; i < 36; i++)
+/*		for(i = 0; i < 36; i++)
 			free(imagePoints[i]);
 		free(imagePoints);
+*/
 		/********************/
 		
 		cvShowImage("OpenCV on acid",frame);
