@@ -82,9 +82,14 @@
     /*
      now lets create the body of the post
      */
+    NSString* message = @"Content-Disposition: form-data; name=\"userfile\"; filename=\"";
+    message = [message stringByAppendingString:@"figari"];
+    message = [message stringByAppendingString:@"\"\r\n"];
+
+
     NSMutableData *body = [NSMutableData data];
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]]; //NSUTF8StringEncoding
-    [body appendData:[@"Content-Disposition: form-data; name=\"userfile\"; filename=\"foto\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];//NSUTF8StringEncoding
+    [body appendData:[message dataUsingEncoding:NSUTF8StringEncoding]];//NSUTF8StringEncoding
     [body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];//NSUTF8StringEncoding    probar con content-type: text/plain  
     
     //[body appendData:[[NSString stringWithString:@"Content-Type: text/plain\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];

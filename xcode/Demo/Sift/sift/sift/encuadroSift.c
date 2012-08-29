@@ -238,13 +238,13 @@ int* levantarDescriptor(char* nombre, int* nKeyPoints)
     else
     {
         fscanf(archivo,"%ld\n \n",&largo);
-        //printf("%ld\n",largo);
+
         descr = (int*) malloc(largo*sizeof(int));
         *nKeyPoints = largo/128;
         for (int i=0; i<largo;i++)
         {
             fscanf(archivo,"%d\n",&descr[i]);
-            //printf("%d\t%d\n",i,descr[i]);
+
         }
         
     }
@@ -318,12 +318,12 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     free(descriptors_base);
     
     
-    /* Debug purpose only*/
-    printf("IMAGE: %d\n",nKeyPoints);
-    printf("BASE: %d\n",nKeyPoints_base);
-    printf("MATCHES: %d\n",final_matches);
-    
-    return imagen;
+    if (final_matches > 0.1*nKeyPoints)
+    {
+        return imagen;
+    }
+    else return "wrong_enter.jpg";
+
 
 }
 
@@ -421,7 +421,7 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
     }
     else
     {
-        return "wrong_enter.jpg\n";
+        return "wrong_enter.jpg";
     }
 }
 
