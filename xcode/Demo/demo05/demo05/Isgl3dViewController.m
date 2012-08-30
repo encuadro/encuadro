@@ -150,7 +150,7 @@ double **imagePointsCambiados;
         {
             bandera = true;
             
-            NSLog(@"Procesando!\n");
+            if (verbose) NSLog(@"Procesando!\n");
             
             /******************PROCESAMIENTO********************************************/
             /***************************************************************************/

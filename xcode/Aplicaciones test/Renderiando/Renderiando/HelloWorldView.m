@@ -11,7 +11,7 @@
 
 
 #pragma mark UIBackgroundView
-int numero = 1;
+int numero = 7;
 double puntoProyectado3D1[3], puntoProyectado3D2[3], puntoProyectado3D3[3], b[3];
 double punto3D1[3] = {0,0,-30}, punto3D2[3] = {190,0,-30}, punto3D3[3]={0,100,-30};
 Isgl3dVector3 angles;
@@ -28,16 +28,70 @@ Isgl3dVector3 angles;
         Isgl3dGLUIImage * background;
         
         switch (numero) {
-            case 1:
-        
-                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0003.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+            case 0:
+/*------------------------------------*/        
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0000.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
                 background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
                 [self.scene addChild:background];
               
                 break;
+/*------------------------------------*/                
+            case 1:
                 
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0001.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;                
+/*------------------------------------*/
             case 2:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0002.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
                 break;
+/*------------------------------------*/
+            case 3:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0003.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;
+/*------------------------------------*/
+            case 4:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0004.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;
+/*------------------------------------*/
+            case 5:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0005.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;
+/*------------------------------------*/
+            case 6:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0006.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;
+/*------------------------------------*/
+            case 7:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0007.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;
+                
         }
 		
 	}
@@ -81,32 +135,34 @@ double traslacion[3];
         _cube3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
 
         self.camera.position = iv3(0, 0, 0.1);
-        self.camera.fov = 34.8225;
+        //self.camera.fov = 34.8225;
+        self.camera.fov = 35.5;
         self.camera.width = 480;
         self.camera.height = 360;
         self.camera.aspect = 1/0.75;
         printf("%f \t %f \t %f\n",self.camera.aspect, self.camera.width, self.camera.height);
         switch (numero) {
-            case 1:
+/*------------------------------------*/
+            case 0:
             
-                 printf("punto C\n");
-                traslacion[0] = -100;
-                traslacion[1] = -100;
+                 
+                traslacion[0] = 0;
+                traslacion[1] = 0;
                 traslacion[2] = 1000;
-                 printf("punto D\n");
+                 
                 rotacion[0][0] = 1;
                 rotacion[0][1] = 0;
                 rotacion[0][2] = 0;
-          printf("punto E\n");
+
                 rotacion[1][0] = 0;
-                rotacion[1][1] = 1;
-                rotacion[1][2] = 0;
-               printf("punto F\n"); 
+                rotacion[1][1] = 0.8660;
+                rotacion[1][2] = -0.5000;
+         
                 rotacion[2][0] = 0;
-                rotacion[2][1] = 0;
-                rotacion[2][2] = 1;
+                rotacion[2][1] = 0.5000;
+                rotacion[2][2] = 0.8660;
                 
-                printf("punto 0\n");
+               
                 
                 _matriz.sxx = rotacion[0][0];
                 _matriz.sxy = rotacion[0][1];
@@ -146,13 +202,556 @@ double traslacion[3];
                     printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
                     printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
                 _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
-                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
-                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
+                break;
+/*------------------------------------*/                
+            case 1:
+                
+                traslacion[0] = 0;
+                traslacion[1] = 0;
+                traslacion[2] = 1000;
+                
+                rotacion[0][0] =  0.8660;
+                rotacion[0][1] = 0;
+                rotacion[0][2] = 0.5000;
+                
+                rotacion[1][0] = 0;
+                rotacion[1][1] = 1;
+                rotacion[1][2] = 0;
+                
+                rotacion[2][0] = -0.5000;
+                rotacion[2][1] = 0;
+                rotacion[2][2] = 0.8660;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
                 break;
                 
+/*------------------------------------*/
             case 2:
                 
+                traslacion[0] = 0;
+                traslacion[1] = 0;
+                traslacion[2] = 1000;
+                
+                rotacion[0][0] =  0.8660;
+                rotacion[0][1] = -0.5000;
+                rotacion[0][2] = 0;
+                
+                rotacion[1][0] = 0.5000;
+                rotacion[1][1] = 0.8660;
+                rotacion[1][2] = 0;
+                ;
+                rotacion[2][0] = 0;
+                rotacion[2][1] = 0;
+                rotacion[2][2] = 1;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
                 break;
+/*------------------------------------*/
+            case 3:
+                
+                
+                traslacion[0] = -100;
+                traslacion[1] = -100;
+                traslacion[2] = 1000;
+                
+                rotacion[0][0] = 1;
+                rotacion[0][1] = 0;
+                rotacion[0][2] = 0;
+                
+                rotacion[1][0] = 0;
+                rotacion[1][1] = 1;
+                rotacion[1][2] = 0;
+                
+                rotacion[2][0] = 0;
+                rotacion[2][1] = 0;
+                rotacion[2][2] = 1;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
+                break;
+/*------------------------------------*/
+            case 4:
+                
+                
+                traslacion[0] = -100;
+                traslacion[1] = -100;
+                traslacion[2] = 500;
+                
+                rotacion[0][0] = 1;
+                rotacion[0][1] = 0;
+                rotacion[0][2] = 0;
+                
+                rotacion[1][0] = 0;
+                rotacion[1][1] = 1;
+                rotacion[1][2] = 0;
+                
+                rotacion[2][0] = 0;
+                rotacion[2][1] = 0;
+                rotacion[2][2] = 1;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
+                break;
+/*------------------------------------*/
+            case 5:
+                
+                
+                traslacion[0] = 100;
+                traslacion[1] = 0;
+                traslacion[2] = 1000;
+                
+                rotacion[0][0] = 1;
+                rotacion[0][1] = 0;
+                rotacion[0][2] = 0;
+                
+                rotacion[1][0] = 0;
+                rotacion[1][1] = 0.8660;
+                rotacion[1][2] = -0.5000;
+                
+                rotacion[2][0] = 0;
+                rotacion[2][1] = 0.5000;
+                rotacion[2][2] = 0.8660;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
+                break;
+/*------------------------------------*/
+            case 6:
+                
+                
+                traslacion[0] = 100;
+                traslacion[1] = 150;
+                traslacion[2] = 1000;
+                
+                rotacion[0][0] =  0.8660;
+                rotacion[0][1] = 0;
+                rotacion[0][2] = 0.5000;
+                
+                rotacion[1][0] = 0;
+                rotacion[1][1] = 1;
+                rotacion[1][2] = 0;
+                
+                rotacion[2][0] = -0.5000;
+                rotacion[2][1] = 0;
+                rotacion[2][2] = 0.8660;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
+                break;
+                /*------------------------------------*/
+            case 7:
+                
+                
+                traslacion[0] = 0;
+                traslacion[1] = 0;
+                traslacion[2] = 500;
+                
+                rotacion[0][0] =  0.7441;
+                rotacion[0][1] = 0.5827;
+                rotacion[0][2] = -0.3268;
+              
+                rotacion[1][0] =  -0.3268;
+                rotacion[1][1] = 0.7441;
+                rotacion[1][2] = 0.5827;
+             
+                rotacion[2][0] = 0.5827;
+                rotacion[2][1] = -0.3268;
+                rotacion[2][2] = 0.7441;
+                
+                
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                
+                
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                [_cube1 pitch:angles.x];
+                [_cube1 yaw:-angles.y];
+                [_cube1 roll:-angles.z];
+                  
+                     //Aca creo que el problema es el orden de las rotaciones. Por eso cuando hago una sola me da bien, pero cuando son 3 tengo problemas.
+                
+                [_cube2 pitch:angles.x];
+                [_cube2 yaw:-angles.y];
+                [_cube2 roll:-angles.z];
+                
+                [_cube3 pitch:angles.x];
+                [_cube3 yaw:-angles.y];
+                [_cube3 roll:-angles.z];
+                
+                break;
+
+
         }
         
         
