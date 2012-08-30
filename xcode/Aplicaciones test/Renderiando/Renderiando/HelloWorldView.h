@@ -7,11 +7,7 @@
 //
 
 #import "isgl3d.h"
-
-@interface HelloWorldView : Isgl3dBasic2DView {
-}
-
-@end
+#include "vvector.h"
 
 
 #pragma mark UIBackgroundView
@@ -29,7 +25,9 @@
 @interface Simple3DView : Isgl3dBasic3DView {
     
 @private
-	Isgl3dMeshNode * _torus;
+	Isgl3dMeshNode * _cube1;
+    Isgl3dMeshNode * _cube2;
+    Isgl3dMeshNode * _cube3;
 	Isgl3dDemoCameraController * _cameraController;
     
 }
