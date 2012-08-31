@@ -11,7 +11,7 @@
 
 
 #pragma mark UIBackgroundView
-int numero = 7;
+int numero = 8;
 double puntoProyectado3D1[3], puntoProyectado3D2[3], puntoProyectado3D3[3], b[3];
 double punto3D1[3] = {0,0,-30}, punto3D2[3] = {190,0,-30}, punto3D3[3]={0,100,-30};
 Isgl3dVector3 angles;
@@ -91,6 +91,15 @@ Isgl3dVector3 angles;
                 [self.scene addChild:background];
                 
                 break;
+/*------------------------------------*/
+            case 8:
+                
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0008.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                [self.scene addChild:background];
+                
+                break;
+
                 
         }
 		
@@ -128,15 +137,15 @@ double traslacion[3];
 	if ((self = [super init])) {
 		// Create the primitive
                 printf("punto A\n");
-		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"backround.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
 		Isgl3dCube * cubeMesh = [Isgl3dCube meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
 		_cube1 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         _cube2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         _cube3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
 
-        self.camera.position = iv3(0, 0, 0.1);
+        self.camera.position = iv3(0, 0, 0.000000000000001);
         //self.camera.fov = 34.8225;
-        self.camera.fov = 35.5;
+        self.camera.fov = 35.6;
         self.camera.width = 480;
         self.camera.height = 360;
         self.camera.aspect = 1/0.75;
@@ -205,17 +214,22 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
 /*------------------------------------*/                
@@ -280,17 +294,22 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
                 
@@ -355,17 +374,22 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
 /*------------------------------------*/
@@ -431,17 +455,22 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
 /*------------------------------------*/
@@ -507,17 +536,22 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
 /*------------------------------------*/
@@ -583,17 +617,22 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
 /*------------------------------------*/
@@ -659,38 +698,43 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+                
                 [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
                 
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
-                /*------------------------------------*/
+/*------------------------------------*/
             case 7:
                 
                 
                 traslacion[0] = 0;
                 traslacion[1] = 0;
-                traslacion[2] = 500;
+                traslacion[2] = 500;      
+
+                rotacion[0][0] = 0.7500;
+                rotacion[0][1] = 0.6495;
+                rotacion[0][2] = -0.1250;
                 
-                rotacion[0][0] =  0.7441;
-                rotacion[0][1] = 0.5827;
-                rotacion[0][2] = -0.3268;
-              
-                rotacion[1][0] =  -0.3268;
-                rotacion[1][1] = 0.7441;
-                rotacion[1][2] = 0.5827;
-             
-                rotacion[2][0] = 0.5827;
-                rotacion[2][1] = -0.3268;
-                rotacion[2][2] = 0.7441;
+                rotacion[1][0] = -0.4330;
+                rotacion[1][1] = 0.6250;
+                rotacion[1][2] = 0.6495;
+                
+                rotacion[2][0] = 0.5000;
+                rotacion[2][1] = -0.4330;
+                rotacion[2][2] = 0.7500;
                 
                 
                 
@@ -718,8 +762,6 @@ double traslacion[3];
                 angles = im4ToEulerAngles(&_matriz);
                 
                 MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
-                
-                
                 VEC_SUM(puntoProyectado3D1,b,traslacion);
                 
                 MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
@@ -735,21 +777,103 @@ double traslacion[3];
                 _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
                 _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
                 
-                [_cube1 pitch:angles.x];
-                [_cube1 yaw:-angles.y];
+               
                 [_cube1 roll:-angles.z];
-                  
-                     //Aca creo que el problema es el orden de las rotaciones. Por eso cuando hago una sola me da bien, pero cuando son 3 tengo problemas.
-                
-                [_cube2 pitch:angles.x];
-                [_cube2 yaw:-angles.y];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
+
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+      
                 [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
                 
-                [_cube3 pitch:angles.x];
-                [_cube3 yaw:-angles.y];
                 [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
+                break;
+/*------------------------------------*/
+            case 8:
+                
+                
+                traslacion[0] = 0;
+                traslacion[1] = 0;
+                traslacion[2] = 500;
+                
+                rotacion[0][0] = 0.8660;
+                rotacion[0][1] = 0.2500;
+                rotacion[0][2] =  -0.4330;
+                
+                rotacion[1][0] = 0;
+                rotacion[1][1] = 0.8660;
+                rotacion[1][2] = 0.5000;
+                
+                rotacion[2][0] =  0.5000;
+                rotacion[2][1] = -0.4330;
+                rotacion[2][2] = 0.7500;
+                  
+                
+                _matriz.sxx = rotacion[0][0];
+                _matriz.sxy = rotacion[0][1];
+                _matriz.sxz = rotacion[0][2];
+                _matriz.tx = traslacion[0];
+                
+                _matriz.syx = rotacion[1][0];
+                _matriz.syy = rotacion[1][1];
+                _matriz.syz = rotacion[1][2];
+                _matriz.ty = traslacion[1];
+                
+                _matriz.szx = rotacion[2][0];
+                _matriz.szy = rotacion[2][1];
+                _matriz.szz = rotacion[2][2];
+                _matriz.tz = traslacion[2];
+                
+                _matriz.swx = 0;
+                _matriz.swy = 0;
+                _matriz.swz = 0;
+                _matriz.tw = 1;
+                
+                printf("Punto 1\n");
+                angles = im4ToEulerAngles(&_matriz);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
+                VEC_SUM(puntoProyectado3D1,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D2);
+                VEC_SUM(puntoProyectado3D2,b,traslacion);
+                
+                MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
+                VEC_SUM(puntoProyectado3D3,b,traslacion);
+                
+                printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+                printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+                _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
+                _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
+                _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
+                
+                
+                
+                [_cube1 roll:-angles.z];
+                [_cube1 yaw:-angles.y];
+                [_cube1 pitch:angles.x];
+                
+                //FIXME: Nos dimos cuenta de dos cosas:
+                // 1. Hay que usar function R=euler2Matrix(psi,theta,phi) de matlab y no rodrigues porque no anda del todo bien.
+                // 2. El orden de rotacion es el de este ejemplo. Hay que cambiarlo en la demo.
+                
+                [_cube2 roll:-angles.z];
+                [_cube2 yaw:-angles.y];
+                [_cube2 pitch:angles.x];
+                
+                [_cube3 roll:-angles.z];
+                [_cube3 yaw:-angles.y];
+                [_cube3 pitch:angles.x];
                 
                 break;
+
 
 
         }

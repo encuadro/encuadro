@@ -12,6 +12,6 @@ cmd = sprintf('%s%s -b %s%s -P %s%s -- %4.3f %4.3f %4.3f %4.3f %4.3f %4.3f %4.3f
 				camera.int.fov(1), camera.int.height, camera.int.width,...
 				setup.img_path, setup.img_fname)
 
-system([fix ';' cmd])
-
+% system([fix ';' cmd])
+system(cmd)
 end
