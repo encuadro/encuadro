@@ -108,6 +108,13 @@
                                     <action selector="tomarFoto:" destination="Qkb-jp-Gjx" eventType="touchUpInside" id="Ahb-fC-4aj"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="usw-Ge-Ggc">
+                                <rect key="frame" x="121" y="118" width="82" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -115,6 +122,7 @@
                     <connections>
                         <outlet property="image" destination="FyI-9T-S7b" id="VwW-wr-7Dx"/>
                         <outlet property="imagenView" destination="FyI-9T-S7b" id="Cd7-6i-jrb"/>
+                        <outlet property="mensaje" destination="usw-Ge-Ggc" id="4yY-Zf-WPy"/>
                     </connections>
                 </viewController>
             </objects>
@@ -182,9 +190,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="enCuadro App" id="9vV-dt-bIK"/>
-                    <connections>
-                        <outlet property="start" destination="NHz-ta-5ra" id="cKv-cl-wXU"/>
-                    </connections>
                 </viewController>
             </objects>
             <point key="canvasLocation" x="803" y="-1354"/>
@@ -443,8 +448,10 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImagenServerViewController.h"/>
             <relationships>
                 <relationship kind="action" name="tomarFoto:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="imagenView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mensaje" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="read" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="tomarFoto" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="url" candidateClass="UITextField"/>

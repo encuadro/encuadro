@@ -19,7 +19,8 @@
 @synthesize read =_read;
 @synthesize image = _image;
 
-
+@synthesize activity;
+@synthesize mensaje;
 
 @synthesize imagenView,tomarFoto;
 
@@ -45,12 +46,10 @@
     
 }
 
-
-
+//-(IBAction)uploadImage:(id)sender
 -(void)uploadImage
 {
-    
-    
+
     
     /*
      turning the image into a NSData object
@@ -121,13 +120,24 @@
     UIImage* image = [[UIImage alloc] initWithData:imageDataServer];
     [self.image setImage:image];
     
-    
-    
+  
     
 }
 
 
 
+
+- (IBAction)animate:(id)sender {
+    //[mensaje sizeToFit];
+   // mensaje.center=CGPointMake(20, 20);
+    mensaje.backgroundColor=[UIColor colorWithRed:0 green:0 blue:0.9 alpha:1];
+    mensaje.text=@"Cargando...";
+    [activity startAnimating];
+}
+
+- (IBAction)stop:(id)sender {
+    [activity stopAnimating];
+}
 
 
 
@@ -148,30 +158,23 @@
 }
 
 
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    
+   
+    
     if ([[segue identifier] isEqualToString:@"Detalle2"])
     {
         
-
-        
-        [self uploadImage];
+        [self performSelectorInBackground:@selector(animate:) withObject:nil];
+        [self uploadImage]; 
+       
         manual=false;
         
         ObraCompletaViewController *obracompletaViewController = 
         [segue destinationViewController];
-        
-        //NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
-        
-//        obracompletaViewController.descripcionObra = [[NSArray alloc]
-//                                                      initWithObjects: 
-//                                                      [self.cuadroAutor objectAtIndex:[myIndexPath row]],
-//                                                      [self.cuadroObra objectAtIndex:[myIndexPath row]],
-//                                                      [self.cuadroImages objectAtIndex:[myIndexPath row]],
-//                                                      [self.cuadroDescripcion objectAtIndex:[myIndexPath row]],
-//                                                      [self.nombre_audio objectAtIndex:[myIndexPath row]],          
-//                                                      nil];
-        
+         
         NSString* autor = @"http://silviaguridi99.no-ip.info/autores/";
         autor = [autor stringByAppendingString:returnString];
         autor = [autor stringByAppendingString:@".txt"];
@@ -205,7 +208,11 @@
                                                       audio,          
                                                       nil];
 
+       [self performSelectorOnMainThread:@selector(stop:) withObject:nil waitUntilDone:YES];
+       // [mensaje release];
         
+        mensaje.text=nil;
+        mensaje.backgroundColor=nil;
     }
 }
 
@@ -218,10 +225,18 @@
     picker.sourceType =UIImagePickerControllerSourceTypeCamera;
     [self presentModalViewController:picker animated:YES];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [self.view addSubview:activity]; // spinner is not visible until started
+    activity.center = CGPointMake(160, 100);
+
 }
 
 - (void)viewDidUnload
 {
+    [self setActivity:nil];
+    [self setAnimate:nil];
+    [self setStop:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

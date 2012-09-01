@@ -26,7 +26,9 @@ NSString *returnString;
 -(IBAction)tomarFoto:(id)sender;
 
 
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *activity;
 
-
+//@property (retain, nonatomic) IBOutlet UIView *vista;
+@property (retain, nonatomic) IBOutlet UILabel *mensaje;
 
 @end
