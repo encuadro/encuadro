@@ -37,15 +37,46 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    self.autor.text = [self.descripcionObra objectAtIndex:0];
-   
-   // self.obra.text = [self.descripcionObra objectAtIndex:1];
-    
-    self.imagenObra.image = [UIImage imageNamed: 
-                            [self.descripcionObra objectAtIndex:2]];
-    self.detalle.text=[self.descripcionObra objectAtIndex:3];
+    if (manual==true) {
+        
+        //CAMINO MANUAL
+        self.autor.text = [self.descripcionObra objectAtIndex:0];
+        
+        // self.obra.text = [self.descripcionObra objectAtIndex:1];
+        
+        self.imagenObra.image = [UIImage imageNamed: 
+                                 [self.descripcionObra objectAtIndex:2]];
+        self.detalle.text=[self.descripcionObra objectAtIndex:3];
+
+    }else {
+        //CAMINO AUTOMATICO
+        
+        
+        
+        NSString *filePath = [self.descripcionObra objectAtIndex:0];
+        NSData* textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        NSString* text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
+        self.autor.text=text;
+        
+        filePath= [self.descripcionObra objectAtIndex:1];
+        textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
+        self.obra.text=text;
+        
+        
+        filePath= [self.descripcionObra objectAtIndex:2];
+        textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        UIImage *imagen =  [[UIImage alloc] initWithData:textData];
+        self.imagenObra.image=imagen;
+        
+        
+        filePath= [self.descripcionObra objectAtIndex:3];
+        textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
+        self.detalle.text=text;
+    }
+     
     justLoaded=true;
-    
     
 }
 
