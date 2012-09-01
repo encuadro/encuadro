@@ -9,7 +9,8 @@
 
 #import <UIKit/UIKit.h>
 #import "ReaderSampleViewController.h"
-
+#import "ObraCompletaViewController.h"
+NSString *returnString;
 @interface ImagenServerViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     
@@ -22,9 +23,10 @@
 
 @property (nonatomic,retain)IBOutlet UIImageView *imagenView;
 @property (nonatomic,retain)IBOutlet UIButton *tomarFoto;
-
-
-
 -(IBAction)tomarFoto:(id)sender;
+
+
+
+
 
 @end

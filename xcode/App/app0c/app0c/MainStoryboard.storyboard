@@ -63,7 +63,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1437" y="-716"/>
+            <point key="canvasLocation" x="1401" y="-716"/>
         </scene>
         <!--Imagen Server View Controller - SIFT-->
         <scene sceneID="VoU-q9-Zmr">
@@ -86,13 +86,28 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="uploadImage:" destination="Qkb-jp-Gjx" eventType="touchUpInside" id="mwR-j2-ywP"/>
+                                    <segue destination="BtP-KK-hPw" kind="push" identifier="Detalle2" id="exL-C6-BBy"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="FyI-9T-S7b">
                                 <rect key="frame" x="40" y="31" width="240" height="267"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fZX-Dc-tp2">
+                                <rect key="frame" x="36" y="353" width="81" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Camara">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tomarFoto:" destination="Qkb-jp-Gjx" eventType="touchUpInside" id="Ahb-fC-4aj"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -103,7 +118,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1996" y="-707"/>
+            <point key="canvasLocation" x="1999" y="-698"/>
         </scene>
         <!--Inicio View Controller - enCuadro App-->
         <scene sceneID="vDZ-h5-c5c">
@@ -228,7 +243,7 @@
                     <navigationItem key="navigationItem" title="Obras" id="7tH-gW-xKo"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="1975" y="-1292"/>
+            <point key="canvasLocation" x="1999" y="-1284"/>
         </scene>
         <!--Obra Completa View Controller - Detalle de la Obra-->
         <scene sceneID="CcR-HA-Ma7">
@@ -239,7 +254,7 @@
                         <rect key="frame" x="0.0" y="44" width="320" height="436"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="center" id="2lw-2r-BYf">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="2lw-2r-BYf">
                                 <rect key="frame" x="28" y="57" width="264" height="200"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
@@ -251,7 +266,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="yv8-Za-DID">
-                                <rect key="frame" x="20" y="315" width="240" height="67"/>
+                                <rect key="frame" x="20" y="315" width="207" height="101"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -472,4 +487,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="exL-C6-BBy"/>
+    </inferredMetricsTieBreakers>
 </document>

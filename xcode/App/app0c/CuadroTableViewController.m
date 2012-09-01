@@ -7,8 +7,7 @@
 //
 
 #import "CuadroTableViewController.h"
-#import "CuadroTableViewCell.h"
-#import "ObraCompletaViewController.h"
+
 
 
 @interface CuadroTableViewController ()
@@ -131,7 +130,7 @@
                               initWithObjects:
                               @"Figari_cambacua.mp3",
                               @"Figari_candombe.mp3",
-                              @"Figari_gritoAsencio.mp3", 
+                              @"Figari_gritoDeAsencio.mp3", 
                               @"Figari_pericon.mp3",
                               @"Figari_pique.mp3",
                               @"Figari_toque.mp3",
@@ -182,7 +181,7 @@
                               @"Torres_constructiva.mp3", 
                               @"Torres_constructiva2.mp3",
                               @"Torres_interior.mp3",
-                              @"Torres_paisaje.mp3",
+                              @"Torres_paisajeCiudad.mp3",
                               @"Torres_universal.mp3",
                               nil];   
         
@@ -278,14 +277,14 @@
                              @"Blanes_sraCarlota.mp3", 
                              @"Figari_cambacua.mp3",
                              @"Figari_candombe.mp3",
-                             @"Figari_gritoAsencio.mp3", 
+                             @"Figari_gritoDeAsencio.mp3", 
                              @"Figari_pericon.mp3",
                              @"Figari_pique.mp3",
                              @"Figari_toque.mp3",
                              @"Torres_constructiva.mp3", 
                              @"Torres_constructiva2.mp3",
                              @"Torres_interior.mp3",
-                             @"Torres_paisaje.mp3",
+                             @"Torres_paisajeCiudad.mp3",
                              @"Torres_universal.mp3",
                              nil];
         
@@ -406,6 +405,8 @@
 {
     if ([[segue identifier] isEqualToString:@"Detalle"])
     {
+        manual=true;
+        
         ObraCompletaViewController *obracompletaViewController = 
         [segue destinationViewController];
         

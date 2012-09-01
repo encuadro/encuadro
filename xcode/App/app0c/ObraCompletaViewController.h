@@ -16,6 +16,7 @@
 
 int click;
 bool justLoaded;
+bool manual;
 
 @interface ObraCompletaViewController : UIViewController
 

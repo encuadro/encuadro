@@ -47,8 +47,10 @@
 
 
 
--(IBAction)uploadImage:(id)sender
+-(void)uploadImage
 {
+    
+    
     
     /*
      turning the image into a NSData object
@@ -106,7 +108,7 @@
     
     // now lets make the connection to the web
     NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
     
     NSLog(returnString);
     
@@ -146,7 +148,66 @@
 }
 
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"Detalle2"])
+    {
+        
 
+        
+        [self uploadImage];
+        manual=false;
+        
+        ObraCompletaViewController *obracompletaViewController = 
+        [segue destinationViewController];
+        
+        //NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+        
+//        obracompletaViewController.descripcionObra = [[NSArray alloc]
+//                                                      initWithObjects: 
+//                                                      [self.cuadroAutor objectAtIndex:[myIndexPath row]],
+//                                                      [self.cuadroObra objectAtIndex:[myIndexPath row]],
+//                                                      [self.cuadroImages objectAtIndex:[myIndexPath row]],
+//                                                      [self.cuadroDescripcion objectAtIndex:[myIndexPath row]],
+//                                                      [self.nombre_audio objectAtIndex:[myIndexPath row]],          
+//                                                      nil];
+        
+        NSString* autor = @"http://silviaguridi99.no-ip.info/autores/";
+        autor = [autor stringByAppendingString:returnString];
+        autor = [autor stringByAppendingString:@".txt"];
+        
+        
+        NSString* obra = @"http://silviaguridi99.no-ip.info/obras/";
+        obra = [obra stringByAppendingString:returnString];
+        obra = [obra stringByAppendingString:@".txt"];
+        
+        
+        NSString* texto = @"http://silviaguridi99.no-ip.info/textos/";
+        texto = [texto stringByAppendingString:returnString];
+        texto = [texto stringByAppendingString:@".txt"];
+        
+        NSString* imagen = @"http://silviaguridi99.no-ip.info/imagenes/";
+        imagen = [imagen stringByAppendingString:returnString];
+        imagen = [imagen stringByAppendingString:@".jpg"];
+        
+        
+        NSString* audio = returnString;
+        audio = [audio stringByAppendingString:@".mp3"];
+        
+        
+        
+        obracompletaViewController.descripcionObra = [[NSArray alloc]
+                                                      initWithObjects: 
+                                                      autor,
+                                                      obra,
+                                                      imagen,
+                                                      texto,
+                                                      audio,          
+                                                      nil];
+
+        
+    }
+}
 
 
 - (void)viewDidLoad
@@ -173,5 +234,7 @@
         return YES;
     }
 }
+
+
 
 @end
