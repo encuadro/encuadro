@@ -11,11 +11,12 @@
 
 
 #pragma mark UIBackgroundView
-int numero = 8;
+int numero = 6;
 double puntoProyectado3D1[3], puntoProyectado3D2[3], puntoProyectado3D3[3], b[3];
 double punto3D1[3] = {0,0,-30}, punto3D2[3] = {190,0,-30}, punto3D3[3]={0,100,-30};
 Isgl3dVector3 angles;
-
+Isgl3dTextureMaterial * backgroundMaterial;
+Isgl3dGLUIImage * background;
 
 @implementation UIBackgroundView
 
@@ -24,8 +25,8 @@ Isgl3dVector3 angles;
 	if ((self = [super init])) {
         NSLog(@"init del background\n");
         
-        Isgl3dTextureMaterial * backgroundMaterial;
-        Isgl3dGLUIImage * background;
+//        Isgl3dTextureMaterial * backgroundMaterial;
+//        Isgl3dGLUIImage * background;
         
         switch (numero) {
             case 0:
@@ -892,6 +893,7 @@ double traslacion[3];
 }
 
 - (void) tick:(float)dt {
+   
 
 }
 
