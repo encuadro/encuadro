@@ -1,19 +1,36 @@
+/*======================includes=======================*/
 #include <math.h>
 #include "vvector.h"
+/*=====================================================*/
 
-/*----defines-----*/
+
+/*======================defines========================*/
+//marker properties
 #define QL_NB_VERTICES 4
 #define QLSET_NB_QLS 3
 #define MRKR_NB_QLSETS 3
 #define MRKR_NP MRKR_NB_QLSETS*QLSET_NB_QLS*QL_NB_VERTICES
 
+//thesholds
 #define QL_CENTER_TH 10
+#define ANGLE_TH 15
+#define PERIMETER_TH 10
 
+//output error codes
+#define MRKR_INCOMPLETE_NOT_FOUND -3
+#define MRKR_NOT_SUFFICIENT -2
+#define MRKR_NOT_ENOUGH_SEGMENTS -1
+#define MRKR_COMPLETE_FOUND 0
+#define MRKR_INCOMPLETE_FOUND 1
+
+
+//misc
 #define MY_PI 3.14159265358979323846
+/*=====================================================*/
 
-/*-----macros-----*/
 
-/*gives angle between (-pi/2,pi/2]*/
+/*======================macros=========================*/
+//gives angle between (-pi/2,pi/2]
 #define VEC_ANGLE_2(a,v) 								\
 {														\
 	(a) = atan((v)[1]/(v)[0])*(180/MY_PI);	\
@@ -26,7 +43,10 @@
 	(a) = fmod((atan2((v)[1],(v)[0]))*(180/MY_PI),180);	\
 }
 */
-/*----structures-----*/
+/*=====================================================*/
+
+
+/*====================structures=======================*/
 /*FIXME: resolve structure intialization! */
 typedef struct quadrilateral{
 	//const int NB = QL_NB_VERTICES;
@@ -49,14 +69,17 @@ typedef struct markerQr{
 	double origin[2] ;
 	double directions[2][2];
 } markerQr;
+/*=====================================================*/
 
 
-/*-----constructors-----*/
+/*======================constructors===================*/
 quadrilateral quadrilateralNew(double vertices[4][2]);
 quadrilateralSet quadrilateralSetNew(quadrilateral ql[QLSET_NB_QLS]);
 markerQr markerQrNew(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
+/*=====================================================*/
 
-/*-----functions------*/
+
+/*=====================functions=======================*/
 int findPointCorrespondances(int *listSize, double *list, double **imgPts);
 int getMarkerVertices(markerQr marker, double **imgPts);
 
@@ -74,4 +97,5 @@ int orderMarkerVertices(markerQr *marker);
 int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]);
 int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet);
 int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]);
+/*=====================================================*/
 
