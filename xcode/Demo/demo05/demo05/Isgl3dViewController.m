@@ -129,6 +129,8 @@ double **imagePointsCambiados;
         // Entonces podemos borrar "data" y no pasa nada con pixels
         
         pixels = (unsigned char *)[data bytes];
+       
+        
         
     }
     
