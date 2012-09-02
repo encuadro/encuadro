@@ -22,6 +22,7 @@
 	
 	// Instantiate the Isgl3dDirector and set background color
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
+
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES;
@@ -32,7 +33,7 @@
 	
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
-    
+ 
 	// Set view in director
 	[Isgl3dDirector sharedInstance].openGLView = glView;
 	

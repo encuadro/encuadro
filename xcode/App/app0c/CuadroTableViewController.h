@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "CuadroTableViewCell.h"
+#import "ObraCompletaViewController.h"
 
 int opcionAutor;
 /* opcionAutor

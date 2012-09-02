@@ -260,59 +260,59 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     Pair* pairs_iterator = (Pair*) malloc(sizeof(Pair) * (nKeyPoints+nKeyPoints));
     const char* imagen;
 
-    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes1.txt", &nKeyPoints_base);
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes_sraCarlota.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     //imagen = "Blanes - Retrato de la Sra. Carlota F. de R.";
-    imagen = "Blanes1.jpg";
+    imagen = "Blanes_sraCarlota";
     final_matches = correspondences;
     free(descriptors_base);
     
-    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes2.txt", &nKeyPoints_base);
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes_fiebreAmarilla.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
     //imagen = "Blanes - Un episodio de la fiebre amarilla en Buenos Aires, c.1871";
-    imagen = "Blanes2.jpg";
+    imagen = "Blanes_fiebreAmarilla";
         final_matches = correspondences;
     }
     free(descriptors_base);
     
-    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari1.txt", &nKeyPoints_base);
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari_toque.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
     //imagen = "Figari - Toque de oración, c.1925";
-    imagen = "Figari1.jpg";
+    imagen = "Figari_toque";
         final_matches = correspondences;
     }
     free(descriptors_base);
     
-    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari2.txt", &nKeyPoints_base);
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari_candombe.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
     //imagen = "Figari - Candombe, c.1925";
-    imagen = "Figari2.jpg";
+    imagen = "Figari_candombe";
         final_matches = correspondences;
     }
     free(descriptors_base);
     
-    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres1.txt", &nKeyPoints_base);
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres_universal.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
     //imagen = "Torres Garcia - Arte universal, 1943";
-    imagen = "Torres1.jpg";
+    imagen = "Torres_universal";
         final_matches = correspondences;
     }
    free(descriptors_base);
     
-    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres2.txt", &nKeyPoints_base);
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres_interior.txt", &nKeyPoints_base);
     compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
     if (correspondences>final_matches)
     {
     //imagen = "Torres Garcia - Interior, 1924";
-    imagen = "Torres2.jpg";
+    imagen = "Torres_interior";
         final_matches = correspondences;
     }
     free(descriptors_base);
@@ -322,7 +322,7 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     {
         return imagen;
     }
-    else return "wrong_enter.jpg";
+    else return "wrong_enter";
 
 
 }
@@ -337,19 +337,19 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
     
     if (strcmp(ala,"blanes")==0)
     {
-        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes1.txt", &nKeyPoints_base);
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes_sraCarlota.txt", &nKeyPoints_base);
         compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
         //imagen = "Blanes - Retrato de la Sra. Carlota F. de R.";
-        imagen = "Blanes1.jpg";
+        imagen = "Blanes_sraCarlota";
         final_matches = correspondences;
         free(descriptors_base);
         
-        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes2.txt", &nKeyPoints_base);
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Blanes_fiebreAmarilla.txt", &nKeyPoints_base);
         compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
         if (correspondences>final_matches)
         {
             //imagen = "Blanes - Un episodio de la fiebre amarilla en Buenos Aires, c.1871";
-            imagen = "Blanes2.jpg";
+            imagen = "Blanes_fiebreAmarilla";
             final_matches = correspondences;
         }
         free(descriptors_base);
@@ -359,29 +359,29 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
         {
         return imagen;
         }
-        else return "wrong_enter.jpg";
+        else return "wrong_enter";
     }
     
     else if (strcmp(ala,"figari")==0)
     {
         
-        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari1.txt", &nKeyPoints_base);
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari_toque.txt", &nKeyPoints_base);
         
         compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
         
         //imagen = "Figari - Toque de oración, c.1925";
-        imagen = "Figari1.jpg";
+        imagen = "Figari_toque";
         final_matches = correspondences;
         
         free(descriptors_base);
 
         
-        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari2.txt", &nKeyPoints_base);
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Figari_candombe.txt", &nKeyPoints_base);
         compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
         if (correspondences>final_matches)
         {
             //imagen = "Figari - Candombe, c.1925";
-            imagen = "Figari2.jpg";
+            imagen = "Figari_candombe";
             final_matches = correspondences;
         }
         free(descriptors_base);
@@ -390,25 +390,25 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
         {
             return imagen;
         }
-        else return "wrong_enter.jpg";
+        else return "wrong_enter";
     }
     
     else if (strcmp(ala,"torres")==0)
     {
-        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres1.txt", &nKeyPoints_base);
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres_universal.txt", &nKeyPoints_base);
         compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
         
         //imagen = "Torres Garcia - Arte universal, 1943";
-        imagen = "Torres1.jpg";
+        imagen = "Torres_universal";
         final_matches = correspondences;
         free(descriptors_base);
         
-        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres2.txt", &nKeyPoints_base);
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Torres_interior.txt", &nKeyPoints_base);
         compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
         if (correspondences>final_matches)
         {
             //imagen = "Torres Garcia - Interior, 1924";
-            imagen = "Torres2.jpg";
+            imagen = "Torres_interior";
             final_matches = correspondences;
         }
         free(descriptors_base);
@@ -417,11 +417,11 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
         {
             return imagen;
         }
-        else return "wrong_enter.jpg";
+        else return "wrong_enter";
     }
     else
     {
-        return "wrong_enter.jpg";
+        return "wrong_enter";
     }
 }
 
@@ -485,13 +485,13 @@ int main(int argc, const char * argv[])
     if (argc==2)
     {
         image_out = buscarBaseDeDatos(nKeyPoints, descriptors);
-        printf("images/%s\n",image_out);
+        printf("%s",image_out);
     
     }
     else if (argc ==3)
     {
         image_out = buscarBaseDeDatos_ala(nKeyPoints, descriptors,argv[2]);
-        printf("images/%s\n",image_out);
+        printf("%s",image_out);
     
     }
    

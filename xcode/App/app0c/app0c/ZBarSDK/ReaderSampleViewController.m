@@ -14,6 +14,7 @@
 - (IBAction) scanButtonTapped
 {
 
+    
    
     // ADD: present a barcode reader that scans from the camera feed
     ZBarReaderViewController *reader = [ZBarReaderViewController new];
@@ -33,6 +34,11 @@
     
 
    // [reader release];
+        
+    
+    
+    
+    
 }
 
 - (IBAction) play{
@@ -91,6 +97,8 @@
         resultText.text = symbol.data;
         site=@"http://www.mnav.gub.uy/cms.php?a=1";
         opcionAutor=1;
+        room=@"blanes";
+        cad=@"AutorBlanes.jpeg";
         
        
     } else if ([string rangeOfString:@"FIGARI"].location != NSNotFound) {
@@ -99,6 +107,8 @@
         resultText.text = symbol.data;
         site=@"http://www.mnav.gub.uy/cms.php?a=6";
         opcionAutor=2;
+        room=@"figari";
+        cad=@"AutorFigari.jpeg";
 
         
     }else if ([string rangeOfString:@"TORRES"].location != NSNotFound) {
@@ -106,22 +116,38 @@
         
         resultText.text = symbol.data;
         site=@"http://www.mnav.gub.uy/cms.php?a=4";
-        opcionAutor=3; 
+        opcionAutor=3;
+        room=@"torres";
+        cad=@"AutorTorres.jpeg";
+        
     
     } else {
        //ninguna ZONA
         resultText.text = @"No está en zona BLANES, FIGARI ni TORRES GARCIA";
         site=@"http://code.google.com/p/encuadro/";
         opcionAutor=0;
+        room=@"noroom";
+        cad=@"Blanes_sraCarlota.jpg";
 
     }
     
 
       
     // EXAMPLE: do something useful with the barcode image
-    resultImage.image =
-    [info objectForKey: UIImagePickerControllerOriginalImage];
+    //resultImage.image = [info objectForKey: UIImagePickerControllerOriginalImage];
 
+    UIImage *cuadroPhoto = [UIImage imageNamed:cad];
+    
+    resultImage.image = cuadroPhoto;
+    
+    UIAlertView *alertWithOkButton;
+    UIAlertView *alertWithYesNoButtons;
+    alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"
+                                                   message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    
+    [alertWithOkButton show];
+    [alertWithOkButton release];
+    
 
     // ADD: dismiss the controller (NB dismiss from the *reader*!)
     [reader dismissModalViewControllerAnimated: YES];
@@ -148,11 +174,18 @@
         [audioPlayer stop];
         click=0;
         [start setTitle:@"Start" forState:UIControlStateNormal];
+       
+        
         
     }
 }
 
+-(void) viewDidLoad{
 
+    [super viewDidLoad];
+    room=@"noroom";
+
+}
 
 - (BOOL) shouldAutorotateToInterfaceOrientation: (UIInterfaceOrientation) orient
 {

@@ -11,7 +11,10 @@
 #import "CuadroTableViewController.h"
 #import "app0cAppDelegate.h"
 
+
 int click;
+NSString *room;
+NSString *cad;
 
 @interface ReaderSampleViewController
     : UIViewController
@@ -30,6 +33,7 @@ int click;
 @property (nonatomic, retain) IBOutlet NSString *site;
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) UIButton *start;
+
 
 
 

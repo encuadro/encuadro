@@ -120,6 +120,22 @@
 }
 
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"ObrasAutor"])
+    {
+        
+        
+        NSIndexPath *myIndexPath = [self.tableView 
+                                    indexPathForSelectedRow];
+           
+        opcionAutor = [myIndexPath row]+1;
+        
+
+    }
+}
+
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

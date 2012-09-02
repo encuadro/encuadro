@@ -105,7 +105,10 @@ double **imagePointsCambiados;
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);  
     CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
     CGImageRef ref = [self.context createCGImage:ciImage fromRect:ciImage.extent];
-    NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref));
+    //NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref));
+    
+    CGDataProviderRef provider = CGImageGetDataProvider(ref);
+    NSData* data =(NSData*)CGDataProviderCopyData(provider);
     
     /*Obtengo algunas catacteristicas de la imagen de interes*/
     width = CGImageGetWidth(ref);
@@ -150,7 +153,7 @@ double **imagePointsCambiados;
         {
             bandera = true;
             
-            NSLog(@"Procesando!\n");
+            if (verbose) NSLog(@"Procesando!\n");
             
             /******************PROCESAMIENTO********************************************/
             /***************************************************************************/
@@ -289,6 +292,8 @@ double **imagePointsCambiados;
             errFlag=false;
             errFlag1=false;
             errFlag2=false;
+            
+      
         }
         
     }

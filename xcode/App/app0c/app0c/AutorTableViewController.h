@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "CuadroTableViewCell.h"
+#import "CuadroTableViewController.h"
 
 @interface AutorTableViewController : UITableViewController
 //@property (nonatomic, retain) IBOutlet UIImageView *autorLabelImagen;

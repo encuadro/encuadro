@@ -90,7 +90,7 @@ bool verbose;
         _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         
-        Isgl3dSphere * sphereMesh = [Isgl3dSphere meshWithGeometry:5 longs:40 lats:40];
+       // Isgl3dSphere * sphereMesh = [Isgl3dSphere meshWithGeometry:5 longs:40 lats:40];
         
 //        _redondel1 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
 //        _redondel2 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
@@ -209,22 +209,21 @@ bool verbose;
                            
             _cubito3.rotationX = 0;
             _cubito3.rotationY = 0;
-            _cubito3.rotationZ = 0;
+            _cubito3.rotationZ = 0;         
             
             
-            [self.cubito1 pitch:angles.x];
-            [self.cubito1 yaw:-angles.y];
             [self.cubito1 roll:-angles.z];
+            [self.cubito1 yaw:-angles.y];
+            [self.cubito1 pitch:angles.x];
             
-            [self.cubito2 pitch:angles.x];
-            [self.cubito2 yaw:-angles.y];
             [self.cubito2 roll:-angles.z];
+            [self.cubito2 yaw:-angles.y];
+            [self.cubito2 pitch:angles.x];
             
-            [self.cubito3 pitch:angles.x];
-            [self.cubito3 yaw:-angles.y];
             [self.cubito3 roll:-angles.z];
+            [self.cubito3 yaw:-angles.y];
+            [self.cubito3 pitch:angles.x];
 
-            
         }
     }
     

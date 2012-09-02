@@ -50,6 +50,14 @@ switch pose_nb
 		tx = 0;
 		ty = 0;
 		tz = 1000:500:2000;		
+    case 11, %esta es de mou		
+		ax = -30;
+		ay = -30;
+		az = 0;
+
+		tx = 0;
+		ty = 0;
+		tz = 500;
 %=============================RANDOM POSES================================%
 	case 50,		
 		ax = randn(5);
