@@ -58,7 +58,7 @@ int main(int argc, const char * argv[])
 	int distance_thr = 25;	// Threshold para findPointsCorrespondences
     int errorMarkerDetection; // codigo de error que devuelve findPointCorrespondences
 
-    bool verImg=false; // para ver imagenes mientras se hace el benchmark
+    bool verImg=true; // para ver imagenes mientras se hace el benchmark
     
     double scale=0.8; // scale para el LSD
     bool flag=false,flag1=false,flag2=false; // flags para ver si fallo la deteccion de marcador
@@ -313,7 +313,7 @@ int main(int argc, const char * argv[])
         
         /*get image properties*/
         
-        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".png");
+        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".jpg");
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
@@ -391,17 +391,17 @@ int main(int argc, const char * argv[])
         
         for (j=0;j<NumberOfPoints;j++){
             fprintf(puntosFiltro,"%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
-//            printf("%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
-            
-            if (!flag1) {
-                flag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000);
-            }    
-            else {
-                flag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000);
-                
-            }
-            flag=flag1&&flag2;
-            if (flag) break;
+////            printf("%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
+//            
+//            if (!flag1) {
+//                flag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000);
+//            }    
+//            else {
+//                flag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000);
+//                
+//            }
+//            flag=flag1&&flag2;
+//            if (flag) break;
         }
         fclose(puntosFiltro);
         
@@ -426,7 +426,7 @@ int main(int argc, const char * argv[])
         fprintf(errorFile, "%d\n",cantPtsDetectados);
         
         /* chequeo si hay error de filtro o de Pose*/
-        if (!flag) {
+        if (errorMarkerDetection>=0) {
             CoplanarPosit(cantPtsDetectados, imagePointsCrop, objectCrop, f, center, Rot, Tras);
             
             for (j=0;j<NumberOfPoints;j++){
@@ -468,10 +468,9 @@ int main(int argc, const char * argv[])
             }
         }
         else {
-            err=-10;
-            fprintf(errorFile, "%g\n",err);
+            fprintf(errorFile, "%d\n",errorMarkerDetection);
             fclose(errorFile);
-//            goto FreeLabel;
+            goto FreeLabel;
             
         }
         /*Poject object points and save reprojection error*/

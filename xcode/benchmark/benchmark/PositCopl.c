@@ -396,7 +396,7 @@ while (!converged)
   converged=(Erp==0)||(deltaImDifference<Threshold);
 
   /*test de securite en cas de non convergence (oscillations periodiques)*/
-  if ((count>100)&&(Erp<Erpmin)) Erpmin=Erp;
+  if (Erp<Erpmin) Erpmin=Erp;
   if ((count>100)&&(Erp==Erpmin)) converged=1;
 
   count++;
