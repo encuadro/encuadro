@@ -23,61 +23,81 @@
 int main(int argc, const char * argv[])
 {
     
-    /*Variable para openCV y LSD*/
-    int width, height;
-	double *image;
-	double **imagePoints,**imagePoints4Composit,**imagePointsCrop;
-	int i, j, listSize = 0, listFiltSize = 0; 	int listDim = 7;
-	int distance_thr = 25;	// 4 pixels
-    bool verImg=true;
-    double scale=0.6;
-    bool flag=false;
-    bool flag1=false,flag2=false;
+    /*================================================================*/
+    /*=================Definiciones de variables======================*/
+    /*================================================================*/
     
-    /*creo directorios para guardar datos*/
+    int width, height;
+    double f;
+    double** Rot;
+    double* Tras;
+    double Rot4Composit[3][3];
+    double Trans4Composit[3];
+    double center[2];
+    double x,y,err,x4Composit,y4Composit,err4Composit;
+    f=747.2;
+    center[0]=320.5;
+    center[1]=240.5;
+    float intrinsic[3][3]=  {{747.2,  0,          320.5},
+        {0,          747.5  ,240.5},
+        {0,          0,          1},
+    };
+    
+    int NumberOfPoints=36; 
+    double *image;
+	double **imagePoints;
+    double **imagePoints4Composit;
+    double **imagePointsCrop;
+    double **object;
+    double **objectCrop;
+    float **objectCamera;
+    float **objectProy;
+    double **objectProy4Composit;
+    
+    int i, j, listSize = 0, listFiltSize = 0; 	int listDim = 7;
+	int distance_thr = 25;	// Threshold para findPointsCorrespondences
+    int errorMarkerDetection; // codigo de error que devuelve findPointCorrespondences
+
+    bool verImg=false; // para ver imagenes mientras se hace el benchmark
+    
+    double scale=0.8; // scale para el LSD
+    bool flag=false,flag1=false,flag2=false; // flags para ver si fallo la deteccion de marcador
+    int k;
+    int cantPtsDetectados; // cantidad de puntos del maracador
+
+    /*================================================================*/
+
+    
+    /*================================================================*/
+    /*===============directorios para guardar datos===================*/
+    /*================================================================*/
+    
     char folderName[100];
     sprintf(folderName, "%s%s%g",argv[1],"Scale",scale);
     mkdir(folderName,S_IRWXU);
     sprintf(folderName, "%s%s%d%s",folderName,"/threshold",distance_thr,"/");
     mkdir(folderName,S_IRWXU);
     
+    /*================================================================*/
+
     
-    
-    /*Variables para el Coplanar*/
-    int NumberOfPoints,k, cantPtsDetectados;
-    double **object, **objectCrop;
-    float **objectCamera;
-    float **objectProy,**objectProy4Composit;
-    double f; // Para el ipod y para el ipad tambien sirve /*f: focal length en pixels*/
-    double** Rot;
-    double Rot4Composit[3][3];
-    double Trans4Composit[3];
-    double* Tras;
-    double center[2];
-    
-    /*Variables para calcular error de reproyeccion*/
-    double x,y,err,x4Composit,y4Composit,err4Composit;
-    
-    NumberOfPoints=36;
-    
-    /*parametros intrinsecos*/  
-    f=747.2;
-    center[0]=320.5;
-    center[1]=240.5;
-    float intrinsic[3][3]=  {{747.2,  0,          320.5},
-                             {0,          747.5  ,240.5},
-                             {0,          0,          1},
-    };
-    
+    /*================================================================*/
+    /*===================Reserva de memoria===========================*/
+    /*================================================================*/
     /*Reservamos memoria para pose*/
     Rot=(double **)malloc(3 * sizeof(double *));
     for (k=0;k<3;k++) Rot[k]=(double *)malloc(3 * sizeof(double));
     Tras=(double *)malloc(3 * sizeof(double));
     
-    /*Reservo memoria para imagePioints2*/
+    /*Reservo memoria para imagePoints*/
+    imagePoints=(double **)malloc(NumberOfPoints*sizeof(double*));
+    for(i=0;i<NumberOfPoints;i++)imagePoints[i]=(double*)malloc(2*sizeof(double));
+    
+    /*Reservo memoria para imagePioints4Composit*/
     imagePoints4Composit=(double **)malloc(NumberOfPoints*sizeof(double*));
     for(i=0;i<NumberOfPoints;i++)imagePoints4Composit[i]=(double*)malloc(2*sizeof(double));
     
+    /*Reservo memoria para imagePiointsCrop*/
     imagePointsCrop=(double **)malloc(NumberOfPoints*sizeof(double*));
     for(i=0;i<NumberOfPoints;i++)imagePointsCrop[i]=(double*)malloc(2*sizeof(double));
     
@@ -85,21 +105,28 @@ int main(int argc, const char * argv[])
     object=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (k=0;k<NumberOfPoints;k++) object[k]=(double *)malloc(3 * sizeof(double));
     
+    /*Reservamos memoria para marcador Crop*/
     objectCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (k=0;k<NumberOfPoints;k++) objectCrop[k]=(double *)malloc(3 * sizeof(double));
     
+    /*Reservamos memoria para marcador en el eje de coordenadas de la camara*/
     objectCamera=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (k=0;k<NumberOfPoints;k++) objectCamera[k]=(float *)malloc(3 * sizeof(float));
     
+    /*Reservamos memoria para marcador proyectado sobre imagen*/
     objectProy=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (k=0;k<NumberOfPoints;k++) objectProy[k]=(float *)malloc(2 * sizeof(float));
 
-    objectProy4Composit=(float **)malloc(NumberOfPoints * sizeof(float *));
-    for (k=0;k<NumberOfPoints;k++) objectProy4Composit[k]=(float *)malloc(2 * sizeof(float));
-
-    //distancia entre marcadores, a segun x (eje largo), b segun y (eje corto)
-    double a=182.5, b=98;       
+    /*Reservamos memoria para marcador proyectado sobre imagen para composit*/
+    objectProy4Composit=(double **)malloc(NumberOfPoints * sizeof(double *));
+    for (k=0;k<NumberOfPoints;k++) objectProy4Composit[k]=(double *)malloc(2 * sizeof(double));
+     
+    /*================================================================*/
     
+    
+    /*================================================================*/
+    /*==================Inicializo marcador===========================*/
+    /*================================================================*/
     /* BEGIN MARKER */
     //QlSet0
     object[0][0] = 15;
@@ -214,6 +241,7 @@ int main(int argc, const char * argv[])
     object[35][2] = 0;
     /* END MARKER*/
     
+    /*================================================================*/
     
     /* leo que caso estoy analizando*/
     int l=strlen(argv[1]);
@@ -269,7 +297,7 @@ int main(int argc, const char * argv[])
 	cvInitFont(&font1, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0.5, 1, 8);
     
 	
-    for (k=0; k<5; k++) {
+    for (k=1; k<61; k++) {
         
         
         if (verImg) {
@@ -289,6 +317,7 @@ int main(int argc, const char * argv[])
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
+        cvMoveWindow( "LSD filtered", img->width, 42);
         
         /*create LSD image type*/
         image = (double *) malloc( width * height * sizeof(double) );
@@ -326,7 +355,7 @@ int main(int argc, const char * argv[])
         /*filter LSD segments*/		
         listFilt = filterSegments( &listFiltSize , &listSize, list, distance_thr);
         //imagePoints = getCorners( &listFiltSize, listFilt);
-        imagePoints = findPointCorrespondances(&listFiltSize, listFilt);
+        errorMarkerDetection = findPointCorrespondances(&listFiltSize, listFilt, imagePoints);
         
         /*Guardo en archivo puntos detectados*/
         FILE *puntosFiltro;
@@ -394,6 +423,7 @@ int main(int argc, const char * argv[])
         FILE *errorFile;
         sprintf(fileName, "%s%s%d%s",folderName,imgNameRoot,imgNum,".txt");
         errorFile=fopen(fileName, "w");
+        fprintf(errorFile, "%d\n",cantPtsDetectados);
         
         /* chequeo si hay error de filtro o de Pose*/
         if (!flag) {
@@ -412,7 +442,7 @@ int main(int argc, const char * argv[])
             printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
             printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
             printf("Traslacion: \n");
-            printf("%f\ t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rot,angles1,angles2);
@@ -525,12 +555,7 @@ int main(int argc, const char * argv[])
         free( (void *) list );
         listFiltSize = 0;
         listSize = 0;
-        
-        /*free imagePoints memory*/
-        for(i = 0; i < 36; i++)
-            free(imagePoints[i]);
-        free(imagePoints);
-        /********************/
+
         
         for (i=0;i<3;i++){
             Rot[i][0]=0;
@@ -555,7 +580,6 @@ int main(int argc, const char * argv[])
         cvReleaseImage( &img );
         cvReleaseImage( &imgLsd );
         cvReleaseImage( &imgLsdFilt );
-        
         
         imgNum++;
         flag=false;
