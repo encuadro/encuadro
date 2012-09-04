@@ -11,6 +11,8 @@ function setup = renderMarkerSetup(repo_path,output_path,pose_id)
 % 	end
 % end
 
+%% general setup
+
 setup.pose_id = pose_id;
 
 setup.img_fname_template = 'marker_%04d';

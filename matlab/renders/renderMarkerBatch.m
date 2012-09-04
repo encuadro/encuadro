@@ -4,19 +4,19 @@ clc;
 
 %% setup
 
-% %colorado setup
-% setup = renderMarkerSetup(	'/home/roho/workspace/encuadro/',...
-% 							'/home/roho/Dropbox/encuadro/renders/',...
-% 							30);
+%colorado setup
+setup = renderMarkerSetup(	'/home/roho/workspace/encuadro/',...
+							'/home/roho/Dropbox/encuadro/renders/',...
+							5);
 
-%mou setup
-setup = renderMarkerSetup(	'/Users/pablofloresguridi/repositorios/encuadro/',...
-							'/Users/pablofloresguridi/Desktop/',...
-							11);                        
+% %mou setup
+% setup = renderMarkerSetup(	'/Users/pablofloresguridi/repositorios/encuadro/',...
+% 							'/Users/pablofloresguridi/Desktop/',...
+% 							11);                        
 
 
 %% configure camera
-camera = pinholeCamera(46.4343,480,360,zeros(5,1),0);
+camera = pinholeCamera(44.5,480,360,zeros(5,1),0);
 
 %% generate poses
 poses = generatePoses(setup.pose_id);
@@ -26,5 +26,6 @@ for i=1:length(poses)
 	renderMarker(poses(i),camera,setup,i);
 end
 
-%% write poses 
+%% write parameters 
 writePosesFile(poses,[setup.img_path 'poses.txt']);
+writeCameraFile(camera,[setup.img_path 'camera.txt']);
