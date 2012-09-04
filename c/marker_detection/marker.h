@@ -97,5 +97,8 @@ int orderMarkerVertices(markerQr *marker);
 int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]);
 int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet);
 int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]);
+int getCropLists(double **imagePts, double **worldPts, double
+                 **imagePtsCrop, double **worldPtsCrop);
+
 /*=====================================================*/
 

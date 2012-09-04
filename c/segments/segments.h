@@ -14,13 +14,15 @@ http://code.google.com/p/encuadro/
 #include <math.h>
 #include <malloc.h>
 
+#define MY_PI 3.14159265358979323846
+
 typedef struct segment{
 		int p1[2];
 		int p2[2];
-		double dir[2];	
+		/*double dir[2];
 		double length;
 		double angleDeg;
-		double angleRad;
+		double angleRad;*/
 		double width;
 } segment;
 
@@ -38,7 +40,7 @@ int lineSegmentIntersection(double Ax, double Ay,
 							double Dx, double Dy,
 							double *X, double *Y );
 							
-double** getMarkerCorners(int *listSize, double *list);
+double** getCorners(int *listSize, double *list);
 
 double* filterSegments(int *listOutSize , int *listInSize , double *listIn, float distance_thr);
 

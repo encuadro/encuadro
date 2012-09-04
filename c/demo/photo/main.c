@@ -309,21 +309,21 @@ int main(int argc, char **argv)
 
     		// draw line on frameLsd
     		cvLine(imgLsdFilt,pt1,pt2,white,1.5,8,0);
-
-    		if (j<36){
-    			//define marker corners
-    			pt1 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
-    			// draw small corner circle
-    			cvCircle(imgLsdFilt, pt1, 3, green, 1, 8, 0);
-    			pt2 = cvPoint(objectProy[j][0],objectProy[j][1]);
-    			// draw small corner circle
-    			cvCircle(imgLsdFilt, pt2, 3, red, 1, 8, 0);
-    			char ind[2];
-    			sprintf(ind,"%d",j);
-    			cvPutText(imgLsdFilt, ind, pt1, &font1 , blue);
-
-    		}
     	}
+		if (error_code>=0)
+		{	/*draw imgPts*/
+			for (j=0; j<36; j++){
+				//define marker corners
+				pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
+				// draw small corner circle
+				cvCircle(imgLsdFilt, pt3, 3, red, 1, 8, 0);
+				char ind[2];
+				sprintf(ind,"%d",j);
+				cvPutText(imgLsdFilt, ind, pt3, &font1 , blue);
+			}
+		}
+
+
     } else
     {
     	printf("ERROR CODE findPointCorrespondances: %d",error_code);
