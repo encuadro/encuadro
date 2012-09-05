@@ -397,7 +397,8 @@ while (!converged)
 
   /*test de securite en cas de non convergence (oscillations periodiques)*/
   if (Erp<Erpmin) Erpmin=Erp;
-  if ((count>100)&&(Erp==Erpmin)) converged=1;
+//  if ((count>100)&&(Erp==Erpmin)) converged=1;
+  if (count>100) converged=1; // Modifico esta condicion pq habia casos en los que oscilaba por encima de ErpMin y nunca paraba
 
   count++;
   /*printf("\n%d %f %d %f",count-1,Erhvmax,Erp,deltaImDifference);*/

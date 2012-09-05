@@ -31,23 +31,23 @@ int main(int argc, const char * argv[])
     double f;
     double** Rot;
     double* Tras;
-    double Rot4Composit[3][3];
-    double Trans4Composit[3];
+    double** Rot4Composit;
+    double* Trans4Composit;
     double center[2];
     double x,y,err,x4Composit,y4Composit,err4Composit;
 
 //    Render 480x360
-//    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
-//        {0,          586.6381  ,180.0000},
-//        {0,          0,          1},
-//    };
+    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
+        {0,          586.6381  ,180.0000},
+        {0,          0,          1},
+    };
     
     
 //    Camara iPod 640x480
-    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
-        {0,          746.36170  ,217.56288},
-        {0,          0,          1},
-    };
+//    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
+//        {0,          746.36170  ,217.56288},
+//        {0,          0,          1},
+//    };
     
     f=intrinsic[0][0];
     center[0]=intrinsic[0][2];
@@ -70,7 +70,7 @@ int main(int argc, const char * argv[])
 
     bool verImg=false; // para ver imagenes mientras se hace el benchmark
     
-    double scale=0.6; // scale para el LSD
+    double scale=0.8; // scale para el LSD
     int k;
     int cantPtsDetectados; // cantidad de puntos del maracador
 
@@ -97,6 +97,11 @@ int main(int argc, const char * argv[])
     Rot=(double **)malloc(3 * sizeof(double *));
     for (k=0;k<3;k++) Rot[k]=(double *)malloc(3 * sizeof(double));
     Tras=(double *)malloc(3 * sizeof(double));
+    
+    Rot4Composit=(double **)malloc(3 * sizeof(double *));
+    for (k=0;k<3;k++) Rot4Composit[k]=(double *)malloc(3 * sizeof(double));
+    Trans4Composit=(double *)malloc(3 * sizeof(double));
+
     
     /*Reservo memoria para imagePoints*/
     imagePoints=(double **)malloc(NumberOfPoints*sizeof(double*));
@@ -253,39 +258,55 @@ int main(int argc, const char * argv[])
     /*================================================================*/
     
     /* leo que caso estoy analizando*/
-    int l=strlen(argv[1]);
-    int Caso=argv[1][l-2];
+    long int l=strlen(argv[1]);
+    char CasoStr[2]={'0','0'};
+    int Caso;
+    if ((argv[1][l-3]<='9')&&(argv[1][l-3]>='0')){
+        CasoStr[0]=argv[1][l-3];
+        CasoStr[1]=argv[1][l-2];
+        }
+    else CasoStr[1]=argv[1][l-2];
+    
+    Caso=strtod(CasoStr,&CasoStr);
+
     char* imgNameRoot;
     char imgName[100];
     int imgNum=1;
     switch (Caso) {
-        case '1':
+        case 1:
             imgNameRoot="Caso1-";
             break;
-        case '2':
+        case 2:
             imgNameRoot="Caso2-";
             break;
-        case '3':
+        case 3:
             imgNameRoot="Caso3-";
             break;
-        case '4':
+        case 4:
             imgNameRoot="Caso4-";
             break;
-        case '5':
+        case 5:
             imgNameRoot="Caso5-";
             break;
-        case '6':
+        case 6:
             imgNameRoot="Caso6-";
             break;
-        case '7':
+        case 7:
             imgNameRoot="Caso7-";
             break;
-        case '8':
+        case 8:
             imgNameRoot="Caso8-";
             break;
-        case '9':
+        case 9:
             imgNameRoot="Caso9-";
             break;
+        case 10:
+            imgNameRoot="Caso10-";
+            break;
+        case 11:
+            imgNameRoot="Caso11-";
+            break;
+
             
         default:
             break;
@@ -306,7 +327,18 @@ int main(int argc, const char * argv[])
 	cvInitFont(&font1, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0.5, 1, 8);
     
 	
-    for (k=1; k<61; k++) {
+    /*Guardo en archivo poses*/
+    FILE *poses_coplanar;
+    char poseName[150];
+    sprintf(poseName, "%s%s%g%s",folderName,"poses_coplanar_scale",scale,".txt");
+    poses_coplanar=fopen(poseName, "w");
+    FILE *poses_composit;
+    sprintf(poseName, "%s%s%g%s",folderName,"poses_composit_scale",scale,".txt");
+    poses_composit=fopen(poseName, "w");
+
+
+    
+    for (k=1; k<344; k++) {
         
         
         if (verImg) {
@@ -322,7 +354,7 @@ int main(int argc, const char * argv[])
         
         /*get image properties*/
         
-        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".jpg");
+        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".png");
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
@@ -446,29 +478,25 @@ int main(int argc, const char * argv[])
             
             Composit(cantPtsDetectados, imagePoints4Composit, objectCrop, f,Rot4Composit , Trans4Composit);
             
-            printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
-            printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
-            printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
-            printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+//            printf("\nRotacion: \n");
+//            printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+//            printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+//            printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+//            printf("Traslacion: \n");
+//            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rot,angles1,angles2);
+            fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",angles1[0],angles1[1],angles1[2],Tras[0],Tras[1],Tras[2]);
             
             printf("\nPrimera solicion\n");
             printf("psi1: %g\ntheta1: %g\nphi1: %g\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2]);
             printf("\nSegunda solicion\n");
             printf("psi2: %g\ntheta2: %g\nphi2: %g\n",(180/MY_PI)*angles2[0],(180/MY_PI)*angles2[1],(180/MY_PI)*angles2[2]);
 
+            Matrix2Euler(Rot4Composit,angles1,angles2);
+            fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",angles1[0],angles1[1],angles1[2],Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
             
-//            printf("\nRotacion: \n");
-//            printf("%f\t %f\t %f\n",Rot4Composit[0][0],Rot4Composit[0][1],Rot4Composit[0][2]);
-//            printf("%f\t %f\t %f\n",Rot4Composit[1][0],Rot4Composit[1][1],Rot4Composit[1][2]);
-//            printf("%f\t %f\t %f\n",Rot4Composit[2][0],Rot4Composit[2][1],Rot4Composit[2][2]);
-//            printf("Traslacion: \n");
-//            printf("%f\t %f\t %f\n",Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
-//            
             if (Rot[0][0]>=2.0) {
                 err=-20;
                 fprintf(errorFile, "%g\n",err);
@@ -479,6 +507,8 @@ int main(int argc, const char * argv[])
         else {
             fprintf(errorFile, "%d\n",errorMarkerDetection);
             fclose(errorFile);
+            fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",-1.0,-1.0,-1.0,-1.0,-1.0,-1.0);
+            fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",-1.0,-1.0,-1.0,-1.0,-1.0,-1.0);
             goto FreeLabel;
             
         }
@@ -596,7 +626,8 @@ int main(int argc, const char * argv[])
         
         imgNum++;
     }
-    
+    fclose(poses_coplanar);
+    fclose(poses_composit);
 }
 
 
