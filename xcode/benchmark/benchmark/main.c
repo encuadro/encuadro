@@ -35,11 +35,11 @@ int main(int argc, const char * argv[])
     double Trans4Composit[3];
     double center[2];
     double x,y,err,x4Composit,y4Composit,err4Composit;
-    f=747.2;
-    center[0]=320.5;
-    center[1]=240.5;
-    float intrinsic[3][3]=  {{747.2,  0,          320.5},
-        {0,          747.5  ,240.5},
+    f=586.6381;
+    center[0]=240.0000;
+    center[1]=180.0000;
+    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
+        {0,          586.6381  ,180.0000},
         {0,          0,          1},
     };
     
@@ -58,10 +58,9 @@ int main(int argc, const char * argv[])
 	int distance_thr = 25;	// Threshold para findPointsCorrespondences
     int errorMarkerDetection; // codigo de error que devuelve findPointCorrespondences
 
-    bool verImg=true; // para ver imagenes mientras se hace el benchmark
+    bool verImg=false; // para ver imagenes mientras se hace el benchmark
     
-    double scale=0.8; // scale para el LSD
-    bool flag=false,flag1=false,flag2=false; // flags para ver si fallo la deteccion de marcador
+    double scale=0.6; // scale para el LSD
     int k;
     int cantPtsDetectados; // cantidad de puntos del maracador
 
@@ -297,7 +296,7 @@ int main(int argc, const char * argv[])
 	cvInitFont(&font1, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0.5, 1, 8);
     
 	
-    for (k=1; k<61; k++) {
+    for (k=1; k<343; k++) {
         
         
         if (verImg) {
@@ -313,7 +312,7 @@ int main(int argc, const char * argv[])
         
         /*get image properties*/
         
-        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".jpg");
+        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".png");
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
@@ -475,13 +474,13 @@ int main(int argc, const char * argv[])
         }
         /*Poject object points and save reprojection error*/
         
-        for(i=0;i<NumberOfPoints;i++){
+        for(i=0;i<cantPtsDetectados;i++){
             
             /*project CoplanarPosit*/
             float a[3],b[3];
-            b[0]=object[i][0];
-            b[1]=object[i][1];
-            b[2]=object[i][2];
+            b[0]=objectCrop[i][0];
+            b[1]=objectCrop[i][1];
+            b[2]=objectCrop[i][2];
             MAT_DOT_VEC_3X3(a, Rot, b);
             VEC_SUM(b,a,Tras);
             objectProy[i][0]=intrinsic[0][2]+intrinsic[0][0]*b[0]/b[2];
@@ -490,9 +489,9 @@ int main(int argc, const char * argv[])
             
             
             /*project Composit*/
-            b[0]=object[i][0];
-            b[1]=object[i][1];
-            b[2]=object[i][2];
+            b[0]=objectCrop[i][0];
+            b[1]=objectCrop[i][1];
+            b[2]=objectCrop[i][2];
             MAT_DOT_VEC_3X3(a, Rot4Composit, b);
             VEC_SUM(b,a,Trans4Composit);
             objectProy4Composit[i][0]=intrinsic[0][2]+intrinsic[0][0]*b[0]/b[2];
@@ -501,11 +500,11 @@ int main(int argc, const char * argv[])
             
             /*reprojection error*/
             
-            x=pow((imagePoints[i][0]-objectProy[i][0]),2);
-            y=pow((imagePoints[i][1]-objectProy[i][1]),2);
+            x=pow((imagePointsCrop[i][0]-objectProy[i][0]),2);
+            y=pow((imagePointsCrop[i][1]-objectProy[i][1]),2);
             err=sqrt(x+y);
-            x4Composit=pow((imagePoints[i][0]-objectProy4Composit[i][0]),2);
-            y4Composit=pow((imagePoints[i][1]-objectProy4Composit[i][1]),2);
+            x4Composit=pow((imagePointsCrop[i][0]-objectProy4Composit[i][0]),2);
+            y4Composit=pow((imagePointsCrop[i][1]-objectProy4Composit[i][1]),2);
             err4Composit=sqrt(x4Composit+y4Composit);
             
             fprintf(errorFile, "%g\t%g\n",err,err4Composit);
@@ -524,24 +523,29 @@ int main(int argc, const char * argv[])
             
             // draw line on frameLsd
             cvLine(imgLsdFilt,pt1,pt2,white,1.5,8,0);
-            
-            if (j<36){
-                //define marker corners
-                pt1 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
-                // draw small corner circle
-                cvCircle(imgLsdFilt, pt1, 3, green, 1, 8, 0);
-                pt2 = cvPoint(objectProy[j][0],objectProy[j][1]);
-                // draw small corner circle
-                cvCircle(imgLsdFilt, pt2, 3, red, 1, 8, 0);
-                pt3 = cvPoint(objectProy4Composit[j][0],objectProy4Composit[j][1]);
-                // draw small corner circle
-                cvCircle(imgLsdFilt, pt3, 3, white, 1, 8, 0);
-                char *ind[2];
-                sprintf(ind,"%d",j);
-                cvPutText(imgLsdFilt, ind, pt1, &font1 , blue);
-                
-            }
         }
+        
+        for (j=0; j<NumberOfPoints; j++) {
+            //define marker corners
+            pt1 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
+            // draw small corner circle
+            cvCircle(imgLsdFilt, pt1, 3, green, 1, 8, 0);
+            char *ind[2];
+            sprintf(ind,"%d",j);
+            cvPutText(imgLsdFilt, ind, pt1, &font1 , blue);
+        }
+            
+        for (j=0; j<cantPtsDetectados; j++) {
+            pt2 = cvPoint(objectProy[j][0],objectProy[j][1]);
+            // draw small corner circle
+            cvCircle(imgLsdFilt, pt2, 3, red, 1, 8, 0);
+            pt3 = cvPoint(objectProy4Composit[j][0],objectProy4Composit[j][1]);
+            // draw small corner circle
+            cvCircle(imgLsdFilt, pt3, 3, white , 1, 8, 0);
+          
+            
+        }
+
         
         sprintf(imgName, "%s%s%s%d%s",folderName,imgNameRoot,"LSDfilter",imgNum,".jpg");
         cvSaveImage(imgName, imgLsdFilt, 0);
@@ -581,9 +585,6 @@ int main(int argc, const char * argv[])
         cvReleaseImage( &imgLsdFilt );
         
         imgNum++;
-        flag=false;
-        flag1=false;
-        flag2=false;
     }
     
 }

@@ -3,6 +3,7 @@
 #include "segments.h"
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 int QlId = 1;
 
@@ -351,7 +352,7 @@ int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]) {
 		}
 	}
 	//the one unmatched is assigned to qlDummy for correct sorting
-	int found = 1;
+/*	int found = 1;
 	for (int i = 0; i < QLSET_NB_QLS; i++) {
 		if (checks[i] == -1) {
 			ql[2] = qlDummy;
@@ -360,8 +361,22 @@ int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]) {
 			break;
 		}
 	}
+*/
+	int found = 0;
+	if ((checks[0]==0 && checks[1]==1) || (checks[0]==1 && checks[1]==0)){
+		ql[2] = qlDummy;
+		ql[2].perimeter = perimeter[2];
+		found = 1;
+	}else if ((checks[0]==1 && checks[1]==2) || (checks[0]==2 && checks[1]==1)){
+		ql[2] = qlDummy;
+		ql[2].perimeter = perimeter[0];
+		found = 1;
+	}else if ((checks[0]==0 && checks[1]==2) || (checks[0]==2 && checks[1]==0)){
+		ql[2] = qlDummy;
+		ql[2].perimeter = perimeter[1];
+		found = 1;
+	}
 	/*sort*/
-//	if (found == 1){
 	if ((checks[0]!=checks[1]) && (found == 1)){
 		qsort(ql, 3, sizeof(quadrilateral), compare_quadrilateral_perimeter);
 		return 0;
