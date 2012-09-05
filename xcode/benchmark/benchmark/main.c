@@ -35,15 +35,25 @@ int main(int argc, const char * argv[])
     double Trans4Composit[3];
     double center[2];
     double x,y,err,x4Composit,y4Composit,err4Composit;
-    f=586.6381;
-    center[0]=240.0000;
-    center[1]=180.0000;
-    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
-        {0,          586.6381  ,180.0000},
+
+//    Render 480x360
+//    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
+//        {0,          586.6381  ,180.0000},
+//        {0,          0,          1},
+//    };
+    
+    
+//    Camara iPod 640x480
+    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
+        {0,          746.36170  ,217.56288},
         {0,          0,          1},
     };
     
-    int NumberOfPoints=36; 
+    f=intrinsic[0][0];
+    center[0]=intrinsic[0][2];
+    center[1]=intrinsic[1][2];
+    
+    int NumberOfPoints=36;
     double *image;
 	double **imagePoints;
     double **imagePoints4Composit;
@@ -296,7 +306,7 @@ int main(int argc, const char * argv[])
 	cvInitFont(&font1, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0.5, 1, 8);
     
 	
-    for (k=1; k<343; k++) {
+    for (k=1; k<61; k++) {
         
         
         if (verImg) {
@@ -312,7 +322,7 @@ int main(int argc, const char * argv[])
         
         /*get image properties*/
         
-        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".png");
+        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".jpg");
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
