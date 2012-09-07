@@ -1,4 +1,4 @@
-function setup = renderMarkerSetup(repo_path,output_path,pose_id)
+function setup = renderMarkerSetup(repo_path,output_path,pose_id,mode)
 
 % % defaults
 % if (varargin < 1)
@@ -14,6 +14,7 @@ function setup = renderMarkerSetup(repo_path,output_path,pose_id)
 %% general setup
 
 setup.pose_id = pose_id;
+setup.mode = mode;
 
 setup.img_fname_template = 'marker_%04d';
 setup.img_fname = ''; % automatic template name;
@@ -22,10 +23,12 @@ setup.img_path_template = 'pose_%02d/';
 setup.img_path = [output_path sprintf(setup.img_path_template,setup.pose_id)];  % automatic template name;
 
 %make dir if doesn't exist
-if (~exist(setup.img_path,'dir'))
-	mkdir(setup.img_path);
-else
-	delete([setup.img_path '*']);
+if (setup.mode == 1)
+	if (~exist(setup.img_path,'dir'))
+		mkdir(setup.img_path);
+	else
+		delete([setup.img_path '*']);
+	end
 end
 
 setup.repo_path = repo_path;
