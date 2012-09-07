@@ -60,6 +60,7 @@ float distance_thr=20;
 double rotacion[9];
 double traslacion[3];
 bool bandera;
+int errorMarkerDetection; //Codigo de error del findPointCorrespondence
 
 /*Variables para el Coplanar*/
 int NumberOfPoints=36;
@@ -67,20 +68,13 @@ int cantPtosDetectados;
 long int i;
 double **object, **objectCrop, f=615; //con 630 andaba bien /*f: focal length en pixels*/
 bool PosJuani=true;
-bool errFlag1=false,errFlag2=false,errFlag=false;/*bandera para control de errores del filtro*/
 
-
-double Rota[3][3],Transa[3],Rot2[3][3],Trans2[3], Matriz[4][4];
 //modern coplanar requiere double** en lugar de [][]
 double *Tras;
 double **Rotmodern;                                 ///modern coplanar
 double center[2]={240, 180};           ///modern coplanar
 bool verbose;
 
-
-
-/*Variables auxiliares*/
-double **imagePointsCambiados;
 
 - (CIContext* ) context
 {
@@ -167,7 +161,7 @@ double **imagePointsCambiados;
             free(list);
             free(listFiltrada);
             // free(esquinas);
-            free(imagePoints);
+//            free(imagePoints);
             
             listSize =0;
             listFiltradaSize =0;
@@ -186,39 +180,25 @@ double **imagePointsCambiados;
             
             /************************************************CORRESPONDENCIAS*/
             /*Correspondencias entre marcador real y puntos detectados*/
-            imagePoints = findPointCorrespondances(&listFiltradaSize, listFiltrada);  
+            errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
             
             if (verbose){
             printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);           
-            }
-            
-            /* Verificacion de salida filtro*/
-            for (int j=0;j<NumberOfPoints;j++){
-                if (!errFlag1) {
-                    errFlag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000);
-                }    
-                else {
-                    errFlag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000);
-                    
-                }
-                errFlag=errFlag1&&errFlag2;
-                if (errFlag) break;
+            printf("Tamano filtrada: %d\n", listFiltradaSize);
             }
             
             
-            
-            if (!errFlag) {
+            if (errorMarkerDetection>=0) {
                 
                 cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
                 
                 /* eleccion de algoritmo de pose*/
                 if (PosJuani){
                     CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-                    for(int i=0;i<3;i++){
-                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-                        Transa[i]=Tras[i];
-                    }
+//                    for(int i=0;i<3;i++){
+//                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
+//                        Transa[i]=Tras[i];
+//                    }
                     
                 }
                 else {
@@ -227,18 +207,18 @@ double **imagePointsCambiados;
                         imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
                         imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
                     }
-                    Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rota,Transa);
+                    Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
                 }
             }
             
             if (verbose){
             printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
             printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rota[0][0],Rota[0][1],Rota[0][2]);
-            printf("%f\t %f\t %f\n",Rota[1][0],Rota[1][1],Rota[1][2]);
-            printf("%f\t %f\t %f\n",Rota[2][0],Rota[2][1],Rota[2][2]);
+            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
             printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Transa[0],Transa[1],Transa[2]);
+            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
             }
             
             /************************************************POSIT COPLANAR*/
@@ -260,15 +240,15 @@ double **imagePointsCambiados;
             /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
             
             
-            rotacion[0]=Rota[0][0];
-            rotacion[1]=Rota[0][1];
-            rotacion[2]=Rota[0][2];
-            rotacion[3]=Rota[1][0];
-            rotacion[4]=Rota[1][1];
-            rotacion[5]=Rota[1][2];
-            rotacion[6]=Rota[2][0];
-            rotacion[7]=Rota[2][1];
-            rotacion[8]=Rota[2][2];
+            rotacion[0]=Rotmodern[0][0];
+            rotacion[1]=Rotmodern[0][1];
+            rotacion[2]=Rotmodern[0][2];
+            rotacion[3]=Rotmodern[1][0];
+            rotacion[4]=Rotmodern[1][1];
+            rotacion[5]=Rotmodern[1][2];
+            rotacion[6]=Rotmodern[2][0];
+            rotacion[7]=Rotmodern[2][1];
+            rotacion[8]=Rotmodern[2][2];
             
             
             double angles1[3],angles2[3];
@@ -283,7 +263,7 @@ double **imagePointsCambiados;
             }
             
             [self.isgl3DView setRotacion:rotacion];
-            [self.isgl3DView setTraslacion:Transa];
+            [self.isgl3DView setTraslacion:Tras];
                 
             
             //self.traslacion = traslacion;
@@ -291,9 +271,6 @@ double **imagePointsCambiados;
             /*************FIN DEL PROCESAMIENTO********************************************/
             /******************************************************************************/
             bandera = false;
-            errFlag=false;
-            errFlag1=false;
-            errFlag2=false;
             
       
         }
@@ -323,6 +300,10 @@ double **imagePointsCambiados;
     
     imagePointsCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(double *)malloc(2 * sizeof(double));
+    
+    imagePoints=(double **)malloc(NumberOfPoints * sizeof(double *));
+    for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(double *)malloc(2 * sizeof(double));
+
 
 //    coplMatrix=(double **)malloc(3 * sizeof(double *));
 //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));

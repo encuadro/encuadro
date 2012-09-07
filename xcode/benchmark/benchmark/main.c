@@ -432,33 +432,11 @@ int main(int argc, const char * argv[])
         
         for (j=0;j<NumberOfPoints;j++){
             fprintf(puntosFiltro,"%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
-////            printf("%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
-//            
-//            if (!flag1) {
-//                flag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000);
-//            }    
-//            else {
-//                flag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000)||(imagePoints[j][1]>1000);
-//                
-//            }
-//            flag=flag1&&flag2;
-//            if (flag) break;
         }
         fclose(puntosFiltro);
         
         
         cantPtsDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
-        
-//        for (int i=cantPtsDetectados; i<NumberOfPoints; i++) {
-//            free(imagePointsCrop[i]);
-//            free(objectCrop[i]);
-//            free(imagePoints4Composit[i]);
-//        }
-//        imagePointsCrop=realloc(imagePointsCrop, cantPtsDetectados*sizeof(double**));
-//        objectCrop=realloc(objectCrop, cantPtsDetectados*sizeof(double**));
-//        imagePoints4Composit=realloc(imagePoints4Composit, cantPtsDetectados*sizeof(double**));
-
-        
         
         /* creo archivo para guardar los errores*/
         FILE *errorFile;
@@ -478,24 +456,22 @@ int main(int argc, const char * argv[])
             
             Composit(cantPtsDetectados, imagePoints4Composit, objectCrop, f,Rot4Composit , Trans4Composit);
             
-//            printf("\nRotacion: \n");
-//            printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
-//            printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
-//            printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
-//            printf("Traslacion: \n");
-//            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+            printf("\nRotacion: \n");
+            printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+            printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+            printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+            printf("Traslacion: \n");
+            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rot,angles1,angles2);
-            fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",angles1[0],angles1[1],angles1[2],Tras[0],Tras[1],Tras[2]);
+            fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2],Tras[0],Tras[1],Tras[2]);
             
             printf("\nPrimera solicion\n");
             printf("psi1: %g\ntheta1: %g\nphi1: %g\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2]);
-            printf("\nSegunda solicion\n");
-            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",(180/MY_PI)*angles2[0],(180/MY_PI)*angles2[1],(180/MY_PI)*angles2[2]);
 
             Matrix2Euler(Rot4Composit,angles1,angles2);
-            fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",angles1[0],angles1[1],angles1[2],Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
+            fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2],Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
             
             if (Rot[0][0]>=2.0) {
                 err=-20;
