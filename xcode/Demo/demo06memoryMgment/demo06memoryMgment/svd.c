@@ -426,9 +426,11 @@ void  PseudoInverseGen(double** A,int N,int M,double** B) /*retourne en B la pse
     }
     
     /*desallocations*/
-    free(W); 
+    free(W);
+    for (i=0;i<N;i++) free(U[i]);
     free(U);
     for (i=0;i<M;i++) free(V[i]);
+    free(V);
     
 }
 

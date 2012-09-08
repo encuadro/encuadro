@@ -13,11 +13,11 @@
 
 
 
-double* rgb2gray(unsigned char *pixels, int w, int h, int d)
+void rgb2gray(unsigned char *pixels, int w, int h, int d, double* luminancia)
 {
         printf("w: %-3d h: %-3d\n",w,h);
-        double* luminancia;
-        luminancia = (double *) malloc(w*h*sizeof(double));
+      
+        
         
         unsigned long int  pixelNr;
         for(int j=0;j<h;j++)
@@ -45,7 +45,7 @@ double* rgb2gray(unsigned char *pixels, int w, int h, int d)
             luminancia[pixelNr] = rint(fvalue);
             }
         }
-        return luminancia;
+        
       
 }   
 

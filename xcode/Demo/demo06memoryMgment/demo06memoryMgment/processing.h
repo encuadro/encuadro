@@ -7,4 +7,4 @@
 //
 
 
-double* rgb2gray(unsigned char *pixels, int w, int h, int d);
+void rgb2gray(unsigned char *pixels, int w, int h, int d, double* luminancia);

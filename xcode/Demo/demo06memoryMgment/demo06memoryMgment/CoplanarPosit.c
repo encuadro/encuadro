@@ -12,7 +12,8 @@
 #include <stdbool.h>
 #include "svd.h"
 #include "CoplanarPosit.h"
-#define PI 3.14159265
+#include "vvector.h"
+#define MY_PI 3.14159265
 
 void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLength, double center[2], double** Rot, double* Trans){
     
@@ -682,6 +683,7 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
     double Er,Erhvmax,Er1,Erhvmax1,Er2,Erhvmax2;
     long int Epr,Epr1,Epr2;
     double r3T[4];
+    double a[3],b[3];
     
     
     
@@ -790,6 +792,13 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
             for (j=0;j<4;j++){
                 wk[i]+=homogeneousWorldPts[i][j]*r3T[j]/Trans[2];
             }
+            b[0]=homogeneousWorldPts[i][0];
+            b[1]=homogeneousWorldPts[i][1];
+            b[2]=homogeneousWorldPts[i][2];
+            MAT_DOT_VEC_3X3(a, Rot, b);
+            VEC_SUM(b,a,Trans);
+            centeredImageAux[i][0]=b[0]/b[2];
+            centeredImageAux[i][1]=b[1]/b[2];
             deltaX-=centeredImageAux[i][0];
             deltaY-=centeredImageAux[i][1];
             centeredImageAux[i][0]=wk[i]*centeredImage[i][0];
@@ -805,11 +814,11 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
 //        printf("\nwk en iteracion %d\n",count);
 //        for (i=0; i<NbPts; i++) printf("%f\t",wk[i]);
 //        printf("\n");
-        delta=f*f*delta;
-        converged=(count>0 && delta<0.0001) || (count>20&&delta>100);
+        delta=sqrt(delta);
+        converged=(count>0 && delta<0.03) || (count>10);
         count+=1;
         
-        if (count>20&&delta>100) Rot[0][0]=2; /* if pose doesn't converge after 20 iteration, discard the pose, the value for count and delta is arbitrary*/
+        if (count>10&&delta>1) Rot[0][0]=2; /* if pose doesn't converge after 20 iteration, discard the pose, the value for count and delta is arbitrary*/
         
 //        printf("\nRotacion en iteracion %d: \n",count-1);
 //        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
@@ -845,7 +854,7 @@ void Matrix2Euler(double** Rot, double* angles1,double* angles2){
     double psi1, psi2;
     
     theta1=-asin(Rot[2][0]);
-    theta2= PI - theta1;
+    theta2= MY_PI - theta1;
     
     if(abs(Rot[2][0])!=1){
         psi1=atan2(Rot[2][1]/cos(theta1),Rot[2][2]/cos(theta1));
@@ -858,22 +867,23 @@ void Matrix2Euler(double** Rot, double* angles1,double* angles2){
         phi1=0;
         phi2=0;
         if (Rot[2][0]==-1) {
-            theta1=PI/2;
+            theta1=MY_PI/2;
             psi1=phi1+atan2(Rot[0][1], Rot[0][2]);
         }
         else {
-            theta1=-PI/2;
+            theta1=-MY_PI/2;
             psi1=-phi1+atan2(-Rot[0][1], -Rot[0][2]);
         }
         theta2=0;
         psi2=0;
     }
-    angles1[0]=psi1*180/PI;
-    angles1[1]=theta1*180/PI;
-    angles1[2]=phi1*180/PI;
     
-    angles2[0]=psi2*180/PI;
-    angles2[1]=theta2*180/PI;
-    angles2[2]=phi2*180/PI;
+    angles1[0]=psi1;
+    angles1[1]=theta1;
+    angles1[2]=phi1;
+    
+    angles2[0]=psi2;
+    angles2[1]=theta2;
+    angles2[2]=phi2;
 }
 
