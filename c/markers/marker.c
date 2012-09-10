@@ -288,13 +288,17 @@ int getIncompleteQlSet(int qlListSize, quadrilateral *qlList,
 						ql[0] = qlList[i];
 						ql[1] = qlList[j];
 
-						orderIncompleteQlArr(ql, perimeter);
-						(*qlSet) = quadrilateralSetNew(ql);
-						(*qlSet).id = 2;
-						found = 1;
-						if (VERBOSE)
-							printf("found incomplete\n");
-						return 0;
+						int err_code = orderIncompleteQlArr(ql, perimeter);
+
+						if (err_code==0){
+							(*qlSet) = quadrilateralSetNew(ql);
+							(*qlSet).id = 2;
+							found = 1;
+							if (VERBOSE)
+								printf("found incomplete\n");
+							return 0;
+						} else
+							return 1;
 					}
 				}
 			}
