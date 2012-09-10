@@ -5,7 +5,7 @@
 
 
 /*********************************************************************************************************/
-void Composit(long int np, double** coplImage,double** copl,double fLength,double R[3][3],double T[3]){
+void Composit(long int np, double** coplImage,double** copl,double fLength,double** R,double* T){
 /*Retourne le nombre de poses DIFFERENTES acceptables (cf plus bas pour cette notion) en nsol, ainsi que*/ 
 /*la meilleure pose (rota1, transa1), i.e. la plus proche en rotation (transmission de rota) lorsque 2*/
 /*sont acceptables, ou celle donnant la plus faible erreur E s'il n'y en a pas 2 acceptables.*/
@@ -37,7 +37,6 @@ for (i=0;i<np;i++)
 
 PseudoInverse(coplVectors,np,coplMatrix); /*coplMatrix est la pseudoinverse de coplVectors*/
 
-//printf("OBJECT MATRIX PARA COMPOSIT:\n");
 //for (i=0;i<3;i++)
 //{
 // printf("\n");
@@ -48,23 +47,6 @@ PositCopl(np,coplImage,copl,coplMatrix,fLength,
           POSITRot1,POSITTrans1,POSITRot2,POSITTrans2);
 /*retourne les DEUX poses resultant de la convergence des deux branches de POSIT, sans les juger*/
 
-
-    if (false) {
-        
-        printf("\nROTACION 1 A LA SALIDA DE POSITCOPL: \n");
-        printf("%f\t %f\t %f\n",POSITRot1[0][0],POSITRot1[0][1],POSITRot1[0][2]);
-        printf("%f\t %f\t %f\n",POSITRot1[1][0],POSITRot1[1][1],POSITRot1[1][2]);
-        printf("%f\t %f\t %f\n",POSITRot1[2][0],POSITRot1[2][1],POSITRot1[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",POSITTrans1[0],POSITTrans1[1],POSITTrans1[2]);
-        
-        printf("\nROTACION 2 A LA SALIDA DE POSITCOPL: \n");
-        printf("%f\t %f\t %f\n",POSITRot2[0][0],POSITRot2[0][1],POSITRot2[0][2]);
-        printf("%f\t %f\t %f\n",POSITRot2[1][0],POSITRot2[1][1],POSITRot2[1][2]);
-        printf("%f\t %f\t %f\n",POSITRot2[2][0],POSITRot2[2][1],POSITRot2[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",POSITTrans2[0],POSITTrans2[1],POSITTrans2[2]);
-    }    
 /*calcul des translations d'origine a origine  (l'origine du rep. objet n'est pas forcement*/
 /*confondue avec Mo)*/
 for (i=0;i<3;i++)

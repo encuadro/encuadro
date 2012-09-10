@@ -10,6 +10,5 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <stdbool.h>
 
-void Composit(long int np,double** coplImage,double** copl, double fLength, double R[3][3], double T[3]);
+void Composit(long int np,double** coplImage,double** copl, double fLength, double** R, double* T);

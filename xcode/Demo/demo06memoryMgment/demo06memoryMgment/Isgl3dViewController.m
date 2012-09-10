@@ -33,6 +33,8 @@
 @synthesize videoView = _videoView;
 @synthesize isgl3DView = _isgl3DView;
 
+//se define global para tratar el memory leak
+
 
 //para DIBUJAR
 claseDibujar *cgvista;
@@ -40,6 +42,7 @@ claseDibujar *cgvista;
 
 /*Variables para la imagen*/
 unsigned char* pixels;
+NSData* data;
 size_t width;
 size_t height;
 size_t bitsPerComponent;
@@ -60,6 +63,7 @@ float distance_thr=20;
 double rotacion[9];
 double traslacion[3];
 bool bandera;
+int errorMarkerDetection; //Codigo de error del findPointCorrespondence
 
 /*Variables para el Coplanar*/
 int NumberOfPoints=36;
@@ -67,10 +71,7 @@ int cantPtosDetectados;
 long int i;
 double **object, **objectCrop, f=615; //con 630 andaba bien /*f: focal length en pixels*/
 bool PosJuani=true;
-bool errFlag1=false,errFlag2=false,errFlag=false;/*bandera para control de errores del filtro*/
 
-
-double Rota[3][3],Transa[3],Rot2[3][3],Trans2[3], Matriz[4][4];
 //modern coplanar requiere double** en lugar de [][]
 double *Tras;
 double **Rotmodern;                                 ///modern coplanar
@@ -79,8 +80,6 @@ bool verbose;
 
 
 
-/*Variables auxiliares*/
-double **imagePointsCambiados;
 
 - (CIContext* ) context
 {
@@ -96,55 +95,139 @@ double **imagePointsCambiados;
 }
 
 
--(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
+NSData* imageToBuffer( CMSampleBufferRef source) {
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(source);
+    CVPixelBufferLockBaseAddress(imageBuffer,0);
     
-    if (verbose) NSLog(@"Capture output");
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);
+    size_t width = CVPixelBufferGetWidth(imageBuffer);
+    size_t height = CVPixelBufferGetHeight(imageBuffer);
+    void *src_buff = CVPixelBufferGetBaseAddress(imageBuffer);
     
+    NSData *data = [NSData dataWithBytes:src_buff length:bytesPerRow * height];
     
-    
-    CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);  
-    CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
-    CGImageRef ref = [self.context createCGImage:ciImage fromRect:ciImage.extent];
-    //NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref));
-    
-    CGDataProviderRef provider = CGImageGetDataProvider(ref);
-    NSData* data =(NSData*)CGDataProviderCopyData(provider);
-    
-    /*Obtengo algunas catacteristicas de la imagen de interes*/
-    width = CGImageGetWidth(ref);
-    height = CGImageGetHeight(ref);
-    bitsPerComponent     = CGImageGetBitsPerComponent(ref);
-    bitsPerPixel         = CGImageGetBitsPerPixel(ref);
-    d= bitsPerPixel/bitsPerComponent;
-    
-    
-    if (bandera == false)
-    {
-        /*Esto es para solucionar el problema de memoria*/
-        free(pixels); 
-        
-        /*Obtenemos los pixeles como unsigned char en pixeles*/
-        
-        // El problema es esta asignacion! Tnemos que ver la forma de copiar el arreglo y no de apuntar un arreglo al otro!
-        // Entonces podemos borrar "data" y no pasa nada con pixels
-        
-        pixels = (unsigned char *)[data bytes];
-        
-        
-        
-    }
-    
-    
-    /*El procesamiento se hace en otro hilo de ejecucion*/
-    
-    self.videoView.image = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
-    
-    [self.videoView setNeedsDisplay];
-    
-    
-    CGImageRelease(ref);
-    
+    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+    return [data autorelease];
 }
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput 
+didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer 
+	   fromConnection:(AVCaptureConnection *)connection 
+{ 
+	/*We create an autorelease pool because as we are not in the main_queue our code is
+	 not executed in the main thread. So we have to create an autorelease pool for the thread we are in*/
+	
+	
+	
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer); 
+    /*Lock the image buffer*/
+    CVPixelBufferLockBaseAddress(imageBuffer,0); 
+    /*Get information about the image*/
+    uint8_t *baseAddress = (uint8_t *)CVPixelBufferGetBaseAddress(imageBuffer); 
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer); 
+    size_t width = CVPixelBufferGetWidth(imageBuffer); 
+    size_t height = CVPixelBufferGetHeight(imageBuffer);  
+    
+    
+    /*Create a CGImageRef from the CVImageBufferRef*/
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); 
+    CGContextRef newContext = CGBitmapContextCreate(baseAddress, width, height, 8, bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
+    CGImageRef newImage = CGBitmapContextCreateImage(newContext);
+    
+    CGDataProviderRef provider = CGImageGetDataProvider(newImage);
+    
+//    CFDataRef bitmapData = CGDataProviderCopyData(provider);
+//    char* data2 = CFDataGetBytePtr(bitmapData);
+	//NSData* data2 = (NSData *) CGDataProviderCopyData(provider);
+    data=imageToBuffer(sampleBuffer);
+    
+    /*We release some components*/
+    CGContextRelease(newContext); 
+    CGColorSpaceRelease(colorSpace);
+    
+    	
+	/*We display the result on the image view (We need to change the orientation of the image so that the video is displayed correctly).
+	 Same thing as for the CALayer we are not in the main thread so ...*/
+//	UIImage *image= [UIImage imageWithCGImage:newImage scale:1.0 orientation:UIImageOrientationRight];
+	
+    if (bandera == false)
+            {
+               //pixels = (unsigned char *)[data bytes];
+                pixels=(unsigned char *)[data bytes];
+
+            }
+	
+	
+	self.videoView.image = [UIImage imageWithCGImage:newImage scale:1.0 orientation:UIImageOrientationRight];
+    
+    
+    //CGDataProviderRelease(provider);
+    /*We relase the CGImageRef*/
+	CGImageRelease(newImage);
+	
+	/*We unlock the  image buffer*/
+	CVPixelBufferUnlockBaseAddress(imageBuffer,0);
+	
+	
+} 
+
+
+//-(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
+//    
+//
+//    if (verbose) NSLog(@"Capture output");
+//
+//    CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);  
+//    CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
+//    CGImageRef ref = [self.context createCGImage:ciImage fromRect:ciImage.extent];
+//    //NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref));
+//    
+//    
+//    CGDataProviderRef provider = CGImageGetDataProvider(ref);
+//    data =(NSData*)CGDataProviderCopyData(provider);
+//    
+//
+//    /*Obtengo algunas catacteristicas de la imagen de interes*/
+//    width = CGImageGetWidth(ref);
+//    height = CGImageGetHeight(ref);
+//    bitsPerComponent     = CGImageGetBitsPerComponent(ref);
+//    bitsPerPixel         = CGImageGetBitsPerPixel(ref);
+//    d= bitsPerPixel/bitsPerComponent;
+//    
+//    
+////    if (bandera == false)
+////    {
+////        /*Esto es para solucionar el problema de memoria*/
+////       // free(pixels); 
+////        
+////        /*Obtenemos los pixeles como unsigned char en pixeles*/
+////        
+////        // El problema es esta asignacion! Tnemos que ver la forma de copiar el arreglo y no de apuntar un arreglo al otro!
+////        // Entonces podemos borrar "data" y no pasa nada con pixels
+////        
+////       // pixels = (unsigned char*) malloc(480*360*4*sizeof(unsigned char));
+////        pixels = (unsigned char *)[data bytes];
+////        //[data release];
+////        //[self procesamiento];
+////      
+////        NSLog(@"LARGO DATA %d", data.length);
+////        
+////    }
+//  
+//    
+//    /*El procesamiento se hace en otro hilo de ejecucion*/
+//
+//    
+//    self.videoView.image = [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
+//    
+//    [self.videoView setNeedsDisplay];
+//    
+//   // CGDataProviderRelease(provider);
+//    CGImageRelease(ref);
+//    
+//    
+//
+//}
 
 - (void) procesamiento
 {
@@ -159,15 +242,15 @@ double **imagePointsCambiados;
             
             /******************PROCESAMIENTO********************************************/
             /***************************************************************************/
-            /*Esto es para solucionar el problema de memoria*/
-            free(luminancia);
+           
             /*Obtengo la imagen en nivel de grises en luminancia*/
-            luminancia = rgb2gray(pixels,width,height,d);
+            rgb2gray(pixels,width,height,d,luminancia);
+            
             bandera = false;
             free(list);
             free(listFiltrada);
             // free(esquinas);
-            free(imagePoints);
+            //free(imagePoints);
             
             listSize =0;
             listFiltradaSize =0;
@@ -186,39 +269,25 @@ double **imagePointsCambiados;
             
             /************************************************CORRESPONDENCIAS*/
             /*Correspondencias entre marcador real y puntos detectados*/
-            imagePoints = findPointCorrespondances(&listFiltradaSize, listFiltrada);  
+            errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints); 
             
             if (verbose){
                 printf("Tamano: %d\n", listSize);
                 printf("Tamano filtrada: %d\n", listFiltradaSize);           
             }
             
-            /* Verificacion de salida filtro*/
-            for (int j=0;j<NumberOfPoints;j++){
-                if (!errFlag1) {
-                    errFlag1=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000);
-                }    
-                else {
-                    errFlag2=((imagePoints[j][0]==0)&&(imagePoints[j][1]==0))||(imagePoints[j][0]>1000);
-                    
-                }
-                errFlag=errFlag1&&errFlag2;
-                if (errFlag) break;
-            }
-            
-            
-            
-            if (!errFlag) {
+                       
+            if (errorMarkerDetection>=0) {
                 
                 cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
                 
                 /* eleccion de algoritmo de pose*/
                 if (PosJuani){
                     CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-                    for(int i=0;i<3;i++){
-                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-                        Transa[i]=Tras[i];
-                    }
+//                    for(int i=0;i<3;i++){
+//                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
+//                        Transa[i]=Tras[i];
+//                    }
                     
                 }
                 else {
@@ -227,18 +296,18 @@ double **imagePointsCambiados;
                         imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
                         imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
                     }
-                    Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rota,Transa);
+                     Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
                 }
             }
             
             if (verbose){
                 printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
                 printf("\nRotacion: \n");
-                printf("%f\t %f\t %f\n",Rota[0][0],Rota[0][1],Rota[0][2]);
-                printf("%f\t %f\t %f\n",Rota[1][0],Rota[1][1],Rota[1][2]);
-                printf("%f\t %f\t %f\n",Rota[2][0],Rota[2][1],Rota[2][2]);
+                printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+                printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+                printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
                 printf("Traslacion: \n");
-                printf("%f\t %f\t %f\n",Transa[0],Transa[1],Transa[2]);
+                printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
             }
             
             /************************************************POSIT COPLANAR*/
@@ -260,16 +329,15 @@ double **imagePointsCambiados;
             /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
             
             
-            rotacion[0]=Rota[0][0];
-            rotacion[1]=Rota[0][1];
-            rotacion[2]=Rota[0][2];
-            rotacion[3]=Rota[1][0];
-            rotacion[4]=Rota[1][1];
-            rotacion[5]=Rota[1][2];
-            rotacion[6]=Rota[2][0];
-            rotacion[7]=Rota[2][1];
-            rotacion[8]=Rota[2][2];
-            
+            rotacion[0]=Rotmodern[0][0];
+            rotacion[1]=Rotmodern[0][1];
+            rotacion[2]=Rotmodern[0][2];
+            rotacion[3]=Rotmodern[1][0];
+            rotacion[4]=Rotmodern[1][1];
+            rotacion[5]=Rotmodern[1][2];
+            rotacion[6]=Rotmodern[2][0];
+            rotacion[7]=Rotmodern[2][1];
+            rotacion[8]=Rotmodern[2][2];            
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rotmodern,angles1,angles2);
@@ -283,7 +351,7 @@ double **imagePointsCambiados;
             }
             
             [self.isgl3DView setRotacion:rotacion];
-            [self.isgl3DView setTraslacion:Transa];
+            [self.isgl3DView setTraslacion:Tras];
             
             
             //self.traslacion = traslacion;
@@ -291,10 +359,7 @@ double **imagePointsCambiados;
             /*************FIN DEL PROCESAMIENTO********************************************/
             /******************************************************************************/
             bandera = false;
-            errFlag=false;
-            errFlag1=false;
-            errFlag2=false;
-            
+                        
             
         }
         
@@ -324,14 +389,20 @@ double **imagePointsCambiados;
     imagePointsCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(double *)malloc(2 * sizeof(double));
     
+    imagePoints=(double **)malloc(NumberOfPoints * sizeof(double *));
+    for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(double *)malloc(2 * sizeof(double));
+    
     //    coplMatrix=(double **)malloc(3 * sizeof(double *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));
     
+    
+    luminancia=(double*) malloc(480*360*sizeof(double));
     pixels = (unsigned char*) malloc(480*360*4*sizeof(unsigned char));
     for (int i=0;i<360*480*4;i++)
     {
         pixels[i]= INFINITY;
     }
+    //data=[[NSData alloc] initWithBytes:pixels length:480*360*4];
     
     
     
@@ -557,6 +628,21 @@ double **imagePointsCambiados;
     
     /*Le decimos al método que nuestro sampleBufferDelegate (al que se le pasan los pixeles por el metodo captureOutput) es el mismo*/
     [self.frameOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+    //dispatch_get_main_queue
+    /*We create a serial queue to handle the processing of our frames*/
+//	dispatch_queue_t queue;
+//	queue = dispatch_queue_create("cameraQueue", NULL);
+//	[self.frameOutput setSampleBufferDelegate:self queue:queue];
+//	dispatch_release(queue);
+    
+    /*While a frame is processes in -captureOutput:didOutputSampleBuffer:fromConnection: delegate methods no other frames are added in the queue.
+	 If you don't want this behaviour set the property to NO */    
+    self.frameOutput.alwaysDiscardsLateVideoFrames = YES; 
+	/*We specify a minimum duration for each frame (play with this settings to avoid having too many frames waiting
+	 in the queue because it can cause memory issues). It is similar to the inverse of the maximum framerate.
+	 In this example we set a min frame duration of 1/10 seconds so a maximum framerate of 10fps. We say that
+	 we are not able to process more than 10 frames per second.*/
+	//self.frameOutput.minFrameDuration = CMTimeMake(1, 1);
     
     /*Sin esta linea de codigo el context apunta siempre a nil*/
     self.context =  [CIContext contextWithOptions:nil];
@@ -567,6 +653,9 @@ double **imagePointsCambiados;
     /*Mandamos el procesamiento a otro thread*/
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     dispatch_async(processQueue, ^{[self procesamiento];});
+    
+    
+    
     /*Comenzamos a capturar*/
     
     [self.session startRunning]; 

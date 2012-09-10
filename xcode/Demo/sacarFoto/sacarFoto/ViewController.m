@@ -153,7 +153,7 @@ didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer
     /////////////////////////////////////////////////////////////////////////////
 	self.session = [[AVCaptureSession alloc] init];
 	
-    self.session.sessionPreset = AVCaptureSessionPreset1280x720;
+    self.session.sessionPreset = AVCaptureSessionPresetPhoto;
 
 	CALayer *viewLayer = self.vImagePreview.layer;
 	NSLog(@"viewLayer = %@", viewLayer);
