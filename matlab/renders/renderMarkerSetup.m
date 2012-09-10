@@ -27,7 +27,7 @@ if (setup.mode == 1)
 	if (~exist(setup.img_path,'dir'))
 		mkdir(setup.img_path);
 	else
-		delete([setup.img_path '*']);
+		delete([setup.img_path '*.png']);
 	end
 end
 

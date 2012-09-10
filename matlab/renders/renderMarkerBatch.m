@@ -28,8 +28,18 @@ poses = generatePoses(setup.pose_id);
 
 %% batch render images
 
+count = 0
 for i=1:length(poses)
 	renderMarker(poses(i),camera,setup,i);
+	
+	%pause rendering 5 seconds per 20 renders to be able to abort (CTRL+C)
+	if (count==20)
+		fprintf('***Pausing for 10 seconds***\n')
+		pause(10)
+		count=0;
+	else
+		count=count+1;
+	end
 end
 
 %% write parameters 
