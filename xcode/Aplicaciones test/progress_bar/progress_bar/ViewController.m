@@ -28,7 +28,7 @@
     
     activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [self.view addSubview:activity]; // spinner is not visible until started
-      activity.center = CGPointMake(160, 100);
+      //activity.center = CGPointMake(200, 100);
 
     // [activity setCenter:CGPointMake(kScreenWidth/2.0, kScreenHeight/2.0)]; // I do this because I'm in landscape mode
 
