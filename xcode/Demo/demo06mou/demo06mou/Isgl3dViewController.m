@@ -97,20 +97,13 @@ double* luminancia;
     
     if (verbose) NSLog(@"Capture output");
     
-    
-    
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
     CGImageRef ref = [self.context createCGImage:ciImage fromRect:ciImage.extent];
     //NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref);
     
     CGDataProviderRef provider = CGImageGetDataProvider(ref);
-    provider = CGDataProviderRetain(provider);
-  
-    
-    
-
-    
+    provider = CGDataProviderRetain(provider); 
     
     if (bandera == false)
     {
@@ -140,7 +133,7 @@ double* luminancia;
 
         
         CFRelease(data);
-                
+        
         asignando = false;
 
     }
@@ -154,7 +147,7 @@ double* luminancia;
     
     CGDataProviderRelease(provider);
     CGImageRelease(ref);
-
+   
 }
 
 - (void) procesamiento
@@ -171,9 +164,13 @@ double* luminancia;
             /******************PROCESAMIENTO********************************************/
             /***************************************************************************/
             /*Esto es para solucionar el problema de memoria*/
-            free(luminancia);
+            //free(luminancia);
+            
             /*Obtengo la imagen en nivel de grises en luminancia*/
-            luminancia = rgb2gray( pixels,width,height,d);
+            if (verbose) NSLog(@"rgb2gray in\n");
+            rgb2gray(luminancia, pixels,width,height,d);
+            if (verbose) NSLog(@"rgb2gray out\n");
+            
             bandera = false;
             free(list);
             free(listFiltrada);
@@ -186,9 +183,9 @@ double* luminancia;
             /************************************************LSD*/
             
             /*Se corre el LSD*/
-            NSLog(@"LSD in\n");
+            if (verbose) NSLog(@"LSD in\n");
             list = lsd_scale(&listSize, luminancia, width, height,0.55);
-            NSLog(@"LSD out\n");
+            if (verbose) NSLog(@"LSD out\n");
             /************************************************FILTRADO*/
 
 
@@ -288,7 +285,7 @@ double* luminancia;
             
             /*************FIN DEL PROCESAMIENTO********************************************/
             /******************************************************************************/
-            bandera = false;
+        //    bandera = false;
             
             
         }
@@ -331,6 +328,7 @@ double* luminancia;
         pixels[i]= INFINITY;
     }
     
+    luminancia = (double *) malloc(480*360*sizeof(double));
     
     
     
