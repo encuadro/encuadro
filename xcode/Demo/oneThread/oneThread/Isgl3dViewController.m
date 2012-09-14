@@ -48,6 +48,7 @@ size_t bitsPerPixel;
 double* luminancia;
 int d;
 int dProcesamiento;
+UIImage *imagen;
 
 /*Variables para el procesamiento*/
 double* list;
@@ -112,12 +113,17 @@ double* luminancia;
     pixels = (unsigned char *)CVPixelBufferGetBaseAddress(pb);
     
     [self procesamiento];
- 
-    [self performSelectorOnMainThread:@selector(setImage:) withObject: [UIImage imageWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight] waitUntilDone:NO];
+   
+    imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
+    
+    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
 
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
     //CVPixelBufferRelease(pb);
+    [imagen release];
+
+    
 }
 
 - (void) setImage: (UIImage*) imagen
@@ -142,12 +148,13 @@ double* luminancia;
         
         /*Obtengo la imagen en nivel de grises en luminancia*/
         if (verbose) NSLog(@"rgb2gray in\n");
+       
         rgb2gray(luminancia, pixels,width,height,d);
         if (verbose) NSLog(@"rgb2gray out\n");
         
         free(list);
         free(listFiltrada);
-        // free(esquinas);
+        
         //            free(imagePoints);
         
         listSize =0;
@@ -158,6 +165,7 @@ double* luminancia;
         /*Se corre el LSD*/
         if (verbose) NSLog(@"LSD in\n");
         list = lsd_scale(&listSize, luminancia, width, height,0.50);
+       
         if (verbose) NSLog(@"LSD out\n");
         /************************************************FILTRADO*/
         
@@ -538,6 +546,8 @@ double* luminancia;
     //dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     //dispatch_async(processQueue, ^{[self.session startRunning];});
     /*Comenzamos a capturar*/
+    
+    //NSLog(@"FORMATOS POSIBLES %@",self.frameOutput.availableVideoCVPixelFormatTypes);
     
     [self.session startRunning];
     
