@@ -24,6 +24,7 @@
 	// The rendered text
     Isgl3dMeshNode * _3dText;
     Isgl3dDemoCameraController * _cameraController;
+    Isgl3dNode * _container;
 }
 @property (nonatomic) double* eulerAngles;
 @property (nonatomic) double* traslacion;

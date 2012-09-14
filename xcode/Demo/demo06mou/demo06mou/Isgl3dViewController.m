@@ -97,6 +97,7 @@ double* luminancia;
     
     if (verbose) NSLog(@"Capture output");
     
+    NSLog(@"Capture output\n");
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
     CGImageRef ref = [self.context createCGImage:ciImage fromRect:ciImage.extent];
@@ -147,7 +148,8 @@ double* luminancia;
     
     CGDataProviderRelease(provider);
     CGImageRelease(ref);
-   
+    
+
 }
 
 - (void) procesamiento

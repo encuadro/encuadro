@@ -15,7 +15,7 @@
 @property(nonatomic, retain) AVCaptureDevice * videoDevice;
 @property(nonatomic, retain) AVCaptureDeviceInput * videoInput;
 @property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
-@property(nonatomic, retain) CIContext* context; 
+@property(nonatomic, retain) CIContext* context;
 
 //@property(nonatomic, retain) CIImage* ciImage;
 //@property(nonatomic, retain) CVPixelBufferRef pb;
@@ -35,7 +35,7 @@
 
 
 //para DIBUJAR
-claseDibujar *cgvista;
+//claseDibujar *cgvista;
 
 
 /*Variables para la imagen*/
@@ -43,7 +43,7 @@ unsigned char* pixels;
 size_t width;
 size_t height;
 size_t bitsPerComponent;
-size_t bitsPerPixel; 
+size_t bitsPerPixel;
 double* luminancia;
 int d;
 int dProcesamiento;
@@ -59,7 +59,7 @@ int listFiltradaSize;
 float distance_thr=20;
 double rotacion[9];
 double traslacion[3];
-bool bandera;
+bool bandera, asignando;
 int errorMarkerDetection; //Codigo de error del findPointCorrespondence
 
 /*Variables para el Coplanar*/
@@ -75,6 +75,8 @@ double **Rotmodern;                                 ///modern coplanar
 double center[2]={240, 180};           ///modern coplanar
 bool verbose;
 
+double* luminancia;
+//CFDataRef data;
 
 - (CIContext* ) context
 {
@@ -85,46 +87,54 @@ bool verbose;
     return _context;
 }
 
-- (void) dealloc {    
+- (void) dealloc {
     [super dealloc];
 }
 
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
-     
-    if (verbose) NSLog(@"Capture output");
-   
-
     
-    CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);  
+    if (verbose) NSLog(@"Capture output");
+    
+    NSLog(@"Capture output\n");
+    CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
     CGImageRef ref = [self.context createCGImage:ciImage fromRect:ciImage.extent];
-    //NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref));
+    //NSData* data = (NSData *) CGDataProviderCopyData(CGImageGetDataProvider(ref);
     
     CGDataProviderRef provider = CGImageGetDataProvider(ref);
-    NSData* data =(NSData*)CGDataProviderCopyData(provider);
-    
-    /*Obtengo algunas catacteristicas de la imagen de interes*/
-    width = CGImageGetWidth(ref);
-    height = CGImageGetHeight(ref);
-    bitsPerComponent     = CGImageGetBitsPerComponent(ref);
-    bitsPerPixel         = CGImageGetBitsPerPixel(ref);
-    d= bitsPerPixel/bitsPerComponent;
-    
+    provider = CGDataProviderRetain(provider);
     
     if (bandera == false)
     {
+        asignando=true;
+        /*Obtengo algunas catacteristicas de la imagen de interes*/
+        width = CGImageGetWidth(ref);
+        height = CGImageGetHeight(ref);
+        bitsPerComponent     = CGImageGetBitsPerComponent(ref);
+        bitsPerPixel         = CGImageGetBitsPerPixel(ref);
+        d= bitsPerPixel/bitsPerComponent;
+        
         /*Esto es para solucionar el problema de memoria*/
-        free(pixels); 
+        free(pixels);
         
         /*Obtenemos los pixeles como unsigned char en pixeles*/
         
         // El problema es esta asignacion! Tnemos que ver la forma de copiar el arreglo y no de apuntar un arreglo al otro!
         // Entonces podemos borrar "data" y no pasa nada con pixels
+        //NSData* data =(NSData*)CGDataProviderCopyData(provider);
         
-        pixels = (unsigned char *)[data bytes];
-       
+        //NSData* data =(NSData*)CGDataProviderCopyData(provider);
+        CFDataRef data = CGDataProviderCopyData(provider);
+        data = CFRetain(data);
         
+        pixels = (unsigned char *) CFDataGetBytePtr(data);
+        //pixels = (unsigned char *)[data bytes];
+        
+        
+        CFRelease(data);
+        
+        asignando = false;
         
     }
     
@@ -135,8 +145,9 @@ bool verbose;
     
     [self.videoView setNeedsDisplay];
     
-    
+    CGDataProviderRelease(provider);
     CGImageRelease(ref);
+    
     
 }
 
@@ -145,7 +156,7 @@ bool verbose;
     while(1){
         
         
-        if((pixels!=nil) & (height!=0))
+        if((asignando==false) & (height!=0))
         {
             bandera = true;
             
@@ -154,27 +165,32 @@ bool verbose;
             /******************PROCESAMIENTO********************************************/
             /***************************************************************************/
             /*Esto es para solucionar el problema de memoria*/
-            free(luminancia);
+            //free(luminancia);
+            
             /*Obtengo la imagen en nivel de grises en luminancia*/
-            luminancia = rgb2gray(pixels,width,height,d);
+            if (verbose) NSLog(@"rgb2gray in\n");
+            rgb2gray(luminancia, pixels,width,height,d);
+            if (verbose) NSLog(@"rgb2gray out\n");
+            
             bandera = false;
             free(list);
             free(listFiltrada);
             // free(esquinas);
-//            free(imagePoints);
+            //            free(imagePoints);
             
             listSize =0;
             listFiltradaSize =0;
             
             /************************************************LSD*/
             
-            /*Se corre el LSD*/	
-            NSLog(@"LSD in\n");
+            /*Se corre el LSD*/
+            if (verbose) NSLog(@"LSD in\n");
             list = lsd_scale(&listSize, luminancia, width, height,0.55);
-            NSLog(@"LSD out\n");
+            if (verbose) NSLog(@"LSD out\n");
             /************************************************FILTRADO*/
             
-            /*Filtrado de segmentos detectados por el LSD */	
+            
+            /*Filtrado de segmentos detectados por el LSD */
             listFiltrada = filterSegments(&listFiltradaSize , &listSize ,list, distance_thr);
             //    esquinas = getMarkerCorners(&listFiltradaSize, listFiltrada);
             
@@ -183,8 +199,8 @@ bool verbose;
             errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
             
             if (verbose){
-            printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);
+                printf("Tamano: %d\n", listSize);
+                printf("Tamano filtrada: %d\n", listFiltradaSize);
             }
             
             
@@ -195,10 +211,10 @@ bool verbose;
                 /* eleccion de algoritmo de pose*/
                 if (PosJuani){
                     CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-//                    for(int i=0;i<3;i++){
-//                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-//                        Transa[i]=Tras[i];
-//                    }
+                    //                    for(int i=0;i<3;i++){
+                    //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
+                    //                        Transa[i]=Tras[i];
+                    //                    }
                     
                 }
                 else {
@@ -212,13 +228,13 @@ bool verbose;
             }
             
             if (verbose){
-            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-            printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-            printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+                printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
+                printf("\nRotacion: \n");
+                printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+                printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+                printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
+                printf("Traslacion: \n");
+                printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
             }
             
             /************************************************POSIT COPLANAR*/
@@ -227,9 +243,9 @@ bool verbose;
             //
             //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
             //            free(imagePointsCambiados);
-            // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1); 
-
-                        
+            // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
+            
+            
             
             
             /************************************************SPINCALC*/
@@ -253,26 +269,26 @@ bool verbose;
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rotmodern,angles1,angles2);
-//            self.isgl3DView.eulerAngles = angles1;
-
+            //            self.isgl3DView.eulerAngles = angles1;
+            
             if (verbose){
-            printf("\nPrimera solucion\n");
-            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-            printf("\nSegunda solicion\n");
-            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+                printf("\nPrimera solucion\n");
+                printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+                printf("\nSegunda solicion\n");
+                printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
             }
             
             [self.isgl3DView setRotacion:rotacion];
             [self.isgl3DView setTraslacion:Tras];
-                
+            
             
             //self.traslacion = traslacion;
             
             /*************FIN DEL PROCESAMIENTO********************************************/
             /******************************************************************************/
-            bandera = false;
+            //    bandera = false;
             
-      
+            
         }
         
     }
@@ -281,7 +297,7 @@ bool verbose;
 - (void) reservarMemoria {
     
     if (verbose) printf("Reservamos memoria");
-
+    
     free(pixels);
     free(Rotmodern);
     free(Tras);
@@ -294,7 +310,7 @@ bool verbose;
     
     object=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) object[i]=(double *)malloc(3 * sizeof(double));
-
+    
     objectCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) objectCrop[i]=(double *)malloc(3 * sizeof(double));
     
@@ -303,10 +319,9 @@ bool verbose;
     
     imagePoints=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(double *)malloc(2 * sizeof(double));
-
-
-//    coplMatrix=(double **)malloc(3 * sizeof(double *));
-//    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));
+    
+    //    coplMatrix=(double **)malloc(3 * sizeof(double *));
+    //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));
     
     pixels = (unsigned char*) malloc(480*360*4*sizeof(unsigned char));
     for (int i=0;i<360*480*4;i++)
@@ -314,7 +329,8 @@ bool verbose;
         pixels[i]= INFINITY;
     }
     
-
+    luminancia = (double *) malloc(480*360*sizeof(double));
+    
     
     
     /* BEGIN MARKER */
@@ -483,7 +499,7 @@ bool verbose;
 		CGRect screenRect = [[UIScreen mainScreen] bounds];
 		CGRect rect = CGRectZero;
 		
-		if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {		
+		if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			rect = screenRect;
             
 		} else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
@@ -498,7 +514,7 @@ bool verbose;
 			rect.size.height *= contentScaleFactor;
 		}
 		glView.frame = rect;
-	}	
+	}
 }
 
 - (void) viewWillAppear:(BOOL)animated {
@@ -513,7 +529,7 @@ bool verbose;
     
     if (verbose) printf("viewDidLoad\n");
     
-    [super viewDidLoad];    
+    [super viewDidLoad];
     
     /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];
@@ -545,12 +561,13 @@ bool verbose;
     //    /*Para probar con el simulador*/
     //    self.videoView.image = [UIImage imageNamed:@"Calibrar10.jpg"];
     [self reservarMemoria];
+    
     /*Mandamos el procesamiento a otro thread*/
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     dispatch_async(processQueue, ^{[self procesamiento];});
     /*Comenzamos a capturar*/
     
-    [self.session startRunning]; 
+    [self.session startRunning];
     
 }
 

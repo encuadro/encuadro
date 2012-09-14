@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "HelloWorldView.h"
-#import "simple.h"
+//#import "simple.h"
 
   
 #import "processing.h"
