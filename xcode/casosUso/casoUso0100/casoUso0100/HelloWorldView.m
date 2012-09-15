@@ -36,7 +36,7 @@
 @property(nonatomic, retain) Isgl3dNode* cubito1;
 @property(nonatomic, retain) Isgl3dNode* cubito2;
 @property(nonatomic, retain) Isgl3dNode* cubito3;
-@property(nonatomic, retain) Isgl3dNode* redondel1;
+@property(nonatomic, retain) Isgl3dNode* cono;
 @property(nonatomic, retain) Isgl3dNode* redondel2;
 @property(nonatomic, retain) Isgl3dNode* redondel3;
 
@@ -47,7 +47,7 @@
 @synthesize cubito1 = _cubito1;
 @synthesize cubito2 = _cubito2;
 @synthesize cubito3 = _cubito3;
-@synthesize redondel1 = _redondel1;
+@synthesize cono = _cono;
 @synthesize redondel2 = _redondel2;
 @synthesize redondel3 = _redondel3;
 @synthesize traslacion = _traslacion;
@@ -90,14 +90,17 @@ NSString *estring;
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
-        _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
+       // Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+        Isgl3dCone *coneMesh = [Isgl3dCone meshWithGeometry:60 topRadius:0 bottomRadius:30 ns:40 nt:40 openEnded:NO];
+      //  _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
+        _cono = [_container createNodeWithMesh:coneMesh andMaterial:material];
         
-        _cubito1.position = iv3(0,0,0);
+        //_cubito1.position = iv3(0,0,0);
+        _cono.position = iv3(0,0,0);
         cantidadToques = 0;
 
-        _cubito1.interactive =YES;
-        [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+        _cono.interactive =YES;
+        [_cono addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
 
         self.camera.position = iv3(0,0,0.1);
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];
@@ -174,13 +177,13 @@ NSString *estring;
             
             _container.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
             
-            _container.rotationX = 0;
+            _container.rotationX =0;
             _container.rotationY = 0;
             _container.rotationZ = 0;
             
             [_container roll:-angles.z];
             [_container yaw:-angles.y];
-            [_container pitch:angles.x];
+            [_container pitch:angles.x -60];
 
             
         }
@@ -261,17 +264,17 @@ NSString *estring;
     
     
     if (cantidadToques ==0){ 
-        estring=@"Blanes_fiebreAmarilla.mp3";  
+        estring=@"arriba_izq.mp3";
         
         
     }
     else if (cantidadToques ==1) { 
-        estring=@"Figari_gritoDeAsencio.mp3";
+        estring=@"arriba_der.mp3";
         
         
     }
     else if (cantidadToques ==2) { 
-        estring=@"Torres_paisajeCiudad.mp3";
+        estring=@"abajo.mp3";
         
         
     }
@@ -292,11 +295,11 @@ NSString *estring;
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
 
 
-    if (cantidadToques ==0){_cubito1.position = iv3(190,0,0); cantidadToques =1;
+    if (cantidadToques ==0){_cono.position = iv3(190,0,0); cantidadToques =1;
     }
-    else if (cantidadToques ==1) {_cubito1.position = iv3(0,-100,0); cantidadToques =2;
+    else if (cantidadToques ==1) {_cono.position = iv3(0,-100,0); cantidadToques =2;
     }
-    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
+    else if (cantidadToques ==2) {_cono.position = iv3(0,0,0); cantidadToques =0;}
     
 }
 
