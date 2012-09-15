@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <MediaPlayer/MediaPlayer.h>
 @interface ViewController : UIViewController
 
+
+@property (nonatomic, retain) IBOutlet UIButton *boton;
+@property (nonatomic, retain) IBOutlet UIImageView *imagen;
 @end

@@ -52,7 +52,7 @@
 @synthesize redondel3 = _redondel3;
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
-
+@synthesize audioPlayer = _audioPlayer;
 
 double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
@@ -62,7 +62,7 @@ Isgl3dVector3 angles;
 double rotacion[3][3];
 bool verbose;
 int cantidadToques;
-
+NSString *estring;
 
 - (void) setRotacion:(double*) rot
 {
@@ -260,27 +260,45 @@ int cantidadToques;
     
     
     
-    //////////////////////////
-    NSString *estring=@"Blanes_fiebreAmarilla.mp3";
+    if (cantidadToques ==0){ 
+        estring=@"Blanes_fiebreAmarilla.mp3";  
+        
+        
+    }
+    else if (cantidadToques ==1) { 
+        estring=@"Figari_gritoDeAsencio.mp3";
+        
+        
+    }
+    else if (cantidadToques ==2) { 
+        estring=@"Torres_paisajeCiudad.mp3";
+        
+        
+    }
     
-   // NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
-    
-    //  NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
-     NSURL *url =[NSURL fileURLWithPath:@"/Users/pablofloresguridi/repositorios/encuadro/xcode/casosUso/casoUso0100/casoUso0100/Blanes_fiebreAmarilla.mp3"];
-    // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"]];
-    
+    NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
     NSError *error;
     self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     self.audioPlayer.numberOfLoops=0;
+    self.audioPlayer.delegate = self;
     [self.audioPlayer play];
     
     
-    /////////////////////////
     
     
-    if (cantidadToques ==0){ _cubito1.position = iv3(190,0,0); cantidadToques =1;}
-    else if (cantidadToques ==1) { _cubito1.position = iv3(0,-100,0); cantidadToques =2;}
-    else if (cantidadToques ==2) { _cubito1.position = iv3(0,0,0); cantidadToques =0;}
+
 }
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
+
+
+    if (cantidadToques ==0){_cubito1.position = iv3(190,0,0); cantidadToques =1;
+    }
+    else if (cantidadToques ==1) {_cubito1.position = iv3(0,-100,0); cantidadToques =2;
+    }
+    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
+    
+}
+
 @end
 

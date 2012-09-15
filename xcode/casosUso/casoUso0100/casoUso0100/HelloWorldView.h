@@ -11,7 +11,9 @@
 #import "configuration.h"
 #import <AVFoundation/AVFoundation.h>
 
-@interface videoView : UIImageView {
+
+bool fin;
+@interface videoView : UIImageView <AVAudioPlayerDelegate> {
 }
 
 @end
