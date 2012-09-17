@@ -519,11 +519,57 @@ int orderQlArr(quadrilateral *ql) {
 
 int getMarker(quadrilateralSet *qlSet, markerQr *marker) {
 
-	orderQlSetArr(qlSet);
+	orderQlSetArr3(qlSet);
 	*marker = markerQrNew(qlSet);
 	orderMarkerVertices(marker);
 
 	return 0;
+}
+
+int orderQlSetArr3(quadrilateralSet *qlSet) {
+	quadrilateralSet qlSetTemp[MRKR_NB_QLSETS];
+	double vect[MRKR_NB_QLSETS][2];
+	double leng[MRKR_NB_QLSETS];
+	double dirs[2][2];
+	int ref_index = -1;
+
+	/*compute the 3 posible principal directions*/
+	for (int i = 0; i < MRKR_NB_QLSETS; i++) {
+		VEC_DIFF_2(vect[i], qlSet[i].center,
+				qlSet[(i+1)%MRKR_NB_QLSETS].center);
+		VEC_LENGTH_2(leng[i], vect[i]);
+		VEC_NORMALIZE_2(vect[i]);
+	}
+	/*find out y direction by minimum distance*/
+	for (int i = 0; i < MRKR_NB_QLSETS; i++) {
+		if ((leng[i] < leng[(i + 1) % MRKR_NB_QLSETS])
+				&& (leng[i] < leng[(i + 2) % MRKR_NB_QLSETS])) {
+			VEC_COPY_2(dirs[1], vect[i]);
+			VEC_NORMALIZE_2(dirs[1]);
+			ref_index = i;
+			break;
+		}
+	}
+
+	double c[3];
+	double a[3] = {vect[ref_index][0],vect[ref_index][1],0};
+	double b[3] = {vect[(ref_index+1)%MRKR_NB_QLSETS][0],vect[(ref_index+1)%MRKR_NB_QLSETS][1],0};
+	VEC_CROSS_PRODUCT(c,a,b);
+	if (c[2]<0){
+		qlSetTemp[0] = qlSet[(ref_index + 0) % MRKR_NB_QLSETS];
+		qlSetTemp[1] = qlSet[(ref_index + 2) % MRKR_NB_QLSETS];
+		qlSetTemp[2] = qlSet[(ref_index + 1) % MRKR_NB_QLSETS];
+	} else {
+		qlSetTemp[0] = qlSet[(ref_index + 1) % MRKR_NB_QLSETS];
+		qlSetTemp[1] = qlSet[(ref_index + 2) % MRKR_NB_QLSETS];
+		qlSetTemp[2] = qlSet[(ref_index + 0) % MRKR_NB_QLSETS];
+	}
+
+	for (int i = 0; i < MRKR_NB_QLSETS; i++)
+		qlSet[i] = qlSetTemp[i];
+
+	return 0;
+
 }
 
 int orderQlSetArr(quadrilateralSet *qlSet) {
