@@ -8,7 +8,6 @@
 
 #import "Isgl3dViewController.h"
 #import "isgl3d.h"
-//#import "simple.h"
 
 @interface Isgl3dViewController()
 
