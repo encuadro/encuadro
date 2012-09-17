@@ -9,11 +9,8 @@
 #import "isgl3d.h"
 #include "vvector.h"
 #import "configuration.h"
-#import <AVFoundation/AVFoundation.h>
 
-
-bool fin;
-@interface videoView : UIImageView <AVAudioPlayerDelegate> {
+@interface videoView : UIImageView {
 }
 
 @end
@@ -26,12 +23,10 @@ bool fin;
 	// The rendered text
     Isgl3dMeshNode * _3dText;
     Isgl3dDemoCameraController * _cameraController;
-    Isgl3dNode * _container;
 }
 @property (nonatomic) double* eulerAngles;
 @property (nonatomic) double* traslacion;
 
-@property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 
 -(void) setRotacion:(double*) rot;
 
@@ -41,8 +36,8 @@ bool fin;
 /*
  * Principal class to be instantiated in main.h.
  */
-#import "casoUso0100AppDelegate.h"
-@interface AppDelegate : casoUso0100AppDelegate
+#import "casoUso0200AppDelegate.h"
+@interface AppDelegate : casoUso0200AppDelegate
 - (void) createViews;
 @end
 

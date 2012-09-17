@@ -36,7 +36,7 @@
 @property(nonatomic, retain) Isgl3dNode* cubito1;
 @property(nonatomic, retain) Isgl3dNode* cubito2;
 @property(nonatomic, retain) Isgl3dNode* cubito3;
-@property(nonatomic, retain) Isgl3dNode* redondel1;
+@property(nonatomic, retain) Isgl3dNode* cono;
 @property(nonatomic, retain) Isgl3dNode* redondel2;
 @property(nonatomic, retain) Isgl3dNode* redondel3;
 
@@ -47,12 +47,12 @@
 @synthesize cubito1 = _cubito1;
 @synthesize cubito2 = _cubito2;
 @synthesize cubito3 = _cubito3;
-@synthesize redondel1 = _redondel1;
+@synthesize cono = _cono;
 @synthesize redondel2 = _redondel2;
 @synthesize redondel3 = _redondel3;
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
-
+@synthesize audioPlayer = _audioPlayer;
 
 double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
@@ -62,7 +62,7 @@ Isgl3dVector3 angles;
 double rotacion[3][3];
 bool verbose;
 int cantidadToques;
-
+NSString *estring;
 
 - (void) setRotacion:(double*) rot
 {
@@ -90,14 +90,17 @@ int cantidadToques;
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
-        _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
+       // Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+        Isgl3dCone *coneMesh = [Isgl3dCone meshWithGeometry:60 topRadius:0 bottomRadius:30 ns:40 nt:40 openEnded:NO];
+      //  _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
+        _cono = [_container createNodeWithMesh:coneMesh andMaterial:material];
         
-        _cubito1.position = iv3(0,0,0);
+        //_cubito1.position = iv3(0,0,0);
+        _cono.position = iv3(0,0,0);
         cantidadToques = 0;
 
-        _cubito1.interactive =YES;
-        [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+        _cono.interactive =YES;
+        [_cono addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
 
         self.camera.position = iv3(0,0,0.1);
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];
@@ -174,13 +177,13 @@ int cantidadToques;
             
             _container.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
             
-            _container.rotationX = 0;
+            _container.rotationX =0;
             _container.rotationY = 0;
             _container.rotationZ = 0;
             
             [_container roll:-angles.z];
             [_container yaw:-angles.y];
-            [_container pitch:angles.x];
+            [_container pitch:angles.x -60];
 
             
         }
@@ -260,27 +263,45 @@ int cantidadToques;
     
     
     
-    //////////////////////////
-    NSString *estring=@"Blanes_fiebreAmarilla.mp3";
+    if (cantidadToques ==0){ 
+        estring=@"arriba_izq.mp3";
+        
+        
+    }
+    else if (cantidadToques ==1) { 
+        estring=@"arriba_der.mp3";
+        
+        
+    }
+    else if (cantidadToques ==2) { 
+        estring=@"abajo.mp3";
+        
+        
+    }
     
-   // NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
-    
-    //  NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
-     NSURL *url =[NSURL fileURLWithPath:@"/Users/pablofloresguridi/repositorios/encuadro/xcode/casosUso/casoUso0100/casoUso0100/Blanes_fiebreAmarilla.mp3"];
-    // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"]];
-    
+    NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
     NSError *error;
     self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
     self.audioPlayer.numberOfLoops=0;
+    self.audioPlayer.delegate = self;
     [self.audioPlayer play];
     
     
-    /////////////////////////
     
     
-    if (cantidadToques ==0){ _cubito1.position = iv3(190,0,0); cantidadToques =1;}
-    else if (cantidadToques ==1) { _cubito1.position = iv3(0,-100,0); cantidadToques =2;}
-    else if (cantidadToques ==2) { _cubito1.position = iv3(0,0,0); cantidadToques =0;}
+
 }
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
+
+
+    if (cantidadToques ==0){_cono.position = iv3(190,0,0); cantidadToques =1;
+    }
+    else if (cantidadToques ==1) {_cono.position = iv3(0,-100,0); cantidadToques =2;
+    }
+    else if (cantidadToques ==2) {_cono.position = iv3(0,0,0); cantidadToques =0;}
+    
+}
+
 @end
 
