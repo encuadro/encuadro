@@ -15,45 +15,52 @@
 @implementation ViewController
 @synthesize boton = _boton;
 @synthesize imagen = _imagen;
+@synthesize theMovie = _theMovie;
 
 -(IBAction)reproducir:(id)sender{
     NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"marker_lo" ofType:@"mov"]];
-    /* Con ViewController
-    MPMoviePlayerViewController *player=[[MPMoviePlayerViewController alloc]initWithContentURL:url];
-    [self presentMoviePlayerViewControllerAnimated:player];
-    player.moviePlayer.movieSourceType=MPMovieSourceTypeFile;
-    player.view.bounds=CGRectMake(0, 0, 100, 100);
-    [player.moviePlayer play];
-    player=nil;
-    */
-
     
-    MPMoviePlayerController *moviePlayerController = [[MPMoviePlayerController alloc] initWithContentURL:url];  
-    [self.view addSubview:moviePlayerController.view];  
-    moviePlayerController.fullscreen = YES;  
-    [moviePlayerController play];
-
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *moviePath = [bundle pathForResource:@"marker_lo" ofType:@"mov"];
+    NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    //Place it in subview, else it won’t work
+    theMovie.view.frame = CGRectMake(0, 0, 100, 100);
+    
+    
+//    CGAffineTransform rotate = CGAffineTransformMakeRotation(0.95);
+//	CGAffineTransform moveRight = CGAffineTransformMakeTranslation(100, 200);
+//	CGAffineTransform combo1 = CGAffineTransformConcat(rotate, moveRight);
+//	CGAffineTransform zoomIn = CGAffineTransformMakeScale(1, 1);
+//	CGAffineTransform transform = CGAffineTransformConcat(zoomIn, combo1);
+//    theMovie.view.transform = combo1;
+    
+    
+    
+    theMovie.view.transform = CGAffineTransformMake(0, 1, 2, 1, 0, 0);
+    [self.view addSubview:theMovie.view];
+    //Resize window – a bit more practical
+    UIWindow *moviePlayerWindow = nil;
+    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
+    //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+    // Play the movie.
+    [theMovie play];
 }
 
 
 -(IBAction)playMovie:(id)sender  
 {  
   
-        NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle] 
-                                             pathForResource:@"marker_lo" ofType:@"mov"]];
-        MPMoviePlayerController *moviePlayer = 
-        [[MPMoviePlayerController alloc] 
-         initWithContentURL:url];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(moviePlayBackDidFinish:)
-                                                     name:MPMoviePlayerPlaybackDidFinishNotification
-                                                   object:moviePlayer];
-        
-        moviePlayer.controlStyle = MPMovieControlStyleDefault;
-        moviePlayer.shouldAutoplay = YES;
-        [self.view addSubview:moviePlayer.view];
-        [moviePlayer setFullscreen:YES animated:YES];
+    [UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:15];
+	[UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(0.95);
+	CGAffineTransform moveRight = CGAffineTransformMakeTranslation(100, 200);
+	CGAffineTransform combo1 = CGAffineTransformConcat(rotate, moveRight);
+	CGAffineTransform zoomIn = CGAffineTransformMakeScale(5.8, 5.8);
+	CGAffineTransform transform = CGAffineTransformConcat(zoomIn, combo1);
+    self.view.transform = transform;
+	[UIView commitAnimations];
      
 }  
 
