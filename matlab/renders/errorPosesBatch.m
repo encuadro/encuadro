@@ -23,12 +23,16 @@ err = m2-m1;
 media = mean(err);
 mediana = median(err);
 varianza = var(err);
+stddev = std(err);
 maximum = max(err);
 minimum = min(err);
+
+trimmedia = trimmean(err,20)
 
 %% return stats struct
 stats.meanErr = media;
 stats.varErr = varianza;
+stats.stdErr = stddev;
 stats.medianErr = mediana;
 stats.maxErr = maximum;
 stats.minErr = minimum;
@@ -42,24 +46,24 @@ stats.score = score;
 %% plots
 figure(1)
 axis('tight');
-subplot(321); plot(m1(:,1),'b'); hold on; plot(m2(:,1),'r'); ylabel('rx'); hold off;
-subplot(323); plot(m1(:,2),'b'); hold on; plot(m2(:,2),'r'); ylabel('ry'); hold off;
-subplot(325); plot(m1(:,3),'b'); hold on; plot(m2(:,3),'r'); ylabel('rz'); hold off;
-subplot(322); plot(m1(:,4),'b'); hold on; plot(m2(:,4),'r'); ylabel('tx'); hold off;
-subplot(324); plot(m1(:,5),'b'); hold on; plot(m2(:,5),'r'); ylabel('ty'); hold off;
-subplot(326); plot(m1(:,6),'b'); hold on; plot(m2(:,6),'r'); ylabel('tz'); hold off; 
+subplot(321); plot(successIdx,m1(:,1),'b'); hold on; plot(successIdx,m2(:,1),'r'); ylabel('rx'); hold off;
+subplot(323); plot(successIdx,m1(:,2),'b'); hold on; plot(successIdx,m2(:,2),'r'); ylabel('ry'); hold off;
+subplot(325); plot(successIdx,m1(:,3),'b'); hold on; plot(successIdx,m2(:,3),'r'); ylabel('rz'); hold off;
+subplot(322); plot(successIdx,m1(:,4),'b'); hold on; plot(successIdx,m2(:,4),'r'); ylabel('tx'); hold off;
+subplot(324); plot(successIdx,m1(:,5),'b'); hold on; plot(successIdx,m2(:,5),'r'); ylabel('ty'); hold off;
+subplot(326); plot(successIdx,m1(:,6),'b'); hold on; plot(successIdx,m2(:,6),'r'); ylabel('tz'); hold off; 
 % xlabel('pose index'); title('Pose Estimation');
 
 % figure(2)
 % hist(err,500)
 
-% figure(2)
-% subplot(321); plot(err(:,1),'--o'); ylabel('rx');
-% subplot(323); plot(err(:,2),'--o'); ylabel('ry');
-% subplot(325); plot(err(:,3),'--o'); ylabel('rz');
-% subplot(322); plot(err(:,4),'--o'); ylabel('tx');
-% subplot(324); plot(err(:,5),'--o'); ylabel('ty');
-% subplot(326); plot(err(:,6),'--o'); ylabel('tz'); 
+figure(2)
+subplot(321); plot(successIdx,err(:,1),'b'); ylabel('rx');
+subplot(323); plot(successIdx,err(:,2),'b'); ylabel('ry');
+subplot(325); plot(successIdx,err(:,3),'b'); ylabel('rz');
+subplot(322); plot(successIdx,err(:,4),'b'); ylabel('tx');
+subplot(324); plot(successIdx,err(:,5),'b'); ylabel('ty');
+subplot(326); plot(successIdx,err(:,6),'b'); ylabel('tz'); 
 % axis('tight');
 % % xlabel('pose index'); title('Pose Error')
 
