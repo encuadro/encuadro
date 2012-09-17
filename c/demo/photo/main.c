@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 	double **imagePoints, **imagePointsCrop;
 	int i, j, listSize = 0, listFiltSize = 0; 	int listDim = 7;
 	int distance_thr = 25;	// 4 pixels
-    double scale=0.8;
+    double scale=0.6;
     
     /*Variables para el Coplanar*/
     int NumberOfPoints,k, cantPtsDetectados;
