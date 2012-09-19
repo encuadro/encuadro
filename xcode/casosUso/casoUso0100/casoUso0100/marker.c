@@ -222,10 +222,10 @@ int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList,
 		printf("markerIsSufficient: %d\n", markerIsSufficient);
 
 	if (markerIsComplete == 1) {
-		printf("MSG: MRKR_COMPLETE_FOUND\n");
+		if (VERBOSE) printf("MSG: MRKR_COMPLETE_FOUND\n");
 		return MRKR_COMPLETE_FOUND;
 	} else if (markerIsSufficient == 0) {
-		printf("MSG: MRKR_NOT_SUFFICIENT\n");
+		if (VERBOSE) printf("MSG: MRKR_NOT_SUFFICIENT\n");
 		return MRKR_NOT_SUFFICIENT;
 	}
 
@@ -257,11 +257,11 @@ int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList,
 	}
 
 	if (not_found==1){
-		printf("MSG: MRKR_INCOMPLETE_NOT_FOUND\n");
+		if (VERBOSE) printf("MSG: MRKR_INCOMPLETE_NOT_FOUND\n");
 		return MRKR_INCOMPLETE_NOT_FOUND;
 	}
 
-	printf("MSG: MRKR_INCOMPLETE_FOUND\n");
+	if (VERBOSE) printf("MSG: MRKR_INCOMPLETE_FOUND\n");
 	return MRKR_INCOMPLETE_FOUND;
 }
 

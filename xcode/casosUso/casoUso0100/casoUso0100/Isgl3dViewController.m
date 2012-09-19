@@ -76,6 +76,18 @@ double center[2]={240, 180};           ///modern coplanar
 bool verbose;
 double* luminancia;
 
+/* LSD parameters */
+double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
+                           sigma = sigma_scale/scale.                    */
+double quant = 2.0;       /* Bound to the quantization error on the
+                           gradient norm.                                */
+double ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
+double log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
+double density_th = 0.7;  /* Minimal density of region points in rectangle. */
+int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
+                           modulus.                                       */
+/*Up to here */
+
 - (CIContext* ) context
 {
     if(!_context)
@@ -146,10 +158,10 @@ double* luminancia;
         //free(luminancia);
         
         /*Obtengo la imagen en nivel de grises en luminancia*/
-        if (verbose) NSLog(@"rgb2gray in\n");
+        //NSLog(@"rgb2gray in\n");
         
         rgb2gray(luminancia, pixels,width,height,d);
-        if (verbose) NSLog(@"rgb2gray out\n");
+       // NSLog(@"rgb2gray out\n");
         
         free(list);
         free(listFiltrada);
@@ -162,10 +174,12 @@ double* luminancia;
         /************************************************LSD*/
         
         /*Se corre el LSD*/
-        if (verbose) NSLog(@"LSD in\n");
-        list = lsd_scale(&listSize, luminancia, width, height,0.50);
+       // NSLog(@"LSD in\n");
+//        list = lsd_scale(&listSize, luminancia, width, height,0.50);
+        list = LineSegmentDetection(&listSize, luminancia, width, height,0.5, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+
         
-        if (verbose) NSLog(@"LSD out\n");
+      //  NSLog(@"LSD out\n");
         /************************************************FILTRADO*/
         
         

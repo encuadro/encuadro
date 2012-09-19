@@ -77,7 +77,7 @@ bool verbose = FALSE;
     
     
     
-    vistaImg.transform =CGAffineTransformMake(0, -1, 1, 0, 0, 0);
+    vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
     /* Se ajusta la pantalla*/
     
     UIScreen *screen = [UIScreen mainScreen];
