@@ -629,9 +629,12 @@ static image_double gaussian_sampler( image_double in, double scale,
   /* compute new image size and get memory for images */
   if( in->xsize * scale > (double) UINT_MAX ||
       in->ysize * scale > (double) UINT_MAX )
+
     error("gaussian_sampler: the output image size exceeds the handled size.");
   N = (unsigned int) ceil( in->xsize * scale );
   M = (unsigned int) ceil( in->ysize * scale );
+
+
 
   aux = new_image_double(N,in->ysize);
   out = new_image_double(N,M);
@@ -658,9 +661,7 @@ static image_double gaussian_sampler( image_double in, double scale,
   double_x_size = (int) (2 * in->xsize);
   double_y_size = (int) (2 * in->ysize);
 
-    //gaussian_kernel( kernel, sigma, 0.25 ); /*Le hacemos una aproximacion al offset*/
-
-  /* First subsampling: x axis */
+    /* First subsampling: x axis */
   for(x=0;x<aux->xsize;x++)
     {
       /*
@@ -672,7 +673,9 @@ static image_double gaussian_sampler( image_double in, double scale,
       /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
       xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
+
       gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
+
       /* the kernel must be computed for each x because the fine
          offset xx-xc is different in each case */
 
@@ -687,14 +690,14 @@ static image_double gaussian_sampler( image_double in, double scale,
               while( j < 0 ) j += double_x_size;
               while( j >= double_x_size ) j -= double_x_size;
               if( j >= (int) in->xsize ) j = double_x_size-1-j;
-
+                      
               sum += in->data[ j + y * in->xsize ] * kernel->values[i];
-                
+                               
             }
           aux->data[ x + y * aux->xsize ] = sum;
         }
     }
-
+    
   /* Second subsampling: y axis */
   for(y=0;y<out->ysize;y++)
     {
@@ -722,7 +725,7 @@ static image_double gaussian_sampler( image_double in, double scale,
               while( j < 0 ) j += double_y_size;
               while( j >= double_y_size ) j -= double_y_size;
               if( j >= (int) in->ysize ) j = double_y_size-1-j;
-
+                   
               sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
                 
             }
@@ -2159,15 +2162,22 @@ double * LineSegmentDetection( int * n_out,
          */
         rec.x1 += 0.5; rec.y1 += 0.5;
         rec.x2 += 0.5; rec.y2 += 0.5;
-
+/*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
         /* scale the result values if a subsampling was performed */
-        if( scale != 1.0 )
-          {
-            rec.x1 /= scale; rec.y1 /= scale;
-            rec.x2 /= scale; rec.y2 /= scale;
-            rec.width /= scale;
-          }
+//        if( scale != 1.0 )
+//          {
+//            rec.x1 /= scale; rec.y1 /= scale;
+//            rec.x2 /= scale; rec.y2 /= scale;
+//            rec.width /= scale;
+//          }
 
+
+          rec.x1 /= 0.5; rec.y1 /= 0.5;
+              rec.x2 /= 0.5; rec.y2 /= 0.5;
+              rec.width /= 0.5;
+
+/*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
+          
         /* add line segment found to output */
         add_7tuple( out, rec.x1, rec.y1, rec.x2, rec.y2,
                          rec.width, rec.p, log_nfa );

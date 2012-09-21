@@ -104,7 +104,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    //NSLog(@"Capture output");
+    NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -131,7 +131,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
-    //CVPixelBufferRelease(pb);
+
     [imagen release];
     
     
@@ -146,7 +146,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 - (void) procesamiento
 {
     
-    if((luminancia != NULL)&(height!=0))
+    if((pixels[0] != INFINITY)&(height!=0))
     {
         
         
@@ -154,14 +154,14 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
         
         /******************PROCESAMIENTO********************************************/
         /***************************************************************************/
-        /*Esto es para solucionar el problema de memoria*/
-        //free(luminancia);
         
         /*Obtengo la imagen en nivel de grises en luminancia*/
         //NSLog(@"rgb2gray in\n");
         
         rgb2gray(luminancia, pixels,width,height,d);
-       // NSLog(@"rgb2gray out\n");
+        //NSLog(@"rgb2gray out\n");
+        image_double luminancia_sub = gaussian_sampler2(luminancia, width, height, 1, 0.5, sigma_scale);
+        //NSLog(@"gaussian_sampler out\n");
         
         free(list);
         free(listFiltrada);
@@ -174,12 +174,12 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
         /************************************************LSD*/
         
         /*Se corre el LSD*/
-       // NSLog(@"LSD in\n");
-//        list = lsd_scale(&listSize, luminancia, width, height,0.50);
-        list = LineSegmentDetection(&listSize, luminancia, width, height,0.5, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+        NSLog(@"LSD in\n");
+        //list = lsd_scale(&listSize, luminancia, width, height,0.50);
+        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,1, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
 
-        
-      //  NSLog(@"LSD out\n");
+        NSLog(@"LSD out\n");
+        free(luminancia_sub);
         /************************************************FILTRADO*/
         
         
@@ -275,12 +275,9 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
         [self.isgl3DView setTraslacion:Tras];
         
         
-        //self.traslacion = traslacion;
-        
         /*************FIN DEL PROCESAMIENTO********************************************/
         /******************************************************************************/
-        //    bandera = false;
-        
+
     }
     
 }

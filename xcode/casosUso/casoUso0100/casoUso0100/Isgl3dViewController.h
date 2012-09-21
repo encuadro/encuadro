@@ -26,4 +26,6 @@
 @property (readwrite, retain) IBOutlet UIImageView* videoView;
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
 
+
+- (void) procesamiento;
 @end
