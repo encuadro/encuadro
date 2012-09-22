@@ -87,6 +87,8 @@ double density_th = 0.7;  /* Minimal density of region points in rectangle. */
 int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
                            modulus.                                       */
 /*Up to here */
+image_double luminancia_sub;
+image_double image;
 
 - (CIContext* ) context
 {
@@ -160,7 +162,8 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
         
         rgb2gray(luminancia, pixels,width,height,d);
         //NSLog(@"rgb2gray out\n");
-        image_double luminancia_sub = gaussian_sampler2(luminancia, width, height, 1, 0.5, sigma_scale);
+        image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+        luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
         //NSLog(@"gaussian_sampler out\n");
         
         free(list);
@@ -179,7 +182,8 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,1, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
 
         NSLog(@"LSD out\n");
-        free(luminancia_sub);
+        free( (void *) image );
+       free_image_double(luminancia_sub);
         /************************************************FILTRADO*/
         
         

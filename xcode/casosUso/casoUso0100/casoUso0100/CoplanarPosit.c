@@ -74,12 +74,12 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         homogeneousWorldPts[i][3] = 1;
     }
     
-    if (false) {
-        printf("IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\n",imgPts[i][0],imgPts[i][1]);
-        }
-    }
+//    if (false) {
+//        printf("IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\n",imgPts[i][0],imgPts[i][1]);
+//        }
+//    }
     /* allocation for centeredImage*/
     double** centeredImage;
     centeredImage=(double**)malloc(NbPts*sizeof(double*));
@@ -92,12 +92,12 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         
     }
     
-    if (false) {
-        printf("CENTERED IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
-        }
-    }
+//    if (false) {
+//        printf("CENTERED IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
+//        }
+//    }
     
     
     //    /* objectMat alloc*/
@@ -116,12 +116,12 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         for (j=0;j<3;j++) objectMat[i][j]=0;
     }
     
-    if (false) {
-        printf("PUNTOS ANTES DE ENTRAR A PSEUDOINVERSE\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\t%g\t%g\n",homogeneousWorldPts[i][0],homogeneousWorldPts[i][1],homogeneousWorldPts[i][2],homogeneousWorldPts[i][3]);
-        }
-    }
+//    if (false) {
+//        printf("PUNTOS ANTES DE ENTRAR A PSEUDOINVERSE\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\t%g\t%g\n",homogeneousWorldPts[i][0],homogeneousWorldPts[i][1],homogeneousWorldPts[i][2],homogeneousWorldPts[i][3]);
+//        }
+//    }
     
     double v[3];
     double m[3][3]={{0,0,0},{0,0,0},{0,0,0}};
@@ -133,26 +133,26 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         ACCUM_OUTER_PRODUCT_3X3(m,v,v);
     }
     INVERT_3X3(objectMat,det,m);
-    MAT_PRINT_3X3(objectMat);
+//    MAT_PRINT_3X3(objectMat);
     
     PositBranches(NbPts, centeredImage, worldPts, objectMat, Rot1, Rot2, Trans);
     
-    if (true) {
-        
-        printf("\nRotacion1 antes de iterar: \n");
-        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
-        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
-        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-        
-        printf("\nRotacion2 antes de iterar: \n");
-        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
-        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
-        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-    }
+//    if (true) {
+//        
+//        printf("\nRotacion1 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
+//        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
+//        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//        
+//        printf("\nRotacion2 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
+//        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
+//        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
     
     if ((Rot1[0][0])!=2.0) /*pose1 a priori possible*/
     {
@@ -300,21 +300,21 @@ void CoplanarPosit4Soft(int NbPts, double **centeredImage, double** homogeneousW
     PositBranches(NbPts, centeredImage, homogeneousWorldPts, objectMat, Rot1, Rot2, Trans);
 
     
-    if (false){
-        printf("\nRotacion1 antes de iterar: \n");
-        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
-        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
-        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-        
-        printf("\nRotacion2 antes de iterar: \n");
-        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
-        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
-        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-    }
+//    if (false){
+//        printf("\nRotacion1 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
+//        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
+//        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//        
+//        printf("\nRotacion2 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
+//        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
+//        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
     
     if ((Rot1[0][0])!=2.0) /*pose1 a priori possible*/
     {
@@ -323,14 +323,14 @@ void CoplanarPosit4Soft(int NbPts, double **centeredImage, double** homogeneousW
         /*PosCopl (BRANCHE 1)*/
     }
     
-    if (false){
-        printf("\nRotacion: \n");
-        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
-        printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
-        printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-    }
+//    if (false){
+//        printf("\nRotacion: \n");
+//        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+//        printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+//        printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
     
     if ((Rot2[0][0])!=2.0) /*pose1 a priori possible*/
     {
@@ -339,14 +339,14 @@ void CoplanarPosit4Soft(int NbPts, double **centeredImage, double** homogeneousW
         /*PosCopl (BRANCHE 2)*/
     }
     
-    if (false){
-        printf("\nRotacion: \n");
-        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
-        printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
-        printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-    }
+//    if (false){
+//        printf("\nRotacion: \n");
+//        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+//        printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+//        printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
     
     if ((RotFinal1[0][0]!=2)&&(RotFinal2[0][0]!=2))
     {
@@ -431,13 +431,13 @@ void PositBranches(int NbPts, double **centeredImage, double** worldPts, double*
     int firstNonCol;
     double delta,lambda,mu,q,zi,zmin1,zmin2;
     
-    if (false) {
-        printf("\nIMAGE POINTS A LA ENTRADA DE POSITBRANCHES:\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
-        }
-        
-    }
+//    if (false) {
+//        printf("\nIMAGE POINTS A LA ENTRADA DE POSITBRANCHES:\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
+//        }
+//        
+//    }
     
     double b[3];
     double r1Taux[3]={0,0,0};
@@ -470,10 +470,10 @@ void PositBranches(int NbPts, double **centeredImage, double** worldPts, double*
     J0J0=r2T[0]*r2T[0]+r2T[1]*r2T[1]+r2T[2]*r2T[2];
     I0J0=r1T[0]*r2T[0]+r1T[1]*r2T[1]+r1T[2]*r2T[2];
     
-    if (false){
-        printf("I0I0J0J0I0J0\n");
-        printf("%g\t%g\t%g\n",I0I0,J0J0,I0J0);
-    }
+//    if (false){
+//        printf("I0I0J0J0I0J0\n");
+//        printf("%g\t%g\t%g\n",I0I0,J0J0,I0J0);
+//    }
     
     /*Computation of u, unit vector normal to the image plane*/
     firstNonCol=2;
@@ -819,8 +819,8 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
             }
         }
        
-        MAT_PRINT_3X3(Rot);
-        VEC_PRINT(Trans);
+//        MAT_PRINT_3X3(Rot);
+//        VEC_PRINT(Trans);
         
         r3T[0]=Rot[2][0];
         r3T[1]=Rot[2][1];

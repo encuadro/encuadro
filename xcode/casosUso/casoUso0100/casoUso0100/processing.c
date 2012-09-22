@@ -109,7 +109,7 @@ static void enlarge_ntuple_list(ntuple_list n_tuple)
 /*----------------------------------------------------------------------------*/
 /** Free memory used in image_double 'i'.
  */
-static void free_image_double(image_double i)
+void free_image_double(image_double i)
 {
     if( i == NULL || i->data == NULL )
         error("free_image_double: invalid input image.");
@@ -128,7 +128,33 @@ static void free_ntuple_list(ntuple_list in)
     free( (void *) in );
 }
 
+/*----------------------------------------------------------------------------*/
+/** Create a new image_double of size 'xsize' times 'ysize'
+ with the data pointed by 'data'.
+ */
+image_double new_image_double_ptr( unsigned int xsize, unsigned int ysize, double * data )
+{
+    image_double image;
+    
+    /* check parameters */
+    //  if( xsize == 0 || ysize == 0 )
+    //    error("new_image_double_ptr: invalid image size.");
+    //  if( data == NULL ) error("new_image_double_ptr: NULL data pointer.");
+    
+    /* get memory */
+    image = (image_double) malloc( sizeof(struct image_double_s) );
+    if( image == NULL ) error("not enough memory.");
+    
+    /* set image */
+    image->xsize = xsize;
+    image->ysize = ysize;
+    image->data = data;
+    
+    return image;
+}
 
+
+/*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
 /*-------------------------------RGB 2 GRAY-----------------------------------*/
@@ -199,7 +225,7 @@ static void gaussian_kernel(ntuple_list kernel, double sigma, double mean)
 
 //static image_double gaussian_sampler( double* in, int width,int height, int d, double scale,
                                      //double sigma_scale )
-image_double gaussian_sampler2( double* in,int width,int height, int d, double scale,double sigma_scale )
+image_double gaussian_sampler( image_double in, double scale, double sigma_scale )
 {
     image_double aux,out;
     ntuple_list kernel;
@@ -215,17 +241,16 @@ image_double gaussian_sampler2( double* in,int width,int height, int d, double s
     //    error("gaussian_sampler: 'sigma_scale' must be positive.");
     
     /* compute new image size and get memory for images */
-    if( width * scale > (double) UINT_MAX ||
-       height * scale > (double) UINT_MAX )
+    if( in->xsize * scale > (double) UINT_MAX ||
+       in->ysize * scale > (double) UINT_MAX )
         
         error("gaussian_sampler: the output image size exceeds the handled size.");
-//    N = (unsigned int) ceil( in->xsize * scale );
-//    M = (unsigned int) ceil( in->ysize * scale );
-    N = (unsigned int) ceil( width* scale );
-    M = (unsigned int) ceil( height * scale );
+    N = (unsigned int) ceil( in->xsize * scale );
+    M = (unsigned int) ceil( in->ysize * scale );
     
     
-    aux = new_image_double(N,height);
+    
+    aux = new_image_double(N,in->ysize);
     out = new_image_double(N,M);
     
     /* sigma, kernel size and memory for the kernel */
@@ -247,10 +272,9 @@ image_double gaussian_sampler2( double* in,int width,int height, int d, double s
     kernel = new_ntuple_list(n);
     
     /* auxiliary double image size variables */
-    double_x_size = (int) (2 * width);
-    double_y_size = (int) (2 * height);
+    double_x_size = (int) (2 * in->xsize);
+    double_y_size = (int) (2 * in->ysize);
     
-    gaussian_kernel( kernel, sigma, (double) h);
     /* First subsampling: x axis */
     for(x=0;x<aux->xsize;x++)
     {
@@ -264,7 +288,7 @@ image_double gaussian_sampler2( double* in,int width,int height, int d, double s
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
         xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
         
-       // gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
+        gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
         
         /* the kernel must be computed for each x because the fine
          offset xx-xc is different in each case */
@@ -279,16 +303,11 @@ image_double gaussian_sampler2( double* in,int width,int height, int d, double s
                 /* symmetry boundary condition */
                 while( j < 0 ) j += double_x_size;
                 while( j >= double_x_size ) j -= double_x_size;
-                if( j >= (int) width ) j = double_x_size-1-j;
+                if( j >= (int) in->xsize ) j = double_x_size-1-j;
                 
-                sum += in[ j + y * width ] * kernel->values[i];
-               // printf("width: %d \t height: %d \t j: %d \t y: %d \t kernel-> values: %f \n", width, height,j,y, kernel->values[i]);
-                // printf("1: %f \t 2: %f \t 3: %f \n", 0.30*in[ (j + y * width)*4 + 2 ], 0.30*in[ (j + y * width)*4 + 1 ],0.30*in[ (j + y * width)*4 ]);
-               // sum += (0.30*in[ (j + y * 480)*4 + 2 ] + 0.59*in[ (j + y * 480)*4 + 1 ] + 0.11*in[ (j + y * 480)*4 ]) * kernel->values[i];
-        
+                sum += in->data[ j + y * in->xsize ] * kernel->values[i];
                 
             }
-            
             aux->data[ x + y * aux->xsize ] = sum;
         }
     }
@@ -305,10 +324,10 @@ image_double gaussian_sampler2( double* in,int width,int height, int d, double s
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
         yc = (int) floor( yy + 0.5 );
-        //gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
+        gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
         /* the kernel must be computed for each y because the fine
          offset yy-yc is different in each case */
-    
+        
         for(x=0;x<out->xsize;x++)
         {
             sum = 0.0;
@@ -319,12 +338,11 @@ image_double gaussian_sampler2( double* in,int width,int height, int d, double s
                 /* symmetry boundary condition */
                 while( j < 0 ) j += double_y_size;
                 while( j >= double_y_size ) j -= double_y_size;
-                if( j >= (int) height ) j = double_y_size-1-j;
+                if( j >= (int) in->ysize ) j = double_y_size-1-j;
                 
                 sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
                 
             }
-           
             out->data[ x + y * out->xsize ] = sum;
         }
     }

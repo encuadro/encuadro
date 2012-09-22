@@ -28,20 +28,20 @@ PosCopl(nbP,imagePoints,objectPoints,objectMatrix,
     
     if (false) {
         
-        printf("\nROTACION 1 A LA SALIDA DE POSITCOPL: \n");
-        printf("%f\t %f\t %f\n",POSRot1[0][0],POSRot1[0][1],POSRot1[0][2]);
-        printf("%f\t %f\t %f\n",POSRot1[1][0],POSRot1[1][1],POSRot1[1][2]);
-        printf("%f\t %f\t %f\n",POSRot1[2][0],POSRot1[2][1],POSRot1[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",POSTrans[0],POSTrans[1],POSTrans[2]);
-        
-        printf("\nROTACION 2 A LA SALIDA DE POSITCOPL: \n");
-        printf("%f\t %f\t %f\n",POSRot2[0][0],POSRot2[0][1],POSRot2[0][2]);
-        printf("%f\t %f\t %f\n",POSRot2[1][0],POSRot2[1][1],POSRot2[1][2]);
-        printf("%f\t %f\t %f\n",POSRot2[2][0],POSRot2[2][1],POSRot2[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",POSTrans[0],POSTrans[1],POSTrans[2]);
-    } 
+//        printf("\nROTACION 1 A LA SALIDA DE POSITCOPL: \n");
+//        printf("%f\t %f\t %f\n",POSRot1[0][0],POSRot1[0][1],POSRot1[0][2]);
+//        printf("%f\t %f\t %f\n",POSRot1[1][0],POSRot1[1][1],POSRot1[1][2]);
+//        printf("%f\t %f\t %f\n",POSRot1[2][0],POSRot1[2][1],POSRot1[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",POSTrans[0],POSTrans[1],POSTrans[2]);
+//        
+//        printf("\nROTACION 2 A LA SALIDA DE POSITCOPL: \n");
+//        printf("%f\t %f\t %f\n",POSRot2[0][0],POSRot2[0][1],POSRot2[0][2]);
+//        printf("%f\t %f\t %f\n",POSRot2[1][0],POSRot2[1][1],POSRot2[1][2]);
+//        printf("%f\t %f\t %f\n",POSRot2[2][0],POSRot2[2][1],POSRot2[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",POSTrans[0],POSTrans[1],POSTrans[2]);
+    }
     
 if ((POSRot1[0][0])!=2.0) /*pose1 a priori possible*/
   {
