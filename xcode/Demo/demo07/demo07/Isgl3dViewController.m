@@ -35,6 +35,7 @@
 @synthesize isgl3DView = _isgl3DView;
 @synthesize theMovie = _theMovie;
 @synthesize videofromMovieView = _videofromMovieView;
+@synthesize movieReader = _movieReader;
 //para DIBUJAR
 //claseDibujar *cgvista;
 
@@ -187,6 +188,117 @@ double* luminancia;
 
 }
 
+//- (void)imagePickerController:(UIImagePickerController *)picker 
+//didFinishPickingMediaWithInfo:(NSDictionary *)info
+//{
+//    NSString * mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+//    
+//  //  if ([mediaType isEqualToString:kUTTypeMovie])
+//        [self readMovie:[info objectForKey:UIImagePickerControllerMediaURL]];
+//    
+//    [self dismissModalViewControllerAnimated:YES];
+//}
+
+
+- (void) readMovie:(NSURL *)url
+{
+//    NSBundle *bundle = [NSBundle mainBundle];
+//    NSString *moviePath = [bundle pathForResource:@"video1280x720" ofType:@"MOV"];
+//    NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+//    theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+//    //    //Place it in subview, else it won’t work
+//    UIScreen *screen = [UIScreen mainScreen];
+//    CGRect fullScreenRect = screen.bounds;
+//
+//    theMovie.view.frame = CGRectMake(0, 0, fullScreenRect.size.width, fullScreenRect.size.height);
+//   
+//    
+//    self.videofromMovieView=theMovie.view;
+//    
+//    //Resize window – a bit more practical
+//    UIWindow *moviePlayerWindow = nil;
+//    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
+//    //  [moviePlayerWindow setTransform:CGAffineTransformMake(0, 1,-1,0,0,0)];
+//    
+//    [moviePlayerWindow addSubview:theMovie.view];
+//    [moviePlayerWindow sendSubviewToBack:theMovie.view];
+//    
+//    // Play the movie.
+//    [theMovie play];
+    
+    
+	AVURLAsset * asset = [AVURLAsset URLAssetWithURL:url options:nil];
+	[asset loadValuesAsynchronouslyForKeys:[NSArray arrayWithObject:@"tracks"] completionHandler:
+     ^{
+         dispatch_async(dispatch_get_main_queue(),
+                        ^{
+                            AVAssetTrack * videoTrack = nil;
+                            NSArray * tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+                            if ([tracks count] == 1)
+                            {
+                                videoTrack = [tracks objectAtIndex:0];
+                                
+                                NSError * error = nil;
+                                
+                                // _movieReader is a member variable
+                                _movieReader = [[AVAssetReader alloc] initWithAsset:asset error:&error];
+                                if (error)
+                                    NSLog(error.localizedDescription);		
+                                
+                                NSString* key = (NSString*)kCVPixelBufferPixelFormatTypeKey;
+                                NSNumber* value = [NSNumber numberWithUnsignedInt:kCVPixelFormatType_32BGRA];
+                                NSDictionary* videoSettings = 
+                                [NSDictionary dictionaryWithObject:value forKey:key]; 
+                                
+                                [_movieReader addOutput:[AVAssetReaderTrackOutput 
+                                                         assetReaderTrackOutputWithTrack:videoTrack 
+                                                         outputSettings:videoSettings]];
+                                [_movieReader startReading];
+                            }
+                        });
+     }];
+   // [self readNextMovieFrame];
+}
+
+
+- (void) readNextMovieFrame
+{
+    
+   // while (1) {
+    while (_movieReader.status == AVAssetReaderStatusReading)
+        {
+            NSLog(@"READNEXTMOVIEFRAME");
+            AVAssetReaderTrackOutput * output = [_movieReader.outputs objectAtIndex:0];
+            CMSampleBufferRef sampleBuffer = [output copyNextSampleBuffer];
+            if (sampleBuffer)
+            {
+                CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer); 
+                
+                // Lock the image buffer
+                CVPixelBufferLockBaseAddress(imageBuffer,0); 
+                
+                // Get information of the image
+                //uint8_t *baseAddress = (uint8_t *)CVPixelBufferGetBaseAddress(imageBuffer);
+                //size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);
+                width = CVPixelBufferGetWidth(imageBuffer);
+                height = CVPixelBufferGetHeight(imageBuffer); 
+                
+                
+                pixels = (unsigned char *)CVPixelBufferGetBaseAddress(imageBuffer);
+                [self procesamiento];
+                
+                // Unlock the image buffer
+                CVPixelBufferUnlockBaseAddress(imageBuffer,0);
+                CFRelease(sampleBuffer);
+            }
+        }
+
+    //}
+
+
+}
+
+
 - (void) procesamiento
 {
     
@@ -203,7 +315,7 @@ double* luminancia;
         
         /*Obtengo la imagen en nivel de grises en luminancia*/
         if (verbose) NSLog(@"rgb2gray in\n");
-        
+        NSLog(@"CORRIENDO PROCESAMIENTO");
         rgb2gray(luminancia, pixels,width,height,d);
         if (verbose) NSLog(@"rgb2gray out\n");
         
@@ -609,7 +721,8 @@ double* luminancia;
         
         [self.session startRunning];
     }else {
-        [self desplegarVideo];
+        //[self desplegarVideo];
+       // [self readMovie];
     }
     
     

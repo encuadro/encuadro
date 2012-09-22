@@ -39,6 +39,10 @@
 //claseDibujar *cgvista;
 int tamano;
 int rotView;
+double **imagePoints3; //para hacer la CGAffineTransform
+
+double *h;
+
 /*Variables para la imagen*/
 unsigned char* pixels;
 size_t width;
@@ -180,9 +184,11 @@ double* luminancia;
 
         rotView=rotView+0.1;
         tamano=tamano+10;
-        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
-        NSLog(@"esquinas");
         
+        solveHomographie(imagePoints, imagePoints3, h);
+        
+//        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+
         
         
         if (verbose){
@@ -267,7 +273,7 @@ double* luminancia;
         
         [self.isgl3DView setRotacion:rotacion];
         [self.isgl3DView setTraslacion:Tras];
-        
+        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
         
         //self.traslacion = traslacion;
         
@@ -279,19 +285,18 @@ double* luminancia;
     
 }
 -(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux{
-    NSLog(@"IMAGE POINT %f",imagePoints[0][0]);
-    if (imagePoints[0][0]!=0) {
-        theMovie.view.frame = CGRectMake(imagePoints[6][0], imagePoints[6][1], 50, 50);
-    }
-        
+//    NSLog(@"IMAGE POINT %f",imagePoints[0][0]);
+//    if (imagePoints[6][0]!=0) {
+//        theMovie.view.frame = CGRectMake(imagePoints[6][0], imagePoints[6][1], 50, 50);
+//    }
+   
+    CGAffineTransform currentMatrix =  theMovie.view.transform;
+    CGAffineTransform newMatrix = CGAffineTransformTranslate(currentMatrix, 1,1);
+    //CGAffineTransform newMatrix = CGAffineTransformMake(rotacion[0], rotacion[1], rotacion[3], rotacion[4], Tras[0]/Tras[2], Tras[1]/Tras[2]);
+    //theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
+    theMovie.view.transform=newMatrix;
+   
     
-    
-//    CGAffineTransform currentMatrix =  theMovie.view.transform;
-//    CGAffineTransform newMatrix = CGAffineTransformRotate(currentMatrix, 0.1);
-//    theMovie.view.transform=newMatrix;
-    
-    //theMovie.view.transform = CGAffineTransformMake(1, 0, 0, 1, 0, 0);
-
 
 }
 -(void) desplegarVideo{
@@ -304,12 +309,10 @@ double* luminancia;
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
     theMovie.view.frame = CGRectMake(0, 0, tamano, tamano);
+    //theMovie.fullscreen=YES;
+    theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
-    
-
-    
-    
-    
+    theMovie.scalingMode=MPMovieScalingModeFill;
     
     [self.view addSubview:theMovie.view];
     //Resize window – a bit more practical
@@ -346,6 +349,28 @@ double* luminancia;
     
     imagePoints=(double **)malloc(NumberOfPoints * sizeof(double *));
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(double *)malloc(2 * sizeof(double));
+    
+    //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
+    imagePoints3=(double **)malloc(4 * sizeof(double *));
+    for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
+    
+    imagePoints3[0][0]=60;
+    imagePoints3[0][1]=60;
+    
+    imagePoints3[1][0]=60;
+    imagePoints3[1][1]=10;
+    
+    imagePoints3[2][0]=10;
+    imagePoints3[2][1]=10;
+    
+    imagePoints3[3][0]=10;
+    imagePoints3[3][1]=60;
+    
+    
+    
+    h=(double *)malloc(8 * sizeof(double *));
+   // for (i=0;i<8;i++) h[i]=(double *)malloc(sizeof(double));
+    
     
     //    coplMatrix=(double **)malloc(3 * sizeof(double *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));

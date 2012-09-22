@@ -23,7 +23,7 @@
 bool fromCamera; 
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
-    
+//@interface Isgl3dViewController : UIViewController <UIImagePickerControllerDelegate>{    
     MPMoviePlayerController *theMovie;
     
 }
@@ -32,4 +32,5 @@ bool fromCamera;
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
 @property (nonatomic, retain) MPMoviePlayerController *theMovie;
 @property (readwrite, retain) IBOutlet UIView* videofromMovieView;
+@property (readwrite, retain) AVAssetReader *movieReader;
 @end

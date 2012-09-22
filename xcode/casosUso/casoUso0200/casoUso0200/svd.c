@@ -321,6 +321,12 @@ for (i=0;i<3;i++) free(V[i]);
 
 }
 /*******************************************************************************************************/
+
+
+
+
+
+
 void  PseudoInverseGen(double** A,int N,int M,double** B) /*retourne en B la pseudoinverse de A qui est de dimension N x M*/
 /*C'est par definition la matrice v.[diag(1/wi)].(u)t (cf. svdcmp())*/
 
