@@ -37,8 +37,7 @@
 
 //para DIBUJAR
 //claseDibujar *cgvista;
-int tamano;
-int rotView;
+
 double **imagePoints3; //para hacer la CGAffineTransform
 
 double *h;
@@ -182,12 +181,11 @@ double* luminancia;
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
 
-        rotView=rotView+0.1;
-        tamano=tamano+10;
+
         
         solveHomographie(imagePoints, imagePoints3, h);
         
-//        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
 
         
         
@@ -289,10 +287,10 @@ double* luminancia;
 //    if (imagePoints[6][0]!=0) {
 //        theMovie.view.frame = CGRectMake(imagePoints[6][0], imagePoints[6][1], 50, 50);
 //    }
-   
-    CGAffineTransform currentMatrix =  theMovie.view.transform;
-    CGAffineTransform newMatrix = CGAffineTransformTranslate(currentMatrix, 1,1);
-    //CGAffineTransform newMatrix = CGAffineTransformMake(rotacion[0], rotacion[1], rotacion[3], rotacion[4], Tras[0]/Tras[2], Tras[1]/Tras[2]);
+    theMovie.view.frame = CGRectMake(10, 10, 50, 50);
+    //CGAffineTransform currentMatrix =  theMovie.view.transform;
+    //CGAffineTransform newMatrix = CGAffineTransformTranslate(currentMatrix, 1,1);
+    CGAffineTransform newMatrix = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
     //theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
     theMovie.view.transform=newMatrix;
    
@@ -308,7 +306,7 @@ double* luminancia;
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(0, 0, tamano, tamano);
+    theMovie.view.frame = CGRectMake(10, 10, 50, 50);
     //theMovie.fullscreen=YES;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
@@ -368,7 +366,7 @@ double* luminancia;
     
     
     
-    h=(double *)malloc(8 * sizeof(double *));
+    h=(double *)malloc(8 * sizeof(double));
    // for (i=0;i<8;i++) h[i]=(double *)malloc(sizeof(double));
     
     
@@ -578,8 +576,8 @@ double* luminancia;
 }
 
 - (void) viewDidLoad{
-    tamano=100;
-    rotView=0.5;
+
+    
     if (verbose) printf("viewDidLoad\n");
     
     [super viewDidLoad];
