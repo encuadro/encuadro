@@ -306,8 +306,8 @@ static void add_7tuple( ntuple_list out, double v1, double v2, double v3,
                         double v4, double v5, double v6, double v7 )
 {
   /* check parameters */
-  if( out == NULL ) error("add_7tuple: invalid n-tuple input.");
-  if( out->dim != 7 ) error("add_7tuple: the n-tuple must be a 7-tuple.");
+//  if( out == NULL ) error("add_7tuple: invalid n-tuple input.");
+//  if( out->dim != 7 ) error("add_7tuple: the n-tuple must be a 7-tuple.");
 
   /* if needed, alloc more tuples to 'out' */
   if( out->size == out->max_size ) enlarge_ntuple_list(out);
@@ -516,9 +516,9 @@ static image_double new_image_double_ptr( unsigned int xsize,
   image_double image;
 
   /* check parameters */
-  if( xsize == 0 || ysize == 0 )
-    error("new_image_double_ptr: invalid image size.");
-  if( data == NULL ) error("new_image_double_ptr: NULL data pointer.");
+//  if( xsize == 0 || ysize == 0 )
+//    error("new_image_double_ptr: invalid image size.");
+//  if( data == NULL ) error("new_image_double_ptr: NULL data pointer.");
 
   /* get memory */
   image = (image_double) malloc( sizeof(struct image_double_s) );
@@ -547,27 +547,29 @@ static image_double new_image_double_ptr( unsigned int xsize,
  */
 static void gaussian_kernel(ntuple_list kernel, double sigma, double mean)
 {
-  double sum = 0.0;
-  double val;
-  unsigned int i;
-
-  /* check parameters */
-  if( kernel == NULL || kernel->values == NULL )
-    error("gaussian_kernel: invalid n-tuple 'kernel'.");
-  if( sigma <= 0.0 ) error("gaussian_kernel: 'sigma' must be positive.");
-
-  /* compute Gaussian kernel */
-  if( kernel->max_size < 1 ) enlarge_ntuple_list(kernel);
-  kernel->size = 1;
-  for(i=0;i<kernel->dim;i++)
+    double sum = 0.0;
+    //double val;
+    unsigned int i;
+    
+    /* check parameters */
+    //  if( kernel == NULL || kernel->values == NULL )
+    //    error("gaussian_kernel: invalid n-tuple 'kernel'.");
+    //  if( sigma <= 0.0 ) error("gaussian_kernel: 'sigma' must be positive.");
+    
+    /* compute Gaussian kernel */
+    if( kernel->max_size < 1 ) enlarge_ntuple_list(kernel);
+    kernel->size = 1;
+    for(i=0;i<kernel->dim;i++)
     {
-      val = ( (double) i - mean ) / sigma;
-      kernel->values[i] = exp( -0.5 * val * val );
-      sum += kernel->values[i];
+        //      val = ( (double) i - mean ) / sigma;
+        //      kernel->values[i] = exp( -0.5 * val * val );
+        
+        kernel->values[i] = exp( -0.5 * (( (double) i - mean ) / sigma) * (( (double) i - mean ) / sigma) );
+        sum += kernel->values[i];
     }
-
-  /* normalization */
-  if( sum >= 0.0 ) for(i=0;i<kernel->dim;i++) kernel->values[i] /= sum;
+    
+    /* normalization */
+    if( sum >= 0.0 ) for(i=0;i<kernel->dim;i++) kernel->values[i] /= sum;
 }
 
 /*----------------------------------------------------------------------------*/
@@ -618,23 +620,29 @@ static image_double gaussian_sampler( image_double in, double scale,
   double sigma,xx,yy,sum,prec;
 
   /* check parameters */
-  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
-    error("gaussian_sampler: invalid image.");
-  if( scale <= 0.0 ) error("gaussian_sampler: 'scale' must be positive.");
-  if( sigma_scale <= 0.0 )
-    error("gaussian_sampler: 'sigma_scale' must be positive.");
+//  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
+//    error("gaussian_sampler: invalid image.");
+//  if( scale <= 0.0 ) error("gaussian_sampler: 'scale' must be positive.");
+//  if( sigma_scale <= 0.0 )
+//    error("gaussian_sampler: 'sigma_scale' must be positive.");
 
   /* compute new image size and get memory for images */
   if( in->xsize * scale > (double) UINT_MAX ||
       in->ysize * scale > (double) UINT_MAX )
+
     error("gaussian_sampler: the output image size exceeds the handled size.");
   N = (unsigned int) ceil( in->xsize * scale );
   M = (unsigned int) ceil( in->ysize * scale );
+
+
+
   aux = new_image_double(N,in->ysize);
   out = new_image_double(N,M);
 
   /* sigma, kernel size and memory for the kernel */
   sigma = scale < 1.0 ? sigma_scale / scale : sigma_scale;
+    /*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
+    siempre se va a cumplir que sigma = sigma_scale / scale */
   /*
      The size of the kernel is selected to guarantee that the
      the first discarded term is at least 10^prec times smaller
@@ -645,14 +653,15 @@ static image_double gaussian_sampler( image_double in, double scale,
    */
   prec = 3.0;
   h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
+    /*La funcion log() corresponde al logaritmo neperiano*/
   n = 1+2*h; /* kernel size */
   kernel = new_ntuple_list(n);
-
+   
   /* auxiliary double image size variables */
   double_x_size = (int) (2 * in->xsize);
   double_y_size = (int) (2 * in->ysize);
 
-  /* First subsampling: x axis */
+    /* First subsampling: x axis */
   for(x=0;x<aux->xsize;x++)
     {
       /*
@@ -660,11 +669,13 @@ static image_double gaussian_sampler( image_double in, double scale,
          xx  is the corresponding x-value in the original size image.
          xc  is the integer value, the pixel coordinate of xx.
        */
-      xx = (double) x / scale;
+      xx = (double) x / scale; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
       /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
-      xc = (int) floor( xx + 0.5 );
+      xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
+
       gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
+
       /* the kernel must be computed for each x because the fine
          offset xx-xc is different in each case */
 
@@ -679,13 +690,14 @@ static image_double gaussian_sampler( image_double in, double scale,
               while( j < 0 ) j += double_x_size;
               while( j >= double_x_size ) j -= double_x_size;
               if( j >= (int) in->xsize ) j = double_x_size-1-j;
-
+                      
               sum += in->data[ j + y * in->xsize ] * kernel->values[i];
+                               
             }
           aux->data[ x + y * aux->xsize ] = sum;
         }
     }
-
+    
   /* Second subsampling: y axis */
   for(y=0;y<out->ysize;y++)
     {
@@ -713,8 +725,9 @@ static image_double gaussian_sampler( image_double in, double scale,
               while( j < 0 ) j += double_y_size;
               while( j >= double_y_size ) j -= double_y_size;
               if( j >= (int) in->ysize ) j = double_y_size-1-j;
-
+                   
               sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
+                
             }
           out->data[ x + y * out->xsize ] = sum;
         }
@@ -767,13 +780,13 @@ static image_double ll_angle( image_double in, double threshold,
   double max_grad = 0.0;
 
   /* check parameters */
-  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
-    error("ll_angle: invalid image.");
-  if( threshold < 0.0 ) error("ll_angle: 'threshold' must be positive.");
-  if( list_p == NULL ) error("ll_angle: NULL pointer 'list_p'.");
-  if( mem_p == NULL ) error("ll_angle: NULL pointer 'mem_p'.");
-  if( modgrad == NULL ) error("ll_angle: NULL pointer 'modgrad'.");
-  if( n_bins == 0 ) error("ll_angle: 'n_bins' must be positive.");
+//  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
+//    error("ll_angle: invalid image.");
+//  if( threshold < 0.0 ) error("ll_angle: 'threshold' must be positive.");
+//  if( list_p == NULL ) error("ll_angle: NULL pointer 'list_p'.");
+//  if( mem_p == NULL ) error("ll_angle: NULL pointer 'mem_p'.");
+//  if( modgrad == NULL ) error("ll_angle: NULL pointer 'modgrad'.");
+//  if( n_bins == 0 ) error("ll_angle: 'n_bins' must be positive.");
 
   /* image size shortcuts */
   n = in->ysize;
@@ -1616,11 +1629,11 @@ static void region2rect( struct point * reg, int reg_size,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("region2rect: invalid region.");
-  if( reg_size <= 1 ) error("region2rect: region size <= 1.");
-  if( modgrad == NULL || modgrad->data == NULL )
-    error("region2rect: invalid image 'modgrad'.");
-  if( rec == NULL ) error("region2rect: invalid 'rec'.");
+//  if( reg == NULL ) error("region2rect: invalid region.");
+//  if( reg_size <= 1 ) error("region2rect: region size <= 1.");
+//  if( modgrad == NULL || modgrad->data == NULL )
+//    error("region2rect: invalid image 'modgrad'.");
+//  if( rec == NULL ) error("region2rect: invalid 'rec'.");
 
   /* center of the region:
 
@@ -1709,15 +1722,15 @@ static void region_grow( int x, int y, image_double angles, struct point * reg,
   int xx,yy,i;
 
   /* check parameters */
-  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
-    error("region_grow: (x,y) out of the image.");
-  if( angles == NULL || angles->data == NULL )
-    error("region_grow: invalid image 'angles'.");
-  if( reg == NULL ) error("region_grow: invalid 'reg'.");
-  if( reg_size == NULL ) error("region_grow: invalid pointer 'reg_size'.");
-  if( reg_angle == NULL ) error("region_grow: invalid pointer 'reg_angle'.");
-  if( used == NULL || used->data == NULL )
-    error("region_grow: invalid image 'used'.");
+//  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
+//    error("region_grow: (x,y) out of the image.");
+//  if( angles == NULL || angles->data == NULL )
+//    error("region_grow: invalid image 'angles'.");
+//  if( reg == NULL ) error("region_grow: invalid 'reg'.");
+//  if( reg_size == NULL ) error("region_grow: invalid pointer 'reg_size'.");
+//  if( reg_angle == NULL ) error("region_grow: invalid pointer 'reg_angle'.");
+//  if( used == NULL || used->data == NULL )
+//    error("region_grow: invalid image 'used'.");
 
   /* first point of the region */
   *reg_size = 1;
@@ -2046,15 +2059,15 @@ double * LineSegmentDetection( int * n_out,
 
 
   /* check parameters */
-  if( img == NULL || X <= 0 || Y <= 0 ) error("invalid image input.");
-  if( scale <= 0.0 ) error("'scale' value must be positive.");
-  if( sigma_scale <= 0.0 ) error("'sigma_scale' value must be positive.");
-  if( quant < 0.0 ) error("'quant' value must be positive.");
-  if( ang_th <= 0.0 || ang_th >= 180.0 )
-    error("'ang_th' value must be in the range (0,180).");
-  if( density_th < 0.0 || density_th > 1.0 )
-    error("'density_th' value must be in the range [0,1].");
-  if( n_bins <= 0 ) error("'n_bins' value must be positive.");
+//  if( img == NULL || X <= 0 || Y <= 0 ) error("invalid image input.");
+//  if( scale <= 0.0 ) error("'scale' value must be positive.");
+//  if( sigma_scale <= 0.0 ) error("'sigma_scale' value must be positive.");
+//  if( quant < 0.0 ) error("'quant' value must be positive.");
+//  if( ang_th <= 0.0 || ang_th >= 180.0 )
+//    error("'ang_th' value must be in the range (0,180).");
+//  if( density_th < 0.0 || density_th > 1.0 )
+//    error("'density_th' value must be in the range [0,1].");
+//  if( n_bins <= 0 ) error("'n_bins' value must be positive.");
 
 
   /* angle tolerance */
@@ -2149,15 +2162,22 @@ double * LineSegmentDetection( int * n_out,
          */
         rec.x1 += 0.5; rec.y1 += 0.5;
         rec.x2 += 0.5; rec.y2 += 0.5;
-
+/*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
         /* scale the result values if a subsampling was performed */
-        if( scale != 1.0 )
-          {
-            rec.x1 /= scale; rec.y1 /= scale;
-            rec.x2 /= scale; rec.y2 /= scale;
-            rec.width /= scale;
-          }
+//        if( scale != 1.0 )
+//          {
+//            rec.x1 /= scale; rec.y1 /= scale;
+//            rec.x2 /= scale; rec.y2 /= scale;
+//            rec.width /= scale;
+//          }
 
+
+          rec.x1 /= 0.5; rec.y1 /= 0.5;
+              rec.x2 /= 0.5; rec.y2 /= 0.5;
+              rec.width /= 0.5;
+
+/*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
+          
         /* add line segment found to output */
         add_7tuple( out, rec.x1, rec.y1, rec.x2, rec.y2,
                          rec.width, rec.p, log_nfa );
@@ -2215,7 +2235,7 @@ double * lsd_scale_region( int * n_out,
                            int ** reg_img, int * reg_x, int * reg_y )
 {
   /* LSD parameters */
-  double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
+    double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
                                 sigma = sigma_scale/scale.                    */
   double quant = 2.0;       /* Bound to the quantization error on the
                                 gradient norm.                                */

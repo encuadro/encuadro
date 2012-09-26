@@ -8,7 +8,6 @@
 
 #import "HelloWorldView.h"
 
-
 /*viewView*/
 @implementation videoView
 
@@ -34,22 +33,14 @@
 /*HelloWorldView*/
 @interface HelloWorldView()
 @property(nonatomic, retain) Isgl3dNode* cubito1;
-@property(nonatomic, retain) Isgl3dNode* cubito2;
-@property(nonatomic, retain) Isgl3dNode* cubito3;
-@property(nonatomic, retain) Isgl3dNode* cono;
-@property(nonatomic, retain) Isgl3dNode* redondel2;
-@property(nonatomic, retain) Isgl3dNode* redondel3;
-
 
 @end
+
+
 @implementation HelloWorldView
 
 @synthesize cubito1 = _cubito1;
-@synthesize cubito2 = _cubito2;
-@synthesize cubito3 = _cubito3;
-@synthesize cono = _cono;
-@synthesize redondel2 = _redondel2;
-@synthesize redondel3 = _redondel3;
+
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
@@ -85,22 +76,24 @@ NSString *estring;
         
         if (verbose) printf("init del HelloWorldView\n");
         
+        
         /* Create a container node as a parent for all scene objects.*/
         _container = [self.scene createNode];
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-       // Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
-        Isgl3dCone *coneMesh = [Isgl3dCone meshWithGeometry:60 topRadius:0 bottomRadius:30 ns:40 nt:40 openEnded:NO];
-      //  _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
-        _cono = [_container createNodeWithMesh:coneMesh andMaterial:material];
-        
-        //_cubito1.position = iv3(0,0,0);
-        _cono.position = iv3(0,0,0);
+        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+      
+       _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
+
+        _cubito1.position = iv3(0,0,0);
         cantidadToques = 0;
 
-        _cono.interactive =YES;
-        [_cono addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+        _cubito1.interactive =YES;
+        [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+
+        _cubito1.interactive =YES;
+       [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
 
         self.camera.position = iv3(0,0,0.1);
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];
@@ -183,8 +176,8 @@ NSString *estring;
             
             [_container roll:-angles.z];
             [_container yaw:-angles.y];
-            [_container pitch:angles.x -60];
-
+            [_container pitch:angles.x];
+        
             
         }
     }
@@ -295,11 +288,11 @@ NSString *estring;
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
 
 
-    if (cantidadToques ==0){_cono.position = iv3(190,0,0); cantidadToques =1;
+    if (cantidadToques ==0){_cubito1.position = iv3(190,0,0); cantidadToques =1;
     }
-    else if (cantidadToques ==1) {_cono.position = iv3(0,-100,0); cantidadToques =2;
+    else if (cantidadToques ==1) {_cubito1.position = iv3(0,-100,0); cantidadToques =2;
     }
-    else if (cantidadToques ==2) {_cono.position = iv3(0,0,0); cantidadToques =0;}
+    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
     
 }
 

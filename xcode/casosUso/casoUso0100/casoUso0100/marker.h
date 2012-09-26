@@ -33,16 +33,16 @@
 //gives angle between (-pi/2,pi/2]
 #define VEC_ANGLE_2(a,v) 								\
 {														\
-(a) = atan((v)[1]/(v)[0])*(180/MY_PI);	\
+	(a) = atan((v)[1]/(v)[0])*(180/MY_PI);	\
 }
 
 /*gives angle between (-pi,pi]*/
 /*
- #define VEC_ANGLE_2(a,v) 								\
- {														\
- (a) = fmod((atan2((v)[1],(v)[0]))*(180/MY_PI),180);	\
- }
- */
+#define VEC_ANGLE_2(a,v) 								\
+{														\
+	(a) = fmod((atan2((v)[1],(v)[0]))*(180/MY_PI),180);	\
+}
+*/
 /*=====================================================*/
 
 
@@ -61,7 +61,7 @@ typedef struct quadrilateralSet {
 	quadrilateral ql[QLSET_NB_QLS];
 	double center[2] ;
 	int id; //not constructed - not assigned
-    
+
 } quadrilateralSet;
 typedef struct markerQr{
 	//const int NB = MRKR_NB_QLSETS;
@@ -92,6 +92,7 @@ int getQlSetArrDirections(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
 int orderQlArr(quadrilateral *ql);
 int orderQlSetArr(quadrilateralSet *qlSet);
 int orderQlSetArr2(quadrilateralSet *qlSet);
+int orderQlSetArr3(quadrilateralSet *qlSet);
 int orderMarkerVertices(markerQr *marker);
 
 int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]);

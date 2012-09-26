@@ -8,7 +8,6 @@
 
 #import "Isgl3dViewController.h"
 #import "isgl3d.h"
-//#import "simple.h"
 
 @interface Isgl3dViewController()
 
@@ -77,6 +76,20 @@ double center[2]={240, 180};           ///modern coplanar
 bool verbose;
 double* luminancia;
 
+/* LSD parameters */
+double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
+                           sigma = sigma_scale/scale.                    */
+double quant = 2.0;       /* Bound to the quantization error on the
+                           gradient norm.                                */
+double ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
+double log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
+double density_th = 0.7;  /* Minimal density of region points in rectangle. */
+int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
+                           modulus.                                       */
+/*Up to here */
+image_double luminancia_sub;
+image_double image;
+
 - (CIContext* ) context
 {
     if(!_context)
@@ -93,7 +106,7 @@ double* luminancia;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    //NSLog(@"Capture output");
+    NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -120,7 +133,7 @@ double* luminancia;
     
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
-    //CVPixelBufferRelease(pb);
+
     [imagen release];
     
     
@@ -135,7 +148,7 @@ double* luminancia;
 - (void) procesamiento
 {
     
-    if((luminancia != NULL)&(height!=0))
+    if((pixels[0] != INFINITY)&(height!=0))
     {
         
         
@@ -143,14 +156,15 @@ double* luminancia;
         
         /******************PROCESAMIENTO********************************************/
         /***************************************************************************/
-        /*Esto es para solucionar el problema de memoria*/
-        //free(luminancia);
         
         /*Obtengo la imagen en nivel de grises en luminancia*/
-        if (verbose) NSLog(@"rgb2gray in\n");
+        //NSLog(@"rgb2gray in\n");
         
         rgb2gray(luminancia, pixels,width,height,d);
-        if (verbose) NSLog(@"rgb2gray out\n");
+        //NSLog(@"rgb2gray out\n");
+        image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+        luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
+        //NSLog(@"gaussian_sampler out\n");
         
         free(list);
         free(listFiltrada);
@@ -163,10 +177,13 @@ double* luminancia;
         /************************************************LSD*/
         
         /*Se corre el LSD*/
-        if (verbose) NSLog(@"LSD in\n");
-        list = lsd_scale(&listSize, luminancia, width, height,0.50);
-        
-        if (verbose) NSLog(@"LSD out\n");
+        NSLog(@"LSD in\n");
+        //list = lsd_scale(&listSize, luminancia, width, height,0.50);
+        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,1, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+
+        NSLog(@"LSD out\n");
+        free( (void *) image );
+       free_image_double(luminancia_sub);
         /************************************************FILTRADO*/
         
         
@@ -262,12 +279,9 @@ double* luminancia;
         [self.isgl3DView setTraslacion:Tras];
         
         
-        //self.traslacion = traslacion;
-        
         /*************FIN DEL PROCESAMIENTO********************************************/
         /******************************************************************************/
-        //    bandera = false;
-        
+
     }
     
 }

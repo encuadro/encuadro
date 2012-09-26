@@ -92,6 +92,7 @@ int getQlSetArrDirections(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
 int orderQlArr(quadrilateral *ql);
 int orderQlSetArr(quadrilateralSet *qlSet);
 int orderQlSetArr2(quadrilateralSet *qlSet);
+int orderQlSetArr3(quadrilateralSet *qlSet);
 int orderMarkerVertices(markerQr *marker);
 
 int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]);

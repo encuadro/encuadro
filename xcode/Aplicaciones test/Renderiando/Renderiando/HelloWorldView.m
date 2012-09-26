@@ -11,7 +11,7 @@
 
 
 #pragma mark UIBackgroundView
-int numero = 6;
+int numero = 0;
 double puntoProyectado3D1[3], puntoProyectado3D2[3], puntoProyectado3D3[3], b[3];
 double punto3D1[3] = {0,0,-30}, punto3D2[3] = {190,0,-30}, punto3D3[3]={0,100,-30};
 Isgl3dVector3 angles;
@@ -24,27 +24,28 @@ Isgl3dGLUIImage * background;
 	
 	if ((self = [super init])) {
         NSLog(@"init del background\n");
-        
-//        Isgl3dTextureMaterial * backgroundMaterial;
-//        Isgl3dGLUIImage * background;
+
         
         switch (numero) {
             case 0:
-/*------------------------------------*/        
-                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0000.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+                /*------------------------------------*/
+                backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureUIImage:[UIImage imageNamed:@"marker_0000.png"] key:0];
+                //backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0000.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
                 background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
+                
+                
                 [self.scene addChild:background];
-              
+                
                 break;
-/*------------------------------------*/                
+                /*------------------------------------*/
             case 1:
                 
                 backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0001.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
                 background = [Isgl3dGLUIImage imageWithMaterial:backgroundMaterial andRectangle:CGRectMake(0, 0, 480, 360) width:1024 height:768];
                 [self.scene addChild:background];
                 
-                break;                
-/*------------------------------------*/
+                break;
+                /*------------------------------------*/
             case 2:
                 
                 backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0002.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
@@ -52,7 +53,7 @@ Isgl3dGLUIImage * background;
                 [self.scene addChild:background];
                 
                 break;
-/*------------------------------------*/
+                /*------------------------------------*/
             case 3:
                 
                 backgroundMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"marker_0003.png" shininess:0 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
@@ -105,13 +106,26 @@ Isgl3dGLUIImage * background;
         }
 		
 	}
-	
+    [self schedule:@selector(tick:)];
 	return self;
 }
 
 - (void) dealloc {
     
 	[super dealloc];
+}
+
+
+- (void) tick:(float)dt {
+
+
+
+    
+if(numero<8)
+{
+    numero++;
+}
+else numero=0;
 }
 
 
@@ -893,8 +907,8 @@ double traslacion[3];
 }
 
 - (void) tick:(float)dt {
+        //[self.scene removeChild:background];
    
-
 }
 
 - (void) onActivated {

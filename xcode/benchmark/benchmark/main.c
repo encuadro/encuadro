@@ -35,19 +35,19 @@ int main(int argc, const char * argv[])
     double* Trans4Composit;
     double center[2];
     double x,y,err,x4Composit,y4Composit,err4Composit;
-
-//    Render 480x360
-    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
-        {0,          586.6381  ,180.0000},
-        {0,          0,          1},
-    };
-    
-    
-//    Camara iPod 640x480
-//    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
-//        {0,          746.36170  ,217.56288},
+//
+////    Render 480x360
+//    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
+//        {0,          586.6381  ,180.0000},
 //        {0,          0,          1},
 //    };
+//    
+    
+//    Camara iPod 640x480
+    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
+        {0,          746.36170  ,217.56288},
+        {0,          0,          1},
+    };
     
     f=intrinsic[0][0];
     center[0]=intrinsic[0][2];
@@ -68,7 +68,7 @@ int main(int argc, const char * argv[])
 	int distance_thr = 25;	// Threshold para findPointsCorrespondences
     int errorMarkerDetection; // codigo de error que devuelve findPointCorrespondences
 
-    bool verImg=false; // para ver imagenes mientras se hace el benchmark
+    bool verImg=true; // para ver imagenes mientras se hace el benchmark
     
     double scale=0.8; // scale para el LSD
     int k;
@@ -338,7 +338,7 @@ int main(int argc, const char * argv[])
 
 
     
-    for (k=1; k<344; k++) {
+    for (k=1; k<50; k++) {
         
         
         if (verImg) {
@@ -354,7 +354,7 @@ int main(int argc, const char * argv[])
         
         /*get image properties*/
         
-        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".png");
+        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".jpg");
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
@@ -393,16 +393,52 @@ int main(int argc, const char * argv[])
         double *list;
         list = lsd_scale(&listSize, image, width, height,scale);
         
+        /*Guardo en archivo puntos detectados*/
+        FILE *puntosLSD;
+        char puntosLSDfileName[200];
+        sprintf(puntosLSDfileName, "%s%s%s%d%s",folderName,imgNameRoot,"PuntosLSD",imgNum,".txt");
+        puntosLSD=fopen(puntosLSDfileName, "w");
+        
+        fprintf(puntosLSD, "%d\n",listSize);
+        for (j=0;j<listSize;j++){
+            fprintf(puntosLSD,"%g\t%g\n",list[0+j*listDim],list[1+j*listDim]);
+            //            fprintf(puntos,"%g\t%g\n",listFilt[2+j*listDim],listFilt[3+j*listDim]);
+        }
+        fclose(puntosLSD);
+
+        
         /*filter LSD segments*/		
         listFilt = filterSegments( &listFiltSize , &listSize, list, distance_thr);
+        
+        /*Guardo en archivo puntos detectados*/
+        FILE *puntos;
+        char puntosfileName[200];
+        sprintf(puntosfileName, "%s%s%s%d%s",folderName,imgNameRoot,"Puntos",imgNum,".txt");
+        puntos=fopen(puntosfileName, "w");
+        
+        fprintf(puntos, "%d\n",listFiltSize);
+        for (j=0;j<listFiltSize;j++){
+            fprintf(puntos,"%g\t%g\n",listFilt[0+j*listDim],listFilt[1+j*listDim]);
+//            fprintf(puntos,"%g\t%g\n",listFilt[2+j*listDim],listFilt[3+j*listDim]);
+        }
+        fclose(puntos);
+
+        
         //imagePoints = getCorners( &listFiltSize, listFilt);
         errorMarkerDetection = findPointCorrespondances(&listFiltSize, listFilt, imagePoints);
+        
+        
         
         /*Guardo en archivo puntos detectados*/
         FILE *puntosFiltro;
         char fileName[200];
         sprintf(fileName, "%s%s%s%d%s",folderName,imgNameRoot,"PuntosFiltro",imgNum,".txt");
         puntosFiltro=fopen(fileName, "w");
+        
+        for (j=0;j<NumberOfPoints;j++){
+            fprintf(puntosFiltro,"%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
+        }
+        fclose(puntosFiltro);
         
         /*draw segments on frame and frameLsd*/
         cvSet(imgLsd, black, 0);
@@ -430,11 +466,6 @@ int main(int argc, const char * argv[])
         
         
         
-        for (j=0;j<NumberOfPoints;j++){
-            fprintf(puntosFiltro,"%g\t%g\n",imagePoints[j][0],imagePoints[j][1]);
-        }
-        fclose(puntosFiltro);
-        
         
         cantPtsDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
         
@@ -456,19 +487,27 @@ int main(int argc, const char * argv[])
             
             Composit(cantPtsDetectados, imagePoints4Composit, objectCrop, f,Rot4Composit , Trans4Composit);
             
-            printf("\nRotacion: \n");
+            printf("\nRotacion Coplanar: \n");
             printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
             printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
             printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
-            printf("Traslacion: \n");
+            printf("Traslacion Coplanar: \n");
             printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+            
+            printf("\nRotacion Composit: \n");
+            printf("%f\t %f\t %f\n",Rot4Composit[0][0],Rot4Composit[0][1],Rot4Composit[0][2]);
+            printf("%f\t %f\t %f\n",Rot4Composit[1][0],Rot4Composit[1][1],Rot4Composit[1][2]);
+            printf("%f\t %f\t %f\n",Rot4Composit[2][0],Rot4Composit[2][1],Rot4Composit[2][2]);
+            printf("Traslacion Composit: \n");
+            printf("%f\t %f\t %f\n",Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
+
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rot,angles1,angles2);
             fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2],Tras[0],Tras[1],Tras[2]);
             
-            printf("\nPrimera solicion\n");
-            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2]);
+//            printf("\nPrimera solicion\n");
+//            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2]);
 
             Matrix2Euler(Rot4Composit,angles1,angles2);
             fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2],Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
