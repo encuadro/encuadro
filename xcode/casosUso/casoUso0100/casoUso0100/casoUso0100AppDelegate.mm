@@ -30,7 +30,7 @@ bool verbose = FALSE;
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
     
 	// Set the device orientation
-	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
+	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeRight;
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES;

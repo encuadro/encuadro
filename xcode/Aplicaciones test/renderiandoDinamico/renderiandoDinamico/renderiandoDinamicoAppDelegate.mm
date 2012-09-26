@@ -76,7 +76,7 @@ bool verbose = FALSE;
     //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
     
     
-    
+
     vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
     /* Se ajusta la pantalla*/
     

@@ -162,8 +162,8 @@ image_double image;
         
         rgb2gray(luminancia, pixels,width,height,d);
         //NSLog(@"rgb2gray out\n");
-        image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-        luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
+        //image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+        //luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
         //NSLog(@"gaussian_sampler out\n");
         
         free(list);
@@ -179,11 +179,11 @@ image_double image;
         /*Se corre el LSD*/
         NSLog(@"LSD in\n");
         //list = lsd_scale(&listSize, luminancia, width, height,0.50);
-        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,1, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+        list = LineSegmentDetection(&listSize, luminancia, width, height,0.5, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
 
         NSLog(@"LSD out\n");
-        free( (void *) image );
-       free_image_double(luminancia_sub);
+        //free( (void *) image );
+       //free_image_double(luminancia_sub);
         /************************************************FILTRADO*/
         
         

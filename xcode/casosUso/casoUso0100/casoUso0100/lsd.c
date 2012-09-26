@@ -691,7 +691,8 @@ static image_double gaussian_sampler( image_double in, double scale,
               while( j >= double_x_size ) j -= double_x_size;
               if( j >= (int) in->xsize ) j = double_x_size-1-j;
                       
-              sum += in->data[ j + y * in->xsize ] * kernel->values[i];
+              sum += in->data[ j + y * in->xsize ] * kernel->values[i]; /*Aca en vez de j+y* in-> xsize le ponemos cero. A ver si esta cuenta tiene impacti significativo*/
+                                                                        /*y * in->xsize es para aumentar un valor en la columna. Es constante durante todo el loop. Podemos calcularlo afuera.*/
                                
             }
           aux->data[ x + y * aux->xsize ] = sum;
@@ -2164,17 +2165,17 @@ double * LineSegmentDetection( int * n_out,
         rec.x2 += 0.5; rec.y2 += 0.5;
 /*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
         /* scale the result values if a subsampling was performed */
-//        if( scale != 1.0 )
-//          {
-//            rec.x1 /= scale; rec.y1 /= scale;
-//            rec.x2 /= scale; rec.y2 /= scale;
-//            rec.width /= scale;
-//          }
+        if( scale != 1.0 )
+          {
+            rec.x1 /= scale; rec.y1 /= scale;
+            rec.x2 /= scale; rec.y2 /= scale;
+            rec.width /= scale;
+          }
 
 
-          rec.x1 /= 0.5; rec.y1 /= 0.5;
-              rec.x2 /= 0.5; rec.y2 /= 0.5;
-              rec.width /= 0.5;
+//          rec.x1 /= 0.5; rec.y1 /= 0.5;
+//              rec.x2 /= 0.5; rec.y2 /= 0.5;
+//              rec.width /= 0.5;
 
 /*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
           
