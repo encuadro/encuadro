@@ -118,14 +118,14 @@ switch pose_nb
 		ty = 0;
 		tz = 1400;
 %==============================USER POSES=================================%
-    case 11, %esta es de mou		
-		ax = -30;
-		ay = -30;
+    case 12, %esta es de mou		
+		ax = -45;
+		ay = 15;
 		az = 0;
 
 		tx = 0;
 		ty = 0;
-		tz = 500;
+		tz = 700;
 %=============================RANDOM POSES================================%
 	case 50,		
 		ax = randn(5);
