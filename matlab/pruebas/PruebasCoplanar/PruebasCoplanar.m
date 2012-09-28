@@ -156,32 +156,30 @@ imagePts=[282.44	154.255;
 
 center=[292 217];
 
-Rotacion=[0.796998	 -0.447087	 0.406088;
-0.582281	 0.747376	 -0.319967;
--0.160447	 0.491470	 0.855987];
+% Rotacion=[0.796998	 -0.447087	 0.406088;
+% 0.582281	 0.747376	 -0.319967;
+% -0.160447	 0.491470	 0.855987];
+% 
+% Traslacion=[-66.816280	 -70.764174	 405.306742];
+% xPosit=proj3dto2d(object', Rotacion, Traslacion', 745.43429,2, center');
+% 
+% figure
+% imshow(Img)
+% for i=1:nb
+%     hold on
+%     plot(xPosit(1,i),xPosit(2,i),'r+')
+%     text(xPosit(1,i),xPosit(2,i),num2str(i-1),'color',[0;0;0])
+% end
+% title('Puntos positCoplanar')
+% 
+% ErrorCoplanarPosit=(imagePts(:,1)-xPosit(1,:)').^2+(imagePts(:,2)-xPosit(2,:)').^2;
+% ErrorCoplanarPosit=sum(sqrt(ErrorCoplanarPosit))
 
-Traslacion=[-66.816280	 -70.764174	 405.306742];
-xPosit=proj3dto2d(object', Rotacion, Traslacion', 745.43429,2, center');
+Rotacion=[0.701420	 -0.707388	 0.087245;
+0.585605	 0.641741	 0.495212;
+-0.406296	 -0.296261	 0.864380];
 
-figure
-imshow(Img)
-for i=1:nb
-    hold on
-    plot(xPosit(1,i),xPosit(2,i),'r+')
-    text(xPosit(1,i),xPosit(2,i),num2str(i-1),'color',[0;0;0])
-end
-title('Puntos positCoplanar')
-
-ErrorCoplanarPosit=(imagePts(:,1)-xPosit(1,:)').^2+(imagePts(:,2)-xPosit(2,:)').^2;
-ErrorCoplanarPosit=sum(sqrt(ErrorCoplanarPosit))
-
-Rotacion=[0.421546	 -0.218693	 0.880041;
-0.605893	 0.789983	 -0.093914;
--0.674679	 0.572800	 0.465519];
-
-
-Traslacion=[
--41.521222	 -74.232965	 596.395517];
+ Traslacion=[-36.616794	 -58.539298	 479.909851];
 xPosit=proj3dto2d(object', Rotacion, Traslacion', 745.43429,2, center');
 
 

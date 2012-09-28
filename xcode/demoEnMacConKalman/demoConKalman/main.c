@@ -32,6 +32,7 @@ int main(int argc, const char * argv[])
     double scale=0.6;
     bool flag=false;
     bool flag1=false,flag2=false;
+    int errorMarkerDetection;
     
     
     
@@ -62,6 +63,10 @@ int main(int argc, const char * argv[])
     Rot=(double **)malloc(3 * sizeof(double *));
     for (k=0;k<3;k++) Rot[k]=(double *)malloc(3 * sizeof(double));
     Tras=(double *)malloc(3 * sizeof(double));
+    
+    /*Reservo memoria para imagePoints*/
+    imagePoints=(double **)malloc(NumberOfPoints*sizeof(double*));
+    for(i=0;i<NumberOfPoints;i++)imagePoints[i]=(double*)malloc(2*sizeof(double));
     
     /*Reservo memoria para imagePioints2*/
     imagePointsCrop=(double **)malloc(NumberOfPoints*sizeof(double*));
@@ -293,9 +298,6 @@ int main(int argc, const char * argv[])
             break;
         }
         
-        
-        
-        
         /*create LSD image type*/
         image = (double *) malloc( width * height * sizeof(double) );
         if( image == NULL ){
@@ -329,7 +331,7 @@ int main(int argc, const char * argv[])
         /*filter LSD segments*/		
         listFilt = filterSegments( &listFiltSize , &listSize, list, distance_thr);
         //imagePoints = getCorners( &listFiltSize, listFilt);
-        imagePoints = findPointCorrespondances(&listFiltSize, listFilt);
+        errorMarkerDetection = findPointCorrespondances(&listFiltSize, listFilt, imagePoints);
         
         /*draw segments on frame and frameLsd*/
         cvSet(imgLsd, black, 0);
