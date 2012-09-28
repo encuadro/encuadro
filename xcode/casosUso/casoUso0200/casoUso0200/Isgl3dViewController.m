@@ -283,23 +283,61 @@ double* luminancia;
     
 }
 -(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux{
-//    NSLog(@"IMAGE POINT %f",imagePoints[0][0]);
-//    if (imagePoints[6][0]!=0) {
-//        theMovie.view.frame = CGRectMake(imagePoints[6][0], imagePoints[6][1], 50, 50);
-//    }
-    theMovie.view.frame = CGRectMake(10, 10, 50, 50);
-    //CGAffineTransform currentMatrix =  theMovie.view.transform;
-    //CGAffineTransform newMatrix = CGAffineTransformTranslate(currentMatrix, 1,1);
-    CGAffineTransform newMatrix = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
-    //theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
-    theMovie.view.transform=newMatrix;
-   
+    bool CGaffine=true;
     
+    if (CGaffine) {
+        theMovie.view.frame = CGRectMake(10, 10, 50, 50);
+        //  CGAffineTransform currentMatrix =  theMovie.view.transform;
+        //  CGAffineTransform translate = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]); 
+        CGAffineTransform affine = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
+        CGAffineTransform rotation = CGAffineTransformMake(h[0], h[3], h[1], h[4], 0, 0);
+        CGAffineTransform translation = CGAffineTransformMake(1, 0 , 0, 1, h[2], h[5]);
+        
+        //CGAffineTransform translate = CGAffineTransformMakeTranslation(200, 50);
+        // theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
+        //     theMovie.view.transform=newMatrix;
+        //    theMovie.view.transform=translate;
+        theMovie.view.transform=rotation;
+        // theMovie.view.transform = CGAffineTransformTranslate(rotation,h[2],h[5]);
+        
+        CGFloat x,y;
+        x=imagePoints[5][0]+imagePoints[6][0];
+        y=imagePoints[5][1]+imagePoints[6][1];
+        //  theMovie.view.frame.origin=CGPointMake(x,y);
+        [theMovie.view setCenter:CGPointMake(x/2, y/2)];
+        printf("imagePoints[5][0] %f",imagePoints[5][0]);
+        printf("imagePoints[6][0] %f",imagePoints[6][0]);
+        // theMovie.view.transform=newMatrix;
+        // theMovie.view.layer.transform=CATransform3DMakeAffineTransform(newMatrix);
+        //theMovie.view.frame=CGRectApplyAffineTransform(CGRectMake(10, 10, 50, 50), newMatrix);
+
+    }else {
+        CALayer *layer = theMovie.view.layer;
+        
+        layer.frame = CGRectMake(0, 0,480,320);
+        layer.anchorPoint = CGPointMake(0.0,0.0);
+        layer.zPosition = 0;
+        
+        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+        
+        rotationAndPerspectiveTransform.m11 = h[0];
+        rotationAndPerspectiveTransform.m12 = h[3];
+        rotationAndPerspectiveTransform.m14 = h[6];
+        rotationAndPerspectiveTransform.m21 = h[1];
+        rotationAndPerspectiveTransform.m22 = h[4];
+        rotationAndPerspectiveTransform.m24 = h[7];
+        rotationAndPerspectiveTransform.m41 = h[2];
+        rotationAndPerspectiveTransform.m42 = h[5];
+        rotationAndPerspectiveTransform.m44 = 1;
+    }   
+   
+
 
 }
 -(void) desplegarVideo{
 
-    NSURL *url = [NSURL fileURLWithPath:[[NSBundle mainBundle]pathForResource:@"marker_lo" ofType:@"mov"]];
+    
     
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"marker_lo" ofType:@"mov"];

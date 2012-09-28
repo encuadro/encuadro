@@ -68,7 +68,7 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
      */
     double ** A;
     double ** Ainv;
-    double * imgPts2mod;
+    double * imgPtsmod;
     int j;
     
 //Reservo memoria    
@@ -78,7 +78,7 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
     Ainv=(double **)malloc(8 * sizeof(double *));
     for (int i=0;i<8;i++) Ainv[i]=(double *)malloc(8 * sizeof(double));
     
-	imgPts2mod=(double *)malloc(8 * sizeof(double));
+	imgPtsmod=(double *)malloc(8 * sizeof(double));
     
 
     
@@ -86,23 +86,23 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
     j=0;
     for (int i=0; i<4; i++) {
         
-        A[j][0]=imgPts[i+4][0];
-        A[j][1]=imgPts[i+4][1];
+        A[j][0]=imgPts2[i][0];
+        A[j][1]=imgPts2[i][1];
         A[j][2]=1;
         A[j][3]=0;
         A[j][4]=0;
         A[j][5]=0;
-        A[j][6]=-imgPts[i+4][0]*imgPts2[i][0];
-        A[j][7]=-imgPts[i+4][1]*imgPts2[i][0];
+        A[j][6]=-imgPts2[i][0]*imgPts[i+4][0];
+        A[j][7]=-imgPts2[i][1]*imgPts[i+4][0];
         
         A[j+1][0]=0;
         A[j+1][1]=0;
         A[j+1][2]=0;
-        A[j+1][3]=imgPts[i+4][0];
-        A[j+1][4]=imgPts[i+4][1];
+        A[j+1][3]=imgPts2[i][0];
+        A[j+1][4]=imgPts2[i][1];
         A[j+1][5]=1;
-        A[j+1][6]=-imgPts[i+4][0]*imgPts2[i][1];
-        A[j+1][7]=-imgPts[i+4][1]*imgPts2[i][1];
+        A[j+1][6]=-imgPts2[i][0]*imgPts[i+4][1];
+        A[j+1][7]=-imgPts2[i][1]*imgPts[i+4][1];
         j=j+2;
         
     }
@@ -115,14 +115,14 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
      
      h = Ainv(8x8) * imgPts2mod(8x1)
      */
-    imgPts2mod[0]=imgPts2[0][0];
-    imgPts2mod[1]=imgPts2[0][1];
-    imgPts2mod[2]=imgPts2[1][0];
-    imgPts2mod[3]=imgPts2[1][1];
-    imgPts2mod[4]=imgPts2[2][0];
-    imgPts2mod[5]=imgPts2[2][1];
-    imgPts2mod[6]=imgPts2[3][0];
-    imgPts2mod[7]=imgPts2[3][1];
+    imgPtsmod[0]=imgPts[4][0];
+    imgPtsmod[1]=imgPts[4][1];
+    imgPtsmod[2]=imgPts[5][0];
+    imgPtsmod[3]=imgPts[5][1];
+    imgPtsmod[4]=imgPts[6][0];
+    imgPtsmod[5]=imgPts[6][1];
+    imgPtsmod[6]=imgPts[7][0];
+    imgPtsmod[7]=imgPts[7][1];
     
     //inicializo h en 0
     for(int i=0;i<8;i++)h[i]=0;
@@ -131,7 +131,7 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
 //Resuelvo sistema A*h=imgPts2mod 
     PseudoInverseGen(A,8,8,Ainv);
     printf("resultado inside matrixVectorProduct\n");
-    matrixVectorProduct(Ainv,8,imgPts2mod,h);
+    matrixVectorProduct(Ainv,8,imgPtsmod,h);
 
     
 //PRINTS     
@@ -152,10 +152,10 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
         printf("\n");
     }
     
-    printf("Vector imgPts2mod\n");
+    printf("Vector imgPtsmod\n");
     for(int i=0;i<8;i++)
     {
-        printf("%f\t",imgPts2mod[i]);
+        printf("%f\t",imgPtsmod[i]);
         printf("\n");
     }
     
@@ -185,7 +185,7 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
     for (int i=0;i<8;i++) free(Ainv[i]);
     free(Ainv);
     
-    free(imgPts2mod);
+    free(imgPtsmod);
 
 }
 
