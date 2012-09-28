@@ -87,7 +87,7 @@ bool verbose;
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
         Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
         
-        _cubito1 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+       // _cubito1 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         
