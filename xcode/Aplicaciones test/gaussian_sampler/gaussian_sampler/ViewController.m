@@ -18,7 +18,7 @@
 @synthesize vista = _vista;
 FILE *in = 0 ;
 int err = 0;
-VlPgmImage pim;
+//VlPgmImage pim;
 unsigned char *datachar  = 0;
 double *datadouble = 0;
 int width;
@@ -32,40 +32,41 @@ time_t start,end,t;
     [super viewDidLoad];
 	/*Aca levantamos la imagen, la pasamos a nivel de grises y la desplegamos*/
     
-    const char* nombre = "/Users/pablofloresguridi/repositorios/encuadro/xcode/Aplicaciones test/gaussian_sampler/gaussian_sampler/marker_0004.pgm";
+/*-------------------------|PARA CORRER DESDE EL IPAD|-----------------------*/
+    UIImage* uiimage = [UIImage imageNamed:@"marker_0004.png"];
     
-    /*---------------------------------------------------Levantamos la imagen PNG y obtenemos los pixels--------------------------------------------*/
-    
-    in = fopen(nombre, "rb") ;
-    
-    /* read PGM header */
-    err = vl_pgm_extract_head(in, &pim) ;
-    
-    /* allocate buffer */
-    datachar  = malloc(vl_pgm_get_npixels (&pim) *
-                       vl_pgm_get_bpp       (&pim) * sizeof (unsigned char)   ) ;
-    datadouble = malloc(vl_pgm_get_npixels (&pim) *
-                        vl_pgm_get_bpp       (&pim) * sizeof (double)) ;
-    
-    
+    CGImageRef image = [uiimage CGImage];
+    width = CGImageGetWidth(image);
+    height = CGImageGetHeight(image);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = malloc(height * width * 4);
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
    
-    err  = vl_pgm_extract_data (in, &pim, datachar) ;
-    width = pim.width;
-    height = pim.height;
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height),image);
+    CGContextRelease(context);
     
-    
-    
-    
-    
-    /* convert data type */
-    for (int q = 0 ; q < (unsigned) (pim.width * pim.height) ; ++q) {
-        datadouble [q] = datachar [q] ;
-    }
 
- 
+    datadouble = malloc(width*height*sizeof(double));
+    int cantidad =width*height;
+     NSLog(@"Entra a rgb2gray\n");
+    //rgb2gray(datadouble, rawData, width, height, 4);
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datadouble[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
+
+     NSLog(@"Sale de rgb2gray\n");
+
+/*-------------------------|PARA LEVANTAR EL PGM DESDE LA PC|-----------------------*/
+    
+    //char* nombre = "/Users/pablofloresguridi/repositorios/encuadro/xcode/Aplicaciones test/gaussian_sampler/gaussian_sampler/marker_0004.pgm";
+    
+    //datadouble = read_pgm_image_double(&width,&height,nombre);
+    
     [self reconstruirImg:datadouble width:width height:height];
-
-    free(datachar);
+     
+    //free(datachar);
     
 }
 - (IBAction)gaussian_oringinal:(id)sender {

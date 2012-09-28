@@ -7,11 +7,16 @@
 //
 
 #include "processing.h"
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <float.h>
+
+
+#ifndef FALSE
+#define FALSE 0
+#endif /* !FALSE */
+
+#ifndef TRUE
+#define TRUE 1
+#endif /* !TRUE */
+
 
 /*--------------------------------------Definiciones de tipos-------------------------------------*/
 //typedef struct image_double_s
@@ -164,31 +169,103 @@ void rgb2gray(double* brillo, unsigned char *pixels, int w, int h, int d)
 {
     // printf("w: %-3d h: %-3d\n",w,h);
     
-    unsigned long int  pixelNr;
-    for(int j=0;j<h;j++)
-    {
-        
-        for(int i=0;i<w;i=i++)
-        {
-            /* The values asigned to brillo obtained as follows:
-            pixelNr = j*w+i;
-            blue                = pixelNr*d;
-            green               = pixelNr*d+1;
-            red                = pixelNr*d+2;
-            
-            r=pixels[red];
-            g=pixels[green];
-            b=pixels[blue];
-            */
-            pixelNr = j*w+i;
-            
-            /*convert each pixel to gray*/
-            brillo[pixelNr] = 0.30*pixels[pixelNr*d+2] + 0.59*pixels[pixelNr*d+1] + 0.11*pixels[pixelNr*d];
-        }
-    }
-    
-    
+    int  pixelNr;
+    int  cantidad= w*h;
+           
+    for(pixelNr=0;pixelNr<cantidad;pixelNr++) brillo[pixelNr] = 0.30*pixels[pixelNr*d+2] + 0.59*pixels[pixelNr*d+1] + 0.11*pixels[pixelNr*d];
+
 }
+/*----------------------------------------------------------------------------*/
+/*------------------------------ PGM image IN -------------------------------*/
+/*----------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------------*/
+/** Skip white characters and comments in a PGM file.
+ */
+void skip_whites_and_comments(FILE * f)
+{
+    int c;
+    do
+    {
+        while(isspace(c=getc(f))); /* skip spaces */
+        if(c=='#') /* skip comments */
+            while( c!='\n' && c!='\r' && c!=EOF )
+                c=getc(f);
+    }
+    while( c == '#' || isspace(c) );
+    if( c != EOF && ungetc(c,f) == EOF )
+        error("Error: unable to 'ungetc' while reading PGM file.");
+}
+
+/*----------------------------------------------------------------------------*/
+/** Read a ASCII number from a PGM file.
+ */
+int get_num(FILE * f)
+{
+    int num,c;
+    
+    while(isspace(c=getc(f)));
+    if(!isdigit(c)) error("Error: corrupted PGM file.");
+    num = c - '0';
+    while( isdigit(c=getc(f)) ) num = 10 * num + c - '0';
+    if( c != EOF && ungetc(c,f) == EOF )
+        error("Error: unable to 'ungetc' while reading PGM file.");
+    
+    return num;
+}
+/*----------------------------------------------------------------------------*/
+/** read_pgm_image_double
+ */
+
+double * read_pgm_image_double(int * X, int * Y, char * name)
+{
+    FILE * f;
+    int c,bin;
+    int xsize,ysize,depth,x,y;
+    double * image;
+    
+    /* open file */
+    if( strcmp(name,"-") == 0 ) f = stdin;
+    else f = fopen(name,"rb");
+    if( f == NULL ) error("Error: unable to open input image file.");
+    
+    /* read header */
+    if( getc(f) != 'P' ) error("Error: not a PGM file!");
+    if( (c=getc(f)) == '2' ) bin = FALSE;
+    else if( c == '5' ) bin = TRUE;
+    else error("Error: not a PGM file!");
+    skip_whites_and_comments(f);
+    xsize = get_num(f);            /* X size */
+    if(xsize<=0) error("Error: X size <=0, invalid PGM file\n");
+    skip_whites_and_comments(f);
+    ysize = get_num(f);            /* Y size */
+    if(ysize<=0) error("Error: Y size <=0, invalid PGM file\n");
+    skip_whites_and_comments(f);
+    depth = get_num(f);            /* depth */
+    if(depth<=0) fprintf(stderr,"Warning: depth<=0, probably invalid PGM file\n");
+    /* white before data */
+    if(!isspace(c=getc(f))) error("Error: corrupted PGM file.");
+    
+    /* get memory */
+    image = (double *) calloc( (size_t) (xsize*ysize), sizeof(double) );
+    if( image == NULL ) error("Error: not enough memory.");
+    
+    /* read data */
+    for(y=0;y<ysize;y++)
+        for(x=0;x<xsize;x++)
+            image[ x + y * xsize ] = bin ? (double) getc(f)
+            : (double) get_num(f);
+    
+    /* close file if needed */
+    if( f != stdin && fclose(f) == EOF )
+        error("Error: unable to close file while reading PGM file.");
+    
+    /* return image */
+    *X = xsize;
+    *Y = ysize;
+    return image;
+}
+
 /*----------------------------------------------------------------------------*/
 /*-----------------------------GAUSSIAN KERNEL--------------------------------*/
 /*----------------------------------------------------------------------------*/
@@ -274,6 +351,8 @@ image_double gaussian_sampler( image_double in, double scale, double sigma_scale
     /* auxiliary double image size variables */
     double_x_size = (int) (2 * in->xsize);
     double_y_size = (int) (2 * in->ysize);
+    
+    
     
     /* First subsampling: x axis */
     for(x=0;x<aux->xsize;x++)
@@ -411,6 +490,7 @@ image_double gaussian_sampler2( image_double in, double scale, double sigma_scal
     double_y_size = (int) (2 * in->ysize);
     
     gaussian_kernel( kernel, sigma, (double) h );
+    double scale_inv=1/scale;
     
     /* First subsampling: x axis */
     for(x=0;x<aux->xsize;x++)
@@ -420,7 +500,7 @@ image_double gaussian_sampler2( image_double in, double scale, double sigma_scal
          xx  is the corresponding x-value in the original size image.
          xc  is the integer value, the pixel coordinate of xx.
          */
-        xx = (double) x / scale; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
+        xx = (double) x * scale_inv; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
         xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
@@ -457,7 +537,7 @@ image_double gaussian_sampler2( image_double in, double scale, double sigma_scal
          yy  is the corresponding x-value in the original size image.
          yc  is the integer value, the pixel coordinate of xx.
          */
-        yy = (double) y / scale;
+        yy = (double) y * scale_inv;
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
         yc = (int) floor( yy + 0.5 );
@@ -501,7 +581,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
 {
     image_double aux,out;
     ntuple_list kernel;
-    unsigned int N,M,h,n,x,y,i,pixelj;
+    unsigned int N,M,h,n,x,y,i;
     int xc,yc,j,double_x_size,double_y_size;
     double sigma,xx,yy,sum,prec;
     
@@ -548,6 +628,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
     double_y_size = (int) (2 * in->ysize);
     
     gaussian_kernel( kernel, sigma, (double) h );
+    double scale_inv=1/scale;
     
     /* First subsampling: x axis */
     for(x=0;x<aux->xsize;x++)
@@ -557,7 +638,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
          xx  is the corresponding x-value in the original size image.
          xc  is the integer value, the pixel coordinate of xx.
          */
-        xx = (double) x / scale; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
+        xx = (double) x * scale_inv; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
         xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
@@ -570,9 +651,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
         for(y=0;y<aux->ysize;y++)
         {
             sum = 0.0;
-            pixelj= y * in->xsize;
             for(i=0;i<kernel->dim;i++)
-                
             {
                 j = xc - h + i;
                 
@@ -581,7 +660,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
                 while( j >= double_x_size ) j -= double_x_size;
                 if( j >= (int) in->xsize ) j = double_x_size-1-j;
                 
-                sum += in->data[ j + pixelj ] * kernel->values[i];
+                sum += in->data[ j + y * in->xsize ] * kernel->values[i];
                 
             }
             aux->data[ x + y * aux->xsize ] = sum;
@@ -596,14 +675,14 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
          yy  is the corresponding x-value in the original size image.
          yc  is the integer value, the pixel coordinate of xx.
          */
-        yy = (double) y / scale;
+        yy = (double) y * scale_inv;
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
         yc = (int) floor( yy + 0.5 );
         //gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
         /* the kernel must be computed for each y because the fine
          offset yy-yc is different in each case */
-        pixelj = y * out->xsize;
+        
         for(x=0;x<out->xsize;x++)
         {
             sum = 0.0;
@@ -619,7 +698,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
                 sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
                 
             }
-            out->data[ x + pixelj] = sum;
+            out->data[ x + y * out->xsize ] = sum;
         }
     }
     
@@ -629,7 +708,6 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
     
     return out;
 }
-
 
 
 

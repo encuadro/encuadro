@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "vl/pgm.h"
-#import "vl/generic.h"
-#import "vl/sift.h"
+//#import "vl/pgm.h"
+//#import "vl/generic.h"
+//#import "vl/sift.h"
 #import "processing.h"
 
 
