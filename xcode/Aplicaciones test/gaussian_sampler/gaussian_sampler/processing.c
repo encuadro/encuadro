@@ -243,8 +243,8 @@ image_double gaussian_sampler( image_double in, double scale, double sigma_scale
     /* compute new image size and get memory for images */
     if( in->xsize * scale > (double) UINT_MAX ||
        in->ysize * scale > (double) UINT_MAX )
-        
         error("gaussian_sampler: the output image size exceeds the handled size.");
+    
     N = (unsigned int) ceil( in->xsize * scale );
     M = (unsigned int) ceil( in->ysize * scale );
     
@@ -287,8 +287,145 @@ image_double gaussian_sampler( image_double in, double scale, double sigma_scale
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
         xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
-        
+       // printf("xx-xc: %f\n",xx-xc);
         gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
+        
+        /* the kernel must be computed for each x because the fine
+         offset xx-xc is different in each case */
+        
+        for(y=0;y<aux->ysize;y++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = xc - h + i;
+                
+                /* symmetry boundary condition */
+                while( j < 0 ) j += double_x_size; /*Aca supone a la imagen periodica*/
+                while( j >= double_x_size ) j -= double_x_size;
+                if( j >= (int) in->xsize ) j = double_x_size-1-j;
+                
+                sum += in->data[ j + y * in->xsize ] * kernel->values[i];
+                
+            }
+            aux->data[ x + y * aux->xsize ] = sum;
+        }
+    }
+    
+    /* Second subsampling: y axis */
+    for(y=0;y<out->ysize;y++)
+    {
+        /*
+         y   is the coordinate in the new image.
+         yy  is the corresponding x-value in the original size image.
+         yc  is the integer value, the pixel coordinate of xx.
+         */
+        yy = (double) y / scale;
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
+        yc = (int) floor( yy + 0.5 );
+          //printf("yy-yc: %f\n",yy-yc);
+        gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
+        /* the kernel must be computed for each y because the fine
+         offset yy-yc is different in each case */
+        
+        for(x=0;x<out->xsize;x++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = yc - h + i;
+                
+                /* symmetry boundary condition */
+                while( j < 0 ) j += double_y_size;
+                while( j >= double_y_size ) j -= double_y_size;
+                if( j >= (int) in->ysize ) j = double_y_size-1-j;
+                
+                sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
+                
+            }
+            out->data[ x + y * out->xsize ] = sum;
+        }
+    }
+    
+    /* free memory */
+    free_ntuple_list(kernel);
+    free_image_double(aux);
+    
+    return out;
+}
+/*----------------------------------------------------------------------------*/
+/*----------------------------GAUSSIAN SAMPLER 2 -----------------------------*/
+/*----------------------------------------------------------------------------*/
+
+//static image_double gaussian_sampler( double* in, int width,int height, int d, double scale,
+//double sigma_scale )
+image_double gaussian_sampler2( image_double in, double scale, double sigma_scale )
+{
+    image_double aux,out;
+    ntuple_list kernel;
+    unsigned int N,M,h,n,x,y,i;
+    int xc,yc,j,double_x_size,double_y_size;
+    double sigma,xx,yy,sum,prec;
+    
+    /* check parameters */
+    //  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
+    //    error("gaussian_sampler: invalid image.");
+    //  if( scale <= 0.0 ) error("gaussian_sampler: 'scale' must be positive.");
+    //  if( sigma_scale <= 0.0 )
+    //    error("gaussian_sampler: 'sigma_scale' must be positive.");
+    
+    /* compute new image size and get memory for images */
+    if( in->xsize * scale > (double) UINT_MAX ||
+       in->ysize * scale > (double) UINT_MAX )
+        
+        error("gaussian_sampler: the output image size exceeds the handled size.");
+    N = (unsigned int) ceil( in->xsize * scale );
+    M = (unsigned int) ceil( in->ysize * scale );
+    
+    
+    
+    aux = new_image_double(N,in->ysize);
+    out = new_image_double(N,M);
+    
+    /* sigma, kernel size and memory for the kernel */
+    sigma = scale < 1.0 ? sigma_scale / scale : sigma_scale;
+    /*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
+     siempre se va a cumplir que sigma = sigma_scale / scale */
+    /*
+     The size of the kernel is selected to guarantee that the
+     the first discarded term is at least 10^prec times smaller
+     than the central value. For that, h should be larger than x, with
+     e^(-x^2/2sigma^2) = 1/10^prec.
+     Then,
+     x = sigma * sqrt( 2 * prec * ln(10) ).
+     */
+    prec = 3.0;
+    h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
+    /*La funcion log() corresponde al logaritmo neperiano*/
+    n = 1+2*h; /* kernel size */
+    kernel = new_ntuple_list(n);
+    
+    /* auxiliary double image size variables */
+    double_x_size = (int) (2 * in->xsize);
+    double_y_size = (int) (2 * in->ysize);
+    
+    gaussian_kernel( kernel, sigma, (double) h );
+    
+    /* First subsampling: x axis */
+    for(x=0;x<aux->xsize;x++)
+    {
+        /*
+         x   is the coordinate in the new image.
+         xx  is the corresponding x-value in the original size image.
+         xc  is the integer value, the pixel coordinate of xx.
+         */
+        xx = (double) x / scale; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
+        xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
+        
+//        gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
         
         /* the kernel must be computed for each x because the fine
          offset xx-xc is different in each case */
@@ -324,7 +461,7 @@ image_double gaussian_sampler( image_double in, double scale, double sigma_scale
         /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
         yc = (int) floor( yy + 0.5 );
-        gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
+        //gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
         /* the kernel must be computed for each y because the fine
          offset yy-yc is different in each case */
         
@@ -354,4 +491,146 @@ image_double gaussian_sampler( image_double in, double scale, double sigma_scale
     return out;
 }
 
+/*----------------------------------------------------------------------------*/
+/*----------------------------GAUSSIAN SAMPLER 3 -----------------------------*/
+/*----------------------------------------------------------------------------*/
+
+//static image_double gaussian_sampler( double* in, int width,int height, int d, double scale,
+//double sigma_scale )
+image_double gaussian_sampler3( image_double in, double scale, double sigma_scale )
+{
+    image_double aux,out;
+    ntuple_list kernel;
+    unsigned int N,M,h,n,x,y,i,pixelj;
+    int xc,yc,j,double_x_size,double_y_size;
+    double sigma,xx,yy,sum,prec;
     
+    /* check parameters */
+    //  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
+    //    error("gaussian_sampler: invalid image.");
+    //  if( scale <= 0.0 ) error("gaussian_sampler: 'scale' must be positive.");
+    //  if( sigma_scale <= 0.0 )
+    //    error("gaussian_sampler: 'sigma_scale' must be positive.");
+    
+    /* compute new image size and get memory for images */
+    if( in->xsize * scale > (double) UINT_MAX ||
+       in->ysize * scale > (double) UINT_MAX )
+        
+        error("gaussian_sampler: the output image size exceeds the handled size.");
+    N = (unsigned int) ceil( in->xsize * scale );
+    M = (unsigned int) ceil( in->ysize * scale );
+    
+    
+    
+    aux = new_image_double(N,in->ysize);
+    out = new_image_double(N,M);
+    
+    /* sigma, kernel size and memory for the kernel */
+    sigma = scale < 1.0 ? sigma_scale / scale : sigma_scale;
+    /*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
+     siempre se va a cumplir que sigma = sigma_scale / scale */
+    /*
+     The size of the kernel is selected to guarantee that the
+     the first discarded term is at least 10^prec times smaller
+     than the central value. For that, h should be larger than x, with
+     e^(-x^2/2sigma^2) = 1/10^prec.
+     Then,
+     x = sigma * sqrt( 2 * prec * ln(10) ).
+     */
+    prec = 3.0;
+    h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
+    /*La funcion log() corresponde al logaritmo neperiano*/
+    n = 1+2*h; /* kernel size */
+    kernel = new_ntuple_list(n);
+    
+    /* auxiliary double image size variables */
+    double_x_size = (int) (2 * in->xsize);
+    double_y_size = (int) (2 * in->ysize);
+    
+    gaussian_kernel( kernel, sigma, (double) h );
+    
+    /* First subsampling: x axis */
+    for(x=0;x<aux->xsize;x++)
+    {
+        /*
+         x   is the coordinate in the new image.
+         xx  is the corresponding x-value in the original size image.
+         xc  is the integer value, the pixel coordinate of xx.
+         */
+        xx = (double) x / scale; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
+        xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
+        
+        //        gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
+        
+        /* the kernel must be computed for each x because the fine
+         offset xx-xc is different in each case */
+        
+        for(y=0;y<aux->ysize;y++)
+        {
+            sum = 0.0;
+            pixelj= y * in->xsize;
+            for(i=0;i<kernel->dim;i++)
+                
+            {
+                j = xc - h + i;
+                
+                /* symmetry boundary condition */
+                while( j < 0 ) j += double_x_size;
+                while( j >= double_x_size ) j -= double_x_size;
+                if( j >= (int) in->xsize ) j = double_x_size-1-j;
+                
+                sum += in->data[ j + pixelj ] * kernel->values[i];
+                
+            }
+            aux->data[ x + y * aux->xsize ] = sum;
+        }
+    }
+    
+    /* Second subsampling: y axis */
+    for(y=0;y<out->ysize;y++)
+    {
+        /*
+         y   is the coordinate in the new image.
+         yy  is the corresponding x-value in the original size image.
+         yc  is the integer value, the pixel coordinate of xx.
+         */
+        yy = (double) y / scale;
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
+        yc = (int) floor( yy + 0.5 );
+        //gaussian_kernel( kernel, sigma, (double) h + yy - (double) yc );
+        /* the kernel must be computed for each y because the fine
+         offset yy-yc is different in each case */
+        pixelj = y * out->xsize;
+        for(x=0;x<out->xsize;x++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = yc - h + i;
+                
+                /* symmetry boundary condition */
+                while( j < 0 ) j += double_y_size;
+                while( j >= double_y_size ) j -= double_y_size;
+                if( j >= (int) in->ysize ) j = double_y_size-1-j;
+                
+                sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
+                
+            }
+            out->data[ x + pixelj] = sum;
+        }
+    }
+    
+    /* free memory */
+    free_ntuple_list(kernel);
+    free_image_double(aux);
+    
+    return out;
+}
+
+
+
+
+

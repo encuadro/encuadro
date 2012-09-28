@@ -25,6 +25,8 @@ int width;
 int height;
 double* brillo;
 
+time_t start,end,t;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -73,19 +75,58 @@ double* brillo;
     double scale = 0.5;
     image_double luminancia_sub;
     image_double image;
-    
+  
     image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, datadouble );
-    luminancia_sub = gaussian_sampler(image, scale, sigma_scale);
     
+    NSLog(@"Entra a gaussian_sampler\n");
+    luminancia_sub = gaussian_sampler(image, scale, sigma_scale);
+    NSLog(@"Sale de gaussian_sampler\n");
     [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
     
     free( (void *) image );
     free_image_double(luminancia_sub);
+
+}
+- (IBAction)gaussian_2:(id)sender {
+    double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
+    double scale = 0.5;
+    image_double luminancia_sub;
+    image_double image;
+    
+    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, datadouble );
+    NSLog(@"Entra a gaussian_sampler 2\n");
+    luminancia_sub = gaussian_sampler2(image, scale, sigma_scale);
+    NSLog(@"Sale de gaussian_sampler 2\n");
+    [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
+    
+    free( (void *) image );
+    free_image_double(luminancia_sub);
+    
+
+    
+}
+- (IBAction)gaussian_3:(id)sender {
+    double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
+    double scale = 0.5;
+    image_double luminancia_sub;
+    image_double image;
+    
+    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, datadouble );
+    NSLog(@"Entra a gaussian_sampler 3\n");
+    luminancia_sub = gaussian_sampler3(image, scale, sigma_scale);
+    NSLog(@"Sale de gaussian_sampler 3\n");
+    [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
+    
+    free( (void *) image );
+    free_image_double(luminancia_sub);
+    
+    
+
 }
 
 - (void) reconstruirImg:(double*) datadouble width: (int) width height: (int) height {
 
-    printf("width: %d \t height: %d",width, height);
+    printf("width: %d \t height: %d\n",width, height);
     
     unsigned char *result = (unsigned char *) malloc(width * height *sizeof(unsigned char) *4);
     
