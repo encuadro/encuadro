@@ -189,6 +189,137 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
 
 }
 
+void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
+    //PUNTO 4 --X: 208.142039
+    //PUNTO 4 --Y: 231.760118
+    //PUNTO 5 --X: 208.254415
+    //PUNTO 5 --Y: 165.749664
+    //PUNTO 6 --X: 140.647865
+    //PUNTO 6 --Y: 165.646337
+    //PUNTO 7 --X: 140.951607
+    //PUNTO 7 --Y: 232.487685
+    
+    /*
+     imgPts     --->    x,y
+     imgPts2    --->    i,j
+     */
+    double ** A;
+    double ** Ainv;
+    double * imgPtsmod;
+    int j;
+    
+    //Reservo memoria    
+    A=(double **)malloc(6 * sizeof(double *));
+    for (int i=0;i<6;i++) A[i]=(double *)malloc(6 * sizeof(double));
+    
+    Ainv=(double **)malloc(6 * sizeof(double *));
+    for (int i=0;i<6;i++) Ainv[i]=(double *)malloc(6 * sizeof(double));
+    
+	imgPtsmod=(double *)malloc(6 * sizeof(double));
+    
+    
+    
+    //Asignacion de valores    
+    j=0;
+    for (int i=0; i<3; i++) {
+        
+        A[j][0]=imgPts2[i][0];
+        A[j][1]=imgPts2[i][1];
+        A[j][2]=1;
+        A[j][3]=0;
+        A[j][4]=0;
+        A[j][5]=0;
+                
+        A[j+1][0]=0;
+        A[j+1][1]=0;
+        A[j+1][2]=0;
+        A[j+1][3]=imgPts2[i][0];
+        A[j+1][4]=imgPts2[i][1];
+        A[j+1][5]=1;
+        j=j+2;
+        
+    }
+    
+    
+    
+    /*
+     imgPts2=[i1 j1; i2 j2; i3 j3]           --->    3x2
+     imgPts2mod=[i1; j1; i2; j2; i3; j3]    --->    6x1
+     
+     h = Ainv(6x6) * imgPtsmod(6x1)
+     */
+    imgPtsmod[0]=imgPts[4][0];
+    imgPtsmod[1]=imgPts[4][1];
+    imgPtsmod[2]=imgPts[5][0];
+    imgPtsmod[3]=imgPts[5][1];
+    imgPtsmod[4]=imgPts[6][0];
+    imgPtsmod[5]=imgPts[6][1];
+    
+    
+    //inicializo h en 0
+    for(int i=0;i<6;i++)h[i]=0;
+    
+    
+    //Resuelvo sistema A*h=imgPts2mod 
+    PseudoInverseGen(A,6,6,Ainv);
+    printf("resultado inside matrixVectorProduct\n");
+    matrixVectorProduct(Ainv,6,imgPtsmod,h);
+    
+    
+    //PRINTS     
+    printf("PUNTOS IMAGE POINTS\n");
+    printf("VECTOR imgPts\n");
+    for(int i=4;i<6;i++)
+    {
+        printf("%f\t",imgPts[i][0]);
+        printf("%f\t",imgPts[i][1]);
+        printf("\n");
+    }
+    
+    printf("PUNTOS INVENTADOS\n");
+    for(int i=0;i<3;i++)
+    {
+        printf("%f\t",imgPts2[i][0]);
+        printf("%f\t",imgPts2[i][1]);
+        printf("\n");
+    }
+    
+    printf("Vector imgPtsmod\n");
+    for(int i=0;i<6;i++)
+    {
+        printf("%f\t",imgPtsmod[i]);
+        printf("\n");
+    }
+    
+    printf("MATRIZ A\n");
+    for(int i=0;i<6;i++)
+    {
+        for(j=0;j<6;j++)
+            printf("%f\t",A[i][j]);
+        printf("\n");
+    }
+    
+    
+    printf("Vector h\n");
+    for(int i=0;i<6;i++)
+    {
+        printf("%f\t",h[i]);
+        printf("\n");
+    }
+    printf("FIN PRINT\n");
+    
+    
+    
+    //Libero memoria
+    for (int i=0;i<6;i++) free(A[i]);
+    free(A);
+    
+    for (int i=0;i<6;i++) free(Ainv[i]);
+    free(Ainv);
+    
+    free(imgPtsmod);
+    
+}
 
 void matrixProduct(double ** A, int rowA, double ** B, int colB, double ** C)
 {

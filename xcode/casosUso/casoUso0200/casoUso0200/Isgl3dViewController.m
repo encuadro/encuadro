@@ -34,6 +34,7 @@
 @synthesize videoView = _videoView;
 @synthesize isgl3DView = _isgl3DView;
 @synthesize theMovie = _theMovie;
+@synthesize cgvista = _cgvista;
 
 //para DIBUJAR
 //claseDibujar *cgvista;
@@ -182,7 +183,25 @@ double* luminancia;
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
 
 
+        [self.cgvista removeFromSuperview];
+        self.cgvista=[[claseDibujar alloc] initWithFrame:self.view.frame];
         
+        self.cgvista.segmentos = listFiltrada;
+        self.cgvista.esquinas = imagePoints;
+        
+        self.cgvista.cantidadSegmentos = listFiltradaSize;
+        self.cgvista.cantidadEsquinas = listFiltradaSize;
+        
+        /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
+        self.cgvista.bounds=CGRectMake(0, 0, 480, 320); 
+        /*Para el iPad:*/
+        //self.cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+        
+         [self.view addSubview:self.cgvista];
+        [self.view bringSubviewToFront:self.cgvista];
+       // cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+        
+       // solveAffineTransformation(imagePoints, imagePoints3, h);
         solveHomographie(imagePoints, imagePoints3, h);
         
         [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
@@ -302,10 +321,10 @@ double* luminancia;
         // theMovie.view.transform = CGAffineTransformTranslate(rotation,h[2],h[5]);
         
         CGFloat x,y;
-        x=imagePoints[5][0]+imagePoints[6][0];
-        y=imagePoints[5][1]+imagePoints[6][1];
+        x=imagePoints[5][0]+imagePoints[6][0]+imagePoints[4][0]+imagePoints[7][0];
+        y=imagePoints[5][1]+imagePoints[6][1]+imagePoints[4][1]+imagePoints[7][1];
         //  theMovie.view.frame.origin=CGPointMake(x,y);
-        [theMovie.view setCenter:CGPointMake(x/2, y/2)];
+        [theMovie.view setCenter:CGPointMake(x/4, y/4)];
         printf("imagePoints[5][0] %f",imagePoints[5][0]);
         printf("imagePoints[6][0] %f",imagePoints[6][0]);
         // theMovie.view.transform=newMatrix;
@@ -315,7 +334,7 @@ double* luminancia;
     }else {
         CALayer *layer = theMovie.view.layer;
         
-        layer.frame = CGRectMake(0, 0,480,320);
+        //layer.frame = CGRectMake(0, 0,480,320);
         layer.anchorPoint = CGPointMake(0.0,0.0);
         layer.zPosition = 0;
         
@@ -330,6 +349,8 @@ double* luminancia;
         rotationAndPerspectiveTransform.m41 = h[2];
         rotationAndPerspectiveTransform.m42 = h[5];
         rotationAndPerspectiveTransform.m44 = 1;
+        
+        theMovie.view.layer.transform=rotationAndPerspectiveTransform;
     }   
    
 
@@ -619,6 +640,7 @@ double* luminancia;
     if (verbose) printf("viewDidLoad\n");
     
     [super viewDidLoad];
+    
     
     /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];

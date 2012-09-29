@@ -20,6 +20,7 @@
 #import "CoplanarPosit.h"
 #import <stdlib.h>
 #import "configuration.h"
+#import "claseDibujar.h"
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     MPMoviePlayerController *theMovie;
@@ -30,5 +31,6 @@
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
 
 @property (nonatomic, retain) MPMoviePlayerController *theMovie;
+@property (readwrite, retain) IBOutlet claseDibujar *cgvista;
 
 @end
