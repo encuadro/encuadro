@@ -71,11 +71,15 @@
 
 + (Isgl3dMatrix4) perspective:(float)fovy aspect:(float)aspect near:(float)near far:(float)far zoom:(float)zoom landscape:(BOOL)landscape {
 	return [Isgl3dGLU perspective:fovy aspect:aspect near:near far:far zoom:zoom orientation:landscape ? Isgl3dOrientation90CounterClockwise : Isgl3dOrientation0];
+   
+
 }
 
 + (Isgl3dMatrix4) perspective:(float)fovy aspect:(float)aspect near:(float)near far:(float)far zoom:(float)zoom orientation:(isgl3dOrientation)orientation {
 	
-	if (orientation == Isgl3dOrientation90Clockwise || orientation == Isgl3dOrientation90CounterClockwise) {
+	//orientation = Isgl3dOrientation90CounterClockwise;
+    
+    if (orientation == Isgl3dOrientation90Clockwise || orientation == Isgl3dOrientation90CounterClockwise) {
 		aspect = 1. / aspect;
 	}
 

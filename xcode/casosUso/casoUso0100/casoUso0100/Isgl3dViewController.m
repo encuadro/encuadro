@@ -89,6 +89,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 /*Up to here */
 image_double luminancia_sub;
 image_double image;
+int cantidad;
 
 - (CIContext* ) context
 {
@@ -106,7 +107,7 @@ image_double image;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    NSLog(@"Capture output");
+    //NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -156,42 +157,38 @@ image_double image;
         
         /******************PROCESAMIENTO********************************************/
         /***************************************************************************/
+
+        /*Se pasa la imagen a nivel de grises*/
+        cantidad =width*height;
+        for(int pixelNr=0;pixelNr<cantidad;pixelNr++) luminancia[pixelNr] = 0.30*pixels[pixelNr*4+2] + 0.59*pixels[pixelNr*4+1] + 0.11*pixels[pixelNr*4];
+        /*Ahora luminancia es la imagen en nivel de grises*/
         
-        /*Obtengo la imagen en nivel de grises en luminancia*/
-        //NSLog(@"rgb2gray in\n");
-        
-        rgb2gray(luminancia, pixels,width,height,d);
-        //NSLog(@"rgb2gray out\n");
-        //image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-        //luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
+        /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
+        image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+        //NSLog(@"gaussian_sampler3 in\n");
+        luminancia_sub = gaussian_sampler3(image, 0.5, sigma_scale);
         //NSLog(@"gaussian_sampler out\n");
         
+        /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
-        free(listFiltrada);
-        
-        //            free(imagePoints);
-        
         listSize =0;
-        listFiltradaSize =0;
+        //NSLog(@"LSD in\n");
+        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+        //NSLog(@"LSD out\n");
         
-        /************************************************LSD*/
-        
-        /*Se corre el LSD*/
-        NSLog(@"LSD in\n");
-        //list = lsd_scale(&listSize, luminancia, width, height,0.50);
-        list = LineSegmentDetection(&listSize, luminancia, width, height,0.5, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-
-        NSLog(@"LSD out\n");
-        //free( (void *) image );
-       //free_image_double(luminancia_sub);
-        /************************************************FILTRADO*/
+        /*Se libera memoria*/
+        free( (void *) image );
+        free_image_double(luminancia_sub);
         
         
+        /*-------------------------------------|FILTRADO|-------------------------------------*/
+          free(listFiltrada);
+         listFiltradaSize =0;
         /*Filtrado de segmentos detectados por el LSD */
         listFiltrada = filterSegments(&listFiltradaSize , &listSize ,list, distance_thr);
-        //    esquinas = getMarkerCorners(&listFiltradaSize, listFiltrada);
         
-        /************************************************CORRESPONDENCIAS*/
+        
+        /*-------------------------------------|CORRESPONDENCIAS|-------------------------------------*/
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
         
@@ -234,7 +231,7 @@ image_double image;
             printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
         }
         
-        /************************************************POSIT COPLANAR*/
+        /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
         /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
         /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
         //
@@ -279,8 +276,7 @@ image_double image;
         [self.isgl3DView setTraslacion:Tras];
         
         
-        /*************FIN DEL PROCESAMIENTO********************************************/
-        /******************************************************************************/
+        /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
 
     }
     

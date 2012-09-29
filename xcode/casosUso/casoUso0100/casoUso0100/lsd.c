@@ -515,11 +515,6 @@ static image_double new_image_double_ptr( unsigned int xsize,
 {
   image_double image;
 
-  /* check parameters */
-//  if( xsize == 0 || ysize == 0 )
-//    error("new_image_double_ptr: invalid image size.");
-//  if( data == NULL ) error("new_image_double_ptr: NULL data pointer.");
-
   /* get memory */
   image = (image_double) malloc( sizeof(struct image_double_s) );
   if( image == NULL ) error("not enough memory.");
@@ -779,15 +774,6 @@ static image_double ll_angle( image_double in, double threshold,
   struct coorlist * start;
   struct coorlist * end;
   double max_grad = 0.0;
-
-  /* check parameters */
-//  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
-//    error("ll_angle: invalid image.");
-//  if( threshold < 0.0 ) error("ll_angle: 'threshold' must be positive.");
-//  if( list_p == NULL ) error("ll_angle: NULL pointer 'list_p'.");
-//  if( mem_p == NULL ) error("ll_angle: NULL pointer 'mem_p'.");
-//  if( modgrad == NULL ) error("ll_angle: NULL pointer 'modgrad'.");
-//  if( n_bins == 0 ) error("ll_angle: 'n_bins' must be positive.");
 
   /* image size shortcuts */
   n = in->ysize;
@@ -1629,13 +1615,6 @@ static void region2rect( struct point * reg, int reg_size,
   double x,y,dx,dy,l,w,theta,weight,sum,l_min,l_max,w_min,w_max;
   int i;
 
-  /* check parameters */
-//  if( reg == NULL ) error("region2rect: invalid region.");
-//  if( reg_size <= 1 ) error("region2rect: region size <= 1.");
-//  if( modgrad == NULL || modgrad->data == NULL )
-//    error("region2rect: invalid image 'modgrad'.");
-//  if( rec == NULL ) error("region2rect: invalid 'rec'.");
-
   /* center of the region:
 
      It is computed as the weighted sum of the coordinates
@@ -1721,17 +1700,6 @@ static void region_grow( int x, int y, image_double angles, struct point * reg,
 {
   double sumdx,sumdy;
   int xx,yy,i;
-
-  /* check parameters */
-//  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
-//    error("region_grow: (x,y) out of the image.");
-//  if( angles == NULL || angles->data == NULL )
-//    error("region_grow: invalid image 'angles'.");
-//  if( reg == NULL ) error("region_grow: invalid 'reg'.");
-//  if( reg_size == NULL ) error("region_grow: invalid pointer 'reg_size'.");
-//  if( reg_angle == NULL ) error("region_grow: invalid pointer 'reg_angle'.");
-//  if( used == NULL || used->data == NULL )
-//    error("region_grow: invalid image 'used'.");
 
   /* first point of the region */
   *reg_size = 1;
@@ -2038,7 +2006,7 @@ static int refine( struct point * reg, int * reg_size, image_double modgrad,
  */
 double * LineSegmentDetection( int * n_out,
                                double * img, int X, int Y,
-                               double scale, double sigma_scale, double quant,
+                               double scale_inv, double sigma_scale, double quant,
                                double ang_th, double log_eps, double density_th,
                                int n_bins,
                                int ** reg_img, int * reg_x, int * reg_y )
@@ -2046,7 +2014,7 @@ double * LineSegmentDetection( int * n_out,
   image_double image;
   ntuple_list out = new_ntuple_list(7);
   double * return_value;
-  image_double scaled_image,angles,modgrad;
+  image_double angles,modgrad;
   image_char used;
   image_int region = NULL;
   struct coorlist * list_p;
@@ -2058,19 +2026,6 @@ double * LineSegmentDetection( int * n_out,
   double rho,reg_angle,prec,p,log_nfa,logNT;
   int ls_count = 0;                   /* line segments are numbered 1,2,3,... */
 
-
-  /* check parameters */
-//  if( img == NULL || X <= 0 || Y <= 0 ) error("invalid image input.");
-//  if( scale <= 0.0 ) error("'scale' value must be positive.");
-//  if( sigma_scale <= 0.0 ) error("'sigma_scale' value must be positive.");
-//  if( quant < 0.0 ) error("'quant' value must be positive.");
-//  if( ang_th <= 0.0 || ang_th >= 180.0 )
-//    error("'ang_th' value must be in the range (0,180).");
-//  if( density_th < 0.0 || density_th > 1.0 )
-//    error("'density_th' value must be in the range [0,1].");
-//  if( n_bins <= 0 ) error("'n_bins' value must be positive.");
-
-
   /* angle tolerance */
   prec = M_PI * ang_th / 180.0;
   p = ang_th / 180.0;
@@ -2079,16 +2034,8 @@ double * LineSegmentDetection( int * n_out,
 
   /* load and scale image (if necessary) and compute angle at each pixel */
   image = new_image_double_ptr( (unsigned int) X, (unsigned int) Y, img );
-  if( scale != 1.0 )
-    {
-      scaled_image = gaussian_sampler( image, scale, sigma_scale );
-      angles = ll_angle( scaled_image, rho, &list_p, &mem_p,
-                         &modgrad, (unsigned int) n_bins );
-      free_image_double(scaled_image);
-    }
-  else
-    angles = ll_angle( image, rho, &list_p, &mem_p, &modgrad,
-                       (unsigned int) n_bins );
+  angles = ll_angle( image, rho, &list_p, &mem_p, &modgrad, (unsigned int) n_bins );
+    
   xsize = angles->xsize;
   ysize = angles->ysize;
 
@@ -2163,21 +2110,14 @@ double * LineSegmentDetection( int * n_out,
          */
         rec.x1 += 0.5; rec.y1 += 0.5;
         rec.x2 += 0.5; rec.y2 += 0.5;
-/*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
-        /* scale the result values if a subsampling was performed */
-        if( scale != 1.0 )
-          {
-            rec.x1 /= scale; rec.y1 /= scale;
-            rec.x2 /= scale; rec.y2 /= scale;
-            rec.width /= scale;
-          }
+        
+          /* scale the result values if a subsampling was performed */
+          /*The parameter scale_inv = 1/scale, where scale is the gaussian_sample scale value*/
 
+            rec.x1 *= scale_inv; rec.y1 *= scale_inv;
+            rec.x2 *= scale_inv; rec.y2 *= scale_inv;
+            rec.width *= scale_inv;
 
-//          rec.x1 /= 0.5; rec.y1 /= 0.5;
-//              rec.x2 /= 0.5; rec.y2 /= 0.5;
-//              rec.width /= 0.5;
-
-/*---------------------Escalamos siempre los valores porque metemos la images ya escalada-----------------------------*/
           
         /* add line segment found to output */
         add_7tuple( out, rec.x1, rec.y1, rec.x2, rec.y2,

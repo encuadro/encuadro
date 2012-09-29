@@ -37,9 +37,12 @@ bool verbose = FALSE;
     
 	// Create the UIViewController
     /*El init que se esta invocando es el del padre UIViewController*/
+
 	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
 	_viewController.wantsFullScreenLayout = YES;
-	
+	   /*Con esto arregle el problema de la actualizacion del xCode*/
+    [self.window setRootViewController:_viewController];
+    
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
     // UIBackgroundView* hwView = [[UIBackgroundView alloc] init];
@@ -50,20 +53,23 @@ bool verbose = FALSE;
 	[Isgl3dDirector sharedInstance].openGLView = glView;
     
 	// Specify auto-rotation strategy if required (for example via the UIViewController and only landscape)
-	[Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
+    
+	//[Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
 	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
-	
+
 	// Set the animation frame rate
 	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
     
 	// Add the OpenGL view to the view controller
+   
     _viewController.view = glView;
+
     
 	// Add view to window and make visible
     /* Esto es basicamente hacer el linkeo con flechitas*/
     [_window addSubview:glView];
 	[_window makeKeyAndVisible];
-    
+
     // Creates the view(s) and adds them to the director
 	
     [self createViews];

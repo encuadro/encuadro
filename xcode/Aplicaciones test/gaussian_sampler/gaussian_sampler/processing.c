@@ -631,7 +631,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
     double scale_inv=1/scale;
     
     /* First subsampling: x axis */
-    for(x=0;x<aux->xsize;x++)
+    for(x=3;x<aux->xsize-2;x++)
     {
         /*
          x   is the coordinate in the new image.
@@ -654,11 +654,11 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
             for(i=0;i<kernel->dim;i++)
             {
                 j = xc - h + i;
-                
+
                 /* symmetry boundary condition */
-                while( j < 0 ) j += double_x_size;
-                while( j >= double_x_size ) j -= double_x_size;
-                if( j >= (int) in->xsize ) j = double_x_size-1-j;
+//                while( j < 0 ) { j += double_x_size; printf("print changamos 1\n");}
+//                    while( j >= double_x_size ) { j -= double_x_size; printf("print changamos 2\n");}
+//                if( j >= (int) in->xsize ) {j = double_x_size-1-j; printf("print changamos 3\n");}
                 
                 sum += in->data[ j + y * in->xsize ] * kernel->values[i];
                 
@@ -668,7 +668,7 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
     }
     
     /* Second subsampling: y axis */
-    for(y=0;y<out->ysize;y++)
+    for(y=3;y<out->ysize-2;y++)
     {
         /*
          y   is the coordinate in the new image.
@@ -689,11 +689,11 @@ image_double gaussian_sampler3( image_double in, double scale, double sigma_scal
             for(i=0;i<kernel->dim;i++)
             {
                 j = yc - h + i;
-                
+        
                 /* symmetry boundary condition */
-                while( j < 0 ) j += double_y_size;
-                while( j >= double_y_size ) j -= double_y_size;
-                if( j >= (int) in->ysize ) j = double_y_size-1-j;
+//                while( j < 0 ) {j += double_y_size; printf("print changamos 1\n");}
+//                while( j >= double_y_size ) {j -= double_y_size; printf("print changamos 2\n");}
+//                if( j >= (int) in->ysize ){ j = double_y_size-1-j;  printf("print changamos 3\n");}
                 
                 sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
                 

@@ -28,7 +28,6 @@ int numero = 0;
 	
 	if ((self = [super init])) {
 		// Create the primitive
-        printf("punto A\n");
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"backround.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
 		Isgl3dCube * cubeMesh = [Isgl3dCube meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
 		_cube1 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
@@ -41,8 +40,8 @@ int numero = 0;
         self.camera.width = 480;
         self.camera.height = 360;
         self.camera.aspect = 1/0.75;
-        printf("%f \t %f \t %f\n",self.camera.aspect, self.camera.width, self.camera.height);
-         
+//        printf("%f \t %f \t %f\n",self.camera.aspect, self.camera.width, self.camera.height);
+        
         
 		// Schedule updates
 		[self schedule:@selector(tick:)];
@@ -122,7 +121,7 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
+           
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -136,9 +135,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -219,7 +218,7 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
+        
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -233,9 +232,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -329,9 +328,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -412,7 +411,7 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
+     
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -426,9 +425,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -509,7 +508,7 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
+
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -523,9 +522,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -605,7 +604,6 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -619,9 +617,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -701,7 +699,6 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -715,9 +712,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -797,7 +794,6 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -809,9 +805,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
@@ -889,7 +885,6 @@ int numero = 0;
             _matriz.swz = 0;
             _matriz.tw = 1;
             
-            printf("Punto 1\n");
             angles = im4ToEulerAngles(&_matriz);
             
             MAT_DOT_VEC_3X3(b, rotacion, punto3D1);
@@ -901,9 +896,9 @@ int numero = 0;
             MAT_DOT_VEC_3X3(b, rotacion, punto3D3);
             VEC_SUM(puntoProyectado3D3,b,traslacion);
             
-            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
-            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D1[0],puntoProyectado3D1[1],puntoProyectado3D1[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D2[0],puntoProyectado3D2[1],puntoProyectado3D2[2]);
+//            printf("%f \t %f \t %f \n",puntoProyectado3D3[0],puntoProyectado3D3[1],puntoProyectado3D3[2]);
             _cube1.position = iv3(puntoProyectado3D1[0],-puntoProyectado3D1[1],-puntoProyectado3D1[2]);
             _cube2.position = iv3(puntoProyectado3D2[0],-puntoProyectado3D2[1],-puntoProyectado3D2[2]);
             _cube3.position = iv3(puntoProyectado3D3[0],-puntoProyectado3D3[1],-puntoProyectado3D3[2]);
