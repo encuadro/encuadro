@@ -86,6 +86,7 @@ bool verbose = FALSE;
     [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
     [vistaImg setBounds:fullScreenRect];
     
+
     
     
     //    [vistaImg setNeedsDisplay];
@@ -97,8 +98,8 @@ bool verbose = FALSE;
     
     
     
-    //    claseDibujar *view = [[claseDibujar alloc] initWithFrame:[self.window frame]];
-    //    [self.window addSubview:view];
+        claseDibujar *cgvistaView = [[claseDibujar alloc] initWithFrame:[self.window frame]];
+        [self.window addSubview:cgvistaView];
     //    [view release];
     //    [self.window makeKeyAndVisible];
     //    [self.window sendSubviewToBack:view];
@@ -108,7 +109,7 @@ bool verbose = FALSE;
     
     
     _viewController.videoView = vistaImg;
-    
+    _viewController.cgvista = cgvistaView;
     
 	// Make the opengl view transparent
 	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];

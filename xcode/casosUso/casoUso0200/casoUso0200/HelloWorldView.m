@@ -41,6 +41,7 @@
 @property(nonatomic, retain) Isgl3dNode* redondel3;
 
 
+
 @end
 @implementation HelloWorldView
 
@@ -52,6 +53,7 @@
 @synthesize redondel3 = _redondel3;
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
+
 
 
 double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
@@ -86,10 +88,20 @@ bool verbose;
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
         Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+        Isgl3dCube* planeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:1 nx:40 ny:40];
         
-       // _cubito1 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
-        _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+       
+		
+		
+        
+        _cubito1 = [self.scene createNodeWithMesh:planeMesh andMaterial:material];
+        _cubito2 = [self.scene createNodeWithMesh:planeMesh andMaterial:material];
         _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+        
+        _cubito1.alpha=0.5;
+        _cubito3.alpha=0.5;
+       
+        
         
         // Isgl3dSphere * sphereMesh = [Isgl3dSphere meshWithGeometry:5 longs:40 lats:40];
         
@@ -100,6 +112,7 @@ bool verbose;
         _cubito1.position = iv3(0,0,-1000);
         _cubito2.position = iv3(0,0,-1000);
         _cubito3.position = iv3(0,0,-1000);
+        
         //        _redondel1.position =  iv3(0,0,-1000);
         //        _redondel2.position =  iv3(0,0,-1000);
         //        _redondel3.position =  iv3(0,0,-1000);
