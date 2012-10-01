@@ -95,7 +95,7 @@ int cantidad;
 
 /*Kalman variables*/
 kalman_state thetaState,psiState,phiState;
-bool kalman=true;
+bool kalman=false;
 bool init=true;
 
 - (CIContext* ) context
