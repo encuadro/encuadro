@@ -33,14 +33,14 @@
 /*HelloWorldView*/
 @interface HelloWorldView()
 @property(nonatomic, retain) Isgl3dNode* cubito1;
-
+@property(nonatomic, retain) Isgl3dMeshNode * ufo;
 @end
 
 
 @implementation HelloWorldView
 
 @synthesize cubito1 = _cubito1;
-
+@synthesize ufo = _ufo;
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
@@ -85,15 +85,36 @@ NSString *estring;
         Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
         
         _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
-        
         _cubito1.position = iv3(0,0,0);
+
+        
+        /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
+        // Create texture and color materials and meshes for UFOs
+		Isgl3dMaterial * hullMaterial = [Isgl3dAnimatedTextureMaterial materialWithTextureFilenameFormat:@"ufo%02d.png" textureFirstID:0 textureLastID:15 animationName:@"ufo" shininess:0.7 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dMaterial * shellMaterial = [Isgl3dColorMaterial materialWithHexColors:@"9999CC" diffuse:@"9999CC" specular:@"FFFFFF" shininess:0.7];
+        
+        // PAra hacer los UFOs usa una elipsoide y un hovoide
+		Isgl3dEllipsoid *hullMesh = [Isgl3dEllipsoid meshWithGeometry:30 radiusY:5 radiusZ:30 longs:32 lats:8];
+		Isgl3dOvoid * shellMesh = [Isgl3dOvoid meshWithGeometry:16 b:11 k:0.0 longs:16 lats:16];
+        _ufo = [_container createNodeWithMesh:hullMesh andMaterial:hullMaterial];
+        Isgl3dMeshNode * ufoShell = [_ufo createNodeWithMesh:shellMesh andMaterial:shellMaterial];
+        
+        ufoShell.position = iv3(0, 4, 0);
+        
+        // Make shell transparent
+        ufoShell.alpha = 0.7;
+        
+        _ufo.position = iv3(0,32.5,0);
+        /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
         cantidadToques = 0;
         
         _cubito1.interactive =YES;
         [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
         
-        _cubito1.interactive =YES;
-        [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+              
+    
+ 
+
         
         self.camera.position = iv3(0,0,0.1);
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];

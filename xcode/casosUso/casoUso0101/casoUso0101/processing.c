@@ -311,14 +311,7 @@ image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
     unsigned int N,M,h,n,x,y,i;
     int xc,yc,j,float_x_size,float_y_size;
     float sigma,xx,yy,sum,prec;
-    
-    /* check parameters */
-    //  if( in == NULL || in->data == NULL || in->xsize == 0 || in->ysize == 0 )
-    //    error("gaussian_sampler: invalid image.");
-    //  if( scale <= 0.0 ) error("gaussian_sampler: 'scale' must be positive.");
-    //  if( sigma_scale <= 0.0 )
-    //    error("gaussian_sampler: 'sigma_scale' must be positive.");
-    
+      
     /* compute new image size and get memory for images */
     if( in->xsize * scale > (float) UINT_MAX ||
        in->ysize * scale > (float) UINT_MAX )
@@ -326,9 +319,7 @@ image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
         error("gaussian_sampler: the output image size exceeds the handled size.");
     N = (unsigned int) ceil( in->xsize * scale );
     M = (unsigned int) ceil( in->ysize * scale );
-    
-    
-    
+
     aux = new_image_float(N,in->ysize);
     out = new_image_float(N,M);
     
@@ -381,10 +372,7 @@ image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
             for(i=0;i<kernel->dim;i++)
             {
                 j = xc - h + i;
-
-                
                 sum += in->data[ j + y * in->xsize ] * kernel->values[i];
-                
             }
             aux->data[ x + y * aux->xsize ] = sum;
         }
@@ -412,14 +400,7 @@ image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
             for(i=0;i<kernel->dim;i++)
             {
                 j = yc - h + i;
-        
-                /* symmetry boundary condition */
-//                while( j < 0 ) {j += float_y_size; printf("print changamos 1\n");}
-//                while( j >= float_y_size ) {j -= float_y_size; printf("print changamos 2\n");}
-//                if( j >= (int) in->ysize ){ j = float_y_size-1-j;  printf("print changamos 3\n");}
-                
                 sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
-                
             }
             out->data[ x + y * out->xsize ] = sum;
         }

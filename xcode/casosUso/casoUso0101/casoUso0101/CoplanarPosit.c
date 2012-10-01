@@ -933,9 +933,9 @@ void Matrix2Euler(float** Rot, float* angles1,float* angles2){
 
 void Euler2Matrix(double* angles, double** Rot){
     
-    angles[0]=angles[0]*(MY_PI/180);
-    angles[1]=angles[1]*(MY_PI/180);
-    angles[2]=angles[2]*(MY_PI/180);
+//    angles[0]=angles[0]*(MY_PI/180);
+//    angles[1]=angles[1]*(MY_PI/180);
+//    angles[2]=angles[2]*(MY_PI/180);
     
     Rot[0][0]=cos(angles[1])*cos(angles[2]);
     Rot[0][1]=sin(angles[0])*sin(angles[1])*cos(angles[2])-cos(angles[0])*sin(angles[2]);
