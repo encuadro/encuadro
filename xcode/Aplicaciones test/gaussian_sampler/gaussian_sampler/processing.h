@@ -18,7 +18,7 @@
 /*--------------------------------------Definiciones de tipos-------------------------------------*/
 typedef struct image_double_s
 {
-    double * data;
+    float * data;
     unsigned int xsize,ysize;
 } * image_double;
 
@@ -27,7 +27,7 @@ typedef struct ntuple_list_s
     unsigned int size;
     unsigned int max_size;
     unsigned int dim;
-    double * values;
+    float * values;
 } * ntuple_list;
 
 
@@ -36,14 +36,14 @@ typedef struct ntuple_list_s
 void rgb2gray(double* brillo, unsigned char *pixels, int w, int h, int d);
 
 void free_image_double(image_double i);
-image_double new_image_double_ptr( unsigned int xsize, unsigned int ysize, double * data );
+image_double new_image_double_ptr( unsigned int xsize, unsigned int ysize, float * data );
 
 
 void skip_whites_and_comments(FILE * f);
 int get_num(FILE * f);
 double * read_pgm_image_double(int * X, int * Y, char * name);
 
-static void gaussian_kernel(ntuple_list kernel, double sigma, double mean);
-image_double gaussian_sampler( image_double in, double scale, double sigma_scale );
-image_double gaussian_sampler2( image_double in, double scale, double sigma_scale );
-image_double gaussian_sampler3( image_double in, double scale, double sigma_scale );
+static void gaussian_kernel(ntuple_list kernel, float sigma, float mean);
+image_double gaussian_sampler( image_double in, float scale, float sigma_scale );
+image_double gaussian_sampler2( image_double in, float scale, float sigma_scale );
+image_double gaussian_sampler3( image_double in, float scale, float sigma_scale );

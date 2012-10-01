@@ -20,10 +20,10 @@ FILE *in = 0 ;
 int err = 0;
 //VlPgmImage pim;
 unsigned char *datachar  = 0;
-double *datadouble = 0;
+float *datadouble = 0;
 int width;
 int height;
-double* brillo;
+float* brillo;
 
 time_t start,end,t;
 
@@ -50,7 +50,7 @@ time_t start,end,t;
     CGContextRelease(context);
     
 
-    datadouble = malloc(width*height*sizeof(double));
+    datadouble = malloc(width*height*sizeof(float));
     int cantidad =width*height;
      NSLog(@"Entra a rgb2gray\n");
     //rgb2gray(datadouble, rawData, width, height, 4);
@@ -72,12 +72,12 @@ time_t start,end,t;
 - (IBAction)gaussian_oringinal:(id)sender {
     
     
-    double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
-    double scale = 0.5;
+    float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
+    float scale = 0.5;
     image_double luminancia_sub;
     image_double image;
   
-    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, datadouble );
+    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height,(float*) datadouble );
     
     NSLog(@"Entra a gaussian_sampler\n");
     luminancia_sub = gaussian_sampler(image, scale, sigma_scale);
@@ -89,12 +89,12 @@ time_t start,end,t;
 
 }
 - (IBAction)gaussian_2:(id)sender {
-    double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
-    double scale = 0.5;
+    float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
+    float scale = 0.5;
     image_double luminancia_sub;
     image_double image;
     
-    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, datadouble );
+    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, (float*)datadouble );
     NSLog(@"Entra a gaussian_sampler 2\n");
     luminancia_sub = gaussian_sampler2(image, scale, sigma_scale);
     NSLog(@"Sale de gaussian_sampler 2\n");
@@ -107,12 +107,12 @@ time_t start,end,t;
     
 }
 - (IBAction)gaussian_3:(id)sender {
-    double sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
-    double scale = 0.5;
+    float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
+    float scale = 0.5;
     image_double luminancia_sub;
     image_double image;
     
-    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, datadouble );
+    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, (float*)datadouble );
     NSLog(@"Entra a gaussian_sampler 3\n");
     luminancia_sub = gaussian_sampler3(image, scale, sigma_scale);
     NSLog(@"Sale de gaussian_sampler 3\n");
@@ -125,7 +125,8 @@ time_t start,end,t;
 
 }
 
-- (void) reconstruirImg:(double*) datadouble width: (int) width height: (int) height {
+
+- (void) reconstruirImg: (float*)datadouble width: (int) width height: (int) height {
 
     printf("width: %d \t height: %d\n",width, height);
     
