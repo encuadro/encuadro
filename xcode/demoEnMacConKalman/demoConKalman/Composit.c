@@ -5,7 +5,7 @@
 
 
 /*********************************************************************************************************/
-void Composit(long int np, double** coplImage,double** copl,double fLength,double R[3][3],double T[3]){
+void Composit(long int np, double** coplImage,double** copl,double fLength,double** R,double* T){
 /*Retourne le nombre de poses DIFFERENTES acceptables (cf plus bas pour cette notion) en nsol, ainsi que*/ 
 /*la meilleure pose (rota1, transa1), i.e. la plus proche en rotation (transmission de rota) lorsque 2*/
 /*sont acceptables, ou celle donnant la plus faible erreur E s'il n'y en a pas 2 acceptables.*/

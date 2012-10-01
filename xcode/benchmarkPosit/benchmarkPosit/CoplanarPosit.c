@@ -6,19 +6,8 @@
 //  Copyright (c) 2012 juanibraun@gmail.com. All rights reserved.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdbool.h>
-#include "CoplanarPosit.h"
-#include "vvector.h"
-#define MY_PI 3.14159265
-#define absValue(a,b)	\
-{					\
-if(b<0) a=-b;       \
-else a=b;           \
-}
 
+#include "CoplanarPosit.h"
 
 void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLength, double center[2], double** Rot, double* Trans){
     

@@ -13,7 +13,7 @@
 #include "sys/stat.h"
 #include "CoplanarPosit.h"  
 #include "Composit.h"
-#include "vvector.h"
+
 
 int main(int argc, const char * argv[])
 {

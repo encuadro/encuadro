@@ -18,6 +18,7 @@
 #import "CoplanarPosit.h"
 #import <stdlib.h>
 #import "configuration.h"
+#import "kalman.h"
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     

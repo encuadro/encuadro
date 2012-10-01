@@ -150,6 +150,12 @@ for (i=0;i<3;i++)
     rotation1[1][i]=row2[i];
     rotation1[2][i]=row3[i];
   }
+    
+    printf("\nRot1\n");
+    for (i=0;i<3;i++){
+        for (j=0;j<3;j++) printf("%f\t",rotation1[i][j]);
+        printf("\n");
+    }
 
 /*CALCUL DE LA DEUXIEME MATRICE DE ROTATION*/
 for (i=0;i<3;i++)
@@ -172,10 +178,22 @@ for (i=0;i<3;i++)
     rotation2[2][i]=row3[i];
   }
 
+    printf("\nRot2\n");
+    for (i=0;i<3;i++){
+        for (j=0;j<3;j++) printf("%f\t",rotation2[i][j]);
+        printf("\n");
+    }
+    
 /*CALCUL DE LA TRANSLATION*/
 translation[0]=imagePts[0][0]/scale;
 translation[1]=imagePts[0][1]/scale;
 translation[2]=focLength/scale;
+    
+    printf("\nTrans\n");
+    for (j=0;j<3;j++){
+        printf("%f\t",translation[j]);
+    }
+    printf("\n");
 
 /*calcul du minimum des profondeurs zi des points objets dans le repere camera, pour la premiere pose*/
 for (i=0;i<nbrP;i++)
@@ -397,7 +415,8 @@ while (!converged)
 
   /*test de securite en cas de non convergence (oscillations periodiques)*/
   if (Erp<Erpmin) Erpmin=Erp;
-  if ((count>100)&&(Erp==Erpmin)) converged=1;
+//  if ((count>100)&&(Erp==Erpmin)) converged=1;
+  if (count>100) converged=1; // Modifico esta condicion pq habia casos en los que oscilaba por encima de ErpMin y nunca paraba
 
   count++;
   /*printf("\n%d %f %d %f",count-1,Erhvmax,Erp,deltaImDifference);*/

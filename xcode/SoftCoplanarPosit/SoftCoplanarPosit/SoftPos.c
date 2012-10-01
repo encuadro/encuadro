@@ -1,4 +1,4 @@
-//
+ //
 //  SoftPosit.c
 //  CoplanarPosit
 //
@@ -22,7 +22,7 @@ void softPosit(double** imgPoints, int nbImagePts, double** worldPoints, int nbW
     double epsilon0 = 0.01;           // Used to initialize assignment matrix
     
     int maxCount = 2; 
-    int minBetaCount = 5;
+    int minBetaCount = 50;
     
     int minNbPts = fmin(nbWorldPts, nbImagePts);
     int maxNbPts = fmax(nbWorldPts, nbImagePts);
@@ -31,6 +31,7 @@ void softPosit(double** imgPoints, int nbImagePts, double** worldPoints, int nbW
     double Tx,Ty,Tz;
     double r1[3],r2[3],r3[3];
     int count=0;
+
         
     /* allocation for centeredImage*/
     double** centeredImage;
@@ -455,13 +456,36 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
     double betaUpdate = 1.05;         // Update rate on beta
     double epsilon0 = 0.01;           // Used to initialize assignment matrix
     
-    int minBetaCount = 80;
+    int minBetaCount = 50;
     
     int minNbPts = fmin(nbWorldPts, nbImagePts);
     int maxNbPts = fmax(nbWorldPts, nbImagePts);
     double  assMatScale = 1/((double)maxNbPts+1);
     
+    
+
     int count=0;
+    
+    double trash[3];
+    
+    double** Rot1;
+    Rot1=(double**)malloc(3*sizeof(double*));
+    for (i=0; i<3; i++) Rot1[i]=(double*)malloc(3*sizeof(double));
+    
+    double* angles1;
+    angles1=(double*)malloc(3*sizeof(double));
+
+    double** Rot2;
+    Rot2=(double**)malloc(3*sizeof(double*));
+    for (i=0; i<3; i++) Rot2[i]=(double*)malloc(3*sizeof(double));
+    
+    double* angles2;
+    angles2=(double*)malloc(3*sizeof(double));
+    
+    double* anglesIni;
+    anglesIni=(double*)malloc(3*sizeof(double));
+
+    Matrix2Euler(initRot, anglesIni, trash);
     
     /*allocation for pos*/
     int** pos;
@@ -645,7 +669,7 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
         projectedU[i] = homogeneusWorldPts[i][0]*r1T[0] + homogeneusWorldPts[i][1]*r1T[1] + homogeneusWorldPts[i][2]*r1T[2] + homogeneusWorldPts[i][3]*r1T[3];
         projectedV[i] = homogeneusWorldPts[i][0]*r2T[0] + homogeneusWorldPts[i][1]*r2T[1] + homogeneusWorldPts[i][2]*r2T[2] + homogeneusWorldPts[i][3]*r2T[3];
         
-        //            printf("%f\t %f\n",projectedU[i],projectedV[i]);
+        printf("%f\t %f\n",projectedU[i],projectedV[i]);
         
     }
     
@@ -660,7 +684,7 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
         }
     }
     
-    if(false){
+    if(true){
         printf("\nMatriz de distancia:\n");
         for (i=0; i<nbImagePts;i++) {
             for (j=0; j<nbWorldPts; j++) {
@@ -683,7 +707,7 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
 
     sinkhornImp(assignMat,nbImagePts+1,nbWorldPts+1);
     
-    if(false){
+    if(true){
         printf("Matriz de asignacion:\n");
         for (i=0; i<nbImagePts+1;i++) {
             for (j=0; j<nbWorldPts+1; j++) {
@@ -780,19 +804,11 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
         }
         for (i=0;i<3;i++) u[i]=U[i]/NU;
         
-        /*Computation of mu and lambda*/
-        //    delta=sqrt((J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0));
-        //    if ((I0I0-J0J0)>=0) q=atan((-2*I0J0)/((J0J0-I0I0)*(J0J0-I0I0)));
-        //    else q=atan((-2*I0J0)/((J0J0-I0I0)*(J0J0-I0I0)))+MY_PI/2;
-        //    {
-        //        lambda=sqrt(delta)*cos(q/2);
-        //        if (lambda==0.0) mu=0.0;
-        //        else mu=sqrt(delta)*sin(q/2);
-        //    }
         double ro,q,lambda,mu;
         
         /*Computation of mu and lambda*/
         ro=sqrt((J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0));
+        printf("\n %g\n",(J0J0-I0J0));
         if ((J0J0-I0J0)>0.00000001){
             q=atan2(-2*I0J0, (J0J0-I0I0));
         }
@@ -853,6 +869,13 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
         r2Ta[3]=r2T[3]/scale;
         r3Ta[3]=1/scale;
  
+        for (i=0; i<3; i++) {
+            Rot1[0][i]=r1Ta[i];
+            Rot1[1][i]=r2Ta[i];
+            Rot1[2][i]=r3Ta[i];
+        }
+        Matrix2Euler(Rot1, angles1, trash);
+        
         VEC_PRINT_4(r1Ta);
         VEC_PRINT_4(r2Ta);
         VEC_PRINT_4(r3Ta);
@@ -878,6 +901,13 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
         r2Tb[3]=r2T[3]/scale;
         r3Tb[3]=1/scale;
    
+        for (i=0; i<3; i++) {
+            Rot2[0][i]=r1Tb[i];
+            Rot2[1][i]=r2Tb[i];
+            Rot2[2][i]=r3Tb[i];
+        }
+        Matrix2Euler(Rot2, angles2, trash);
+        
         VEC_PRINT_4(r1Tb);
         VEC_PRINT_4(r2Tb);
         VEC_PRINT_4(r3Tb);
@@ -918,7 +948,7 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
             printf("\nSOP para pose 1\n");
             for (i=0; i<nbWorldPts; i++) printf("%f\t %f\n",projectedU1[i],projectedV1[i]);
             
-            printf("\nSOP para pose 21\n");
+            printf("\nSOP para pose 2\n");
             for (i=0; i<nbWorldPts; i++) printf("%f\t %f\n",projectedU2[i],projectedV2[i]);
         }
         
@@ -992,8 +1022,16 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
                 delta2+=assignMat2[i][j]*distMat2[i][j]/nbWorldPts;
             }
         }
+        double absAngles10,absAngles11,absAngles20,absAngles21,absAnglesIni0,absAnglesIni1;
         
-        if (delta1<delta2){
+        absValue(absAnglesIni0, anglesIni[0]);
+        absValue(absAnglesIni1, anglesIni[1]);
+        absValue(absAngles10, angles1[0]);
+        absValue(absAngles11, angles1[1]);
+        absValue(absAngles20, angles2[0]);
+        absValue(absAngles21, angles2[1]);
+
+        if (((absAngles10/angles1[0])==(absAnglesIni0/anglesIni[0]))&&((absAngles11/angles1[1])==(absAnglesIni1/anglesIni[1]))){
             
             r1T[0]=r1Ta[0]/r3Ta[3];
             r1T[1]=r1Ta[1]/r3Ta[3];
@@ -1020,7 +1058,7 @@ void softPositCopl(double** imgPoints, int nbImagePts, double** worldPoints, int
             }
             delta=delta1;
         }
-        else{
+        else if(((absAngles20/angles2[0])==(absAnglesIni0/anglesIni[0]))&&((absAngles21/angles2[1])==(absAnglesIni1/anglesIni[1]))){
             r1T[0]=r1Tb[0]/r3Tb[3];
             r1T[1]=r1Tb[1]/r3Tb[3];
             r1T[2]=r1Tb[2]/r3Tb[3];
@@ -1089,7 +1127,7 @@ void sinkhornImp(double** assMat,int nbRow, int nbCol){
     
     int i,j;
     int iMaxIterSinkhorn = 60;
-    double fEpsilon = 0.0001;
+    double fEpsilon = 0.001;
     int iNumSinkIter = 0;
     double fMdiffSum = fEpsilon + 1;
     double sum=0;
@@ -1114,7 +1152,7 @@ void sinkhornImp(double** assMat,int nbRow, int nbCol){
     for (i=0; i<nbRow; i++) assMatPrev[i] = (double*)malloc(nbCol*sizeof(double));
     /* end alloc*/
 
-//    sizeMax=maxPosRatio(assMat,pos,ratios,nbRow,nbCol);
+    sizeMax=maxPosRatio(assMat,pos,ratios,nbRow,nbCol);
     
       
     while (fabs(fMdiffSum)> fEpsilon && iNumSinkIter<iMaxIterSinkhorn) {

@@ -33,18 +33,18 @@ int main() /*donnee des points objets, focale et amplitude du bruit*/
     double* trans;
     double center[2];
     
-    //    Render 480x360
-    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
-        {0,          586.6381  ,180.0000},
-        {0,          0,          1},
-    };
+//    //    Render 480x360
+//    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
+//        {0,          586.6381  ,180.0000},
+//        {0,          0,          1},
+//    };
     
     
     ////    Camara iPod 640x480
-    //    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
-    //        {0,          746.36170  ,217.56288},
-    //        {0,          0,          1},
-    //    };
+    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
+        {0,          746.36170  ,217.56288},
+        {0,          0,          1},
+    };
     
     f=intrinsic[0][0];
     center[0]=intrinsic[0][2];
@@ -55,7 +55,7 @@ int main() /*donnee des points objets, focale et amplitude du bruit*/
     
     FILE *fp;
     char* num;
-    fp = fopen("/Users/juanignaciobraun/Desktop/benchmark/render/480x360/Caso6/Scale0.8/threshold25/Caso6-PuntosLSD41.txt", "r");
+    fp = fopen("/Users/juanignaciobraun/Desktop/DataBenchmark/benchmark/iPod/640x480/Caso4/Scale0.8/threshold25/Caso4-PuntosLSD13.txt", "r");
 //    fp = fopen("/Users/juanignaciobraun/Desktop/Caso10-Puntos38.txt", "r");
 //    fgets(num, 3, fp);
 //    NumberImgPts=strtod(num,&num);
@@ -227,18 +227,20 @@ int main() /*donnee des points objets, focale et amplitude du bruit*/
 
     double angles[3],anglesB[3];
     
-    double beta0=0.001;
-    double noiseStd=10;
+    double beta0=0.005;
+    double noiseStd=1.2;
 
-    angles[0]=20;
-    angles[1]=0;
-    angles[2]=0;
+    
+    
+    angles[0]=10.3107;
+    angles[1]=47.8372;
+    angles[2]=97.1375;
 
     double initTrans[3]; 	 
-
-    initTrans[0]=0;
-    initTrans[1]=0;
-    initTrans[2]=1500.0000;
+        
+    initTrans[0]=44.9748;
+    initTrans[1]=78.9796;
+    initTrans[2]=984.7806;
     
     Euler2Matrix(angles, initRot);
 

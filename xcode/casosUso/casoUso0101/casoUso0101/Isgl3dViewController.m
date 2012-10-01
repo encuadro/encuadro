@@ -75,6 +75,8 @@ float **Rotmodern;                                 ///modern coplanar
 float center[2]={240, 180};           ///modern coplanar
 bool verbose;
 float* luminancia;
+float* angles1;
+float* angles2;
 
 /* LSD parameters */
 float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
@@ -90,6 +92,11 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 image_float luminancia_sub;
 image_float image;
 int cantidad;
+
+/*Kalman variables*/
+kalman_state thetaState,psiState,phiState;
+bool kalman=true;
+bool init=true;
 
 - (CIContext* ) context
 {
@@ -220,7 +227,31 @@ int cantidad;
                 }
                 Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
             }
+        
+            if (kalman){
+                Matrix2Euler(Rotmodern, angles1, angles2);
+                
+                if(init){
+                    thetaState = kalman_init(1, 5, 1, angles1[0]);
+                    psiState = kalman_init(1, 5, 1, angles1[1]);
+                    phiState = kalman_init(1, 5, 1, angles1[2]);
+                    init=false;
+                }
+                kalman_update(&thetaState, angles1[0]);
+                kalman_update(&psiState, angles1[1]);
+                kalman_update(&phiState, angles1[2]);
+                
+                angles1[0]=thetaState.x;
+                angles1[1]=psiState.x;
+                angles1[2]=phiState.x;
+                
+                Euler2Matrix(angles1, Rotmodern);
+            }
+
+            
         }
+        
+        
         
         if (verbose){
             printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
@@ -262,9 +293,6 @@ int cantidad;
         rotacion[8]=Rotmodern[2][2];
         
         
-        float angles1[3],angles2[3];
-        Matrix2Euler(Rotmodern,angles1,angles2);
-        //            self.isgl3DView.eulerAngles = angles1;
         
         if (verbose){
             printf("\nPrimera solucion\n");
@@ -296,6 +324,9 @@ int cantidad;
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
     
     Tras=(float*)malloc(3*sizeof(float));
+    
+    angles1=(float*)malloc(3*sizeof(float));
+    angles2=(float*)malloc(3*sizeof(float));
     
     object=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) object[i]=(float *)malloc(3 * sizeof(float));
