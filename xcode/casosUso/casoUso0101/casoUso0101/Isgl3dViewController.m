@@ -318,6 +318,8 @@ bool init=true;
     free(pixels);
     free(Rotmodern);
     free(Tras);
+    free(angles1);
+    free(angles2);
     
     /*Reservamos memoria*/
     Rotmodern=(float**)malloc(3*sizeof(float*));
