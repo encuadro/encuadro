@@ -6,55 +6,64 @@
 //  Copyright (c) 2012 juanibraun@gmail.com. All rights reserved.
 //
 
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
+#include "svd.h"
 #include "CoplanarPosit.h"
+#include "vvector.h"
+#define MY_PI 3.14159265
 
-void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLength, double center[2], double** Rot, double* Trans){
+void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLength, float center[2], float** Rot, float* Trans){
     
     
     long int i,j;
-    double** Rot1;
-    double** Rot2;
-    double** RotFinal1;
-    double** RotFinal2;
-    double* TransFinal1;
-    double* TransFinal2;
-    double  E1=0, E2=0;
-
+    float** Rot1;
+    float** Rot2;
+    float** RotFinal1;
+    float** RotFinal2;
+    float* TransFinal1;
+    float* TransFinal2;
+    float  E1,Ehvmax1,E2,Ehvmax2;
+    long int Ep1,Ep2;
+    
+    
+    
     /* allocation for Rot1*/
-    Rot1=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) Rot1[i]=(double *)malloc(3 * sizeof(double));
+    Rot1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot1[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/
     
     /* allocation for Rot2*/
-    Rot2=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) Rot2[i]=(double *)malloc(3 * sizeof(double));
+    Rot2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot2[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/
     
     /* allocation for RotFinal1*/
-    RotFinal1=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) RotFinal1[i]=(double *)malloc(3 * sizeof(double));
+    RotFinal1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal1[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/
     
     /* allocation for RotFinal2*/
-    RotFinal2=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) RotFinal2[i]=(double *)malloc(3 * sizeof(double));
+    RotFinal2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal2[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/
     
     /* allocation for TransFinal1*/
-    TransFinal1=(double *)malloc(3* sizeof(double));
+    TransFinal1=(float *)malloc(3* sizeof(float));
     /* end alloc*/
     
     /* allocation for TransFinal2*/
-    TransFinal2=(double *)malloc(3* sizeof(double));
+    TransFinal2=(float *)malloc(3* sizeof(float));
     /* end alloc*/
     
     
     
     /* allocation for homogeneousWorldPts*/
-    double** homogeneousWorldPts;
-    homogeneousWorldPts=(double **)malloc(NbPts* sizeof(double *));
-    for (i=0;i<NbPts;i++) homogeneousWorldPts[i]=(double *)malloc(4 * sizeof(double));
+    float** homogeneousWorldPts;
+    homogeneousWorldPts=(float **)malloc(NbPts* sizeof(float *));
+    for (i=0;i<NbPts;i++) homogeneousWorldPts[i]=(float *)malloc(4 * sizeof(float));
     /* end alloc*/
     
     /* Homogeneus world points -  append a 1 to each 3-vector. An Nx4 matrix.*/
@@ -65,16 +74,16 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         homogeneousWorldPts[i][3] = 1;
     }
     
-    if (false) {
-        printf("IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\n",imgPts[i][0],imgPts[i][1]);
-        }
-    }
+//    if (false) {
+//        printf("IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\n",imgPts[i][0],imgPts[i][1]);
+//        }
+//    }
     /* allocation for centeredImage*/
-    double** centeredImage;
-    centeredImage=(double**)malloc(NbPts*sizeof(double*));
-    for (i=0; i<NbPts; i++) centeredImage[i]=(double*)malloc(2*sizeof(double));
+    float** centeredImage;
+    centeredImage=(float**)malloc(NbPts*sizeof(float*));
+    for (i=0; i<NbPts; i++) centeredImage[i]=(float*)malloc(2*sizeof(float));
     /* end alloc*/
     
     for (i=0;i<NbPts;i++){
@@ -83,42 +92,40 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         
     }
     
-    if (false) {
-        printf("CENTERED IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
-        }
-    }
+//    if (false) {
+//        printf("CENTERED IMAGEPTS ANTES DE ENTRAR A POSITBRANCHES\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
+//        }
+//    }
     
     
     //    /* objectMat alloc*/
-    //    double** objectMat;
-    //    objectMat=(double **)malloc(4 * sizeof(double*));
-    //    for (i=0; i<4; i++) objectMat[i]=(double *)malloc(NbPts* sizeof(double));
+    //    float** objectMat;
+    //    objectMat=(float **)malloc(4 * sizeof(float*));
+    //    for (i=0; i<4; i++) objectMat[i]=(float *)malloc(NbPts* sizeof(float));
     //    /* end*/
     
     /* objectMat alloc*/
-    double** objectMat;
-    objectMat=(double **)malloc(3 * sizeof(double*));
-    for (i=0; i<3; i++) objectMat[i]=(double *)malloc(3* sizeof(double));
+    float** objectMat;
+    objectMat=(float **)malloc(3 * sizeof(float*));
+    for (i=0; i<3; i++) objectMat[i]=(float *)malloc(3* sizeof(float));
     /* end*/
     
     for (i=0;i<3;i++) {
         for (j=0;j<3;j++) objectMat[i][j]=0;
     }
     
-    if (false) {
-        printf("PUNTOS ANTES DE ENTRAR A PSEUDOINVERSE\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\t%g\t%g\n",homogeneousWorldPts[i][0],homogeneousWorldPts[i][1],homogeneousWorldPts[i][2],homogeneousWorldPts[i][3]);
-        }
-    }
+//    if (false) {
+//        printf("PUNTOS ANTES DE ENTRAR A PSEUDOINVERSE\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\t%g\t%g\n",homogeneousWorldPts[i][0],homogeneousWorldPts[i][1],homogeneousWorldPts[i][2],homogeneousWorldPts[i][3]);
+//        }
+//    }
     
-    
-    /* Se calulca objectMat*/
-    double v[3];
-    double m[3][3]={{0,0,0},{0,0,0},{0,0,0}};
-    double det;
+    float v[3];
+    float m[3][3]={{0,0,0},{0,0,0},{0,0,0}};
+    float det;
     for(i=0;i<NbPts;i++){
         v[0]=homogeneousWorldPts[i][0];
         v[1]=homogeneousWorldPts[i][1];
@@ -128,46 +135,45 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
     INVERT_3X3(objectMat,det,m);
 //    MAT_PRINT_3X3(objectMat);
     
-    /*se calculan las dos ramas principales*/
     PositBranches(NbPts, centeredImage, worldPts, objectMat, Rot1, Rot2, Trans);
     
-    if (false) {
-        
-        printf("\nRotacion1 antes de iterar: \n");
-        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
-        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
-        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
-        
-        printf("\nRotacion2 antes de iterar: \n");
-        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
-        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
-        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
-        printf("Traslacion: \n");
-        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    if (true) {
+//        
+//        printf("\nRotacion1 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
+//        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
+//        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//        
+//        printf("\nRotacion2 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
+//        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
+//        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
+    
+    if ((Rot1[0][0])!=2.0) /*pose1 a priori possible*/
+    {
+        /*printf("\nBranche 1");*/
+        PositLoop(NbPts, centeredImage, homogeneousWorldPts, objectMat, focalLength, center,Rot1, Trans, RotFinal1, TransFinal1);     /*ITERATIONS a partir de la premiere pose fournie*/
+        /*PosCopl (BRANCHE 1)*/
     }
     
-    if ((Rot1[0][0])!=2.0) /*Si la primera pose de la rama 1 es posible, se itera*/
+    if ((Rot2[0][0])!=2.0) /*pose1 a priori possible*/
     {
-        /*printf("\nRama 1\n);*/
-        PositLoop(NbPts, centeredImage, homogeneousWorldPts, objectMat, focalLength, center,Rot1, Trans, RotFinal1, TransFinal1);
-    }
-    
-    if ((Rot2[0][0])!=2.0) /*Si la primera pose de la rama 2 es posible, se itera*/
-    {
-        /*printf("\nRama 2");*/
-        PositLoop(NbPts, centeredImage, homogeneousWorldPts, objectMat, focalLength, center, Rot2, Trans, RotFinal2, TransFinal2);
+        /*printf("\nBranche 2");*/
+        PositLoop(NbPts, centeredImage, homogeneousWorldPts, objectMat, focalLength, center, Rot2, Trans, RotFinal2, TransFinal2);        /*ITERATIONS a partir de la premiere pose fournie*/
+        /*PosCopl (BRANCHE 2)*/
     }
     
     
     if ((RotFinal1[0][0]!=2)&&(RotFinal2[0][0]!=2))
     {
+        ErrorC(NbPts,centeredImage,worldPts,focalLength,center,RotFinal1,TransFinal1,&E1,&Ep1,&Ehvmax1);
+        ErrorC(NbPts,centeredImage,worldPts,focalLength,center,RotFinal2,TransFinal2,&E2,&Ep2,&Ehvmax2);
         
-        
-        imgDiff(NbPts, centeredImage, worldPts, RotFinal1, TransFinal1, &E1);
-        imgDiff(NbPts, centeredImage, worldPts, RotFinal2, TransFinal2, &E2);
-       
         if (E1<E2)
         {
             for (i=0;i<3;i++)
@@ -188,6 +194,9 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
     
     if ((RotFinal1[0][0]!=2)&&(RotFinal2[0][0]==2))
     {
+        /*Error(np,coplImage,copl,fLength,POSITRot1,POSITTrans1,&E1,&Ep1,&Ehvmax1);*/
+        /*Error(np,coplImage,copl,fLength,POSITRot2,POSITTrans2,&E2,&Ep2,&Ehvmax2);*/
+        /*printf("\nErhvmax1=%f Erhvmax2=%f\n",Ehvmax1,Ehvmax2); */
         for (i=0;i<3;i++)
         {
             Trans[i]=TransFinal1[i];
@@ -196,6 +205,9 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
     }
     if ((RotFinal1[0][0]==2)&&(RotFinal2[0][0]!=2))
     {
+        /*Error(np,coplImage,copl,fLength,POSITRot1,POSITTrans1,&E1,&Ep1,&Ehvmax1);*/
+        /*Error(np,coplImage,copl,fLength,POSITRot2,POSITTrans2,&E2,&Ep2,&Ehvmax2);*/
+        /*printf("\nErhvmax1=%f Erhvmax2=%f\n",Ehvmax1,Ehvmax2);*/
         for (i=0;i<3;i++)
         {
             Trans[i]=TransFinal2[i];
@@ -203,6 +215,7 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         }
     }
     
+    /* if ((POSITRot1[0][0]==2)&&(POSITRot2[0][0]==2))...CAS A IMPLEMENTER (n'apparait jamais)*/
     
     /*desallocations*/
     for (i=0;i<NbPts;i++) {
@@ -231,30 +244,206 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
     
 }
 
-
-
-void PositBranches(int NbPts, double **centeredImage, double** worldPts, double**objectMat, double** Rot1, double** Rot2, double* Trans){
-    int i;
-    double r1T[4],r2T[4],U[3],u[3],IVect[3],JVect[3],row1[3],row2[3],row3[3];
-    float I0I0, J0J0, I0J0,absI0J0;
-    double scale;
-    double NU;
-    int firstNonCol;
-    double delta,lambda,mu,q,zi,zmin1,zmin2;
+void CoplanarPosit4Soft(int NbPts, float **centeredImage, float** homogeneousWorldPts, float focalLength, float center[2], float** Rot, float* Trans){
     
-    if (false) {
-        printf("\nIMAGE POINTS A LA ENTRADA DE POSITBRANCHES:\n");
-        for (i=0; i<NbPts; i++) {
-            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
+    
+    long int i,j;
+    float** Rot1;
+    float** Rot2;
+    float** RotFinal1;
+    float** RotFinal2;
+    float* TransFinal1;
+    float* TransFinal2;
+    float  E1,Ehvmax1,E2,Ehvmax2;
+    long int Ep1,Ep2;
+    
+    
+    
+    /* allocation for Rot1*/
+    Rot1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot1[i]=(float *)malloc(3 * sizeof(float));
+    /* end alloc*/
+    
+    /* allocation for Rot2*/
+    Rot2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot2[i]=(float *)malloc(3 * sizeof(float));
+    /* end alloc*/
+    
+    /* allocation for RotFinal1*/
+    RotFinal1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal1[i]=(float *)malloc(3 * sizeof(float));
+    /* end alloc*/
+    
+    /* allocation for RotFinal2*/
+    RotFinal2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal2[i]=(float *)malloc(3 * sizeof(float));
+    /* end alloc*/
+    
+    /* allocation for TransFinal1*/
+    TransFinal1=(float *)malloc(3* sizeof(float));
+    /* end alloc*/
+    
+    /* allocation for TransFinal2*/
+    TransFinal2=(float *)malloc(3* sizeof(float));
+    /* end alloc*/
+    
+    
+    
+    /* objectMat alloc*/
+    float** objectMat;
+    objectMat=(float **)malloc(4 * sizeof(float*));
+    for (i=0; i<4; i++) objectMat[i]=(float *)malloc(NbPts* sizeof(float));
+    /* end*/
+    
+    PseudoInverseGen(homogeneousWorldPts,NbPts,4,objectMat);
+    
+    PositBranches(NbPts, centeredImage, homogeneousWorldPts, objectMat, Rot1, Rot2, Trans);
+
+    
+//    if (false){
+//        printf("\nRotacion1 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot1[0][0],Rot1[0][1],Rot1[0][2]);
+//        printf("%f\t %f\t %f\n",Rot1[1][0],Rot1[1][1],Rot1[1][2]);
+//        printf("%f\t %f\t %f\n",Rot1[2][0],Rot1[2][1],Rot1[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//        
+//        printf("\nRotacion2 antes de iterar: \n");
+//        printf("%f\t %f\t %f\n",Rot2[0][0],Rot2[0][1],Rot2[0][2]);
+//        printf("%f\t %f\t %f\n",Rot2[1][0],Rot2[1][1],Rot2[1][2]);
+//        printf("%f\t %f\t %f\n",Rot2[2][0],Rot2[2][1],Rot2[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
+    
+    if ((Rot1[0][0])!=2.0) /*pose1 a priori possible*/
+    {
+        /*printf("\nBranche 1");*/
+        PositLoop(NbPts, centeredImage, homogeneousWorldPts, objectMat, focalLength, center,Rot1, Trans, RotFinal1, TransFinal1);     /*ITERATIONS a partir de la premiere pose fournie*/
+        /*PosCopl (BRANCHE 1)*/
+    }
+    
+//    if (false){
+//        printf("\nRotacion: \n");
+//        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+//        printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+//        printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
+    
+    if ((Rot2[0][0])!=2.0) /*pose1 a priori possible*/
+    {
+        /*printf("\nBranche 2");*/
+        PositLoop(NbPts, centeredImage, homogeneousWorldPts, objectMat, focalLength, center, Rot2, Trans, RotFinal2, TransFinal2);        /*ITERATIONS a partir de la premiere pose fournie*/
+        /*PosCopl (BRANCHE 2)*/
+    }
+    
+//    if (false){
+//        printf("\nRotacion: \n");
+//        printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+//        printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+//        printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+//        printf("Traslacion: \n");
+//        printf("%f\t %f\t %f\n",Trans[0],Trans[1],Trans[2]);
+//    }
+    
+    if ((RotFinal1[0][0]!=2)&&(RotFinal2[0][0]!=2))
+    {
+        ErrorC(NbPts,centeredImage,homogeneousWorldPts,focalLength,center,RotFinal1,TransFinal1,&E1,&Ep1,&Ehvmax1);
+        ErrorC(NbPts,centeredImage,homogeneousWorldPts,focalLength,center,RotFinal2,TransFinal2,&E2,&Ep2,&Ehvmax2);
+        
+        if (E1<E2)
+        {
+            for (i=0;i<3;i++)
+            {
+                Trans[i]=TransFinal1[i];
+                for (j=0;j<3;j++) Rot[i][j]=RotFinal1[i][j];
+            }
+        }
+        else
+        {
+            for (i=0;i<3;i++)
+            {
+                Trans[i]=TransFinal2[i];
+                for (j=0;j<3;j++) Rot[i][j]=RotFinal2[i][j];
+            }
+        }
+    }
+    
+    if ((RotFinal1[0][0]!=2)&&(RotFinal2[0][0]==2))
+    {
+        /*Error(np,coplImage,copl,fLength,POSITRot1,POSITTrans1,&E1,&Ep1,&Ehvmax1);*/
+        /*Error(np,coplImage,copl,fLength,POSITRot2,POSITTrans2,&E2,&Ep2,&Ehvmax2);*/
+        /*printf("\nErhvmax1=%f Erhvmax2=%f\n",Ehvmax1,Ehvmax2); */
+        for (i=0;i<3;i++)
+        {
+            Trans[i]=TransFinal1[i];
+            for (j=0;j<3;j++) Rot[i][j]=RotFinal1[i][j];
+        }
+    }
+    if ((RotFinal1[0][0]==2)&&(RotFinal2[0][0]!=2))
+    {
+        /*Error(np,coplImage,copl,fLength,POSITRot1,POSITTrans1,&E1,&Ep1,&Ehvmax1);*/
+        /*Error(np,coplImage,copl,fLength,POSITRot2,POSITTrans2,&E2,&Ep2,&Ehvmax2);*/
+        /*printf("\nErhvmax1=%f Erhvmax2=%f\n",Ehvmax1,Ehvmax2);*/
+        for (i=0;i<3;i++)
+        {
+            Trans[i]=TransFinal2[i];
+            for (j=0;j<3;j++) Rot[i][j]=RotFinal2[i][j];
+        }
+    }
+    
+    if ((RotFinal1[0][0]==2)&&(RotFinal2[0][0]==2)){
+        for (i=0;i<3;i++)
+        {
+            Trans[i]=0;
+            for (j=0;j<3;j++) Rot[i][j]=3;
         }
         
     }
     
-    double b[3];
-    double r1Taux[3]={0,0,0};
-    double r2Taux[3]={0,0,0};
-    double r11Taux[3]={0,0,0};
-    double r22Taux[3]={0,0,0};
+    /*desallocations*/
+    for (i=0;i<NbPts;i++) {
+        free(homogeneousWorldPts[i]);
+        free(centeredImage[i]);
+    }
+    for (i=0;i<3;i++) {
+        free(Rot1[i]);
+        free(Rot2[i]);
+        free(RotFinal1[i]);
+        free(RotFinal2[i]);
+    }
+    free(TransFinal1);
+    free(TransFinal2);
+    for (i=0;i<4;i++) free(objectMat[i]);
+    
+}
+
+
+
+void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**objectMat, float** Rot1, float** Rot2, float* Trans){
+    int i,j;
+    float r1T[4],r2T[4],U[3],u[3],IVect[3],JVect[3],row1[3],row2[3],row3[3];
+    float I0I0, J0J0, I0J0;
+    float scale;
+    float NU;
+    int firstNonCol;
+    float delta,lambda,mu,q,zi,zmin1,zmin2;
+    
+//    if (false) {
+//        printf("\nIMAGE POINTS A LA ENTRADA DE POSITBRANCHES:\n");
+//        for (i=0; i<NbPts; i++) {
+//            printf("%g\t%g\n",centeredImage[i][0],centeredImage[i][1]);
+//        }
+//        
+//    }
+    
+    float b[3];
+    float r1Taux[3]={0,0,0};
+    float r2Taux[3]={0,0,0};
+    float r11Taux[3]={0,0,0};
+    float r22Taux[3]={0,0,0};
 
     
     for (i=0; i<NbPts; i++) {
@@ -277,14 +466,14 @@ void PositBranches(int NbPts, double **centeredImage, double** worldPts, double*
     r2T[3]=r2Taux[2];
     
     
-    I0I0=r1T[0]*r1T[0]+r1T[1]*r1T[1];
-    J0J0=r2T[0]*r2T[0]+r2T[1]*r2T[1];
-    I0J0=r1T[0]*r2T[0]+r1T[1]*r2T[1];
+    I0I0=r1T[0]*r1T[0]+r1T[1]*r1T[1]+r1T[2]*r1T[2];
+    J0J0=r2T[0]*r2T[0]+r2T[1]*r2T[1]+r2T[2]*r2T[2];
+    I0J0=r1T[0]*r2T[0]+r1T[1]*r2T[1]+r1T[2]*r2T[2];
     
-    if (false){
-        printf("I0I0J0J0I0J0\n");
-        printf("%g\t%g\t%g\n",I0I0,J0J0,I0J0);
-    }
+//    if (false){
+//        printf("I0I0J0J0I0J0\n");
+//        printf("%g\t%g\t%g\n",I0I0,J0J0,I0J0);
+//    }
     
     /*Computation of u, unit vector normal to the image plane*/
     firstNonCol=2;
@@ -300,38 +489,30 @@ void PositBranches(int NbPts, double **centeredImage, double** worldPts, double*
     for (i=0;i<3;i++) u[i]=U[i]/NU;
     
     /*Computation of mu and lambda*/
-    delta=sqrt((J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0));
-    if ((J0J0-I0J0)>0.00000001){
-      q=atan2(-2*I0J0, (J0J0-I0I0));
-    }
-    else if ((J0J0-I0J0)<-0.00000001) {
-      q=atan2(-2*I0J0, (J0J0-I0I0))+MY_PI;
-    }
-    else{
-        absValue(absI0J0, I0J0);
-        delta=2*absI0J0;
-        q=(I0J0/absI0J0)*MY_PI;
-    }
-    
-
-    lambda=sqrt(delta)*cos(q/2);
-    mu=sqrt(delta)*sin(q/2);
-    
-//    delta=(J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0);
-//    if ((I0I0-J0J0)>=0) q=-(I0I0-J0J0+sqrt(delta))/2;
-//    else q=-(I0I0-J0J0-sqrt(delta))/2;
-//    if (q>=0)
+//    delta=sqrt((J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0));
+//    if ((I0I0-J0J0)>=0) q=atan((-2*I0J0)/((J0J0-I0I0)*(J0J0-I0I0)));
+//    else q=atan((-2*I0J0)/((J0J0-I0I0)*(J0J0-I0I0)))+MY_PI/2;
 //    {
-//        lambda=sqrt(q);
+//        lambda=sqrt(delta)*cos(q/2);
 //        if (lambda==0.0) mu=0.0;
-//        else mu=-I0J0/sqrt(q);
+//        else mu=sqrt(delta)*sin(q/2);
 //    }
-//    else
-//    {
-//        lambda=sqrt(-(I0J0*I0J0)/q);
-//        if (lambda==0.0) mu=sqrt(I0I0-J0J0);
-//        else mu=-I0J0/sqrt(-(I0J0*I0J0)/q);
-//    }
+    
+    delta=(J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0);
+    if ((I0I0-J0J0)>=0) q=-(I0I0-J0J0+sqrt(delta))/2;
+    else q=-(I0I0-J0J0-sqrt(delta))/2;
+    if (q>=0)
+    {
+        lambda=sqrt(q);
+        if (lambda==0.0) mu=0.0;
+        else mu=-I0J0/sqrt(q);
+    }
+    else
+    {
+        lambda=sqrt(-(I0J0*I0J0)/q);
+        if (lambda==0.0) mu=sqrt(I0I0-J0J0);
+        else mu=-I0J0/sqrt(-(I0J0*I0J0)/q);
+    }
 
     
     //    printf("\nlambda=%f\t mu=%f\n",lambda,mu);
@@ -429,58 +610,149 @@ void PositBranches(int NbPts, double **centeredImage, double** worldPts, double*
     /*(object points behind image plane)*/
     if (zmin1<0||zmin1!=zmin1) Rot1[0][0]=2;
     if (zmin2<0||zmin2!=zmin2) Rot2[0][0]=2;
-
+    
+    
+    
+    
 }
 
-
-void imgDiff(int numberOfPoints,double** imgPts,double** objPts,double** Rot,double* Tras,double* Er){
+void  PerspMoveAndProjC(int N, float **obj, float** r, float* t, float foc, float** proj) /*Image projection given a rotation and a traslation.*/
+{
+    float  **moved;
+    long int    i,j,k;
     
-    double a[3],b[3],c[2];
     
-    for(int i=0;i<numberOfPoints;i++){
-    //Calculo error de proyeccion de rotacion1//
-    b[0]=objPts[i][0];
-    b[1]=objPts[i][1];
-    b[2]=objPts[i][2];
-    MAT_DOT_VEC_3X3(a, Rot, b);
-    VEC_SUM(b,a,Tras);
-    c[0]=b[0]/b[2];
-    c[1]=b[1]/b[2];
-    *Er+=pow((imgPts[i][0]-c[0]),2)+pow((imgPts[i][1]-c[1]),2);
+    /*allocations*/
+    moved=(float **)malloc(N * sizeof(float *));
+    for (i=0;i<N;i++) moved[i]=(float *)malloc(3 * sizeof(float));
+    
+    for (i=0;i<N;i++)
+    {
+        for (j=0;j<3;j++) moved[i][j]=t[j];
     }
+    for (i=0;i<N;i++)
+    {
+        for (j=0;j<3;j++)
+        {
+            for (k=0;k<3;k++) moved[i][j]+=r[j][k]*obj[i][k];
+        }
+    }
+    for (i=0;i<N;i++)
+    {
+        for (j=0;j<2;j++)	proj[i][j]=foc*moved[i][j]/moved[i][2];
+    }
+    
+    /*desallocations*/
+    for (i=0;i<N;i++) free(moved[i]);
+    free(moved);
+    
 }
 
-void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, double**objectMat, double f,double center[2], double** RotIn, double* TransIn,double** Rot, double* Trans){
+void ErrorC(long int NP,float** impts,float** obpts,float f,float center[2],float** Rotat,float* Translat,float* Er,long int* Epr,float* Erhvmax)
+/*Returns different error between the original image and the projected image*/
+/*E is the euclidean distance between the two images*/
+/*Ep is the sum of the horizontal and vertical variations in pixels*/
+/*Ehvmax is the maximum horizontal or vertical variation (nonround values in pixels)*/
+
+{
+    float  **impredic,**ErVect;
+    long int    i,j,fr;
+    
+    /*allocations*/
+    impredic=(float **)malloc(NP * sizeof(float *));
+    ErVect=(float **)malloc(NP * sizeof(float *));
+    for (i=0;i<NP;i++)
+    {
+        impredic[i]=(float *)malloc(2 * sizeof(float));
+        ErVect[i]=(float *)malloc(2 * sizeof(float));
+    }
+    
+    if ((Rotat[0][0])!=2.0) /*A 2 in the first position of the rotation matrix means the pose is not possible*/
+    {
+        PerspMoveAndProjC(NP,obpts,Rotat,Translat,f,impredic); /*Project the image with the current pose*/
+        
+        //        printf("puntos proy\n");
+        //        for (i=0; i<NP; i++) {
+        //            printf("\n%f\t%f\n",impredic[i][0],impredic[i][1]);
+        //        }
+        //        printf("puntos imagen\n");
+        //        for (i=0; i<NP; i++) {
+        //            printf("\n%f\t%f\n",f*impts[i][0],f*impts[i][1]);
+        //        }
+        
+        for (i=0;i<NP;i++)
+        {
+            for (j=0;j<2;j++) ErVect[i][j]=impredic[i][j]-f*impts[i][j];
+        }
+        
+        /*Error computation*/
+        *Er=0.0;
+        *Epr=0;
+        *Erhvmax=0;
+        for (i=0;i<NP;i++)
+        {
+            *Er+=sqrt(ErVect[i][0]*ErVect[i][0]+ErVect[i][1]*ErVect[i][1]);
+            *Epr+=(int)(fabs(impredic[i][0]-impts[i][0])+
+                        fabs(impredic[i][1]-impts[i][1]));
+            if (fabs(ErVect[i][0])>*Erhvmax)
+                *Erhvmax=fabs(ErVect[i][0]);
+            if (fabs(ErVect[i][1])>*Erhvmax)
+                *Erhvmax=fabs(ErVect[i][1]);
+        }
+        *Er=*Er/NP;
+    }
+    else /*if the pose is not possible then all error equals to -1*/
+    {
+        *Er=-1.0;
+        *Epr=-1.0;
+        *Erhvmax=-1.0;
+    }
+    
+    /*deallocations*/
+    for (fr=0;fr<NP;fr++)
+    {
+        free(impredic[fr]);
+        free(ErVect[fr]);
+    }
+    free(impredic);
+    free(ErVect);
+}
+
+void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, float**objectMat, float f,float center[2], float** RotIn, float* TransIn,float** Rot, float* Trans){
     
     int i,j;
-    double deltaX, deltaY,delta=0;
-    double delta1,delta2;
+    float deltaX, deltaY,delta=0;
+    float delta1,delta2;
     int count=0;
     bool converged= false;
-    double r3T[4];
-    double a[3],b[3];
+    float Er,Erhvmax,Er1,Erhvmax1,Er2,Erhvmax2;
+    long int Epr,Epr1,Epr2;
+    float r3T[4];
+    float a[3],b[3];
     
-
+    
+    
+    
     /* allocation for Rot1 and Rot2*/
-    double** Rot1;
-    double** Rot2;
-    Rot1=(double**)malloc(3*sizeof(double*));
-    Rot2=(double**)malloc(3*sizeof(double*));
+    float** Rot1;
+    float** Rot2;
+    Rot1=(float**)malloc(3*sizeof(float*));
+    Rot2=(float**)malloc(3*sizeof(float*));
     for (i=0; i<3; i++) {
-        Rot1[i]=(double*)malloc(3*sizeof(double));
-        Rot2[i]=(double*)malloc(3*sizeof(double));
+        Rot1[i]=(float*)malloc(3*sizeof(float));
+        Rot2[i]=(float*)malloc(3*sizeof(float));
     }
     
     
     /* allocation for centeredImageAux*/
-    double** centeredImageAux;
-    centeredImageAux=(double **)malloc(NbPts* sizeof(double *));
-    for (i=0;i<NbPts;i++) centeredImageAux[i]=(double *)malloc(2 * sizeof(double));
+    float** centeredImageAux;
+    centeredImageAux=(float **)malloc(NbPts* sizeof(float *));
+    for (i=0;i<NbPts;i++) centeredImageAux[i]=(float *)malloc(2 * sizeof(float));
     /* end alloc*/
     
     /* allocation for wk*/
-    double* wk;
-    wk=(double *)malloc(NbPts*sizeof(double));
+    float* wk;
+    wk=(float *)malloc(NbPts*sizeof(float));
     /* end alloc*/
     
     /* initializaton for Rot and Trans*/
@@ -506,11 +778,32 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
         
         
         PositBranches(NbPts, centeredImageAux, homogeneousWorldPts, objectMat, Rot1, Rot2, Trans);
+        
         delta1=0;
         delta2=0;
-        imgDiff(NbPts, centeredImage, homogeneousWorldPts, Rot1, Trans, &delta1);
-        imgDiff(NbPts, centeredImage, homogeneousWorldPts, Rot2, Trans, &delta2);
-        
+        for (i=0; i<NbPts; i++) {
+            
+            
+            //Calculo error de proyeccion de rotacion1//
+            b[0]=homogeneousWorldPts[i][0];
+            b[1]=homogeneousWorldPts[i][1];
+            b[2]=homogeneousWorldPts[i][2];
+            MAT_DOT_VEC_3X3(a, Rot1, b);
+            VEC_SUM(b,a,Trans);
+            centeredImageAux[i][0]=b[0]/b[2];
+            centeredImageAux[i][1]=b[1]/b[2];
+            delta1+=pow((centeredImage[i][0]-centeredImageAux[i][0]),2)+pow((centeredImage[i][1]-centeredImageAux[i][1]),2);
+            
+            //Calculo error de proyeccion de rotacion2//
+            b[0]=homogeneousWorldPts[i][0];
+            b[1]=homogeneousWorldPts[i][1];
+            b[2]=homogeneousWorldPts[i][2];
+            MAT_DOT_VEC_3X3(a, Rot2, b);
+            VEC_SUM(b,a,Trans);
+            centeredImageAux[i][0]=b[0]/b[2];
+            centeredImageAux[i][1]=b[1]/b[2];
+            delta2+=pow((centeredImage[i][0]-centeredImageAux[i][0]),2)+pow((centeredImage[i][1]-centeredImageAux[i][1]),2);
+        }
         
         if (delta1>delta2) {
             for (i=0;i<3;i++)
@@ -566,7 +859,7 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
         //        for (i=0; i<NbPts; i++) printf("%f\t",wk[i]);
         //        printf("\n");
         delta=sqrt(delta);
-        converged=(count>0 && delta<0.1) || (count>100);
+        converged=(count>0 && delta<0.001) || (count>100);
         count+=1;
         
         if (count>10&&delta>1) Rot[0][0]=2; /* if pose doesn't converge after 20 iteration, discard the pose, the value for count and delta is arbitrary*/
@@ -599,10 +892,10 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
 }
 
 
-void Matrix2Euler(double** Rot, double* angles1,double* angles2){
-    double theta1, theta2;
-    double phi1, phi2;
-    double psi1, psi2;
+void Matrix2Euler(float** Rot, float* angles1,float* angles2){
+    float theta1, theta2;
+    float phi1, phi2;
+    float psi1, psi2;
     
     theta1=-asin(Rot[2][0]);
     theta2= MY_PI - theta1;
@@ -629,13 +922,13 @@ void Matrix2Euler(double** Rot, double* angles1,double* angles2){
         psi2=0;
     }
     
-    angles1[0]=(180/MY_PI)*psi1;
-    angles1[1]=(180/MY_PI)*theta1;
-    angles1[2]=(180/MY_PI)*phi1;
+    angles1[0]=psi1;
+    angles1[1]=theta1;
+    angles1[2]=phi1;
     
-    angles2[0]=(180/MY_PI)*psi2;
-    angles2[1]=(180/MY_PI)*theta2;
-    angles2[2]=(180/MY_PI)*phi2;
+    angles2[0]=psi2;
+    angles2[1]=theta2;
+    angles2[2]=phi2;
 }
 
 void Euler2Matrix(double* angles, double** Rot){
@@ -655,3 +948,5 @@ void Euler2Matrix(double* angles, double** Rot){
     Rot[2][2]=cos(angles[0])*cos(angles[1]);
     
 }
+
+
