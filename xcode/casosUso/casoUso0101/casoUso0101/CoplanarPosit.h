@@ -6,19 +6,28 @@
 //  Copyright (c) 2012 juanibraun@gmail.com. All rights reserved.
 //
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdbool.h>
+#include "vvector.h"
+
+#define MY_PI 3.14159265
+
+#define absValue(a,b)	\
+{					\
+if(b<0) a=-b;       \
+else a=b;           \
+}
 
 void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLength, float center[2], float** Rot, float* Trans);
 
-void CoplanarPosit4Soft(int NbPts, float **centeredImage, float** homogeneousWorldPts, float focalLength, float center[2], float** Rot, float* Trans);
-
 void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**objectMat, float** Rot1, float** Rot2, float* Trans);
 
-void PerspMoveAndProjC(int N, float **obj, float **r, float *t, float foc, float** proj);
-
-void ErrorC(long int NP,float** impts,float** obpts,float f,float center[2], float** Rotat,float* Translat,float* Er,long int* Epr,float* Erhvmax);
+void imgDiff(int numberOfPoints,float** imgPts,float** objPts,float** Rot,float* Tras,float* Er);
 
 void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, float**objectMat, float f,float center[2], float** RotIn, float* TransIn,float** Rot, float* Trans);
 
 void Matrix2Euler(float** Rot, float* angles1, float* angles2);
 
-void Euler2Matrix(double* angles, double** Rot);
+void Euler2Matrix(float* angles,float** Rot);

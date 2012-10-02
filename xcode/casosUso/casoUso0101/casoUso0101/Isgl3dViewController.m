@@ -228,7 +228,7 @@ bool init=true;
                 Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
             }
         
-            if (kalman){
+            if (true){
                 Matrix2Euler(Rotmodern, angles1, angles2);
                 
                 if(init){
