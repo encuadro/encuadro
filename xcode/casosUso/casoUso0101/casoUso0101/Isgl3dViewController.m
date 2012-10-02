@@ -8,6 +8,7 @@
 
 #import "Isgl3dViewController.h"
 #import "isgl3d.h"
+#import "claseDibujar.h"
 
 @interface Isgl3dViewController()
 
@@ -34,8 +35,8 @@
 @synthesize isgl3DView = _isgl3DView;
 
 
-//para DIBUJAR
-//claseDibujar *cgvista;
+/*para DIBUJAR*/
+claseDibujar *cgvista;
 
 
 /*Variables para la imagen*/
@@ -98,6 +99,7 @@ kalman_state thetaState,psiState,phiState,xState,yState,zState;
 bool kalman=true;
 bool init=true;
 
+
 - (CIContext* ) context
 {
     if(!_context)
@@ -142,6 +144,7 @@ bool init=true;
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
     
+    [cgvista release];
     [imagen release];
     
     
@@ -150,6 +153,26 @@ bool init=true;
 - (void) setImage: (UIImage*) imagen
 {
     self.videoView.image = imagen;
+    /*-------------------------------| Clase dibujar | ----------------------------------*/
+    [cgvista removeFromSuperview];
+    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
+    
+    
+    cgvista.cantidadSegmentos = listFiltradaSize;
+    cgvista.cantidadEsquinas = listFiltradaSize;
+
+    cgvista.segmentos = listFiltrada;
+    cgvista.esquinas = imagePoints;
+    
+    
+    [self.videoView addSubview:cgvista];
+    cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+    /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
+    //cgvista.bounds=CGRectMake(0, 0, 480, 320);
+    /*Para el iPad:*/
+    cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+    
+    /*-------------------------------| Clase dibujar | ----------------------------------*/
     
 }
 
@@ -255,6 +278,7 @@ bool init=true;
 //                Tras[2]=zState.x;
                 
                 Euler2Matrix(angles1, Rotmodern);
+                if(verbose) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
 
             
@@ -354,13 +378,13 @@ bool init=true;
     //    coplMatrix=(float **)malloc(3 * sizeof(float *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(NumberOfPoints * sizeof(float));
     
-    pixels = (unsigned char*) malloc(480*360*4*sizeof(unsigned char));
+    pixels = (unsigned char*) malloc(360*480*4*sizeof(unsigned char));
     for (int i=0;i<360*480*4;i++)
     {
         pixels[i]= INFINITY;
     }
     
-    luminancia = (float *) malloc(480*360*sizeof(float));
+    luminancia = (float *) malloc(360*480*sizeof(float));
     
     
     
