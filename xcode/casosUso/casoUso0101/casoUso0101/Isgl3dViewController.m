@@ -94,8 +94,8 @@ image_float image;
 int cantidad;
 
 /*Kalman variables*/
-kalman_state thetaState,psiState,phiState;
-bool kalman=false;
+kalman_state thetaState,psiState,phiState,xState,yState,zState;
+bool kalman=true;
 bool init=true;
 
 - (CIContext* ) context
@@ -228,22 +228,31 @@ bool init=true;
                 Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
             }
         
-            if (true){
+            if (kalman){
                 Matrix2Euler(Rotmodern, angles1, angles2);
                 
                 if(init){
-                    thetaState = kalman_init(1, 5, 1, angles1[0]);
-                    psiState = kalman_init(1, 5, 1, angles1[1]);
-                    phiState = kalman_init(1, 5, 1, angles1[2]);
+                    thetaState = kalman_init(1, 8, 1, angles1[0]);
+                    psiState = kalman_init(1, 8, 1, angles1[1]);
+                    phiState = kalman_init(1, 8, 1, angles1[2]);
+//                    xState = kalman_init(1, 3, 1, Tras[0]);
+//                    yState = kalman_init(1, 3, 1, Tras[1]);
+//                    zState = kalman_init(1, 3, 1, Tras[2]);
                     init=false;
                 }
                 kalman_update(&thetaState, angles1[0]);
                 kalman_update(&psiState, angles1[1]);
                 kalman_update(&phiState, angles1[2]);
+//                kalman_update(&xState, Tras[0]);
+//                kalman_update(&yState, Tras[1]);
+//                kalman_update(&zState, Tras[2]);
                 
                 angles1[0]=thetaState.x;
                 angles1[1]=psiState.x;
                 angles1[2]=phiState.x;
+//                Tras[0]=xState.x;
+//                Tras[1]=yState.x;
+//                Tras[2]=zState.x;
                 
                 Euler2Matrix(angles1, Rotmodern);
             }
