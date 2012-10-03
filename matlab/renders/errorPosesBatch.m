@@ -1,6 +1,6 @@
 function stats = errorPosesBatch(poses,poses_est)
 %% vectorize poses
-for i=1:length(poses)
+for i=1:length(poses_est)
 		posesMat(i,1:3) = poses(i).rotation;
 		posesMat(i,4:6) = poses(i).translation;
 		posesMatEst(i,1:3) = poses_est(i).rotation;
@@ -26,6 +26,9 @@ varianza = var(err);
 stddev = std(err);
 maximum = max(err);
 minimum = min(err);
+covMatAngles = cov(err(:,1:3));
+covMatTras = cov(err(:,4:6));
+
 
 trimmedia = trimmean(err,20)
 
@@ -36,6 +39,8 @@ stats.stdErr = stddev;
 stats.medianErr = mediana;
 stats.maxErr = maximum;
 stats.minErr = minimum;
+stats.covMatrixAngles = covMatAngles;
+stats.covMatrixTras = covMatTras;
 
 stats.failNb = failNb;
 stats.failIdx = failIdx;
