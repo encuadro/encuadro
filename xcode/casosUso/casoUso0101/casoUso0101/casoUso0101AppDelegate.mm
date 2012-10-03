@@ -32,7 +32,7 @@ bool verbose = FALSE;
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
     
 	// Set the device orientation
-	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeRight;
+	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES;
@@ -100,11 +100,7 @@ bool verbose = FALSE;
     
     
     
-    //    claseDibujar *view = [[claseDibujar alloc] initWithFrame:[self.window frame]];
-    //    [self.window addSubview:view];
-    //    [view release];
-    //    [self.window makeKeyAndVisible];
-    //    [self.window sendSubviewToBack:view];
+
     
     
     

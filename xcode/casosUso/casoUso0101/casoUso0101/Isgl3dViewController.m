@@ -37,7 +37,7 @@
 
 /*para DIBUJAR*/
 claseDibujar *cgvista;
-
+bool dibujar =true;
 
 /*Variables para la imagen*/
 unsigned char* pixels;
@@ -153,25 +153,29 @@ bool init=true;
 - (void) setImage: (UIImage*) imagen
 {
     self.videoView.image = imagen;
+    
     /*-------------------------------| Clase dibujar | ----------------------------------*/
-    [cgvista removeFromSuperview];
-    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
-    
-    
-    cgvista.cantidadSegmentos = listFiltradaSize;
-    cgvista.cantidadEsquinas = listFiltradaSize;
+    if (dibujar)
+    {
+        [cgvista removeFromSuperview];
+        cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
+        
+        
+        cgvista.cantidadSegmentos = listFiltradaSize;
+        cgvista.cantidadEsquinas = listFiltradaSize;
+        
+        cgvista.segmentos = listFiltrada;
+        cgvista.esquinas = imagePoints;
+  
+        
+        
+        
+        [self.videoView addSubview:cgvista];
+        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
 
-    cgvista.segmentos = listFiltrada;
-    cgvista.esquinas = imagePoints;
-    
-    
-    [self.videoView addSubview:cgvista];
-    cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
-    /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
-    //cgvista.bounds=CGRectMake(0, 0, 480, 320);
-    /*Para el iPad:*/
-    cgvista.bounds=CGRectMake(0, 0, 1024, 768);
-    
+        cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+//        cgvista.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+    }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
     
 }
