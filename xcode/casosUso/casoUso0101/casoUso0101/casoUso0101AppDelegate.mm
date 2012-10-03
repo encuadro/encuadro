@@ -32,7 +32,7 @@ bool verbose = FALSE;
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
     
 	// Set the device orientation
-	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeRight;
+	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES;
@@ -42,6 +42,7 @@ bool verbose = FALSE;
 	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
 	_viewController.wantsFullScreenLayout = YES;
     [self.window setRootViewController:_viewController];
+    
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
     // UIBackgroundView* hwView = [[UIBackgroundView alloc] init];
@@ -99,11 +100,7 @@ bool verbose = FALSE;
     
     
     
-    //    claseDibujar *view = [[claseDibujar alloc] initWithFrame:[self.window frame]];
-    //    [self.window addSubview:view];
-    //    [view release];
-    //    [self.window makeKeyAndVisible];
-    //    [self.window sendSubviewToBack:view];
+
     
     
     
