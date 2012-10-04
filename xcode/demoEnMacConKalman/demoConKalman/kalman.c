@@ -33,4 +33,27 @@ void kalman_update(kalman_state* state, double measurement)
     state->p = (1 - state->k) * state->p;
 }
 
+kalman_state_3 kalman_init_3x3(double** q, double** r, double* p, double* intial_value){
+    kalman_state_3 result;
+    result.q = q;
+    result.r = r;
+    result.p = p;
+    result.x = intial_value;
+  
+    
+    return result;
+}
+
+void kalman_update_3x3(kalman_state_3* state, double* measurement,double** A, double** H)
+{
+//    //prediction update
+//    //omit x = x
+//    state->p = state->p + state->q;
+//    
+//    //measurement update
+//    state->k = state->p / (state->p + state->r);
+//    state->x = state->x + state->k * (measurement - state->x);
+//    state->p = (1 - state->k) * state->p;
+}
+
 

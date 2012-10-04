@@ -36,18 +36,18 @@ int main(int argc, const char * argv[])
     double center[2];
     double x,y,err,x4Composit,y4Composit,err4Composit;
 //
-////    Render 480x360
-//    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
-//        {0,          586.6381  ,180.0000},
-//        {0,          0,          1},
-//    };
-//    
-    
-//    Camara iPod 640x480
-    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
-        {0,          746.36170  ,217.56288},
+//    Render 480x360
+    float intrinsic[3][3]=  {{586.6381,  0,         240.0000},
+        {0,          586.6381  ,180.0000},
         {0,          0,          1},
     };
+    
+//    
+////    Camara iPod 640x480
+//    float intrinsic[3][3]=  {{745.43429,  0,         292.80331},
+//        {0,          746.36170  ,217.56288},
+//        {0,          0,          1},
+//    };
     
     f=intrinsic[0][0];
     center[0]=intrinsic[0][2];
@@ -70,7 +70,7 @@ int main(int argc, const char * argv[])
 
     bool verImg=false; // para ver imagenes mientras se hace el benchmark
     
-    double scale=0.8; // scale para el LSD
+    double scale=0.6; // scale para el LSD
     int k;
     int cantPtsDetectados; // cantidad de puntos del maracador
 
@@ -338,7 +338,7 @@ int main(int argc, const char * argv[])
 
 
     
-    for (k=1; k<50; k++) {
+    for (k=1; k<=61; k++) {
         
         
         if (verImg) {
@@ -354,7 +354,7 @@ int main(int argc, const char * argv[])
         
         /*get image properties*/
         
-        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".jpg");
+        sprintf(imgName, "%s%s%d%s",argv[1],imgNameRoot,imgNum,".png");
         IplImage* img = cvLoadImage( imgName ,1); 
         width  = img->width;
         height = img->height;
@@ -504,13 +504,13 @@ int main(int argc, const char * argv[])
             
             double angles1[3],angles2[3];
             Matrix2Euler(Rot,angles1,angles2);
-            fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2],Tras[0],Tras[1],Tras[2]);
+            fprintf(poses_coplanar, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",angles1[0],angles1[1],angles1[2],Tras[0],Tras[1],Tras[2]);
             
 //            printf("\nPrimera solicion\n");
 //            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2]);
 
             Matrix2Euler(Rot4Composit,angles1,angles2);
-            fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2],Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
+            fprintf(poses_composit, "%4.4f %4.4f %4.4f %4.4f %4.4f %4.4f\n",angles1[0],angles1[1],angles1[2],Trans4Composit[0],Trans4Composit[1],Trans4Composit[2]);
             
             if (Rot[0][0]>=2.0) {
                 err=-20;
