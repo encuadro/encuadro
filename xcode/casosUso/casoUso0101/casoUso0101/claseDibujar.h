@@ -15,10 +15,9 @@
 @property(nonatomic, readwrite) float* segmentos;
 @property(nonatomic, readwrite) int cantidadEsquinas;
 @property(nonatomic, readwrite) float** esquinas;
-
+@property(nonatomic, readwrite) int dealloc;
 
 - (id)initWithFrame:(CGRect)frame;
-
 -(void)drawRect:(CGRect)rect; //cantidadSeg:(int) cantidadSeg segmentos: (float*) segmentos;
 
 @end

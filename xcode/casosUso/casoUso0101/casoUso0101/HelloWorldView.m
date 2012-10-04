@@ -7,6 +7,7 @@
 //
 
 #import "HelloWorldView.h"
+#import "Isgl3dViewController.h"
 
 /*viewView*/
 @implementation videoView
@@ -20,6 +21,7 @@
 	
 	return self;
 }
+
 
 
 - (void) dealloc {
@@ -55,6 +57,13 @@ bool verbose;
 int cantidadToques;
 NSString *estring;
 
+bool dibujar;
+
+- (bool) getDibujar
+{
+    return dibujar;
+}
+
 - (void) setRotacion:(float*) rot
 {
     rotacion[0][0] = rot[0];
@@ -74,8 +83,9 @@ NSString *estring;
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
         
-        if (verbose) printf("init del HelloWorldView\n");
         
+        if (verbose) printf("init del HelloWorldView\n");
+        dibujar=NO;
         
         /* Create a container node as a parent for all scene objects.*/
         _container = [self.scene createNode];
@@ -90,32 +100,36 @@ NSString *estring;
         
         /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
         // Create texture and color materials and meshes for UFOs
-		Isgl3dMaterial * hullMaterial = [Isgl3dAnimatedTextureMaterial materialWithTextureFilenameFormat:@"ufo%02d.png" textureFirstID:0 textureLastID:15 animationName:@"ufo" shininess:0.7 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dMaterial * shellMaterial = [Isgl3dColorMaterial materialWithHexColors:@"9999CC" diffuse:@"9999CC" specular:@"FFFFFF" shininess:0.7];
-        
-        // PAra hacer los UFOs usa una elipsoide y un hovoide
-		Isgl3dEllipsoid *hullMesh = [Isgl3dEllipsoid meshWithGeometry:30 radiusY:5 radiusZ:30 longs:32 lats:8];
-		Isgl3dOvoid * shellMesh = [Isgl3dOvoid meshWithGeometry:16 b:11 k:0.0 longs:16 lats:16];
-        _ufo = [_container createNodeWithMesh:hullMesh andMaterial:hullMaterial];
-        Isgl3dMeshNode * ufoShell = [_ufo createNodeWithMesh:shellMesh andMaterial:shellMaterial];
-        
-        ufoShell.position = iv3(0, 4, 0);
-        
-        // Make shell transparent
-        ufoShell.alpha = 0.7;
-        
-        _ufo.position = iv3(0,32.5,0);
+//		Isgl3dMaterial * hullMaterial = [Isgl3dAnimatedTextureMaterial materialWithTextureFilenameFormat:@"ufo%02d.png" textureFirstID:0 textureLastID:15 animationName:@"ufo" shininess:0.7 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+//		Isgl3dMaterial * shellMaterial = [Isgl3dColorMaterial materialWithHexColors:@"9999CC" diffuse:@"9999CC" specular:@"FFFFFF" shininess:0.7];
+//        
+//        // PAra hacer los UFOs usa una elipsoide y un hovoide
+//		Isgl3dEllipsoid *hullMesh = [Isgl3dEllipsoid meshWithGeometry:30 radiusY:5 radiusZ:30 longs:32 lats:8];
+//		Isgl3dOvoid * shellMesh = [Isgl3dOvoid meshWithGeometry:16 b:11 k:0.0 longs:16 lats:16];
+//        _ufo = [_container createNodeWithMesh:hullMesh andMaterial:hullMaterial];
+//        Isgl3dMeshNode * ufoShell = [_ufo createNodeWithMesh:shellMesh andMaterial:shellMaterial];
+//        
+//        ufoShell.position = iv3(0, 4, 0);
+//        
+//        // Make shell transparent
+//        ufoShell.alpha = 0.7;
+//        
+//        _ufo.position = iv3(0,32.5,0);
         /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
+        
+        Isgl3dTextureMaterial * esquinasMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"esquinas.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dGLUIButton * esquinasButton = [Isgl3dGLUIButton buttonWithMaterial:esquinasMaterial width:14.4 height:9.8];
+		[self.scene addChild:esquinasButton];
+        //esquinasButton.position = iv3(-15,-20,0);
+        	[esquinasButton setX:25 andY:15];
+        esquinasButton.interactive = YES;
+        [esquinasButton addEvent3DListener:self method:@selector(buttonTouched:) forEventType:TOUCH_EVENT];
+        
         cantidadToques = 0;
         
         _cubito1.interactive =YES;
         [_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
-        
-              
-    
- 
-
-        
+   
         self.camera.position = iv3(0,0,0.1);
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];
         
@@ -299,12 +313,10 @@ NSString *estring;
     self.audioPlayer.numberOfLoops=0;
     self.audioPlayer.delegate = self;
     [self.audioPlayer play];
-    
-    
-    
-    
+
     
 }
+
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
     
@@ -316,6 +328,17 @@ NSString *estring;
     else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
     
 }
+
+- (void) buttonTouched:(id)sender {
+    
+    if (dibujar==YES) {
+        dibujar =NO;
+    }
+    else if (dibujar==NO) {
+        dibujar=YES;
+    }
+}
+
 
 @end
 

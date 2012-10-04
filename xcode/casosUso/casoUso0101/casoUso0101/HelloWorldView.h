@@ -10,12 +10,12 @@
 #include "vvector.h"
 #import "configuration.h"
 #import <AVFoundation/AVFoundation.h>
-
+#import "claseDibujar.h"
 
 bool fin;
 @interface videoView : UIImageView <AVAudioPlayerDelegate> {
 }
-
+//@property(nonatomic,retain) Isgl3dViewController* viewController;
 @end
 
 
@@ -33,8 +33,8 @@ bool fin;
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 
--(void) setRotacion:(float*) rot;
-
+- (bool) getDibujar;
+- (void) setRotacion:(float*) rot;
 
 @end
 

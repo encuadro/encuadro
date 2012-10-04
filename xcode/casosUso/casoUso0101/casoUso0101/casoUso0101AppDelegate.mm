@@ -97,15 +97,7 @@ bool verbose = FALSE;
     [self.window addSubview:vistaImg];
 	[self.window sendSubviewToBack:vistaImg];
     
-    
-    
-    
 
-    
-    
-    
-    
-    
     _viewController.videoView = vistaImg;
     
     

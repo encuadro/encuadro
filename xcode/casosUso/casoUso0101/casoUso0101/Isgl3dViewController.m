@@ -37,7 +37,8 @@
 
 /*para DIBUJAR*/
 claseDibujar *cgvista;
-bool dibujar =true;
+float **reproyectados;
+float aux[3];
 
 /*Variables para la imagen*/
 unsigned char* pixels;
@@ -58,7 +59,7 @@ float*listFiltrada;
 float **imagePoints,**imagePointsCrop;
 int listSize;
 int listFiltradaSize;
-float distance_thr=20;
+float distance_thr=36;
 float rotacion[9];
 float traslacion[3];
 int errorMarkerDetection; //Codigo de error del findPointCorrespondence
@@ -144,7 +145,7 @@ bool init=true;
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
     
-    [cgvista release];
+
     [imagen release];
     
     
@@ -154,31 +155,56 @@ bool init=true;
 {
     self.videoView.image = imagen;
     
-    /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if (dibujar)
+
+    
+    if (cgvista.dealloc==0)
     {
         [cgvista removeFromSuperview];
-        cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
+        cgvista.dealloc=1;
+    }
+    /*-------------------------------| Clase dibujar | ----------------------------------*/
+    if ([self.isgl3DView getDibujar])
+    {
+
+      /*Reproyectamos los puntos*/
         
+//        for (int i=0;i<NumberOfPoints;i++)
+//            
+//        {
+//          
+//            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
+//            VEC_SUM(reproyectados[i],aux,Tras);
+//        
+//        }
         
+        // Para terminar bien esto hay que calibrar bien la camara del ipad.
+        
+      /*Reproyectamos los puntos*/
+
         cgvista.cantidadSegmentos = listFiltradaSize;
         cgvista.cantidadEsquinas = listFiltradaSize;
         
         cgvista.segmentos = listFiltrada;
         cgvista.esquinas = imagePoints;
-  
-        
-        
         
         [self.videoView addSubview:cgvista];
+
+    
         cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
 
         cgvista.bounds=CGRectMake(0, 0, 1024, 768);
-//        cgvista.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+      
+        [cgvista setNeedsDisplay];
+
+        cgvista.dealloc=0;
+ 
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
     
 }
+
+
+
 
 - (void) procesamiento
 {
@@ -363,34 +389,36 @@ bool init=true;
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
     
     Tras=(float*)malloc(3*sizeof(float));
-    
+
     angles1=(float*)malloc(3*sizeof(float));
     angles2=(float*)malloc(3*sizeof(float));
-    
+
     object=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) object[i]=(float *)malloc(3 * sizeof(float));
     
+    reproyectados=(float **)malloc(NumberOfPoints * sizeof(float *));
+    for (i=0;i<NumberOfPoints;i++) reproyectados[i]=(float *)malloc(3 * sizeof(float));
+
     objectCrop=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) objectCrop[i]=(float *)malloc(3 * sizeof(float));
     
     imagePointsCrop=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(float *)malloc(2 * sizeof(float));
-    
+  
     imagePoints=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(float *)malloc(2 * sizeof(float));
     
     //    coplMatrix=(float **)malloc(3 * sizeof(float *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(NumberOfPoints * sizeof(float));
-    
+
     pixels = (unsigned char*) malloc(360*480*4*sizeof(unsigned char));
     for (int i=0;i<360*480*4;i++)
     {
         pixels[i]= INFINITY;
     }
-    
+
     luminancia = (float *) malloc(360*480*sizeof(float));
-    
-    
+       cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
     
     /* BEGIN MARKER */
     //QlSet0
@@ -506,6 +534,7 @@ bool init=true;
     object[35][2] = 0;
     /* END MARKER*/
     
+
     
     
 }
@@ -588,6 +617,7 @@ bool init=true;
     
     if (verbose) printf("viewDidLoad\n");
     
+   
     [super viewDidLoad];
     
     /*Creamos y seteamos la captureSession*/

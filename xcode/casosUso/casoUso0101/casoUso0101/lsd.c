@@ -712,9 +712,12 @@ static image_float ll_angle( image_float in, float threshold,
       }
 
   /* compute histogram of gradient values */
-  for(x=0;x<p-1;x++)
-    for(y=0;y<n-1;y++)
-      {
+//  for(x=0;x<p-1;x++)
+//    for(y=0;y<n-1;y++)
+    for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
+    
+    {
         norm = (*modgrad)->data[y*p+x];
 
         /* store the point in the right bin according to its norm */
