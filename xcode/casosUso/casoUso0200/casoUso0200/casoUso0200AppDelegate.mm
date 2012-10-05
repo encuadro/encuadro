@@ -39,6 +39,7 @@ bool verbose = FALSE;
     /*El init que se esta invocando es el del padre UIViewController*/
 	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
 	_viewController.wantsFullScreenLayout = YES;
+    [self.window setRootViewController:_viewController];
 	
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];

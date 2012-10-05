@@ -383,7 +383,7 @@ double* luminancia;
     }else {
         CALayer *layer = theMovie.view.layer;
         
-        layer.frame = CGRectMake(0, 0,50,50);
+        layer.frame = CGRectMake(30*wSize/480, 30*hSize/360,60,60);
         layer.anchorPoint = CGPointMake(0.0,0.0);
         layer.zPosition = 0;
         
@@ -460,17 +460,18 @@ double* luminancia;
     imagePoints3=(double **)malloc(4 * sizeof(double *));
     for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
     
-    imagePoints3[0][0]=60;
-    imagePoints3[0][1]=60;
+    imagePoints3[0][0]=30;
+    imagePoints3[0][1]=30;
     
-    imagePoints3[1][0]=60;
-    imagePoints3[1][1]=10;
+    imagePoints3[1][0]=30;
+    imagePoints3[1][1]=-30;
     
-    imagePoints3[2][0]=10;
-    imagePoints3[2][1]=10;
+    imagePoints3[2][0]=-30;
+    imagePoints3[2][1]=-30;
     
-    imagePoints3[3][0]=10;
-    imagePoints3[3][1]=60;
+    imagePoints3[3][0]=-30;
+    imagePoints3[3][1]=30;
+    
     
     //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
     imagePoints4=(double **)malloc(4 * sizeof(double *));
@@ -689,7 +690,7 @@ double* luminancia;
 
 - (void) viewDidLoad{
 
-    iPhone=true;
+    iPhone=false;
     
     if (iPhone) {
         wSize=480;
