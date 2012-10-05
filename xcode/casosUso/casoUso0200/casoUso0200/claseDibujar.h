@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 bool iPhone;
+int wSize,hSize;
 
 @interface claseDibujar : UIView
 
@@ -18,6 +19,7 @@ bool iPhone;
 @property(nonatomic, readwrite) double** esquinas;
 @property(nonatomic, readwrite) double** esquinasRep;
 @property(nonatomic, readwrite) bool bandera;
+@property(nonatomic, readwrite) int dealloc;
 
 - (id)initWithFrame:(CGRect)frame;
 

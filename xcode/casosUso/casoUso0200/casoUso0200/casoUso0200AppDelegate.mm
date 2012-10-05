@@ -98,18 +98,23 @@ bool verbose = FALSE;
     
     
     
-        claseDibujar *cgvistaView = [[claseDibujar alloc] initWithFrame:[self.window frame]];
-        [self.window addSubview:cgvistaView];
-    //    [view release];
-    //    [self.window makeKeyAndVisible];
-    //    [self.window sendSubviewToBack:view];
-    
-    
+////        claseDibujar *cgvistaView = [[claseDibujar alloc] initWithFrame:[self.window frame]];
+////        [self.window addSubview:cgvistaView];
+//    //    [view release];
+//    //    [self.window makeKeyAndVisible];
+//    //    [self.window sendSubviewToBack:view];
+//    
+//    _viewController.cgvista = [[claseDibujar alloc] initWithFrame:[_window frame]];
+//    [_window addSubview:_viewController.cgvista];
+//    _viewController.cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+//    [_viewController.cgvista setNeedsDisplay];
+//    //[_viewController.cgvista release];
+//    [_window makeKeyAndVisible];
     
     
     
     _viewController.videoView = vistaImg;
-    _viewController.cgvista = cgvistaView;
+    //_viewController.cgvista = cgvistaView;
     
 	// Make the opengl view transparent
 	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
