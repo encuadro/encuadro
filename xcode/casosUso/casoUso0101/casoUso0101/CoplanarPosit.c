@@ -566,7 +566,7 @@ void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, fl
         //        for (i=0; i<NbPts; i++) printf("%f\t",wk[i]);
         //        printf("\n");
         delta=sqrt(delta);
-        converged=(count>0 && delta<0.1) || (count>100);
+        converged=(count>0 && delta<0.3) || (count>100);
         count+=1;
         
         if (count>10&&delta>1) Rot[0][0]=2; /* if pose doesn't converge after 20 iteration, discard the pose, the value for count and delta is arbitrary*/

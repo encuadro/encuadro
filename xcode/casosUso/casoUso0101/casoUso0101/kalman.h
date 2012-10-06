@@ -8,15 +8,29 @@
 
 
 #include <math.h>
+#include "vvector.h"
+
 
 typedef struct {
-    double q; //process noise covariance
-    double r; //measurement noise covariance
-    double x; //value
-    double p; //estimation error covariance
-    double k; //kalman gain
+    float q; //process noise covariance
+    float r; //measurement noise covariance
+    float x; //value
+    float p; //estimation error covariance
+    float k; //kalman gain
 } kalman_state;
 
-kalman_state kalman_init(double q, double r, double p, double intial_value);
+typedef struct {
+    float** q; //process noise covariance
+    float** r; //measurement noise covariance
+    float* x; //value
+    float** p; //estimation error covariance
+    float** k; //kalman gain
+} kalman_state_3;
 
-void kalman_update(kalman_state* state, double measurement);
+kalman_state kalman_init(float q, float r, float p, float intial_value);
+
+void kalman_update(kalman_state* state, float measurement);
+
+kalman_state_3 kalman_init_3x3(float** q, float** r, float** p, float** k, float* intial_value);
+
+void kalman_update_3x3(kalman_state_3* state, float* measurement,float** A, float** H);

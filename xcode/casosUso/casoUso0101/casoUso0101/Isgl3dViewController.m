@@ -10,6 +10,7 @@
 #import "isgl3d.h"
 #import "claseDibujar.h"
 
+
 @interface Isgl3dViewController()
 
 @property(nonatomic, retain) AVCaptureSession * session;
@@ -99,6 +100,16 @@ int cantidad;
 kalman_state thetaState,psiState,phiState,xState,yState,zState;
 bool kalman=true;
 bool init=true;
+float** measureNoise;
+float** processNoise;
+float** stateEvolution;
+float** measureMatrix;
+float** errorMatrix;
+float** kalmanGain;
+float* states;
+kalman_state_3 state;
+
+
 
 
 - (CIContext* ) context
@@ -117,7 +128,7 @@ bool init=true;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    //NSLog(@"Capture output");
+//    NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -226,16 +237,16 @@ bool init=true;
         
         /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
         image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-        //NSLog(@"gaussian_sampler3 in\n");
+//        NSLog(@"gaussian_sampler in\n");
         luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
-        //NSLog(@"gaussian_sampler out\n");
+//        NSLog(@"gaussian_sampler out\n");
         
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        //NSLog(@"LSD in\n");
+        NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        //NSLog(@"LSD out\n");
+        NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );
@@ -283,34 +294,92 @@ bool init=true;
         
             if (kalman){
                 Matrix2Euler(Rotmodern, angles1, angles2);
+                if(false){
+                    if(init){
+                        thetaState = kalman_init(1, 4, 1, angles1[0]);
+                        psiState = kalman_init(1, 7, 1, angles1[1]);
+                        phiState = kalman_init(1, 0.1, 1, angles1[2]);
+//                        xState = kalman_init(1, 8, 1, Tras[0]);
+//                        yState = kalman_init(1, 8, 1, Tras[1]);
+//                        zState = kalman_init(1, 8, 1, Tras[2]);
+                        init=false;
+                     }
+                     kalman_update(&thetaState, angles1[0]);
+                     kalman_update(&psiState, angles1[1]);
+                     kalman_update(&phiState, angles1[2]);
+//                     kalman_update(&xState, Tras[0]);
+//                     kalman_update(&yState, Tras[1]);
+//                     kalman_update(&zState, Tras[2]);
                 
-                if(init){
-                    thetaState = kalman_init(1, 8, 1, angles1[0]);
-                    psiState = kalman_init(1, 8, 1, angles1[1]);
-                    phiState = kalman_init(1, 8, 1, angles1[2]);
-//                    xState = kalman_init(1, 3, 1, Tras[0]);
-//                    yState = kalman_init(1, 3, 1, Tras[1]);
-//                    zState = kalman_init(1, 3, 1, Tras[2]);
-                    init=false;
+                     angles1[0]=thetaState.x;
+                     angles1[1]=psiState.x;
+                     angles1[2]=phiState.x;
+//                     Tras[0]=xState.x;
+//                     Tras[1]=yState.x;
+//                     Tras[2]=zState.x;
+                
+                     
+                
                 }
-                kalman_update(&thetaState, angles1[0]);
-                kalman_update(&psiState, angles1[1]);
-                kalman_update(&phiState, angles1[2]);
-//                kalman_update(&xState, Tras[0]);
-//                kalman_update(&yState, Tras[1]);
-//                kalman_update(&zState, Tras[2]);
+                else{
+                    if(init){
+                        
+                        /* kalman correlacionado */
+                        IDENTITY_MATRIX_3X3(stateEvolution);
+                        IDENTITY_MATRIX_3X3(measureMatrix);
+                        IDENTITY_MATRIX_3X3(processNoise);
+                        IDENTITY_MATRIX_3X3(errorMatrix);
+                        SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
+                        
+                        measureNoise[0][0] =4.96249572803608;
+                        measureNoise[0][1]=4.31450588099769;
+                        measureNoise[0][2]=-0.0459669868120827;
+                        measureNoise[1][0]=4.31450588099769;
+                        measureNoise[1][1]=7.02354899298729;
+                        measureNoise[1][2]=-0.0748919339531972;
+                        measureNoise[2][0]=-0.0459669868120827;
+                        measureNoise[2][1]=-0.0748919339531972;
+                        measureNoise[2][2]=0.00106230567668207;
+//                        measureNoise[0][0]=1;
+//                        measureNoise[0][1]=0;
+//                        measureNoise[0][2]=0;
+//                        measureNoise[1][0]=0;
+//                        measureNoise[1][1]=1;
+//                        measureNoise[1][2]=0;
+//                        measureNoise[2][0]=0;
+//                        measureNoise[2][1]=0;
+//                        measureNoise[2][2]=1;
+                        SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
+                        
+                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
+                        
+                        xState = kalman_init(1, 0.2, 1, Tras[0]);
+                        yState = kalman_init(1, 0.2, 1, Tras[1]);
+                        zState = kalman_init(1, 0.2, 1, Tras[2]);
+
+                        
+                        init=false;
+                    }
+                    /* kalman correlacionado */
+                    kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
+
+                    kalman_update(&xState, Tras[0]);
+                    kalman_update(&yState, Tras[1]);
+                    kalman_update(&zState, Tras[2]);
+                    
+                    Tras[0]=xState.x;
+                    Tras[1]=yState.x;
+                    Tras[2]=zState.x;
+                    
+//                    VEC_PRINT(angles1);
+//                    VEC_PRINT(Tras);
                 
-                angles1[0]=thetaState.x;
-                angles1[1]=psiState.x;
-                angles1[2]=phiState.x;
-//                Tras[0]=xState.x;
-//                Tras[1]=yState.x;
-//                Tras[2]=zState.x;
-                
+                }
                 Euler2Matrix(angles1, Rotmodern);
                 if(verbose) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
-
+            
+            
             
         }
         
@@ -533,6 +602,28 @@ bool init=true;
     object[35][1] = 145;
     object[35][2] = 0;
     /* END MARKER*/
+    
+    /*Reservo memoria para kalman*/
+    
+    measureNoise=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureNoise[k]=(float *)malloc(3 * sizeof(float));
+    
+    processNoise=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) processNoise[k]=(float *)malloc(3 * sizeof(float));
+    
+    stateEvolution=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) stateEvolution[k]=(float *)malloc(3 * sizeof(float));
+    
+    measureMatrix=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureMatrix[k]=(float *)malloc(3 * sizeof(float));
+    
+    errorMatrix=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) errorMatrix[k]=(float *)malloc(3 * sizeof(float));
+    
+    kalmanGain=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) kalmanGain[k]=(float *)malloc(3 * sizeof(float));
+    
+    states=(float *)malloc(3 * sizeof(float));
     
 
     
