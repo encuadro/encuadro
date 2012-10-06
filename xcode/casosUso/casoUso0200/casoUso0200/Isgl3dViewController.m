@@ -248,6 +248,9 @@ double* luminancia;
             imagePoints4[i][0]=imagePoints[i+4][0]*wSize/480;
             imagePoints4[i][1]=imagePoints[i+4][1]*hSize/360;
             
+//            imagePoints4[i][0]=(imagePoints[i+4][0]-imagePoints[6][0])*wSize/480;
+//            imagePoints4[i][1]=(imagePoints[i+4][1]-imagePoints[6][1])*hSize/360;
+            
         }
        // solveAffineTransformation(imagePoints, imagePoints3, h);
         solveHomographie(imagePoints4, imagePoints3, h);
@@ -383,7 +386,7 @@ double* luminancia;
     }else {
         CALayer *layer = theMovie.view.layer;
         
-        layer.frame = CGRectMake(30*wSize/480, 30*hSize/360,60,60);
+        layer.frame = CGRectMake(0,0,60,60);
         layer.anchorPoint = CGPointMake(0.0,0.0);
         layer.zPosition = 0;
         
@@ -414,7 +417,7 @@ double* luminancia;
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(430, 270, 50, 50);
+    theMovie.view.frame = CGRectMake(0, 0, 60, 60);
     //theMovie.fullscreen=YES;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
@@ -460,17 +463,17 @@ double* luminancia;
     imagePoints3=(double **)malloc(4 * sizeof(double *));
     for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
     
-    imagePoints3[0][0]=30;
-    imagePoints3[0][1]=30;
+    imagePoints3[0][0]=60;
+    imagePoints3[0][1]=60;
     
-    imagePoints3[1][0]=30;
-    imagePoints3[1][1]=-30;
+    imagePoints3[1][0]=60;
+    imagePoints3[1][1]=0;
     
-    imagePoints3[2][0]=-30;
-    imagePoints3[2][1]=-30;
+    imagePoints3[2][0]=0;
+    imagePoints3[2][1]=0;
     
-    imagePoints3[3][0]=-30;
-    imagePoints3[3][1]=30;
+    imagePoints3[3][0]=0;
+    imagePoints3[3][1]=60;
     
     
     //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
@@ -690,7 +693,7 @@ double* luminancia;
 
 - (void) viewDidLoad{
 
-    iPhone=false;
+    iPhone=true;
     
     if (iPhone) {
         wSize=480;
