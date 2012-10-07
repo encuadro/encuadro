@@ -411,7 +411,7 @@ double* luminancia;
 }
 -(void) desplegarVideo{
 
-    
+    /////////viendo commit
     
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
