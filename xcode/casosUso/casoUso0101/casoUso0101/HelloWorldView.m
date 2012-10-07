@@ -117,7 +117,7 @@ bool dibujar;
 //        _ufo.position = iv3(0,32.5,0);
         /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
         
-        Isgl3dTextureMaterial * esquinasMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+        Isgl3dTextureMaterial * esquinasMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"esquinas.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
 		Isgl3dGLUIButton * esquinasButton = [Isgl3dGLUIButton buttonWithMaterial:esquinasMaterial width:14.4 height:9.8];
 		[self.scene addChild:esquinasButton];
         //esquinasButton.position = iv3(-15,-20,0);
