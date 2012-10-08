@@ -27,7 +27,7 @@
 @property (nonatomic) double* eulerAngles;
 @property (nonatomic) double* traslacion;
 
-
+- (bool) getDibujar;
 -(void) setRotacion:(double*) rot;
 
 

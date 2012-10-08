@@ -63,8 +63,8 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
 //PUNTO 7 --Y: 232.487685
     
     /*
-     imgPts     --->    x,y
-     imgPts2    --->    i,j
+     imgPts     --->    x,y puntos detectados por el filtro
+     imgPts2    --->    i,j puntos sinteticos absolutos a partir de los cuales se pretende hacer la transformacion
      */
     double ** A;
     double ** Ainv;
@@ -92,8 +92,8 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
         A[j][3]=0;
         A[j][4]=0;
         A[j][5]=0;
-        A[j][6]=-imgPts2[i][0]*imgPts[i+4][0];
-        A[j][7]=-imgPts2[i][1]*imgPts[i+4][0];
+        A[j][6]=-imgPts2[i][0]*imgPts[i][0];
+        A[j][7]=-imgPts2[i][1]*imgPts[i][0];
         
         A[j+1][0]=0;
         A[j+1][1]=0;
@@ -101,8 +101,8 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
         A[j+1][3]=imgPts2[i][0];
         A[j+1][4]=imgPts2[i][1];
         A[j+1][5]=1;
-        A[j+1][6]=-imgPts2[i][0]*imgPts[i+4][1];
-        A[j+1][7]=-imgPts2[i][1]*imgPts[i+4][1];
+        A[j+1][6]=-imgPts2[i][0]*imgPts[i][1];
+        A[j+1][7]=-imgPts2[i][1]*imgPts[i][1];
         j=j+2;
         
     }
@@ -115,14 +115,14 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
      
      h = Ainv(8x8) * imgPts2mod(8x1)
      */
-    imgPtsmod[0]=imgPts[4][0];
-    imgPtsmod[1]=imgPts[4][1];
-    imgPtsmod[2]=imgPts[5][0];
-    imgPtsmod[3]=imgPts[5][1];
-    imgPtsmod[4]=imgPts[6][0];
-    imgPtsmod[5]=imgPts[6][1];
-    imgPtsmod[6]=imgPts[7][0];
-    imgPtsmod[7]=imgPts[7][1];
+    imgPtsmod[0]=imgPts[0][0];
+    imgPtsmod[1]=imgPts[0][1];
+    imgPtsmod[2]=imgPts[1][0];
+    imgPtsmod[3]=imgPts[1][1];
+    imgPtsmod[4]=imgPts[2][0];
+    imgPtsmod[5]=imgPts[2][1];
+    imgPtsmod[6]=imgPts[3][0];
+    imgPtsmod[7]=imgPts[3][1];
     
     //inicializo h en 0
     for(int i=0;i<8;i++)h[i]=0;
@@ -137,7 +137,7 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
 //PRINTS     
     printf("PUNTOS IMAGE POINTS\n");
     printf("VECTOR imgPts\n");
-    for(int i=4;i<8;i++)
+    for(int i=0;i<4;i++)
     {
         printf("%f\t",imgPts[i][0]);
         printf("%f\t",imgPts[i][1]);
@@ -200,8 +200,8 @@ void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
     //PUNTO 7 --Y: 232.487685
     
     /*
-     imgPts     --->    x,y
-     imgPts2    --->    i,j
+     imgPts     --->    x,y puntos detectados por el filtro
+     imgPts2    --->    i,j puntos sinteticos absolutos a partir de los cuales se pretende hacer la transformacion
      */
     double ** A;
     double ** Ainv;
@@ -248,12 +248,12 @@ void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
      
      h = Ainv(6x6) * imgPtsmod(6x1)
      */
-    imgPtsmod[0]=imgPts[4][0];
-    imgPtsmod[1]=imgPts[4][1];
-    imgPtsmod[2]=imgPts[5][0];
-    imgPtsmod[3]=imgPts[5][1];
-    imgPtsmod[4]=imgPts[6][0];
-    imgPtsmod[5]=imgPts[6][1];
+    imgPtsmod[0]=imgPts[0][0];
+    imgPtsmod[1]=imgPts[0][1];
+    imgPtsmod[2]=imgPts[1][0];
+    imgPtsmod[3]=imgPts[1][1];
+    imgPtsmod[4]=imgPts[2][0];
+    imgPtsmod[5]=imgPts[2][1];
     
     
     //inicializo h en 0
@@ -269,7 +269,7 @@ void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
     //PRINTS     
     printf("PUNTOS IMAGE POINTS\n");
     printf("VECTOR imgPts\n");
-    for(int i=4;i<6;i++)
+    for(int i=0;i<3;i++)
     {
         printf("%f\t",imgPts[i][0]);
         printf("%f\t",imgPts[i][1]);

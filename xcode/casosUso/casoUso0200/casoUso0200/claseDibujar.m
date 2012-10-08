@@ -18,6 +18,7 @@
 @synthesize esquinas = _esquinas;
 @synthesize esquinasRep = _esquinasRep;
 @synthesize bandera = _bandera;
+@synthesize dealloc=_dealloc;
 
 CGFloat cgx1;
 CGFloat cgy1;
@@ -30,11 +31,18 @@ CGFloat cgesqRep1;
 CGFloat cgesqRep2;
 int dim=7;
 
+
+
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+        
+        
+        
+        
     }
     return self;
 }
@@ -55,11 +63,18 @@ int dim=7;
     for(int i=0;i<self.cantidadSegmentos;i++){
         
         /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
-        cgx1=self.segmentos[i*dim]*480/352;
-        cgy1=self.segmentos[i*dim+1]*320/288;
-        cgx2=self.segmentos[i*dim+2]*480/352;
-        cgy2=self.segmentos[i*dim+3]*320/288;
+//        cgy1=self.segmentos[i*dim]*480/480;             //480/352
+//        cgx1=480 - self.segmentos[i*dim+1]*320/360;     //320/288
+//        
+//        cgy2=self.segmentos[i*dim+2]*480/480;
+//        cgx2=480 - self.segmentos[i*dim+3]*320/360;
         
+        /*a lo mou*/
+        cgx1=self.segmentos[i*dim]*wSize/480;             //480/352
+        cgy1=self.segmentos[i*dim+1]*hSize/360;     //320/288
+        
+        cgx2=self.segmentos[i*dim+2]*wSize/480;
+        cgy2=self.segmentos[i*dim+3]*hSize/360;
         
         /*Para el iPad*/
         
@@ -86,8 +101,8 @@ int dim=7;
      for(int i=0;i<self.cantidadEsquinas;i++){
        
     /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
-    cgesq1=self.esquinas[i][0]*480/352;
-    cgesq2=self.esquinas[i][1]*320/288;
+    cgesq1=self.esquinas[i][0]*wSize/480;
+    cgesq2=self.esquinas[i][1]*hSize/360;
          
          /*Para el iPad*/
 //    cgesq1=self.esquinas[i][0]*1024/352;
@@ -121,9 +136,34 @@ int dim=7;
 //
 //    }
     
-    CGContextSetRGBStrokeColor(context, 0, 255, 0, 1);
-    CGContextStrokeRect(context, CGRectMake(100, 100, 20, 20));
     
+    
+//    CGContextSetRGBStrokeColor(context, 255, 255, 255, 1);
+//    CGContextStrokeRect(context, CGRectMake(100, 0, 5, 5));
+//    
+//    CGContextSetRGBStrokeColor(context, 255, 0, 0, 1);
+//    CGContextStrokeRect(context, CGRectMake(100, 50, 5, 5));
+//    
+//    CGContextSetRGBStrokeColor(context, 0, 255, 0, 1);
+//    CGContextStrokeRect(context, CGRectMake(200, 100, 5, 5));
+//    
+//    CGContextSetRGBStrokeColor(context, 0, 0, 255, 1);
+//    CGContextStrokeRect(context, CGRectMake(300, 150, 5, 5));
+//    
+//    CGContextSetRGBStrokeColor(context, 0, 255, 255, 1);
+//    CGContextStrokeRect(context, CGRectMake(400, 200, 5, 5));
+//    
+//    CGContextSetRGBStrokeColor(context, 0, 255, 255, 1);
+//    CGContextStrokeRect(context, CGRectMake(480, 250, 5, 5));
+//    
+//    CGContextSetRGBStrokeColor(context, 255, 0, 0, 1);
+//    CGContextStrokeRect(context, CGRectMake(100, 320, 5, 5));
+    
+    
+    
+    
+    
+   
     
     
     

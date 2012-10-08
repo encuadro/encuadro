@@ -37,9 +37,10 @@
 @synthesize cgvista = _cgvista;
 
 //para DIBUJAR
-//claseDibujar *cgvista;
+claseDibujar *cgvista;
 
 double **imagePoints3; //para hacer la CGAffineTransform
+double **imagePoints4; 
 
 double *h;
 
@@ -134,6 +135,52 @@ double* luminancia;
 {
     self.videoView.image = imagen;
     
+    
+    
+    if (cgvista.dealloc==0)
+    {
+        [cgvista removeFromSuperview];
+        cgvista.dealloc=1;
+    }
+    /*-------------------------------| Clase dibujar | ----------------------------------*/
+    if ([self.isgl3DView getDibujar])
+    {
+        
+        /*Reproyectamos los puntos*/
+        
+        //        for (int i=0;i<NumberOfPoints;i++)
+        //            
+        //        {
+        //          
+        //            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
+        //            VEC_SUM(reproyectados[i],aux,Tras);
+        //        
+        //        }
+        
+        // Para terminar bien esto hay que calibrar bien la camara del ipad.
+        
+        /*Reproyectamos los puntos*/
+        
+        cgvista.cantidadSegmentos = listFiltradaSize;
+        cgvista.cantidadEsquinas = listFiltradaSize;
+        
+        cgvista.segmentos = listFiltrada;
+        cgvista.esquinas = imagePoints;
+        
+        [self.videoView addSubview:cgvista];
+        
+        
+        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+        
+        cgvista.bounds=CGRectMake(0, 0, wSize, hSize);
+        
+        [cgvista setNeedsDisplay];
+        
+        cgvista.dealloc=0;
+        
+    }
+    /*-------------------------------| Clase dibujar | ----------------------------------*/
+    
 }
 
 - (void) procesamiento
@@ -182,30 +229,33 @@ double* luminancia;
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
 
-
-        [self.cgvista removeFromSuperview];
-        self.cgvista=[[claseDibujar alloc] initWithFrame:self.view.frame];
+                
         
-        self.cgvista.segmentos = listFiltrada;
-        self.cgvista.esquinas = imagePoints;
-        
-        self.cgvista.cantidadSegmentos = listFiltradaSize;
-        self.cgvista.cantidadEsquinas = listFiltradaSize;
+        // [self.cgvista setNeedsDisplay];
         
         /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
-        self.cgvista.bounds=CGRectMake(0, 0, 480, 320); 
+        //self.cgvista.bounds=CGRectMake(0, 0, 480, 320); 
         /*Para el iPad:*/
         //self.cgvista.bounds=CGRectMake(0, 0, 1024, 768);
         
-         [self.view addSubview:self.cgvista];
-        [self.view bringSubviewToFront:self.cgvista];
-       // cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+//         [self.view addSubview:self.cgvista];
+//        [self.view bringSubviewToFront:self.cgvista];
+//        self.cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
         
+        
+        for (int i=0; i<4; i++) {
+            
+            imagePoints4[i][0]=imagePoints[i+4][0]*wSize/480;
+            imagePoints4[i][1]=imagePoints[i+4][1]*hSize/360;
+            
+//            imagePoints4[i][0]=(imagePoints[i+4][0]-imagePoints[6][0])*wSize/480;
+//            imagePoints4[i][1]=(imagePoints[i+4][1]-imagePoints[6][1])*hSize/360;
+            
+        }
        // solveAffineTransformation(imagePoints, imagePoints3, h);
-        solveHomographie(imagePoints, imagePoints3, h);
-        
+        solveHomographie(imagePoints4, imagePoints3, h);
+    
         [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
-
         
         
         if (verbose){
@@ -290,7 +340,7 @@ double* luminancia;
         
         [self.isgl3DView setRotacion:rotacion];
         [self.isgl3DView setTraslacion:Tras];
-        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+//        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
         
         //self.traslacion = traslacion;
         
@@ -302,10 +352,10 @@ double* luminancia;
     
 }
 -(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux{
-    bool CGaffine=true;
+    bool CGaffine=false;
     
     if (CGaffine) {
-        theMovie.view.frame = CGRectMake(10, 10, 50, 50);
+      //  theMovie.view.frame = CGRectMake(imagePoints[6][0]*480/480, imagePoints[6][1]*320/360, 50, 50);
         //  CGAffineTransform currentMatrix =  theMovie.view.transform;
         //  CGAffineTransform translate = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
         //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]); 
@@ -316,13 +366,15 @@ double* luminancia;
         //CGAffineTransform translate = CGAffineTransformMakeTranslation(200, 50);
         // theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
         //     theMovie.view.transform=newMatrix;
-        //    theMovie.view.transform=translate;
+        // theMovie.view.transform=translation;
         theMovie.view.transform=rotation;
-        // theMovie.view.transform = CGAffineTransformTranslate(rotation,h[2],h[5]);
-        
+       // theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+       //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,imagePoints[6][0],imagePoints[6][1]); 
         CGFloat x,y;
         x=imagePoints[5][0]+imagePoints[6][0]+imagePoints[4][0]+imagePoints[7][0];
         y=imagePoints[5][1]+imagePoints[6][1]+imagePoints[4][1]+imagePoints[7][1];
+        x=x*wSize/480;
+        y=y*hSize/360;
         //  theMovie.view.frame.origin=CGPointMake(x,y);
         [theMovie.view setCenter:CGPointMake(x/4, y/4)];
         printf("imagePoints[5][0] %f",imagePoints[5][0]);
@@ -334,9 +386,10 @@ double* luminancia;
     }else {
         CALayer *layer = theMovie.view.layer;
         
-        //layer.frame = CGRectMake(0, 0,480,320);
+        layer.frame = CGRectMake(0,0,60,60);
         layer.anchorPoint = CGPointMake(0.0,0.0);
         layer.zPosition = 0;
+       
         
         CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
         
@@ -358,14 +411,14 @@ double* luminancia;
 }
 -(void) desplegarVideo{
 
-    
+    /////////viendo commit
     
     NSBundle *bundle = [NSBundle mainBundle];
-    NSString *moviePath = [bundle pathForResource:@"marker_lo" ofType:@"mov"];
+    NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(10, 10, 50, 50);
+    theMovie.view.frame = CGRectMake(0, 0, 60, 60);
     //theMovie.fullscreen=YES;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
@@ -415,15 +468,18 @@ double* luminancia;
     imagePoints3[0][1]=60;
     
     imagePoints3[1][0]=60;
-    imagePoints3[1][1]=10;
+    imagePoints3[1][1]=0;
     
-    imagePoints3[2][0]=10;
-    imagePoints3[2][1]=10;
+    imagePoints3[2][0]=0;
+    imagePoints3[2][1]=0;
     
-    imagePoints3[3][0]=10;
+    imagePoints3[3][0]=0;
     imagePoints3[3][1]=60;
     
     
+    //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
+    imagePoints4=(double **)malloc(4 * sizeof(double *));
+    for (i=0;i<4;i++) imagePoints4[i]=(double *)malloc(2 * sizeof(double));
     
     h=(double *)malloc(8 * sizeof(double));
    // for (i=0;i<8;i++) h[i]=(double *)malloc(sizeof(double));
@@ -439,6 +495,8 @@ double* luminancia;
     }
     
     luminancia = (double *) malloc(480*360*sizeof(double));
+    
+    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
     
     
     
@@ -636,6 +694,15 @@ double* luminancia;
 
 - (void) viewDidLoad{
 
+    iPhone=true;
+    
+    if (iPhone) {
+        wSize=480;
+        hSize=320;
+    }else {
+        wSize=1024;
+        hSize=768;
+    }
     
     if (verbose) printf("viewDidLoad\n");
     

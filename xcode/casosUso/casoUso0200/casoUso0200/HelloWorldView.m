@@ -64,6 +64,13 @@ Isgl3dVector3 angles;
 double rotacion[3][3];
 bool verbose;
 
+bool dibujar;
+
+- (bool) getDibujar
+{
+    return dibujar;
+}
+
 - (void) setRotacion:(double*) rot
 {
     rotacion[0][0] = rot[0];
@@ -84,6 +91,7 @@ bool verbose;
 	if ((self = [super init])) {
         
         if (verbose) printf("init del HelloWorldView\n");
+        dibujar=YES;
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
@@ -94,12 +102,12 @@ bool verbose;
 		
 		
         
-        _cubito1 = [self.scene createNodeWithMesh:planeMesh andMaterial:material];
-        _cubito2 = [self.scene createNodeWithMesh:planeMesh andMaterial:material];
+        //_cubito1 = [self.scene createNodeWithMesh:planeMesh andMaterial:material];
+        _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
         
         _cubito1.alpha=0.5;
-        _cubito3.alpha=0.5;
+        
        
         
         
