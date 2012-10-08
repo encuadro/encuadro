@@ -489,119 +489,25 @@ kalman_state_3 state;
     luminancia = (float *) malloc(360*480*sizeof(float));
        cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
     
-    /* BEGIN MARKER */
-    //QlSet0
-    object[0][0] = 15;
-    object[0][1] = 15;
-    object[0][2] = 0;
-    object[1][0] = 15;
-    object[1][1] = -15;
-    object[1][2] = 0;
-    object[2][0] = -15;
-    object[2][1] = -15;
-    object[2][2] = 0;
-    object[3][0] = -15;
-    object[3][1] = 15;
-    object[3][2] = 0;
-    object[4][0] = 30;
-    object[4][1] = 30;
-    object[4][2] = 0;
-    object[5][0] = 30;
-    object[5][1] = -30;
-    object[5][2] = 0;
-    object[6][0] = -30;
-    object[6][1] = -30;
-    object[6][2] = 0;
-    object[7][0] = -30;
-    object[7][1] = 30;
-    object[7][2] = 0;
-    object[8][0] = 45;
-    object[8][1] = 45;
-    object[8][2] = 0;
-    object[9][0] = 45;
-    object[9][1] = -45;
-    object[9][2] = 0;
-    object[10][0] = -45;
-    object[10][1] = -45;
-    object[10][2] = 0;
-    object[11][0] = -45;
-    object[11][1] = 45;
-    object[11][2] = 0;
-    //QlSet1
-    object[12][0] = 205;
-    object[12][1] = 15;
-    object[12][2] = 0;
-    object[13][0] = 205;
-    object[13][1] = -15;
-    object[13][2] = 0;
-    object[14][0] = 175;
-    object[14][1] = -15;
-    object[14][2] = 0;
-    object[15][0] = 175;
-    object[15][1] = 15;
-    object[15][2] = 0;
-    object[16][0] = 220;
-    object[16][1] = 30;
-    object[16][2] = 0;
-    object[17][0] = 220;
-    object[17][1] = -30;
-    object[17][2] = 0;
-    object[18][0] = 160;
-    object[18][1] = -30;
-    object[18][2] = 0;
-    object[19][0] = 160;
-    object[19][1] = 30;
-    object[19][2] = 0;
-    object[20][0] = 235;
-    object[20][1] = 45;
-    object[20][2] = 0;
-    object[21][0] = 235;
-    object[21][1] = -45;
-    object[21][2] = 0;
-    object[22][0] = 145;
-    object[22][1] = -45;
-    object[22][2] = 0;
-    object[23][0] = 145;
-    object[23][1] = 45;
-    object[23][2] = 0;
-    //QlSet2
-    object[24][0] = 15;
-    object[24][1] = 115;
-    object[24][2] = 0;
-    object[25][0] = 15;
-    object[25][1] = 85;
-    object[25][2] = 0;
-    object[26][0] = -15;
-    object[26][1] = 85;
-    object[26][2] = 0;
-    object[27][0] = -15;
-    object[27][1] = 115;
-    object[27][2] = 0;
-    object[28][0] = 30;
-    object[28][1] = 130;
-    object[28][2] = 0;
-    object[29][0] = 30;
-    object[29][1] = 70;
-    object[29][2] = 0;
-    object[30][0] = -30;
-    object[30][1] = 70;
-    object[30][2] = 0;
-    object[31][0] = -30;
-    object[31][1] = 130;
-    object[31][2] = 0;
-    object[32][0] = 45;
-    object[32][1] = 145;
-    object[32][2] = 0;
-    object[33][0] = 45;
-    object[33][1] = 55;
-    object[33][2] = 0;
-    object[34][0] = -45;
-    object[34][1] = 55;
-    object[34][2] = 0;
-    object[35][0] = -45;
-    object[35][1] = 145;
-    object[35][2] = 0;
-    /* END MARKER*/
+    /* READ MARKER MODEL */
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
+    
+    FILE *filePuntos;
+    
+    filePuntos=fopen(filePath.UTF8String, "r");
+    
+    if (filePuntos==NULL)
+    {
+        printf("Could not open file!");
+    }
+    else {
+        
+        for(int i=0; i<36; i++)fscanf(filePuntos,"%f %f %f\n",&object[i][0],&object[i][1],&object[i][2]);
+    }
+    fclose(filePuntos);
+    
+    /* END MARKER */
+    
     
     /*Reservo memoria para kalman*/
     
