@@ -636,7 +636,7 @@ static image_float ll_angle( image_float in, float threshold,
 {
   image_float g;
   unsigned int n,p,x,y,adr,i;
-  float com1,com2,gx,gy,norm,norm2;
+    float com1,com2,gx,gy,norm;//norm2;
   /* the rest of the variables are used for pseudo-ordering
      the gradient magnitude values */
   int list_count = 0;
@@ -664,18 +664,24 @@ static image_float ll_angle( image_float in, float threshold,
                                            sizeof(struct coorlist *) );
   range_l_e = (struct coorlist **) calloc( (size_t) n_bins,
                                            sizeof(struct coorlist *) );
-  if( list == NULL || range_l_s == NULL || range_l_e == NULL )
-    error("not enough memory.");
+//  if( list == NULL || range_l_s == NULL || range_l_e == NULL )
+//    error("not enough memory.");
   for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
 
   /* 'undefined' on the down and right boundaries */
   for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
   for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
 
+
+    
+    
   /* compute gradient on the remaining pixels */
-  for(x=0;x<p-1;x++)
-    for(y=0;y<n-1;y++)
-      {
+//  for(x=0;x<p-1;x++)
+//    for(y=0;y<n-1;y++)
+
+    for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
+    {
         adr = y*p+x;
 
         /*
@@ -694,9 +700,10 @@ static image_float ll_angle( image_float in, float threshold,
 
         gx = com1+com2; /* gradient x component */
         gy = com1-com2; /* gradient y component */
-        norm2 = gx*gx+gy*gy;
-        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
-
+//        norm2 = gx*gx+gy*gy;
+//        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+        norm = sqrt( gx*gx+gy*gy)*0.5; /* gradient norm */
+        
         (*modgrad)->data[adr] = norm; /* store gradient norm */
 
         if( norm <= threshold ) /* norm too small, gradient no defined */
@@ -708,6 +715,25 @@ static image_float ll_angle( image_float in, float threshold,
 
             /* look for the maximum of the gradient */
             if( norm > max_grad ) max_grad = norm;
+              
+             
+              /*-------------------------------------*/
+               /* compute histogram of gradient values */
+//              i = (unsigned int) (norm * (float) n_bins / max_grad);
+//              if( i >= n_bins ) i = n_bins-1;
+//              if( range_l_e[i] == NULL )
+//                  range_l_s[i] = range_l_e[i] = list+list_count++;
+//              else
+//              {
+//                  range_l_e[i]->next = list+list_count;
+//                  range_l_e[i] = list+list_count++;
+//              }
+//              range_l_e[i]->x = (int) x;
+//              range_l_e[i]->y = (int) y;
+//              range_l_e[i]->next = NULL;
+              /*-------------------------------------*/
+              
+              
           }
       }
 
@@ -1909,7 +1935,10 @@ float * LineSegmentDetection( int * n_out,
 
   /* load and scale image (if necessary) and compute angle at each pixel */
   image = new_image_float_ptr( (unsigned int) X, (unsigned int) Y, img );
+    
+   // NSLog(@"ll_angle in\n");
   angles = ll_angle( image, rho, &list_p, &mem_p, &modgrad, (unsigned int) n_bins );
+   // NSLog(@"ll_angle out\n");
     
   xsize = angles->xsize;
   ysize = angles->ysize;

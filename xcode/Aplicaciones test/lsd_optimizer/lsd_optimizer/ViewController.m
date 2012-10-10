@@ -22,14 +22,14 @@ FILE *in = 0 ;
 int err = 0;
 //VlPgmImage pim;
 unsigned char *datachar  = 0;
-float *datadouble = 0;
+float *datafloat = 0;
 int width;
 int height;
 
 /*Para el gaussian sampler*/
 
-image_double luminancia_sub;
-image_double imagen_double;
+image_float luminancia_sub;
+image_float imagen_float;
 
 /*Para el LSD*/
 float* list;
@@ -72,11 +72,11 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     CGContextRelease(context);
     
     
-    datadouble = malloc(width*height*sizeof(float));
+    datafloat = malloc(width*height*sizeof(float));
     int cantidad =width*height;
     NSLog(@"Entra a rgb2gray\n");
-    //rgb2gray(datadouble, rawData, width, height, 4);
-    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datadouble[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
+    //rgb2gray(datafloat, rawData, width, height, 4);
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datafloat[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
     
     NSLog(@"Sale de rgb2gray\n");
     
@@ -84,7 +84,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     //char* nombre = "/Users/pablofloresguridi/repositorios/encuadro/xcode/Aplicaciones test/gaussian_sampler/gaussian_sampler/marker_0004.pgm";
     
-    //datadouble = read_pgm_image_double(&width,&height,nombre);
+    //datafloat = read_pgm_image_float(&width,&height,nombre);
     
     //free(datachar);
     
@@ -92,15 +92,15 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
 
     
-    imagen_double = new_image_double_ptr( (unsigned int) width, (unsigned int) height, (float*)datadouble );
+    imagen_float = new_image_float_ptr( (unsigned int) width, (unsigned int) height, (float*)datafloat );
     NSLog(@"Entra a gaussian_sampler\n");
-    luminancia_sub = gaussian_sampler(imagen_double, scale, sigma_scale);
+    luminancia_sub = gaussian_sampler(imagen_float, scale, sigma_scale);
     NSLog(@"Sale de gaussian_sampler\n");
     
     [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
     
     free( (void *) image );
-    free_image_double(imagen_double);
+    free_image_float(imagen_float);
 
      //cgvista=[[claseDibujar alloc] initWithFrame:self.vista.frame];
     
@@ -136,7 +136,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 
 }
 
-- (void) reconstruirImg: (float*)datadouble width: (int) width height: (int) height {
+- (void) reconstruirImg: (float*)datafloat width: (int) width height: (int) height {
     
     printf("width: %d \t height: %d\n",width, height);
     
@@ -146,9 +146,9 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     for(int i = 0; i < height * width; i++) {
         
-        result[i*4]=datadouble[i];
-        result[i*4+1]=datadouble[i];
-        result[i*4+2]=datadouble[i];
+        result[i*4]=datafloat[i];
+        result[i*4+1]=datafloat[i];
+        result[i*4+2]=datafloat[i];
         result[i*4+3]=0;
     }
     CGDataProviderRef provider  = CGDataProviderCreateWithData(NULL, result, width*height, NULL);
