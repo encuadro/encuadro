@@ -114,7 +114,7 @@
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     /*Corremos el metodo viewDidLoad del ViewController*/
     
-    
+    [_viewController reservarMemoria];
     //[_viewController viewDidLoad];
 }
 

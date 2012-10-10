@@ -13,11 +13,7 @@
 
 @interface Isgl3dViewController()
 
-@property(nonatomic, retain) AVCaptureSession * session;
-@property(nonatomic, retain) AVCaptureDevice * videoDevice;
-@property(nonatomic, retain) AVCaptureDeviceInput * videoInput;
-@property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
-@property(nonatomic, retain) CIContext* context;
+
 
 //@property(nonatomic, retain) CIImage* ciImage;
 //@property(nonatomic, retain) CVPixelBufferRef pb;
@@ -128,7 +124,7 @@ kalman_state_3 state;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    //    NSLog(@"Capture output");
+        NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -173,44 +169,44 @@ kalman_state_3 state;
         [cgvista removeFromSuperview];
         cgvista.dealloc=1;
     }
-    /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if ([self.isgl3DView getDibujar])
-    {
-        
-        /*Reproyectamos los puntos*/
-        
-        //        for (int i=0;i<NumberOfPoints;i++)
-        //
-        //        {
-        //
-        //            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
-        //            VEC_SUM(reproyectados[i],aux,Tras);
-        //
-        //        }
-        
-        // Para terminar bien esto hay que calibrar bien la camara del ipad.
-        
-        /*Reproyectamos los puntos*/
-        
-        cgvista.cantidadSegmentos = listFiltradaSize;
-        cgvista.cantidadEsquinas = listFiltradaSize;
-        
-        cgvista.segmentos = listFiltrada;
-        cgvista.esquinas = imagePoints;
-        
-        [self.videoView addSubview:cgvista];
-        
-        
-        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
-        
-        cgvista.bounds=CGRectMake(0, 0, 1024, 768);
-        
-        [cgvista setNeedsDisplay];
-        
-        cgvista.dealloc=0;
-        
-    }
-    /*-------------------------------| Clase dibujar | ----------------------------------*/
+//    /*-------------------------------| Clase dibujar | ----------------------------------*/
+//    if ([self.isgl3DView getDibujar])
+//    {
+//        
+//        /*Reproyectamos los puntos*/
+//        
+//        //        for (int i=0;i<NumberOfPoints;i++)
+//        //
+//        //        {
+//        //
+//        //            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
+//        //            VEC_SUM(reproyectados[i],aux,Tras);
+//        //
+//        //        }
+//        
+//        // Para terminar bien esto hay que calibrar bien la camara del ipad.
+//        
+//        /*Reproyectamos los puntos*/
+//        
+//        cgvista.cantidadSegmentos = listFiltradaSize;
+//        cgvista.cantidadEsquinas = listFiltradaSize;
+//        
+//        cgvista.segmentos = listFiltrada;
+//        cgvista.esquinas = imagePoints;
+//        
+//        [self.videoView addSubview:cgvista];
+//        
+//        
+//        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+//        
+//        cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+//        
+//        [cgvista setNeedsDisplay];
+//        
+//        cgvista.dealloc=0;
+//        
+//    }
+//    /*-------------------------------| Clase dibujar | ----------------------------------*/
     
 }
 
@@ -648,7 +644,7 @@ kalman_state_3 state;
     
     //    /*Para probar con el simulador*/
     //    self.videoView.image = [UIImage imageNamed:@"Calibrar10.jpg"];
-    [self reservarMemoria];
+   // [self reservarMemoria];
     
     /*Mandamos el procesamiento a otro thread*/
     //dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);

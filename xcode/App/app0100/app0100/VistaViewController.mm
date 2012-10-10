@@ -163,6 +163,7 @@
 
 
 - (void) createViews {
+    printf("CREATE VIEWS\n");
 	// Set the device orientation
 	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortrait;
     
@@ -179,15 +180,17 @@
 
 //este metodo es igual a buttonclicked
 - (void) buttonBACK {
-NSLog(@"BUTTON CLICKED");
-NSLog(@"BUTTON CLICKED");
-NSLog(@"BUTTON CLICKED");
-NSLog(@"BUTTON CLICKED");
-NSLog(@"BUTTON CLICKED");
-NSLog(@"BUTTON CLICKED");
+NSLog(@"BUTTON BACK");
+NSLog(@"BUTTON BACK");
+NSLog(@"BUTTON BACK");
+NSLog(@"BUTTON BACK");
+NSLog(@"BUTTON BACK");
+NSLog(@"BUTTON BACK");
 // _viewController.AugmReal=false;
-[self removeViews];  
 
+    [self removeViews];
+
+    [_viewController.session stopRunning];
 
 
 //////////////////////////////////////////////////////    
@@ -314,7 +317,10 @@ _button=nil;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    BOOL autorotate;
+    autorotate=[_viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+    return autorotate;
 }
 
 @end
