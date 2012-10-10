@@ -57,11 +57,21 @@ bool verbose;
 int cantidadToques;
 NSString *estring;
 
-bool dibujar;
+bool corners, segments, reproyected;
 
-- (bool) getDibujar
+- (bool) getSegments
 {
-    return dibujar;
+    return segments;
+}
+
+- (bool) getCorners
+{
+    return corners;
+}
+
+- (bool) getReproyected
+{
+    return reproyected;
 }
 
 - (void) setRotacion:(float*) rot
@@ -85,7 +95,9 @@ bool dibujar;
         
         
         if (verbose) printf("init del HelloWorldView\n");
-        dibujar=NO;
+        corners=NO;
+        segments=NO;
+        reproyected=NO;
         
         /* Create a container node as a parent for all scene objects.*/
         _container = [self.scene createNode];
@@ -96,34 +108,36 @@ bool dibujar;
         
         _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito1.position = iv3(0,0,0);
-
         
-        /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
-        // Create texture and color materials and meshes for UFOs
-//		Isgl3dMaterial * hullMaterial = [Isgl3dAnimatedTextureMaterial materialWithTextureFilenameFormat:@"ufo%02d.png" textureFirstID:0 textureLastID:15 animationName:@"ufo" shininess:0.7 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-//		Isgl3dMaterial * shellMaterial = [Isgl3dColorMaterial materialWithHexColors:@"9999CC" diffuse:@"9999CC" specular:@"FFFFFF" shininess:0.7];
-//        
-//        // PAra hacer los UFOs usa una elipsoide y un hovoide
-//		Isgl3dEllipsoid *hullMesh = [Isgl3dEllipsoid meshWithGeometry:30 radiusY:5 radiusZ:30 longs:32 lats:8];
-//		Isgl3dOvoid * shellMesh = [Isgl3dOvoid meshWithGeometry:16 b:11 k:0.0 longs:16 lats:16];
-//        _ufo = [_container createNodeWithMesh:hullMesh andMaterial:hullMaterial];
-//        Isgl3dMeshNode * ufoShell = [_ufo createNodeWithMesh:shellMesh andMaterial:shellMaterial];
-//        
-//        ufoShell.position = iv3(0, 4, 0);
-//        
-//        // Make shell transparent
-//        ufoShell.alpha = 0.7;
-//        
-//        _ufo.position = iv3(0,32.5,0);
-        /*--------------------| PROBAMOS CREAR UN UFO|------------------------*/
+        /* Generamos el boton para dibujar los segmentos detectados */
         
-        Isgl3dTextureMaterial * esquinasMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"esquinas.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * esquinasButton = [Isgl3dGLUIButton buttonWithMaterial:esquinasMaterial width:14.4 height:9.8];
-		[self.scene addChild:esquinasButton];
-        //esquinasButton.position = iv3(-15,-20,0);
-        	[esquinasButton setX:25 andY:15];
-        esquinasButton.interactive = YES;
-        [esquinasButton addEvent3DListener:self method:@selector(buttonTouched:) forEventType:TOUCH_EVENT];
+        Isgl3dTextureMaterial * segmentsMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_segments.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dGLUIButton * segmentsButton = [Isgl3dGLUIButton buttonWithMaterial:segmentsMaterial width:14.4 height:9.8];
+		[self.scene addChild:segmentsButton];
+        
+        [segmentsButton setX:30 andY:20];
+        segmentsButton.interactive = YES;
+        [segmentsButton addEvent3DListener:self method:@selector(segmentsTouched:) forEventType:TOUCH_EVENT];
+        
+        /* Generamos el boton para dibujar las esquinas detectadas */
+        
+        Isgl3dTextureMaterial * cornersMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dGLUIButton * cornersButton = [Isgl3dGLUIButton buttonWithMaterial:cornersMaterial width:14.4 height:9.8];
+		[self.scene addChild:cornersButton];
+        
+        [cornersButton setX:30 andY:10];
+        cornersButton.interactive = YES;
+        [cornersButton addEvent3DListener:self method:@selector(cornersTouched:) forEventType:TOUCH_EVENT];
+        
+        /* Generamos el boton para dibujar las esquinas reproyectadas */
+        
+        Isgl3dTextureMaterial * reproyectedMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"reproyected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dGLUIButton * reproyectedButton = [Isgl3dGLUIButton buttonWithMaterial:reproyectedMaterial width:14.4 height:9.8];
+		[self.scene addChild:reproyectedButton];
+    
+        [reproyectedButton setX:30 andY:0];
+        reproyectedButton.interactive = YES;
+        [reproyectedButton addEvent3DListener:self method:@selector(reproyectedTouched:) forEventType:TOUCH_EVENT];
         
         cantidadToques = 0;
         
@@ -134,7 +148,7 @@ bool dibujar;
         [self.camera setLookAt:iv3(self.camera.x, self.camera.y,0) ];
         
         /*Seteamos el fov.*/
-        self.camera.fov = 32;
+        self.camera.fov = 34.441;
         
         [self schedule:@selector(tick:)];
 	}
@@ -329,13 +343,33 @@ bool dibujar;
     
 }
 
-- (void) buttonTouched:(id)sender {
+- (void) segmentsTouched:(id)sender {
     
-    if (dibujar==YES) {
-        dibujar =NO;
+    if (segments==YES) {
+        segments =NO;
     }
-    else if (dibujar==NO) {
-        dibujar=YES;
+    else if (segments==NO) {
+        segments=YES;
+    }
+}
+
+- (void) cornersTouched:(id)sender {
+    
+    if (corners==YES) {
+        corners =NO;
+    }
+    else if (corners==NO) {
+        corners=YES;
+    }
+}
+
+- (void) reproyectedTouched:(id)sender {
+    
+    if (reproyected==YES) {
+        reproyected =NO;
+    }
+    else if (reproyected==NO) {
+        reproyected=YES;
     }
 }
 

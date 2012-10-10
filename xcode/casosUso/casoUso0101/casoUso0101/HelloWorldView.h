@@ -33,7 +33,9 @@ bool fin;
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 
-- (bool) getDibujar;
+- (bool) getSegments;
+- (bool) getCorners;
+- (bool) getReproyected;
 - (void) setRotacion:(float*) rot;
 
 @end

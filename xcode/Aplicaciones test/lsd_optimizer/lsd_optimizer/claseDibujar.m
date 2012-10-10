@@ -58,13 +58,11 @@ UITextField *text;
     
     /*Dibujo lineas*/
     
-    for(int i=0;i<MIN(self.cantidadSegmentos, 36);i++){
+    for(int i=0;i<self.cantidadSegmentos;i++){
         
         /*Las primeras 4 lineas son las del borde de la pantalla*/
         
-        /*Para el iPad*/
-        if (self.segments)
-        {
+
             cgx1=self.segmentos[i*dim]*1024/480;
             cgy1=self.segmentos[i*dim+1]*768/360;
             cgx2=self.segmentos[i*dim+2]*1024/480;
@@ -75,39 +73,7 @@ UITextField *text;
             puntos2[0]=CGPointMake(cgx1,cgy1);
             puntos2[1]=CGPointMake(cgx2,cgy2);
             CGContextStrokeLineSegments(context, puntos2, 2);
-        }
-        
-        if (self.corners)
-        {
-            cgesq1=self.esquinas[i][0]*1024/480;
-            cgesq2=self.esquinas[i][1]*768/360;
-            
-            
-            text = [UITextField new];
-            [text setTextColor: [UIColor greenColor]];
-            
-            [text setText:[NSString stringWithFormat:@"%d", i]];
-            [text drawTextInRect:CGRectMake(cgesq1, cgesq2, 20, 20)];
-            
-            CGContextStrokeRect(context, CGRectMake(cgesq1, cgesq2, 4, 4));
-            
-            
-            [text release];
-        }
-        
-        if (self.reproyected)
-        {
-            
-            
-            cgrep1=self.esquinasReproyectadas[i][0]*1024/(480*self.esquinasReproyectadas[i][2]);
-            cgrep2=self.esquinasReproyectadas[i][1]*768/(360*self.esquinasReproyectadas[i][2]);
-            
-            
-            CGContextSetRGBStrokeColor(context, 0, 0,255, 1);
-            CGContextStrokeRect(context, CGRectMake(cgrep1, cgrep2, 4, 4));
-        }
-        
-    }
+          }
     
 }
 

@@ -731,8 +731,11 @@ int findPointCorrespondances(int *listSize, float *list, float **imgPts) {
 			imgPts[i][0] = 0;
 			imgPts[i][1] = 0;
 		}
-		error_code = MRKR_NOT_ENOUGH_SEGMENTS;
-		if(VERBOSE)printf("MSG: MRKR_NOT_ENOUGH_SEGMENTS\n");
+		
+        error_code = MRKR_NOT_ENOUGH_SEGMENTS;
+        
+        if (VERBOSE) printf("MSG: MRKR_NOT_ENOUGH_SEGMENTS\n");
+
 	}
 
 	return error_code;
