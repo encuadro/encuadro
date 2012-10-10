@@ -19,6 +19,7 @@
 #import <stdlib.h>
 #import "configuration.h"
 #import "kalman.h"
+#import "vvector.h"
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
   

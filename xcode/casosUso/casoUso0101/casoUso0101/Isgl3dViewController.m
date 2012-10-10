@@ -10,6 +10,7 @@
 #import "isgl3d.h"
 #import "claseDibujar.h"
 
+
 @interface Isgl3dViewController()
 
 @property(nonatomic, retain) AVCaptureSession * session;
@@ -39,6 +40,9 @@
 claseDibujar *cgvista;
 float **reproyectados;
 float aux[3];
+float intrinsecos[3][3] = {{589.141,    0,          240},
+                            {0,         580.754,	180},
+                            {0,         0,          1	}};
 
 /*Variables para la imagen*/
 unsigned char* pixels;
@@ -68,7 +72,7 @@ int errorMarkerDetection; //Codigo de error del findPointCorrespondence
 int NumberOfPoints=36;
 int cantPtosDetectados;
 long int i;
-float **object, **objectCrop, f=615; //con 630 andaba bien /*f: focal length en pixels*/
+float **object, **objectCrop, f=589.141; /*f: focal length en pixels*/
 bool PosJuani=true;
 
 //modern coplanar requiere float** en lugar de [][]
@@ -99,6 +103,14 @@ int cantidad;
 kalman_state thetaState,psiState,phiState,xState,yState,zState;
 bool kalman=true;
 bool init=true;
+float** measureNoise;
+float** processNoise;
+float** stateEvolution;
+float** measureMatrix;
+float** errorMatrix;
+float** kalmanGain;
+float* states;
+kalman_state_3 state;
 
 
 - (CIContext* ) context
@@ -117,7 +129,7 @@ bool init=true;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    //NSLog(@"Capture output");
+  //  NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -155,7 +167,7 @@ bool init=true;
 {
     self.videoView.image = imagen;
     
-
+    
     
     if (cgvista.dealloc==0)
     {
@@ -163,41 +175,46 @@ bool init=true;
         cgvista.dealloc=1;
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if ([self.isgl3DView getDibujar])
+    if ([self.isgl3DView getSegments] || [self.isgl3DView getCorners] || [self.isgl3DView getReproyected])
     {
-
-      /*Reproyectamos los puntos*/
         
-//        for (int i=0;i<NumberOfPoints;i++)
-//            
-//        {
-//          
-//            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
-//            VEC_SUM(reproyectados[i],aux,Tras);
-//        
-//        }
-        
-        // Para terminar bien esto hay que calibrar bien la camara del ipad.
-        
-      /*Reproyectamos los puntos*/
-
         cgvista.cantidadSegmentos = listFiltradaSize;
-        cgvista.cantidadEsquinas = listFiltradaSize;
+        cgvista.segments = [self.isgl3DView getSegments];
+        cgvista.corners = [self.isgl3DView getCorners];
+        cgvista.reproyected = [self.isgl3DView getReproyected];
         
-        cgvista.segmentos = listFiltrada;
-        cgvista.esquinas = imagePoints;
+        
+        if ( [self.isgl3DView getSegments]) cgvista.segmentos = listFiltrada;
+        if ( [self.isgl3DView getCorners]) cgvista.esquinas = imagePoints;
+        
+        
+        if ( [self.isgl3DView getReproyected])
+        {
+            for (int i=0;i<NumberOfPoints;i++)
+                
+            {
+                
+                
+                MAT_DOT_VEC_3X3(aux, Rotmodern, object[i]);
+                VEC_SUM(reproyectados[i],aux,Tras);
+                MAT_DOT_VEC_3X3(reproyectados[i], intrinsecos, reproyectados[i]);
+                
+            }
+            cgvista.esquinasReproyectadas = reproyectados;
+        }
+        
+        
         
         [self.videoView addSubview:cgvista];
-
-    
+        
         cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
-
+        
         cgvista.bounds=CGRectMake(0, 0, 1024, 768);
-      
+        
         [cgvista setNeedsDisplay];
-
+        
         cgvista.dealloc=0;
- 
+        
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
     
@@ -215,8 +232,7 @@ bool init=true;
         
         if (verbose) NSLog(@"Procesando!\n");
         
-        /******************PROCESAMIENTO********************************************/
-        /***************************************************************************/
+           /*-------------------------------------|PROCESAMIENTO|-------------------------------------*/
         //NSLog(@"rgb2gray in\n");
         /*Se pasa la imagen a nivel de grises*/
         cantidad =width*height;
@@ -226,16 +242,16 @@ bool init=true;
         
         /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
         image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-        //NSLog(@"gaussian_sampler3 in\n");
+//        NSLog(@"gaussian_sampler in\n");
         luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
-        //NSLog(@"gaussian_sampler out\n");
+//        NSLog(@"gaussian_sampler out\n");
         
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        //NSLog(@"LSD in\n");
+        if (verbose) NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        //NSLog(@"LSD out\n");
+        if (verbose) NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );
@@ -283,34 +299,92 @@ bool init=true;
         
             if (kalman){
                 Matrix2Euler(Rotmodern, angles1, angles2);
+                if(false){
+                    if(init){
+                        thetaState = kalman_init(1, 4, 1, angles1[0]);
+                        psiState = kalman_init(1, 7, 1, angles1[1]);
+                        phiState = kalman_init(1, 0.1, 1, angles1[2]);
+//                        xState = kalman_init(1, 8, 1, Tras[0]);
+//                        yState = kalman_init(1, 8, 1, Tras[1]);
+//                        zState = kalman_init(1, 8, 1, Tras[2]);
+                        init=false;
+                     }
+                     kalman_update(&thetaState, angles1[0]);
+                     kalman_update(&psiState, angles1[1]);
+                     kalman_update(&phiState, angles1[2]);
+//                     kalman_update(&xState, Tras[0]);
+//                     kalman_update(&yState, Tras[1]);
+//                     kalman_update(&zState, Tras[2]);
                 
-                if(init){
-                    thetaState = kalman_init(1, 8, 1, angles1[0]);
-                    psiState = kalman_init(1, 8, 1, angles1[1]);
-                    phiState = kalman_init(1, 8, 1, angles1[2]);
-//                    xState = kalman_init(1, 3, 1, Tras[0]);
-//                    yState = kalman_init(1, 3, 1, Tras[1]);
-//                    zState = kalman_init(1, 3, 1, Tras[2]);
-                    init=false;
+                     angles1[0]=thetaState.x;
+                     angles1[1]=psiState.x;
+                     angles1[2]=phiState.x;
+//                     Tras[0]=xState.x;
+//                     Tras[1]=yState.x;
+//                     Tras[2]=zState.x;
+                
+                     
+                
                 }
-                kalman_update(&thetaState, angles1[0]);
-                kalman_update(&psiState, angles1[1]);
-                kalman_update(&phiState, angles1[2]);
-//                kalman_update(&xState, Tras[0]);
-//                kalman_update(&yState, Tras[1]);
-//                kalman_update(&zState, Tras[2]);
+                else{
+                    if(init){
+                        
+                        /* kalman correlacionado */
+                        IDENTITY_MATRIX_3X3(stateEvolution);
+                        IDENTITY_MATRIX_3X3(measureMatrix);
+                        IDENTITY_MATRIX_3X3(processNoise);
+                        IDENTITY_MATRIX_3X3(errorMatrix);
+                        SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
+                        
+                        measureNoise[0][0] =4.96249572803608;
+                        measureNoise[0][1]=4.31450588099769;
+                        measureNoise[0][2]=-0.0459669868120827;
+                        measureNoise[1][0]=4.31450588099769;
+                        measureNoise[1][1]=7.02354899298729;
+                        measureNoise[1][2]=-0.0748919339531972;
+                        measureNoise[2][0]=-0.0459669868120827;
+                        measureNoise[2][1]=-0.0748919339531972;
+                        measureNoise[2][2]=0.00106230567668207;
+//                        measureNoise[0][0]=1;
+//                        measureNoise[0][1]=0;
+//                        measureNoise[0][2]=0;
+//                        measureNoise[1][0]=0;
+//                        measureNoise[1][1]=1;
+//                        measureNoise[1][2]=0;
+//                        measureNoise[2][0]=0;
+//                        measureNoise[2][1]=0;
+//                        measureNoise[2][2]=1;
+                        SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
+                        
+                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
+                        
+                        xState = kalman_init(1, 0.2, 1, Tras[0]);
+                        yState = kalman_init(1, 0.2, 1, Tras[1]);
+                        zState = kalman_init(1, 0.2, 1, Tras[2]);
+
+                        
+                        init=false;
+                    }
+                    /* kalman correlacionado */
+                    kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
+
+                    kalman_update(&xState, Tras[0]);
+                    kalman_update(&yState, Tras[1]);
+                    kalman_update(&zState, Tras[2]);
+                    
+                    Tras[0]=xState.x;
+                    Tras[1]=yState.x;
+                    Tras[2]=zState.x;
+                    
+//                    VEC_PRINT(angles1);
+//                    VEC_PRINT(Tras);
                 
-                angles1[0]=thetaState.x;
-                angles1[1]=psiState.x;
-                angles1[2]=phiState.x;
-//                Tras[0]=xState.x;
-//                Tras[1]=yState.x;
-//                Tras[2]=zState.x;
-                
+                }
                 Euler2Matrix(angles1, Rotmodern);
                 if(verbose) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
-
+            
+            
             
         }
         
@@ -418,121 +492,52 @@ bool init=true;
     }
 
     luminancia = (float *) malloc(360*480*sizeof(float));
-       cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
+    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
     
-    /* BEGIN MARKER */
-    //QlSet0
-    object[0][0] = 15;
-    object[0][1] = 15;
-    object[0][2] = 0;
-    object[1][0] = 15;
-    object[1][1] = -15;
-    object[1][2] = 0;
-    object[2][0] = -15;
-    object[2][1] = -15;
-    object[2][2] = 0;
-    object[3][0] = -15;
-    object[3][1] = 15;
-    object[3][2] = 0;
-    object[4][0] = 30;
-    object[4][1] = 30;
-    object[4][2] = 0;
-    object[5][0] = 30;
-    object[5][1] = -30;
-    object[5][2] = 0;
-    object[6][0] = -30;
-    object[6][1] = -30;
-    object[6][2] = 0;
-    object[7][0] = -30;
-    object[7][1] = 30;
-    object[7][2] = 0;
-    object[8][0] = 45;
-    object[8][1] = 45;
-    object[8][2] = 0;
-    object[9][0] = 45;
-    object[9][1] = -45;
-    object[9][2] = 0;
-    object[10][0] = -45;
-    object[10][1] = -45;
-    object[10][2] = 0;
-    object[11][0] = -45;
-    object[11][1] = 45;
-    object[11][2] = 0;
-    //QlSet1
-    object[12][0] = 205;
-    object[12][1] = 15;
-    object[12][2] = 0;
-    object[13][0] = 205;
-    object[13][1] = -15;
-    object[13][2] = 0;
-    object[14][0] = 175;
-    object[14][1] = -15;
-    object[14][2] = 0;
-    object[15][0] = 175;
-    object[15][1] = 15;
-    object[15][2] = 0;
-    object[16][0] = 220;
-    object[16][1] = 30;
-    object[16][2] = 0;
-    object[17][0] = 220;
-    object[17][1] = -30;
-    object[17][2] = 0;
-    object[18][0] = 160;
-    object[18][1] = -30;
-    object[18][2] = 0;
-    object[19][0] = 160;
-    object[19][1] = 30;
-    object[19][2] = 0;
-    object[20][0] = 235;
-    object[20][1] = 45;
-    object[20][2] = 0;
-    object[21][0] = 235;
-    object[21][1] = -45;
-    object[21][2] = 0;
-    object[22][0] = 145;
-    object[22][1] = -45;
-    object[22][2] = 0;
-    object[23][0] = 145;
-    object[23][1] = 45;
-    object[23][2] = 0;
-    //QlSet2
-    object[24][0] = 15;
-    object[24][1] = 115;
-    object[24][2] = 0;
-    object[25][0] = 15;
-    object[25][1] = 85;
-    object[25][2] = 0;
-    object[26][0] = -15;
-    object[26][1] = 85;
-    object[26][2] = 0;
-    object[27][0] = -15;
-    object[27][1] = 115;
-    object[27][2] = 0;
-    object[28][0] = 30;
-    object[28][1] = 130;
-    object[28][2] = 0;
-    object[29][0] = 30;
-    object[29][1] = 70;
-    object[29][2] = 0;
-    object[30][0] = -30;
-    object[30][1] = 70;
-    object[30][2] = 0;
-    object[31][0] = -30;
-    object[31][1] = 130;
-    object[31][2] = 0;
-    object[32][0] = 45;
-    object[32][1] = 145;
-    object[32][2] = 0;
-    object[33][0] = 45;
-    object[33][1] = 55;
-    object[33][2] = 0;
-    object[34][0] = -45;
-    object[34][1] = 55;
-    object[34][2] = 0;
-    object[35][0] = -45;
-    object[35][1] = 145;
-    object[35][2] = 0;
-    /* END MARKER*/
+    /* READ MARKER MODEL */
+   
+    
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
+    
+    FILE *filePuntos;
+    
+    filePuntos=fopen(filePath.UTF8String, "r");
+    
+    if (filePuntos==NULL)
+    {
+        printf("Could not open file!");
+    }
+    else {
+        
+        for(int i=0; i<36; i++)fscanf(filePuntos,"%f %f %f\n",&object[i][0],&object[i][1],&object[i][2]);
+    }
+    fclose(filePuntos);
+    
+    /* END MARKER */
+    
+    
+    /*Reservo memoria para kalman*/
+    
+    measureNoise=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureNoise[k]=(float *)malloc(3 * sizeof(float));
+    
+    processNoise=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) processNoise[k]=(float *)malloc(3 * sizeof(float));
+    
+    stateEvolution=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) stateEvolution[k]=(float *)malloc(3 * sizeof(float));
+    
+    measureMatrix=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureMatrix[k]=(float *)malloc(3 * sizeof(float));
+    
+    errorMatrix=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) errorMatrix[k]=(float *)malloc(3 * sizeof(float));
+    
+    kalmanGain=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) kalmanGain[k]=(float *)malloc(3 * sizeof(float));
+    
+    states=(float *)malloc(3 * sizeof(float));
     
 
     
@@ -624,6 +629,14 @@ bool init=true;
     self.session = [[AVCaptureSession alloc] init];
     self.session.sessionPreset = AVCaptureSessionPresetMedium;
     
+//    AVCaptureConnection *captureConnection = [self.frameOutput connectionWithMediaType:AVMediaTypeVideo];
+//    
+//    oneFrame = CMTimeMake(1, 10);
+//    captureConnection.videoMinFrameDuration=oneFrame;
+//    
+//    printf("%d\n",captureConnection.supportsVideoMaxFrameDuration);
+//    printf("%d\n",captureConnection.supportsVideoMinFrameDuration);
+
     /*Creamos al videoDevice*/
     self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
@@ -633,7 +646,9 @@ bool init=true;
     /*Creamos y seteamos al frameOutpt*/
     self.frameOutput = [[AVCaptureVideoDataOutput alloc] init];
     
+    
     self.frameOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id) kCVPixelBufferPixelFormatTypeKey];
+    
     
     /*Ahora conectamos todos los objetos*/
     /*Primero le agregamos a la sesion el videoInput y el videoOutput*/
@@ -648,18 +663,8 @@ bool init=true;
     
     /*Sin esta linea de codigo el context apunta siempre a nil*/
     self.context =  [CIContext contextWithOptions:nil];
-    
-    //    /*Para probar con el simulador*/
-    //    self.videoView.image = [UIImage imageNamed:@"Calibrar10.jpg"];
+
     [self reservarMemoria];
-    
-    /*Mandamos el procesamiento a otro thread*/
-    //dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
-    //dispatch_async(processQueue, ^{[self.session startRunning];});
-    /*Comenzamos a capturar*/
-    
-    //NSLog(@"FORMATOS POSIBLES %@",self.frameOutput.availableVideoCVPixelFormatTypes);
-    
     [self.session startRunning];
     
 }
