@@ -666,7 +666,7 @@ static image_float ll_angle( image_float in, float threshold,
                                            sizeof(struct coorlist *) );
 //  if( list == NULL || range_l_s == NULL || range_l_e == NULL )
 //    error("not enough memory.");
-  for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
+  for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL; /*Apuntamos a NULL a ambas estructuras*/
 
   /* 'undefined' on the down and right boundaries */
   for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
@@ -679,8 +679,8 @@ static image_float ll_angle( image_float in, float threshold,
 //  for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
 
-    for(x=3;x<p-3;x++)
-    for(y=3;y<n-3;y++)
+    for(x=0;x<p-1;x++)
+    for(y=0;y<n-1;y++)
     {
         adr = y*p+x;
 
@@ -748,8 +748,8 @@ static image_float ll_angle( image_float in, float threshold,
 
         /* store the point in the right bin according to its norm */
         i = (unsigned int) (norm * (float) n_bins / max_grad);
-        if( i >= n_bins ) i = n_bins-1;
-        if( range_l_e[i] == NULL )
+        if( i >= n_bins ) i = n_bins-1; /*Esto es por las dudas porque no deberia pasar*/
+        if( range_l_e[i] == NULL ) /*Si todavia no se le asigno ningun punto...*/
           range_l_s[i] = range_l_e[i] = list+list_count++;
         else
           {
@@ -1997,8 +1997,8 @@ float * LineSegmentDetection( int * n_out,
            by R. Grompone von Gioi, J. Jakubowicz, J.M. Morel, and G. Randall.
            The original algorithm is obtained with density_th = 0.0.
          */
-        if( !refine( reg, &reg_size, modgrad, reg_angle,
-                     prec, p, &rec, used, angles, density_th ) ) continue;
+        //if( !refine( reg, &reg_size, modgrad, reg_angle,
+          //           prec, p, &rec, used, angles, density_th ) ) continue;
 
         /* compute NFA value */
         log_nfa = rect_improve(&rec,angles,logNT,log_eps);

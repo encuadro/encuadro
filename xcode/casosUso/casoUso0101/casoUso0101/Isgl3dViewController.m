@@ -91,7 +91,7 @@ float quant = 2.0;       /* Bound to the quantization error on the
                            gradient norm.                                */
 float ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
 float log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
-float density_th = 0.7;  /* Minimal density of region points in rectangle. */
+float density_th = 0.0; //0.7  /* Minimal density of region points in rectangle. */
 int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
                            modulus.                                       */
 /*Up to here */
@@ -242,16 +242,16 @@ kalman_state_3 state;
         
         /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
         image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-//        NSLog(@"gaussian_sampler in\n");
+        //NSLog(@"gaussian_sampler in\n");
         luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
-//        NSLog(@"gaussian_sampler out\n");
+        //NSLog(@"gaussian_sampler out\n");
         
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        if (verbose) NSLog(@"LSD in\n");
+        // NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        if (verbose) NSLog(@"LSD out\n");
+        // NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );

@@ -636,7 +636,7 @@ static image_float ll_angle( image_float in, float threshold,
 {
   image_float g;
   unsigned int n,p,x,y,adr,i;
-  float com1,com2,gx,gy,norm,norm2;
+    float com1,com2,gx,gy,norm;//norm2;
   /* the rest of the variables are used for pseudo-ordering
      the gradient magnitude values */
   int list_count = 0;
@@ -664,8 +664,7 @@ static image_float ll_angle( image_float in, float threshold,
                                            sizeof(struct coorlist *) );
   range_l_e = (struct coorlist **) calloc( (size_t) n_bins,
                                            sizeof(struct coorlist *) );
-  if( list == NULL || range_l_s == NULL || range_l_e == NULL )
-    error("not enough memory.");
+
   for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
 
   /* 'undefined' on the down and right boundaries */
@@ -694,8 +693,10 @@ static image_float ll_angle( image_float in, float threshold,
 
         gx = com1+com2; /* gradient x component */
         gy = com1-com2; /* gradient y component */
-        norm2 = gx*gx+gy*gy;
-        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+//        norm2 = gx*gx+gy*gy;
+//        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+          
+          norm = sqrt( gx*gx+gy*gy)*0.5; /* gradient norm */
 
         (*modgrad)->data[adr] = norm; /* store gradient norm */
 
@@ -1734,15 +1735,15 @@ static int reduce_region_radius( struct point * reg, int * reg_size,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("reduce_region_radius: invalid pointer 'reg'.");
-  if( reg_size == NULL )
-    error("reduce_region_radius: invalid pointer 'reg_size'.");
-  if( prec < 0.0 ) error("reduce_region_radius: 'prec' must be positive.");
-  if( rec == NULL ) error("reduce_region_radius: invalid pointer 'rec'.");
-  if( used == NULL || used->data == NULL )
-    error("reduce_region_radius: invalid image 'used'.");
-  if( angles == NULL || angles->data == NULL )
-    error("reduce_region_radius: invalid image 'angles'.");
+//  if( reg == NULL ) error("reduce_region_radius: invalid pointer 'reg'.");
+//  if( reg_size == NULL )
+//    error("reduce_region_radius: invalid pointer 'reg_size'.");
+//  if( prec < 0.0 ) error("reduce_region_radius: 'prec' must be positive.");
+//  if( rec == NULL ) error("reduce_region_radius: invalid pointer 'rec'.");
+//  if( used == NULL || used->data == NULL )
+//    error("reduce_region_radius: invalid image 'used'.");
+//  if( angles == NULL || angles->data == NULL )
+//    error("reduce_region_radius: invalid image 'angles'.");
 
   /* compute region points density */
   density = (float) *reg_size /
@@ -1809,16 +1810,6 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
   float angle,ang_d,mean_angle,tau,density,xc,yc,ang_c,sum,s_sum;
   int i,n;
 
-  /* check parameters */
-  if( reg == NULL ) error("refine: invalid pointer 'reg'.");
-  if( reg_size == NULL ) error("refine: invalid pointer 'reg_size'.");
-  if( prec < 0.0 ) error("refine: 'prec' must be positive.");
-  if( rec == NULL ) error("refine: invalid pointer 'rec'.");
-  if( used == NULL || used->data == NULL )
-    error("refine: invalid image 'used'.");
-  if( angles == NULL || angles->data == NULL )
-    error("refine: invalid image 'angles'.");
-
   /* compute region points density */
   density = (float) *reg_size /
                          ( dist(rec->x1,rec->y1,rec->x2,rec->y2) * rec->width );
@@ -1826,6 +1817,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
   /* if the density criterion is satisfied there is nothing to do */
   if( density >= density_th ) return TRUE;
 
+    
   /*------ First try: reduce angle tolerance ------*/
 
   /* compute the new mean angle and tolerance */
@@ -1910,8 +1902,9 @@ float * LineSegmentDetection( int * n_out,
 
   /* load and scale image (if necessary) and compute angle at each pixel */
   image = new_image_float_ptr( (unsigned int) X, (unsigned int) Y, img );
+  
   angles = ll_angle( image, rho, &list_p, &mem_p, &modgrad, (unsigned int) n_bins );
-    
+ 
   xsize = angles->xsize;
   ysize = angles->ysize;
 
@@ -1969,9 +1962,12 @@ float * LineSegmentDetection( int * n_out,
            by R. Grompone von Gioi, J. Jakubowicz, J.M. Morel, and G. Randall.
            The original algorithm is obtained with density_th = 0.0.
          */
-        if( !refine( reg, &reg_size, modgrad, reg_angle,
-                     prec, p, &rec, used, angles, density_th ) ) continue;
+        /*if( !refine( reg, &reg_size, modgrad, reg_angle,
+                     prec, p, &rec, used, angles, density_th ) ) continue;*/
+          // Ahorramos como 20 ms en los casos en los que tenemos muchos segmentos en la imagen al no correr el refinamiento anterior. Obtenemos en cualquier caso el mismo resultado.
+          
 
+        
         /* compute NFA value */
         log_nfa = rect_improve(&rec,angles,logNT,log_eps);
         if( log_nfa <= log_eps ) continue;

@@ -694,7 +694,7 @@ double* luminancia;
 
 - (void) viewDidLoad{
 
-    iPhone=true;
+    iPhone=false;
     
     if (iPhone) {
         wSize=480;
