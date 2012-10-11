@@ -711,6 +711,7 @@ static image_float ll_angle( image_float in, float threshold,
           }
       }
 
+    
   /* compute histogram of gradient values */
 //  for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
@@ -721,7 +722,7 @@ static image_float ll_angle( image_float in, float threshold,
         norm = (*modgrad)->data[y*p+x];
 
         /* store the point in the right bin according to its norm */
-        i = (unsigned int) (norm * (float) n_bins / max_grad);
+        i = (unsigned int) (norm * (float) n_bins / 175);
         if( i >= n_bins ) i = n_bins-1;
         if( range_l_e[i] == NULL )
           range_l_s[i] = range_l_e[i] = list+list_count++;
@@ -1450,11 +1451,11 @@ static float get_theta( struct point * reg, int reg_size, float x, float y,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("get_theta: invalid region.");
-  if( reg_size <= 1 ) error("get_theta: region size <= 1.");
-  if( modgrad == NULL || modgrad->data == NULL )
-    error("get_theta: invalid 'modgrad'.");
-  if( prec < 0.0 ) error("get_theta: 'prec' must be positive.");
+//  if( reg == NULL ) error("get_theta: invalid region.");
+//  if( reg_size <= 1 ) error("get_theta: region size <= 1.");
+//  if( modgrad == NULL || modgrad->data == NULL )
+//    error("get_theta: invalid 'modgrad'.");
+//  if( prec < 0.0 ) error("get_theta: 'prec' must be positive.");
 
   /* compute inertia matrix */
   for(i=0; i<reg_size; i++)
