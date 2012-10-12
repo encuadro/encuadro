@@ -9,7 +9,7 @@
 #import "ZBarSDK.h"
 #import <AVFoundation/AVFoundation.h>
 #import "CuadroTableViewController.h"
-#import "app0cAppDelegate.h"
+#import "app0100AppDelegate.h"
 
 
 int click;

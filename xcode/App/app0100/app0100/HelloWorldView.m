@@ -82,7 +82,7 @@ bool dibujar;
 - (id) init {
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
-        
+
         
         if (verbose) printf("init del HelloWorldView\n");
         dibujar=NO;

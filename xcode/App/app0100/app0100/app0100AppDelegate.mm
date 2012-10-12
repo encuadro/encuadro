@@ -29,7 +29,7 @@
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
     
 	// Set the device orientation
-    //TOUCH//	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
+ 	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;   //TOUCH//
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES;
@@ -57,8 +57,8 @@
     
 	// Specify auto-rotation strategy if required (for example via the UIViewController and only landscape)
     [Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
-    //TOUCH	//	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
-	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsAll;
+    [Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;//TOUCH
+	//[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsAll;
     
 	// Set the animation frame rate
 	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
@@ -83,7 +83,7 @@
     //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
     
     
-    //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+    //vistaImg.transform =CGAffineTransformMake(0, -1, 1, 0, 0, 0);
     /* Se ajusta la pantalla*/
     
     UIScreen *screen = [UIScreen mainScreen];

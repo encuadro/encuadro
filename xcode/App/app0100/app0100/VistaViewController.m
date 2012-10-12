@@ -28,6 +28,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        //[self addChildViewController:_viewController];
     }
     return self;
 }
@@ -190,7 +191,7 @@ NSLog(@"BUTTON BACK");
 
     [self removeViews];
 
-    [_viewController.session stopRunning];
+    [self.viewController.session stopRunning];
 
 
 //////////////////////////////////////////////////////    
@@ -249,8 +250,9 @@ _button=nil;
 
 - (void)viewDidLoad
 {
+    NSLog(@"VIEW DID LOAD VISTA");
     [super viewDidLoad];
-  //  [self hacerRender];
+ 
 	// Do any additional setup after loading the view.
     // Override back button action
 //    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"backacka" style:UIBarButtonItemStyleBordered target:self action:@selector(buttonClicked:)];
@@ -304,6 +306,7 @@ _button=nil;
 //
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"VIEW WILL APPEAR VISTA");
     [super viewWillAppear:animated];
     [self hacerRender];
     
@@ -317,10 +320,14 @@ _button=nil;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    //return (interfaceOrientation == UIInterfaceOrientationPortrait);
-    BOOL autorotate;
-    autorotate=[_viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
-    return autorotate;
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+//    [_viewController willRotateToInterfaceOrientation:interfaceOrientation duration:0.2];
+//    BOOL autorotate;
+//    autorotate=[_viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+//    return autorotate;
+    
+    
+    
 }
 
 @end

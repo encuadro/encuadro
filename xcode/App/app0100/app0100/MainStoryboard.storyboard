@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="34Z-38-foR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="34Z-38-foR">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
@@ -326,7 +326,7 @@
             <objects>
                 <viewController id="zzx-Qv-AUQ" customClass="VistaViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="2Sd-VG-M2a">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Qzu-zT-Kcy">
@@ -343,8 +343,10 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="AR" id="CfC-Yd-acK"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OaT-yN-cy2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -428,6 +430,86 @@
     <resources>
         <image name="Default.png" width="320" height="480"/>
     </resources>
+    <classes>
+        <class className="AutorTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutorTableViewController.h"/>
+        </class>
+        <class className="CuadroTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="autorLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="cuadroImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="obraLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="CuadroTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewController.h"/>
+        </class>
+        <class className="HelloWorldView" superclassName="Isgl3dBasic3DView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/HelloWorldView.h"/>
+        </class>
+        <class className="ImagenServerViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImagenServerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="pressed:"/>
+                <relationship kind="action" name="tomarFoto:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imagenView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mensaje" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="read" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tomarFoto" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="url" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="InicioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InicioViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="Isgl3dBasic3DView" superclassName="Isgl3dView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/Isgl3dBasic3DView.h"/>
+        </class>
+        <class className="Isgl3dView" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/Isgl3dView.h"/>
+        </class>
+        <class className="Isgl3dViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/Isgl3dViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="isgl3DView" candidateClass="HelloWorldView"/>
+                <relationship kind="outlet" name="videoView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ObraCompletaViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ObraCompletaViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="outlet" name="autor" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="detalle" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="imagenObra" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="obra" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="ReaderSampleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReaderSampleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="action" name="scanButtonTapped"/>
+                <relationship kind="outlet" name="resultImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="resultText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="site" candidateClass="NSString"/>
+            </relationships>
+        </class>
+        <class className="VistaViewController" superclassName="Isgl3dViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VistaViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="buttonClicked:"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -606,9 +606,15 @@ kalman_state_3 state;
     [super viewWillDisappear:animated];
 }
 
+
+
+
+
 - (void) viewDidLoad{
     
     if (verbose) printf("viewDidLoad\n");
+    
+    printf("VIEWDIDLOAD ISGL\n");
     
     
     [super viewDidLoad];
