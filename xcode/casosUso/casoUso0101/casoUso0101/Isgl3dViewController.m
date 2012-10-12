@@ -85,6 +85,7 @@ float* angles1;
 float* angles2;
 
 /* LSD parameters */
+float scale_inv = 2; /*scale_inv= 1/scale, scale=0.5*/
 float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
                            sigma = sigma_scale/scale.                    */
 float quant = 2.0;       /* Bound to the quantization error on the
@@ -250,7 +251,7 @@ kalman_state_3 state;
         free(list);
         listSize =0;
         // NSLog(@"LSD in\n");
-        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
         // NSLog(@"LSD out\n");
         
         /*Se libera memoria*/

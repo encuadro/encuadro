@@ -17,24 +17,6 @@
 #define TRUE 1
 #endif /* !TRUE */
 
-
-/*--------------------------------------Definiciones de tipos-------------------------------------*/
-//typedef struct image_float_s
-//{
-//    float * data;
-//    unsigned int xsize,ysize;
-//} * image_float;
-//
-//typedef struct ntuple_list_s
-//{
-//    unsigned int size;
-//    unsigned int max_size;
-//    unsigned int dim;
-//    float * values;
-//} * ntuple_list;
-
-
-/*--------------------------------------Definiciones de tipos-------------------------------------*/
 /*----------------------------------------------------------------------------*/
 /** Fatal error, print a message to standard-error output and exit.
  */
@@ -176,7 +158,7 @@ void rgb2gray(float* brillo, unsigned char *pixels, int w, int h, int d)
 
 }
 /*----------------------------------------------------------------------------*/
-/*------------------------------ PGM image IN -------------------------------*/
+/*------------------------------ PGM image IN --------------------------------*/
 /*----------------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------------*/
