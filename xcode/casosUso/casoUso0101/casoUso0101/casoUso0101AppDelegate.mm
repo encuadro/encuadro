@@ -75,35 +75,35 @@ bool verbose = FALSE;
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     
     
-    UIImageView* vistaImg = [[UIImageView alloc] init];
-    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
-    
-    
-    //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
-    /* Se ajusta la pantalla*/
-    
-    UIScreen *screen = [UIScreen mainScreen];
-    CGRect fullScreenRect = screen.bounds;
-    
-    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
-    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
-    [vistaImg setBounds:fullScreenRect];
-    
-    
-    
-    //    [vistaImg setNeedsDisplay];
-    
-    
-    [self.window addSubview:vistaImg];
-	[self.window sendSubviewToBack:vistaImg];
-    
-
-    _viewController.videoView = vistaImg;
-    
-    
-	// Make the opengl view transparent
-	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
-	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
+//    UIImageView* vistaImg = [[UIImageView alloc] init];
+//    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
+//    
+//    
+//    //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+//    /* Se ajusta la pantalla*/
+//    
+//    UIScreen *screen = [UIScreen mainScreen];
+//    CGRect fullScreenRect = screen.bounds;
+//    
+//    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
+//    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+//    [vistaImg setBounds:fullScreenRect];
+//    
+//    
+//    
+//    //    [vistaImg setNeedsDisplay];
+//    
+//    
+//    [self.window addSubview:vistaImg];
+//	[self.window sendSubviewToBack:vistaImg];
+//    
+//
+//    _viewController.videoView = vistaImg;
+//    
+//    
+//	// Make the opengl view transparent
+//	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
+//	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
     
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     /*Corremos el metodo viewDidLoad del ViewController*/

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "HelloWorldView.h"
+#import "casoUso0101AppDelegate.h"
+
 
 #import "processing.h"
 #import "lsd.h"

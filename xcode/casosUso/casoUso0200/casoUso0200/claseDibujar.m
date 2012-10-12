@@ -60,7 +60,7 @@ int dim=7;
     
         /*Dibujo lineas*/
         
-    for(int i=0;i<self.cantidadSegmentos;i++){
+    for(int i=0;i<MIN(self.cantidadSegmentos,36);i++){
         
         /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
 //        cgy1=self.segmentos[i*dim]*480/480;             //480/352
@@ -98,7 +98,7 @@ int dim=7;
         /*Dibujo esquinas*/
  
 
-     for(int i=0;i<self.cantidadEsquinas;i++){
+     for(int i=0;i<MIN(self.cantidadEsquinas,36);i++){
        
     /*Para el iPhone habría que cambiar la linea que viene por la siguiente:*/
     cgesq1=self.esquinas[i][0]*wSize/480;

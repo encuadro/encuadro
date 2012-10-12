@@ -1,73 +1,119 @@
 //
-//  isglYAVFoundProAppDelegate.h
-//  isglYAVFoundPro
+//  casoUso0101AppDelegate.h
+//  casoUso0101
 //
-//  Created by Pablo Flores Guridi on 12/10/12.
+//  Created by Pablo Flores Guridi on 01/10/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 
+
+
 #import "isglYAVFoundProAppDelegate.h"
 #import "Isgl3dViewController.h"
-#import "HelloWorldView.h"
 #import "Isgl3d.h"
+
 
 @implementation isglYAVFoundProAppDelegate
 
 @synthesize window = _window;
 
-- (void) applicationDidFinishLaunching:(UIApplication*)application {
+bool verbose = FALSE;
 
+- (void) applicationDidFinishLaunching:(UIApplication*)application {
+    /*Lo primero que se corre es este metodo*/
+    
+    printf("applicationDidFinishLaunching (AppDelegate)\n");
+    
 	// Create the UIWindow
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-	
-	// Instantiate the Isgl3dDirector and set background color
-	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff"; 
-
+    
+    // Instantiate the Isgl3dDirector and set background color
+	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
+    
 	// Set the device orientation
 	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
-
+    
 	// Set the director to display the FPS
-	[Isgl3dDirector sharedInstance].displayFPS = YES; 
-
+	[Isgl3dDirector sharedInstance].displayFPS = YES;
+    
 	// Create the UIViewController
+    /*El init que se esta invocando es el del padre UIViewController*/
 	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
 	_viewController.wantsFullScreenLayout = YES;
-	
+    [self.window setRootViewController:_viewController];
+    
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
-
+    // UIBackgroundView* hwView = [[UIBackgroundView alloc] init];
+    /*Esto anda bein*/
+    
+    /*Isgl3dEAGLView es un UIView*/
 	// Set view in director
 	[Isgl3dDirector sharedInstance].openGLView = glView;
-	
+    
 	// Specify auto-rotation strategy if required (for example via the UIViewController and only landscape)
 	[Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
 	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
 	
-	// Enable retina display : uncomment if desired
-//	[[Isgl3dDirector sharedInstance] enableRetinaDisplay:YES];
-
-	// Enables anti aliasing (MSAA) : uncomment if desired (note may not be available on all devices and can have performance cost)
-//	[Isgl3dDirector sharedInstance].antiAliasingEnabled = YES;
-	
 	// Set the animation frame rate
 	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
-
+    
 	// Add the OpenGL view to the view controller
-	_viewController.view = glView;
-
+    _viewController.view = glView;
+    
 	// Add view to window and make visible
-	[_window addSubview:_viewController.view];
+    /* Esto es basicamente hacer el linkeo con flechitas*/
+    [_window addSubview:glView];
 	[_window makeKeyAndVisible];
-
-	// Creates the view(s) and adds them to the director
-	[[Isgl3dDirector sharedInstance] addView:[HelloWorldView view]];
+    
+    // Creates the view(s) and adds them to the director
 	
-	// Run the director
+//    [self createViews];
+    
 	[[Isgl3dDirector sharedInstance] run];
+    /*-------------------------------------------------------------------------------------------------------------------------------------------*/
+    
+    
+//    UIImageView* vistaImg = [[UIImageView alloc] init];
+//    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
+//    
+//    
+//    //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+//    /* Se ajusta la pantalla*/
+//    
+//    UIScreen *screen = [UIScreen mainScreen];
+//    CGRect fullScreenRect = screen.bounds;
+//    
+//    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
+//    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+//    [vistaImg setBounds:fullScreenRect];
+//    
+//    
+//    
+//    //    [vistaImg setNeedsDisplay];
+//    
+//    
+//    [self.window addSubview:vistaImg];
+//	[self.window sendSubviewToBack:vistaImg];
+//    
+//    
+//    _viewController.videoView = vistaImg;
+//    
+//    
+//	// Make the opengl view transparent
+//	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
+//	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
+    
+    /*-------------------------------------------------------------------------------------------------------------------------------------------*/
+    /*Corremos el metodo viewDidLoad del ViewController*/
+    
+    
+    [_viewController viewDidLoad];
 }
 
-- (void) dealloc {
+- (void) dealloc
+{
 	if (_viewController) {
 		[_viewController release];
 	}
@@ -98,7 +144,7 @@
 	// Remove the OpenGL view from the view controller
 	[[Isgl3dDirector sharedInstance].openGLView removeFromSuperview];
 	
-	// End and reset the director	
+	// End and reset the director
 	[Isgl3dDirector resetInstance];
 	
 	// Release
@@ -115,5 +161,18 @@
 - (void) applicationSignificantTimeChange:(UIApplication *)application {
 	[[Isgl3dDirector sharedInstance] onSignificantTimeChange];
 }
+
+//- (void) createViews {
+//	// Set the device orientation
+//	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortrait;
+//    
+//	// Set the background transparent
+//	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000";
+//    
+//	// Create view and add to Isgl3dDirector
+//	Isgl3dView * view = [HelloWorldView view];
+//    _viewController.isgl3DView = view;
+//	[[Isgl3dDirector sharedInstance] addView:view];
+//}
 
 @end
