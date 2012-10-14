@@ -29,6 +29,10 @@
     if (self) {
         // Custom initialization
         //[self addChildViewController:_viewController];
+        [Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortrait;
+        // Specify auto-rotation strategy if required (for example via the UIViewController and only landscape)
+        [Isgl3dDirector sharedInstance].autoRotationStrategy =Isgl3dAutoRotationNone;
+        [Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
     }
     return self;
 }
@@ -104,8 +108,6 @@
 - (void) hacerRender 
 {
 
-    
- 
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
     
@@ -116,15 +118,17 @@
         ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
+    [appDelegate.window addSubview:_viewController.view];
+    [appDelegate.window bringSubviewToFront:_viewController.view];
     
     //agrego video
-    [self.view addSubview:self.viewController.videoView];
-    [self.view bringSubviewToFront:self.viewController.videoView];
-    
-    //agrego render
-    [self.view addSubview:self.viewController.view];
-    [self.view bringSubviewToFront:self.viewController.view];
-    self.viewController.view.opaque = NO;
+//    [self.view addSubview:self.viewController.videoView];
+//    [self.view bringSubviewToFront:self.viewController.videoView];
+//    
+//    //agrego render
+////    [self.view addSubview:self.viewController.view];
+////    [self.view bringSubviewToFront:self.viewController.view];
+//    self.viewController.view.opaque = NO;
     
     [self createViews];
     
@@ -146,6 +150,73 @@
     ////////BOTON
     
    // [[Isgl3dDirector sharedInstance] startAnimation];
+}
+
+
+- (void) hacerRenderPro
+{
+    
+    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    NSLog(@"hacerRender");
+    
+    //    isglYAVFoundProAppDelegate *appDelegate = (isglYAVFoundProAppDelegate *)[[UIApplication sharedApplication] delegate];
+    //     NSLog(@"appdelegate1");
+    //    self.viewController=(Isgl3dViewController*)appDelegate.viewController;
+    //     NSLog(@"appdelegate2");
+    self.viewController=[[Isgl3dViewController alloc] init];
+    self.viewController.wantsFullScreenLayout=YES;
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    
+    [_window makeKeyAndVisible];
+    
+    Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
+    [Isgl3dDirector sharedInstance].openGLView = glView;
+    _viewController.view = glView;
+    [_window addSubview:glView];
+    [self createViews];
+    [self.viewController createVideoWindow:_window];
+    [self.viewController viewDidLoad];
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    //    UIView* vista =self.viewController.view;
+    //    UIView* vista2=self.view;
+    //    [self.view addSubview:vista];
+    //
+    //    [self.view bringSubviewToFront:vista];
+    //    [self.view sendSubviewToBack:vista2];
+    
+    //    //agrego video
+    //    [self.view addSubview:self.viewController.videoView];
+    //    [self.view bringSubviewToFront:self.viewController.videoView];
+    //
+    //    //agrego render
+    //    [self.view addSubview:self.viewController.view];
+    //    [self.view bringSubviewToFront:self.viewController.view];
+    //    self.viewController.view.opaque = NO;
+    //
+    //    [self createViews];
+    //
+    //    //activo procesamiento
+    //   // _viewController.AugmReal=true;
+    
+    
+    ////////BOTON
+    
+        self.button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [self.button addTarget:self
+                   action:@selector(buttonClicked:)
+         forControlEvents:UIControlEventTouchDown];
+        [self.button setTitle:@"Back to Story" forState:UIControlStateNormal];
+        self.button.frame = CGRectMake(50,50, 120.0, 50.0);
+        [self.viewController.view addSubview:self.button];
+    
+    
+    ////////BOTON
+    
+    // [[Isgl3dDirector sharedInstance] startAnimation];
 }
 
 
@@ -308,19 +379,30 @@ _button=nil;
 {
     NSLog(@"VIEW WILL APPEAR VISTA");
     [super viewWillAppear:animated];
-    [self hacerRender];
+    [self hacerRenderPro];
     
    // [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    NSLog(@"WILL Autorotate VISTA");
+   // [_viewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 
+}
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
 
+     NSLog(@"DID Autorotate VISTA");
+
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    NSLog(@"SHOULD Autorotate VISTA");
+    return YES;
+//    return (interfaceOrientation == UIInterfaceOrientationPortrait);
 //    [_viewController willRotateToInterfaceOrientation:interfaceOrientation duration:0.2];
 //    BOOL autorotate;
 //    autorotate=[_viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];

@@ -37,5 +37,6 @@
 
 - (void) procesamiento;
 - (void) reservarMemoria;
+-(void)createVideoWindow:(UIWindow *)window;
 
 @end

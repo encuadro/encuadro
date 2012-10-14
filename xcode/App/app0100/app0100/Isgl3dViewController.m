@@ -124,8 +124,8 @@ kalman_state_3 state;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-        NSLog(@"Capture output");
-    
+    NSLog(@"Capture output");
+    //self.context=[self context];
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
     CIImage* ciImage = [CIImage imageWithCVPixelBuffer:pb];
@@ -138,7 +138,7 @@ kalman_state_3 state;
     bitsPerComponent     = CGImageGetBitsPerComponent(ref);
     bitsPerPixel         = CGImageGetBitsPerPixel(ref);
     d= bitsPerPixel/bitsPerComponent;
-    
+
     
     CVPixelBufferLockBaseAddress(pb, 0);
     pixels = (unsigned char *)CVPixelBufferGetBaseAddress(pb);
@@ -146,6 +146,7 @@ kalman_state_3 state;
     [self procesamiento];
     
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
+    
     
     [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
     
@@ -534,7 +535,7 @@ kalman_state_3 state;
 
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    
+    NSLog(@"SHOULD Autorotate ISGL");
 	isgl3dAllowedAutoRotations allowedAutoRotations = [Isgl3dDirector sharedInstance].allowedAutoRotations;
 	if ([Isgl3dDirector sharedInstance].autoRotationStrategy == Isgl3dAutoRotationNone) {
 		return NO;
@@ -576,16 +577,22 @@ kalman_state_3 state;
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
 	
+    NSLog(@"WILL Autorotate ISGL");
 	if ([Isgl3dDirector sharedInstance].autoRotationStrategy == Isgl3dAutoRotationByUIViewController) {
 		CGRect screenRect = [[UIScreen mainScreen] bounds];
 		CGRect rect = CGRectZero;
-		
+		NSLog(@"BY UIVIEWCONTROLLER");
+        
 		if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			rect = screenRect;
+            NSLog(@"PORTRAIT");
             
 		} else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			rect.size = CGSizeMake( screenRect.size.height, screenRect.size.width );
-		}
+           
+            NSLog(@"LANDSCAPE");
+            
+        }
 		
 		UIView * glView = [Isgl3dDirector sharedInstance].openGLView;
 		float contentScaleFactor = [Isgl3dDirector sharedInstance].contentScaleFactor;
@@ -593,6 +600,7 @@ kalman_state_3 state;
 		if (contentScaleFactor != 1) {
 			rect.size.width *= contentScaleFactor;
 			rect.size.height *= contentScaleFactor;
+            NSLog(@"contentScaleFactor!=1");
 		}
 		glView.frame = rect;
 	}
@@ -607,7 +615,45 @@ kalman_state_3 state;
 }
 
 
-
+-(void)createVideoWindow:(UIWindow *)window{
+    
+    
+    ///self.viewController=(Isgl3dViewController*)appDelegate.viewController;
+    
+    UIImageView* vistaImg = [[UIImageView alloc] init];
+    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
+    
+    
+    //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+    /* Se ajusta la pantalla*/
+    
+    UIScreen *screen = [UIScreen mainScreen];
+    CGRect fullScreenRect = screen.bounds;
+    
+    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
+    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+    [vistaImg setBounds:fullScreenRect];
+    
+    
+    
+    //    [vistaImg setNeedsDisplay];
+    
+    
+    [window addSubview:vistaImg];
+	[window sendSubviewToBack:vistaImg];
+    
+    
+    self.videoView = vistaImg;
+    
+    
+	// Make the opengl view transparent
+	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
+	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
+    
+    
+    
+    
+}
 
 
 - (void) viewDidLoad{

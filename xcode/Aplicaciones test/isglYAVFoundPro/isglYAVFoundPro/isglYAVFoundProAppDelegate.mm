@@ -17,7 +17,7 @@
 @implementation isglYAVFoundProAppDelegate
 
 @synthesize window = _window;
-
+@synthesize viewController = _viewController;
 bool verbose = FALSE;
 
 - (void) applicationDidFinishLaunching:(UIApplication*)application {
@@ -26,7 +26,7 @@ bool verbose = FALSE;
     printf("applicationDidFinishLaunching (AppDelegate)\n");
     
 	// Create the UIWindow
-	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	//_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Instantiate the Isgl3dDirector and set background color
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
@@ -39,9 +39,13 @@ bool verbose = FALSE;
     
 	// Create the UIViewController
     /*El init que se esta invocando es el del padre UIViewController*/
-	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
-	_viewController.wantsFullScreenLayout = YES;
-    [self.window setRootViewController:_viewController];
+//	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
+//	_viewController.wantsFullScreenLayout = YES;
+//    [self.window setRootViewController:_viewController];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Storyboard" bundle:nil];
+	ViewController *vc = [storyboard instantiateInitialViewController];
+    [self.window setRootViewController:vc];
+    
     
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
@@ -109,7 +113,7 @@ bool verbose = FALSE;
     /*Corremos el metodo viewDidLoad del ViewController*/
     
     
-    [_viewController viewDidLoad];
+ //   [_viewController viewDidLoad];
 }
 
 - (void) dealloc

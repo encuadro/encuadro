@@ -59,7 +59,20 @@
     
 }
 
+//REIMPLEMENTED
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
 
+    NSLog(@"WILL ROTATE INICIO");
+
+
+}
+
+//REIMPLEMENTED
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
+
+    NSLog(@"DID ROTATE INICIO");
+
+}
 
 
 - (void)viewDidUnload
@@ -80,10 +93,7 @@
         [audioPlayer stop];
         click=0;
         [start setTitle:@"Instrucciones" forState:UIControlStateNormal];
-        
-        
-        
-   // }
+     // }
 }
 
 

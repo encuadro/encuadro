@@ -13,11 +13,7 @@
 
 @interface Isgl3dViewController()
 
-@property(nonatomic, retain) AVCaptureSession * session;
-@property(nonatomic, retain) AVCaptureDevice * videoDevice;
-@property(nonatomic, retain) AVCaptureDeviceInput * videoInput;
-@property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
-@property(nonatomic, retain) CIContext* context;
+
 
 //@property(nonatomic, retain) CIImage* ciImage;
 //@property(nonatomic, retain) CVPixelBufferRef pb;
@@ -240,11 +236,52 @@ UIImage *imagen;
 }
 
 
+-(void)createVideoWindow:(UIWindow *)window{
+    
+    
+    ///self.viewController=(Isgl3dViewController*)appDelegate.viewController;
+    
+    UIImageView* vistaImg = [[UIImageView alloc] init];
+    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
+    
+    
+    //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+    /* Se ajusta la pantalla*/
+    
+    UIScreen *screen = [UIScreen mainScreen];
+    CGRect fullScreenRect = screen.bounds;
+    
+    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
+    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+    [vistaImg setBounds:fullScreenRect];
+    
+    
+    
+    //    [vistaImg setNeedsDisplay];
+    
+    
+    [window addSubview:vistaImg];
+	[window sendSubviewToBack:vistaImg];
+    
+    
+    self.videoView = vistaImg;
+    
+    
+	// Make the opengl view transparent
+	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
+	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
+    
+    
+    
+    
+}
+
+
 - (void) viewDidLoad{
     
-   printf("viewDidLoad\n");
-    [self createViews];
-    [self createVideo];
+   printf("viewDidLoad ISGL3D\n");
+  //  [self createViews];
+  //  [self createVideo];
     [super viewDidLoad];
     
     /*Creamos y seteamos la captureSession*/

@@ -6,18 +6,19 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-
+#import "ViewController.h"
 
 @class Isgl3dViewController;
 
 @interface isglYAVFoundProAppDelegate : NSObject <UIApplicationDelegate> {
     
 @private
-	Isgl3dViewController * _viewController;
+//	Isgl3dViewController * _viewController;
 	UIWindow * _window;
 }
 
 @property (nonatomic, retain) UIWindow * window;
+@property (nonatomic, retain) Isgl3dViewController* viewController;
 - (void) createViews ;
 
 @end
