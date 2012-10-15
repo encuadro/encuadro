@@ -31,7 +31,7 @@
 
 @property (nonatomic, retain) Isgl3dViewController <AVCaptureVideoDataOutputSampleBufferDelegate> * viewController;
 //@property (nonatomic, retain) app0bAppDelegate *appDelegate;
-@property (readwrite) bool AugmReal;
+//@property (readwrite) bool AugmReal;
 @property (nonatomic,retain) Isgl3dView * HWview;
 //- (IBAction)buttonClicked:(id)sender;
 

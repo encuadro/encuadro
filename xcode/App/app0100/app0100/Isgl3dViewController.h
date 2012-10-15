@@ -26,7 +26,7 @@
     
 }
 
-@property (readwrite, retain) IBOutlet UIImageView* videoView;
+@property (readwrite, retain) UIImageView* videoView;
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
 
 @property(nonatomic, retain) AVCaptureSession * session;
