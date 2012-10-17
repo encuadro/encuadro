@@ -200,19 +200,19 @@ bool corners, segments, reproyected;
         MAT_DOT_VEC_3X3(a, rotacion, b);
         VEC_SUM(punto3D1,a,self.traslacion);
         
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D2[0];
-        b[1]=puntoModelo3D2[1];
-        b[2]=puntoModelo3D2[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D2,a,self.traslacion);
-        
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D3[0];
-        b[1]=puntoModelo3D3[1];
-        b[2]=puntoModelo3D3[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D3,a,self.traslacion);
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D2[0];
+//        b[1]=puntoModelo3D2[1];
+//        b[2]=puntoModelo3D2[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D2,a,self.traslacion);
+//        
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D3[0];
+//        b[1]=puntoModelo3D3[1];
+//        b[2]=puntoModelo3D3[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D3,a,self.traslacion);
         
         if (punto3D1[0] < INFINITY)
         {

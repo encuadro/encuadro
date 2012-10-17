@@ -250,9 +250,9 @@ kalman_state_3 state;
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        // NSLog(@"LSD in\n");
+        NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        // NSLog(@"LSD out\n");
+        NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );

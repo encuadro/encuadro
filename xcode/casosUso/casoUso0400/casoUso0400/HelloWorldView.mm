@@ -36,20 +36,18 @@
 
 /*HelloWorldView*/
 @interface HelloWorldView()
-@property(nonatomic, retain) Isgl3dNode* cubito1;
-@property(nonatomic, retain) Isgl3dMeshNode * ufo;
+
 @end
 
 
 @implementation HelloWorldView
 
-@synthesize cubito1 = _cubito1;
-@synthesize ufo = _ufo;
+
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
 
-float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
+float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,0,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
@@ -114,23 +112,59 @@ bool corners, segments, reproyected;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"chihuahua.pod"];
+        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"sofa.pod"];
         
 		_model = [_container createSkeletonNode];
-		
+		_model2 = [_container createSkeletonNode];
+        
+        _model.scaleX=5;
+        _model.scaleY=5;
+        _model.scaleZ=5;
+        _model.rotationZ = 90;
+        
+        _model2.scaleX=15;
+        _model2.scaleY=15;
+        _model2.scaleZ=15;
+
+        
+        
 		[podImporter addMeshesToScene:_model];
         [podImporter printPODInfo];
+        [podImporter2 addMeshesToScene:_model2];;
 		
-		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
-		[_animationController start];
+//		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
+//		[_animationController start];
         
-        _model.position = iv3(0, 0, 0);
+        _model.position = iv3(0, -100, 0);
+        _model2.position = iv3(190,-100,0);
 
-        Isgl3dShadowCastingLight * light  = [Isgl3dShadowCastingLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+        Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
 		[self.scene addChild:light];
-        light.position = iv3(10, 20, 60);
+        light.position = iv3(-2, 2, -10);
+
+        //light.renderLight = YES;
+        
+        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light2];
+        light2.position = iv3(2, 2, -10);
+        
+        //light2.renderLight = YES;
+        
+        Isgl3dShadowCastingLight * light3  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light3];
+        light3.position = iv3(-2, -2, -10);
+        
+        //light3.renderLight = YES;
 
         
+        Isgl3dShadowCastingLight * light4  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light4];
+        light4.position = iv3(2, -2, -10);
+        
+        //light4.renderLight = YES;
+
+
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
 
         /* Generamos el boton para dibujar los segmentos detectados */
@@ -220,19 +254,19 @@ bool corners, segments, reproyected;
         MAT_DOT_VEC_3X3(a, rotacion, b);
         VEC_SUM(punto3D1,a,self.traslacion);
         
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D2[0];
-        b[1]=puntoModelo3D2[1];
-        b[2]=puntoModelo3D2[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D2,a,self.traslacion);
-        
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D3[0];
-        b[1]=puntoModelo3D3[1];
-        b[2]=puntoModelo3D3[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D3,a,self.traslacion);
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D2[0];
+//        b[1]=puntoModelo3D2[1];
+//        b[2]=puntoModelo3D2[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D2,a,self.traslacion);
+//        
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D3[0];
+//        b[1]=puntoModelo3D3[1];
+//        b[2]=puntoModelo3D3[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D3,a,self.traslacion);
         
         if (punto3D1[0] < INFINITY)
         {

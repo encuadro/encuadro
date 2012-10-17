@@ -668,12 +668,13 @@ static image_float ll_angle( image_float in, float threshold,
   for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
 
   /* 'undefined' on the down and right boundaries */
-  for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
-  for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
+    /* 'undefined' on the rows {0,1,2} and {n-1,n-2,n-3} and in the columns{0,1,2} {p-1,p-2,p-3}*/
+  for(x=0;x<p;x++) g->data[(n-1)*p+x] = g->data[(n-2)*p+x] = g->data[(n-3)*p+x] = g->data[x] = g->data[p+x]=  g->data[p*2+x]=NOTDEF;
+  for(y=0;y<n;y++) g->data[p*y+p-1]   =  g->data[p*y+p-2]   = g->data[p*y+p-3] =  g->data[p*y] =  g->data[p*y+1] = g->data[p*y+2]  = NOTDEF;
 
   /* compute gradient on the remaining pixels */
-  for(x=0;x<p-1;x++)
-    for(y=0;y<n-1;y++)
+  for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
       {
         adr = y*p+x;
 
