@@ -1,10 +1,11 @@
 //
 //  Isgl3dViewController.m
-//  casoUso0101
+//  casoUso0401
 //
-//  Created by Pablo Flores Guridi on 01/10/12.
+//  Created by Pablo Flores Guridi on 18/10/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
+
 
 #import "Isgl3dViewController.h"
 #import "isgl3d.h"
@@ -41,8 +42,8 @@ claseDibujar *cgvista;
 float **reproyectados;
 float aux[3];
 float intrinsecos[3][3] = {{589.141,    0,          240},
-                            {0,         580.754,	180},
-                            {0,         0,          1	}};
+    {0,         580.754,	180},
+    {0,         0,          1	}};
 
 /*Variables para la imagen*/
 unsigned char* pixels;
@@ -63,7 +64,7 @@ float*listFiltrada;
 float **imagePoints,**imagePointsCrop;
 int listSize;
 int listFiltradaSize;
-float distance_thr=16;
+float distance_thr=36;
 float rotacion[9];
 float traslacion[3];
 int errorMarkerDetection; //Codigo de error del findPointCorrespondence
@@ -79,7 +80,6 @@ bool PosJuani=true;
 float *Tras;
 float **Rotmodern;                                 ///modern coplanar
 float center[2]={240, 180};           ///modern coplanar
-bool verbose;
 float* luminancia;
 float* angles1;
 float* angles2;
@@ -87,9 +87,9 @@ float* angles2;
 /* LSD parameters */
 float scale_inv = 2; /*scale_inv= 1/scale, scale=0.5*/
 float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
-                           sigma = sigma_scale/scale.                    */
+                          sigma = sigma_scale/scale.                    */
 float quant = 2.0;       /* Bound to the quantization error on the
-                           gradient norm.                                */
+                          gradient norm.                                */
 float ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
 float log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
 float density_th = 0.0; //0.7  /* Minimal density of region points in rectangle. */
@@ -130,7 +130,7 @@ kalman_state_3 state;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-  //  NSLog(@"Capture output");
+    //  NSLog(@"Capture output");
     
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -158,7 +158,7 @@ kalman_state_3 state;
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
     
-
+    
     [imagen release];
     
     
@@ -231,9 +231,9 @@ kalman_state_3 state;
     {
         
         
-        if (verbose) NSLog(@"Procesando!\n");
+        // NSLog(@"Procesando!\n");
         
-           /*-------------------------------------|PROCESAMIENTO|-------------------------------------*/
+        /*-------------------------------------|PROCESAMIENTO|-------------------------------------*/
         //NSLog(@"rgb2gray in\n");
         /*Se pasa la imagen a nivel de grises*/
         cantidad =width*height;
@@ -250,9 +250,9 @@ kalman_state_3 state;
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        //NSLog(@"LSD in\n");
+        // NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        //NSLog(@"LSD out\n");
+        // NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );
@@ -270,10 +270,10 @@ kalman_state_3 state;
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
         
-
-//            printf("Tamano: %d\n", listSize);
-//            printf("Tamano filtrada: %d\n", listFiltradaSize);
         
+        //        printf("Tamano: %d\n", listSize);
+        //        printf("Tamano filtrada: %d\n", listFiltradaSize);
+        //
         
         
         if (errorMarkerDetection>=0) {
@@ -297,7 +297,7 @@ kalman_state_3 state;
                 }
                 Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
             }
-        
+            
             if (kalman){
                 Matrix2Euler(Rotmodern, angles1, angles2);
                 if(false){
@@ -305,27 +305,27 @@ kalman_state_3 state;
                         thetaState = kalman_init(1, 4, 1, angles1[0]);
                         psiState = kalman_init(1, 7, 1, angles1[1]);
                         phiState = kalman_init(1, 0.1, 1, angles1[2]);
-//                        xState = kalman_init(1, 8, 1, Tras[0]);
-//                        yState = kalman_init(1, 8, 1, Tras[1]);
-//                        zState = kalman_init(1, 8, 1, Tras[2]);
+                        //                        xState = kalman_init(1, 8, 1, Tras[0]);
+                        //                        yState = kalman_init(1, 8, 1, Tras[1]);
+                        //                        zState = kalman_init(1, 8, 1, Tras[2]);
                         init=false;
-                     }
-                     kalman_update(&thetaState, angles1[0]);
-                     kalman_update(&psiState, angles1[1]);
-                     kalman_update(&phiState, angles1[2]);
-//                     kalman_update(&xState, Tras[0]);
-//                     kalman_update(&yState, Tras[1]);
-//                     kalman_update(&zState, Tras[2]);
-                
-                     angles1[0]=thetaState.x;
-                     angles1[1]=psiState.x;
-                     angles1[2]=phiState.x;
-//                     Tras[0]=xState.x;
-//                     Tras[1]=yState.x;
-//                     Tras[2]=zState.x;
-                
-                     
-                
+                    }
+                    kalman_update(&thetaState, angles1[0]);
+                    kalman_update(&psiState, angles1[1]);
+                    kalman_update(&phiState, angles1[2]);
+                    //                     kalman_update(&xState, Tras[0]);
+                    //                     kalman_update(&yState, Tras[1]);
+                    //                     kalman_update(&zState, Tras[2]);
+                    
+                    angles1[0]=thetaState.x;
+                    angles1[1]=psiState.x;
+                    angles1[2]=phiState.x;
+                    //                     Tras[0]=xState.x;
+                    //                     Tras[1]=yState.x;
+                    //                     Tras[2]=zState.x;
+                    
+                    
+                    
                 }
                 else{
                     if(init){
@@ -346,15 +346,15 @@ kalman_state_3 state;
                         measureNoise[2][0]=-0.0459669868120827;
                         measureNoise[2][1]=-0.0748919339531972;
                         measureNoise[2][2]=0.00106230567668207;
-//                        measureNoise[0][0]=1;
-//                        measureNoise[0][1]=0;
-//                        measureNoise[0][2]=0;
-//                        measureNoise[1][0]=0;
-//                        measureNoise[1][1]=1;
-//                        measureNoise[1][2]=0;
-//                        measureNoise[2][0]=0;
-//                        measureNoise[2][1]=0;
-//                        measureNoise[2][2]=1;
+                        //                        measureNoise[0][0]=1;
+                        //                        measureNoise[0][1]=0;
+                        //                        measureNoise[0][2]=0;
+                        //                        measureNoise[1][0]=0;
+                        //                        measureNoise[1][1]=1;
+                        //                        measureNoise[1][2]=0;
+                        //                        measureNoise[2][0]=0;
+                        //                        measureNoise[2][1]=0;
+                        //                        measureNoise[2][2]=1;
                         SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
                         
                         state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
@@ -362,13 +362,13 @@ kalman_state_3 state;
                         xState = kalman_init(1, 0.2, 1, Tras[0]);
                         yState = kalman_init(1, 0.2, 1, Tras[1]);
                         zState = kalman_init(1, 0.2, 1, Tras[2]);
-
+                        
                         
                         init=false;
                     }
                     /* kalman correlacionado */
                     kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
-
+                    
                     kalman_update(&xState, Tras[0]);
                     kalman_update(&yState, Tras[1]);
                     kalman_update(&zState, Tras[2]);
@@ -377,12 +377,12 @@ kalman_state_3 state;
                     Tras[1]=yState.x;
                     Tras[2]=zState.x;
                     
-//                    VEC_PRINT(angles1);
-//                    VEC_PRINT(Tras);
-                
+                    //                    VEC_PRINT(angles1);
+                    //                    VEC_PRINT(Tras);
+                    
                 }
                 Euler2Matrix(angles1, Rotmodern);
-                if(verbose) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+                // printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
             
             
@@ -391,14 +391,14 @@ kalman_state_3 state;
         
         
         
-      
-//            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-//            printf("\nRotacion: \n");
-//            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-//            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-//            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-//            printf("Traslacion: \n");
-//            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+        
+        //            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
+        //            printf("\nRotacion: \n");
+        //            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+        //            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+        //            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
+        //            printf("Traslacion: \n");
+        //            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
         
         
         /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
@@ -432,12 +432,12 @@ kalman_state_3 state;
         
         
         
-        if (verbose){
-            printf("\nPrimera solucion\n");
-            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-            printf("\nSegunda solicion\n");
-            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
-        }
+        
+        //            printf("\nPrimera solucion\n");
+        //            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+        //            printf("\nSegunda solicion\n");
+        //            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+        
         
         [self.isgl3DView setRotacion:rotacion];
         [self.isgl3DView setTraslacion:Tras];
@@ -451,7 +451,7 @@ kalman_state_3 state;
 
 - (void) reservarMemoria {
     
-    if (verbose) printf("Reservamos memoria");
+    // printf("Reservamos memoria");
     
     free(pixels);
     free(Rotmodern);
@@ -464,41 +464,42 @@ kalman_state_3 state;
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
     
     Tras=(float*)malloc(3*sizeof(float));
-
+    
     angles1=(float*)malloc(3*sizeof(float));
     angles2=(float*)malloc(3*sizeof(float));
-
+    
     object=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) object[i]=(float *)malloc(3 * sizeof(float));
     
     reproyectados=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) reproyectados[i]=(float *)malloc(3 * sizeof(float));
-
+    
     objectCrop=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) objectCrop[i]=(float *)malloc(3 * sizeof(float));
     
     imagePointsCrop=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(float *)malloc(2 * sizeof(float));
-  
+    
     imagePoints=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(float *)malloc(2 * sizeof(float));
     
     //    coplMatrix=(float **)malloc(3 * sizeof(float *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(NumberOfPoints * sizeof(float));
-
+    
     pixels = (unsigned char*) malloc(360*480*4*sizeof(unsigned char));
     for (int i=0;i<360*480*4;i++)
     {
         pixels[i]= INFINITY;
     }
-
+    
     luminancia = (float *) malloc(360*480*sizeof(float));
-    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
+    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
     
     /* READ MARKER MODEL */
-    self.isgl3DView.distanciaMarcador = (float*) malloc(2*sizeof(float));
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2" ofType:@"txt"];
+    
+    
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
     
     FILE *filePuntos;
     
@@ -514,9 +515,6 @@ kalman_state_3 state;
     }
     fclose(filePuntos);
     
-    
-    self.isgl3DView.distanciaMarcador[0] = object[0][0] - object[12][0];
-    self.isgl3DView.distanciaMarcador[1] = object[0][1] - object[24][1];
     /* END MARKER */
     
     
@@ -542,7 +540,7 @@ kalman_state_3 state;
     
     states=(float *)malloc(3 * sizeof(float));
     
-
+    
     
     
 }
@@ -624,7 +622,7 @@ kalman_state_3 state;
 
 -(void)createVideo{
     
-    casoUso0101AppDelegate *appDelegate = (casoUso0101AppDelegate *)[[UIApplication sharedApplication] delegate];
+    casoUso0401AppDelegate *appDelegate = (casoUso0401AppDelegate *)[[UIApplication sharedApplication] delegate];
     ///self.viewController=(Isgl3dViewController*)appDelegate.viewController;
     
     UIImageView* vistaImg = [[UIImageView alloc] init];
@@ -667,7 +665,7 @@ kalman_state_3 state;
 
 - (void) viewDidLoad{
     
-    if (verbose) printf("viewDidLoad\n");
+    // printf("viewDidLoad\n");
     
     [self createVideo];
     [super viewDidLoad];
@@ -676,14 +674,14 @@ kalman_state_3 state;
     self.session = [[AVCaptureSession alloc] init];
     self.session.sessionPreset = AVCaptureSessionPresetMedium;
     
-//    AVCaptureConnection *captureConnection = [self.frameOutput connectionWithMediaType:AVMediaTypeVideo];
-//    
-//    oneFrame = CMTimeMake(1, 10);
-//    captureConnection.videoMinFrameDuration=oneFrame;
-//    
-//    printf("%d\n",captureConnection.supportsVideoMaxFrameDuration);
-//    printf("%d\n",captureConnection.supportsVideoMinFrameDuration);
-
+    //    AVCaptureConnection *captureConnection = [self.frameOutput connectionWithMediaType:AVMediaTypeVideo];
+    //
+    //    oneFrame = CMTimeMake(1, 10);
+    //    captureConnection.videoMinFrameDuration=oneFrame;
+    //
+    //    printf("%d\n",captureConnection.supportsVideoMaxFrameDuration);
+    //    printf("%d\n",captureConnection.supportsVideoMinFrameDuration);
+    
     /*Creamos al videoDevice*/
     self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
@@ -710,7 +708,7 @@ kalman_state_3 state;
     
     /*Sin esta linea de codigo el context apunta siempre a nil*/
     self.context =  [CIContext contextWithOptions:nil];
-
+    
     [self reservarMemoria];
     [self.session startRunning];
     
