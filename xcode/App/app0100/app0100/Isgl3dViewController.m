@@ -105,11 +105,14 @@ float** kalmanGain;
 float* states;
 kalman_state_3 state;
 
+/* video rotation for App*/
+UIImageOrientation orientation;
 
 
 
 - (CIContext* ) context
 {
+   
     if(!_context)
     {
         _context = [CIContext contextWithOptions:nil];
@@ -124,7 +127,7 @@ kalman_state_3 state;
 
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection{
     
-    NSLog(@"Capture output");
+  //  NSLog(@"Capture output");
     //self.context=[self context];
     CVPixelBufferRef pb  = CMSampleBufferGetImageBuffer(sampleBuffer);
     //CVPixelBufferRetain(pb);
@@ -145,7 +148,9 @@ kalman_state_3 state;
     
     [self procesamiento];
     
-    imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
+    //orientation=UIImageOrientationUp;
+    
+    imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:orientation];
     
     
     [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
@@ -241,9 +246,9 @@ kalman_state_3 state;
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        NSLog(@"LSD in\n");
+       // NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        NSLog(@"LSD out\n");
+       // NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );
@@ -533,6 +538,23 @@ kalman_state_3 state;
     
 }
 
+-(BOOL)shouldAutorotate
+{
+    NSLog(@"shouldAutorotate ISGL");
+    return NO;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    NSLog(@"supportedInterfaceOrientations ISGL");
+    return UIInterfaceOrientationMaskLandscape;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    NSLog(@"preferredInterfaceOrientationForPresentation ISGL");
+    return UIInterfaceOrientationLandscapeRight;
+}
 
 - (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     NSLog(@"SHOULD Autorotate ISGL");
@@ -586,10 +608,13 @@ kalman_state_3 state;
 		if (toInterfaceOrientation == UIInterfaceOrientationPortrait || toInterfaceOrientation == UIInterfaceOrientationPortraitUpsideDown) {
 			rect = screenRect;
             NSLog(@"PORTRAIT");
+//            self.videoView.frame=CGRectMake(0, 0,screenRect.size.width, screenRect.size.height );
+//            orientation=UIImageOrientationRight;
             
 		} else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
 			rect.size = CGSizeMake( screenRect.size.height, screenRect.size.width );
-           
+//            self.videoView.frame=CGRectMake(0, 0,screenRect.size.height, screenRect.size.width );
+//            orientation=UIImageOrientationUp;
             NSLog(@"LANDSCAPE");
             
         }
@@ -607,10 +632,12 @@ kalman_state_3 state;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    NSLog(@"WILL APPEAR ISGL");
     [super viewWillAppear:animated];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
+    NSLog(@"WILL DIS ISGL");
     [super viewWillDisappear:animated];
 }
 
@@ -662,7 +689,7 @@ kalman_state_3 state;
     
     printf("VIEWDIDLOAD ISGL\n");
     
-    
+    orientation=UIImageOrientationUp;
     [super viewDidLoad];
     
     /*Creamos y seteamos la captureSession*/

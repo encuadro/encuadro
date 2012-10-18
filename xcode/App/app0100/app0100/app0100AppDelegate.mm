@@ -23,7 +23,7 @@
     printf("applicationDidFinishLaunching (AppDelegate)\n");
     
 	// Create the UIWindow
-	//_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Instantiate the Isgl3dDirector and set background color
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
@@ -79,38 +79,42 @@
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     
     
-//    UIImageView* vistaImg = [[UIImageView alloc] init];
-//    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
-//    
-//    
-//    //vistaImg.transform =CGAffineTransformMake(0, -1, 1, 0, 0, 0);
-//    /* Se ajusta la pantalla*/
-//    
-//    UIScreen *screen = [UIScreen mainScreen];
-//    CGRect fullScreenRect = screen.bounds;
-//    
-//    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
-//    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
-//    [vistaImg setBounds:fullScreenRect];
-//    
-//    
-//    
-//    //    [vistaImg setNeedsDisplay];
-//    
-//    
-//    [self.window addSubview:vistaImg];
-//	[self.window sendSubviewToBack:vistaImg];
-//    
-//    
-//    
-//    
-//    _viewController.videoView = vistaImg;
-//    
-//    
-//	// Make the opengl view transparent
-//	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
-//	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
-//    
+    UIImageView* vistaImg = [[UIImageView alloc] init];
+    //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
+    
+    
+    //vistaImg.transform =CGAffineTransformMake(0, -1, 1, 0, 0, 0);
+    /* Se ajusta la pantalla*/
+    
+    UIScreen *screen = [UIScreen mainScreen];
+    CGRect fullScreenRect = screen.bounds;
+    
+    printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
+    [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+    [vistaImg setBounds:fullScreenRect];
+    
+    
+    
+    //    [vistaImg setNeedsDisplay];
+    
+    
+    [self.window addSubview:vistaImg];
+	[self.window sendSubviewToBack:vistaImg];
+    
+    
+    
+    
+    _viewController.videoView = vistaImg;
+    
+    
+	// Make the opengl view transparent
+	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
+	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
+    
+    
+    _viewController.videoView.frame=CGRectMake(0, 0,fullScreenRect.size.height, fullScreenRect.size.width);
+    glView.frame=CGRectMake(0, 0,fullScreenRect.size.height, fullScreenRect.size.width);
+    
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
     /*Corremos el metodo viewDidLoad del ViewController*/
     
@@ -181,4 +185,11 @@
 	[[Isgl3dDirector sharedInstance] addView:view];
 }
 
+//- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+//{
+//    // IPhone doesn't support upside down by default, while the IPad does.  Override to allow all orientations always, and let the root view controller decide whats allowed (the supported orientations mask gets intersected).
+//   // NSUInteger supportedInterfaceOrientations = (1 << UIInterfaceOrientationPortrait) | (1 << UIInterfaceOrientationLandscapeLeft) | (1 << UIInterfaceOrientationLandscapeRight) | (1 << UIInterfaceOrientationPortraitUpsideDown);
+//    NSUInteger supportedInterfaceOrientations=UIInterfaceOrientationPortrait;
+//    return supportedInterfaceOrientations;
+//}
 @end

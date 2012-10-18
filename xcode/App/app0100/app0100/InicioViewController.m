@@ -59,6 +59,26 @@
     
 }
 
+-(BOOL)shouldAutorotate
+{
+    NSLog(@"shouldAutorotate INICIO");
+    return NO;
+}
+
+-(NSUInteger)supportedInterfaceOrientations
+{
+    NSLog(@"supportedInterfaceOrientations INICIO");
+    return UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    NSLog(@"preferredInterfaceOrientationForPresentation INICIO");
+    return UIInterfaceOrientationLandscapeRight;
+}
+
+
+
 //REIMPLEMENTED
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
 

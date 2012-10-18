@@ -63,7 +63,7 @@ float*listFiltrada;
 float **imagePoints,**imagePointsCrop;
 int listSize;
 int listFiltradaSize;
-float distance_thr=36;
+float distance_thr=49;
 float rotacion[9];
 float traslacion[3];
 int errorMarkerDetection; //Codigo de error del findPointCorrespondence
@@ -250,9 +250,9 @@ kalman_state_3 state;
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
         listSize =0;
-        // NSLog(@"LSD in\n");
+        //NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        // NSLog(@"LSD out\n");
+        //NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
         free( (void *) image );
@@ -270,10 +270,10 @@ kalman_state_3 state;
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
         
-        if (verbose){
-            printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);
-        }
+
+//            printf("Tamano: %d\n", listSize);
+//            printf("Tamano filtrada: %d\n", listFiltradaSize);
+        
         
         
         if (errorMarkerDetection>=0) {
@@ -391,15 +391,15 @@ kalman_state_3 state;
         
         
         
-        if (verbose){
-            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-            printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-            printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
-        }
+      
+//            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
+//            printf("\nRotacion: \n");
+//            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+//            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+//            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
+//            printf("Traslacion: \n");
+//            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+        
         
         /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
         /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
@@ -496,10 +496,9 @@ kalman_state_3 state;
     cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
     
     /* READ MARKER MODEL */
-   
+    self.isgl3DView.distanciaMarcador = (float*) malloc(2*sizeof(float));
     
-    
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2" ofType:@"txt"];
     
     FILE *filePuntos;
     
@@ -515,6 +514,9 @@ kalman_state_3 state;
     }
     fclose(filePuntos);
     
+    
+    self.isgl3DView.distanciaMarcador[0] = object[0][0] - object[12][0];
+    self.isgl3DView.distanciaMarcador[1] = object[0][1] - object[24][1];
     /* END MARKER */
     
     

@@ -25,13 +25,14 @@
 @synthesize viewController = _viewController;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
+    NSLog(@"INIT VISTA");
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
         //[self addChildViewController:_viewController];
-        [Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortrait;
+        [Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeRight;
         // Specify auto-rotation strategy if required (for example via the UIViewController and only landscape)
-        [Isgl3dDirector sharedInstance].autoRotationStrategy =Isgl3dAutoRotationNone;
+        [Isgl3dDirector sharedInstance].autoRotationStrategy =Isgl3dAutoRotationByUIViewController;
         [Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
     }
     return self;
@@ -107,7 +108,7 @@
 //- (IBAction)hacerRender:(id)sender
 - (void) hacerRender 
 {
-
+    NSLog(@"HACER RENDER VISTA");
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
     
@@ -115,20 +116,19 @@
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     [_viewController viewDidLoad];
-        ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
-    [appDelegate.window addSubview:_viewController.view];
-    [appDelegate.window bringSubviewToFront:_viewController.view];
+    ///////////////////////////////////////////////
+
     
     //agrego video
-//    [self.view addSubview:self.viewController.videoView];
-//    [self.view bringSubviewToFront:self.viewController.videoView];
-//    
-//    //agrego render
-////    [self.view addSubview:self.viewController.view];
-////    [self.view bringSubviewToFront:self.viewController.view];
-//    self.viewController.view.opaque = NO;
+    [self.view addSubview:self.viewController.videoView];
+    [self.view bringSubviewToFront:self.viewController.videoView];
+    
+    //agrego render
+    [self.view addSubview:self.viewController.view];
+    [self.view bringSubviewToFront:self.viewController.view];
+    self.viewController.view.opaque = NO;
     
     [self createViews];
     
@@ -155,9 +155,10 @@
 
 - (void) hacerRenderPro
 {
+ 
     
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    NSLog(@"hacerRender");
+    NSLog(@"hacerRender PRO VISTA");
     
     //    isglYAVFoundProAppDelegate *appDelegate = (isglYAVFoundProAppDelegate *)[[UIApplication sharedApplication] delegate];
     //     NSLog(@"appdelegate1");
@@ -211,7 +212,7 @@
          forControlEvents:UIControlEventTouchDown];
         [self.button setTitle:@"Back to Story" forState:UIControlStateNormal];
         self.button.frame = CGRectMake(50,50, 120.0, 50.0);
-        [self.viewController.view addSubview:self.button];
+        [_window addSubview:self.button];
     
     
     ////////BOTON
@@ -221,7 +222,8 @@
 
 
 - (void) removeViews {
-	    
+	   
+    NSLog(@"REMOVE VIEWS VISTA");
 	// Create view and add to Isgl3dDirector
 	//Isgl3dView * view = [HelloWorldView view];
     
@@ -237,7 +239,7 @@
 - (void) createViews {
     printf("CREATE VIEWS\n");
 	// Set the device orientation
-	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationPortrait;
+	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
     
 	// Set the background transparent
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000"; 
@@ -322,6 +324,7 @@ _button=nil;
 - (void)viewDidLoad
 {
     NSLog(@"VIEW DID LOAD VISTA");
+    //NSLog(@"ARID OBRA ES: %@",self.ARidObra);
     [super viewDidLoad];
  
 	// Do any additional setup after loading the view.
@@ -379,24 +382,27 @@ _button=nil;
 {
     NSLog(@"VIEW WILL APPEAR VISTA");
     [super viewWillAppear:animated];
-    [self hacerRenderPro];
+    [self hacerRender];
     
    // [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
+ 
     NSLog(@"WILL Autorotate VISTA");
-   // [_viewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [_viewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
 
+
      NSLog(@"DID Autorotate VISTA");
 
 }
+
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

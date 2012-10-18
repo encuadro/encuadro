@@ -46,8 +46,8 @@
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
-
-float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
+@synthesize distanciaMarcador;
+float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-62.5,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
@@ -104,7 +104,7 @@ bool corners, segments, reproyected;
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:125 height:125 depth:125 nx:40 ny:40];
         
         _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito1.position = iv3(0,0,0);
@@ -200,19 +200,19 @@ bool corners, segments, reproyected;
         MAT_DOT_VEC_3X3(a, rotacion, b);
         VEC_SUM(punto3D1,a,self.traslacion);
         
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D2[0];
-        b[1]=puntoModelo3D2[1];
-        b[2]=puntoModelo3D2[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D2,a,self.traslacion);
-        
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D3[0];
-        b[1]=puntoModelo3D3[1];
-        b[2]=puntoModelo3D3[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D3,a,self.traslacion);
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D2[0];
+//        b[1]=puntoModelo3D2[1];
+//        b[2]=puntoModelo3D2[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D2,a,self.traslacion);
+//        
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D3[0];
+//        b[1]=puntoModelo3D3[1];
+//        b[2]=puntoModelo3D3[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D3,a,self.traslacion);
         
         if (punto3D1[0] < INFINITY)
         {
@@ -335,11 +335,11 @@ bool corners, segments, reproyected;
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
     
     
-    if (cantidadToques ==0){_cubito1.position = iv3(190,0,0); cantidadToques =1;
+    if (cantidadToques ==0){_cubito1.position = iv3(-distanciaMarcador[0],0,0); cantidadToques =1;
     }
-    else if (cantidadToques ==1) {_cubito1.position = iv3(0,-100,0); cantidadToques =2;
+    else if (cantidadToques ==1) {_cubito1.position = iv3(0,distanciaMarcador[1],0); cantidadToques =2;
     }
-    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
+    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0);; cantidadToques =0;}
     
 }
 

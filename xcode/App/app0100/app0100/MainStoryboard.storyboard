@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="34Z-38-foR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="34Z-38-foR">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
@@ -10,22 +10,15 @@
             <objects>
                 <viewController id="2" customClass="ReaderSampleViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="orz-PY-6d5">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="390"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="qrcode_BLANES.png" id="orz-PY-6d5">
+                                <rect key="frame" x="20" y="20" width="194" height="182"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Push Scan and focuse QR-code..." id="K7W-j3-6R6">
-                                <rect key="frame" x="18" y="250" width="280" height="87"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="VPB-m4-itL">
-                                <rect key="frame" x="124" y="329" width="72" height="37"/>
+                                <rect key="frame" x="315" y="27" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Scan">
@@ -40,7 +33,7 @@
                                 </connections>
                             </button>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="rgF-zI-2ak">
-                                <rect key="frame" x="-2" y="370" width="320" height="44"/>
+                                <rect key="frame" x="-2" y="212" width="480" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="F8R-Am-K1l"/>
@@ -51,29 +44,37 @@
                                     </barButtonItem>
                                 </items>
                             </toolbar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Push Scan and focuse QR-code..." id="BSf-TF-YFc">
+                                <rect key="frame" x="211" y="71" width="280" height="80"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" red="0.81646828707014196" green="0.8540118065244211" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="QR" id="YHv-Wh-t5e"/>
                     <connections>
                         <outlet property="resultImage" destination="orz-PY-6d5" id="65f-jK-lDg"/>
-                        <outlet property="resultText" destination="K7W-j3-6R6" id="kvh-7D-HY6"/>
+                        <outlet property="resultText" destination="BSf-TF-YFc" id="NX6-Hf-Q66"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1401" y="-716"/>
+            <point key="canvasLocation" x="1445" y="-698"/>
         </scene>
         <!--Imagen Server View Controller - SIFT-->
         <scene sceneID="VoU-q9-Zmr">
             <objects>
                 <viewController id="Qkb-jp-Gjx" customClass="ImagenServerViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7l0-hh-sZy">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="HAY-UT-zWr">
-                                <rect key="frame" x="198" y="353" width="74" height="37"/>
+                                <rect key="frame" x="300" y="37" width="74" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="upload">
@@ -88,11 +89,11 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="FyI-9T-S7b">
-                                <rect key="frame" x="40" y="31" width="240" height="267"/>
+                                <rect key="frame" x="20" y="20" width="240" height="209"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="fZX-Dc-tp2">
-                                <rect key="frame" x="36" y="353" width="81" height="37"/>
+                                <rect key="frame" x="300" y="102" width="81" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Camara">
@@ -106,21 +107,14 @@
                                     <action selector="tomarFoto:" destination="Qkb-jp-Gjx" eventType="touchUpInside" id="Ahb-fC-4aj"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="usw-Ge-Ggc">
-                                <rect key="frame" x="121" y="118" width="82" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="SIFT" id="mPQ-Ex-q9B"/>
                     <connections>
                         <outlet property="image" destination="FyI-9T-S7b" id="VwW-wr-7Dx"/>
                         <outlet property="imagenView" destination="FyI-9T-S7b" id="Cd7-6i-jrb"/>
-                        <outlet property="mensaje" destination="usw-Ge-Ggc" id="4yY-Zf-WPy"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R3u-p8-XmY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -132,11 +126,11 @@
             <objects>
                 <viewController storyboardIdentifier="" id="bZH-0L-BnE" customClass="InicioViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hWi-xD-KN4">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="gxc-IA-1Pc">
-                                <rect key="frame" x="177" y="329" width="72" height="37"/>
+                                <rect key="frame" x="374" y="109" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Auto">
@@ -151,7 +145,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="rE3-6Q-hQP">
-                                <rect key="frame" x="75" y="329" width="77" height="37"/>
+                                <rect key="frame" x="369" y="167" width="77" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Manual">
@@ -165,12 +159,12 @@
                                     <segue destination="fjR-wt-fvA" kind="push" id="1I9-AR-gYm"/>
                                 </connections>
                             </button>
-                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Default.png" id="Y8P-4C-kBR">
-                                <rect key="frame" x="37" y="50" width="247" height="258"/>
+                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Default281x280.png" id="Y8P-4C-kBR">
+                                <rect key="frame" x="43" y="-2" width="247" height="258"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="NHz-ta-5ra">
-                                <rect key="frame" x="7" y="13" width="122" height="37"/>
+                                <rect key="frame" x="349" y="20" width="122" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Instrucciones">
@@ -186,6 +180,7 @@
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="enCuadro App" id="9vV-dt-bIK"/>
                 </viewController>
@@ -198,15 +193,16 @@
             <objects>
                 <tableViewController storyboardIdentifier="autorobra" id="A9m-14-LDG" customClass="CuadroTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="GdM-ey-C4H">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cuadroTableCell" id="Z7n-dK-k2u" customClass="CuadroTableViewCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="480" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="460" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="Iuj-1W-kWL">
@@ -247,29 +243,29 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Or4-Vo-r7H" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1999" y="-1284"/>
+            <point key="canvasLocation" x="2007" y="-1292"/>
         </scene>
         <!--Obra Completa View Controller - Detalle de la Obra-->
         <scene sceneID="CcR-HA-Ma7">
             <objects>
                 <viewController storyboardIdentifier="detalleobra" id="BtP-KK-hPw" customClass="ObraCompletaViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="edr-FS-Va1">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="2lw-2r-BYf">
-                                <rect key="frame" x="28" y="57" width="264" height="180"/>
+                                <rect key="frame" x="20" y="27" width="187" height="192"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" adjustsFontSizeToFit="NO" id="tIK-2e-1X0">
-                                <rect key="frame" x="28" y="286" width="129" height="21"/>
+                                <rect key="frame" x="215" y="131" width="129" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="yv8-Za-DID">
-                                <rect key="frame" x="20" y="315" width="207" height="101"/>
+                                <rect key="frame" x="209" y="149" width="207" height="70"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -277,7 +273,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="13t-eI-kDM">
-                                <rect key="frame" x="241" y="345" width="72" height="37"/>
+                                <rect key="frame" x="263" y="27" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Start">
@@ -292,7 +288,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qtl-Ks-RXT">
-                                <rect key="frame" x="241" y="390" width="72" height="37"/>
+                                <rect key="frame" x="380" y="27" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="AR">
@@ -303,11 +299,12 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="zzx-Qv-AUQ" kind="push" id="qtO-Fw-LMP"/>
+                                    <segue destination="zzx-Qv-AUQ" kind="push" identifier="AR" id="qtO-Fw-LMP"/>
                                 </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="Detalle de la Obra" id="VHf-bZ-NWG"/>
                     <connections>
@@ -357,15 +354,16 @@
             <objects>
                 <tableViewController storyboardIdentifier="autores" id="fjR-wt-fvA" customClass="AutorTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="GpZ-Kq-QaK">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="480" height="256"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="AutorCell" id="IHV-Cf-acM" customClass="CuadroTableViewCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="480" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="460" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="Xz9-7k-fvV">
@@ -406,13 +404,14 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WHX-s3-f0v" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1401" y="-1666"/>
+            <point key="canvasLocation" x="1439" y="-1626"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="jxd-Br-MwZ">
             <objects>
-                <navigationController id="34Z-38-foR" sceneMemberID="viewController">
+                <navigationController id="34Z-38-foR" customClass="NavigationViewController" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="37o-Ei-nHH">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -424,92 +423,13 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LND-5N-u3y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="294" y="-1354"/>
+            <point key="canvasLocation" x="136" y="-1354"/>
         </scene>
     </scenes>
     <resources>
-        <image name="Default.png" width="320" height="480"/>
+        <image name="Default281x280.png" width="281" height="280"/>
+        <image name="qrcode_BLANES.png" width="320" height="320"/>
     </resources>
-    <classes>
-        <class className="AutorTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutorTableViewController.h"/>
-        </class>
-        <class className="CuadroTableViewCell" superclassName="UITableViewCell">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewCell.h"/>
-            <relationships>
-                <relationship kind="outlet" name="autorLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="cuadroImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="obraLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="CuadroTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewController.h"/>
-        </class>
-        <class className="HelloWorldView" superclassName="Isgl3dBasic3DView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/HelloWorldView.h"/>
-        </class>
-        <class className="ImagenServerViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImagenServerViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="pressed:"/>
-                <relationship kind="action" name="tomarFoto:"/>
-                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
-                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="imagenView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="mensaje" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="read" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="tomarFoto" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="url" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="InicioViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/InicioViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="play"/>
-                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="Isgl3dBasic3DView" superclassName="Isgl3dView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/Isgl3dBasic3DView.h"/>
-        </class>
-        <class className="Isgl3dView" superclassName="NSObject">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/Isgl3dView.h"/>
-        </class>
-        <class className="Isgl3dViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/Isgl3dViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="isgl3DView" candidateClass="HelloWorldView"/>
-                <relationship kind="outlet" name="videoView" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="ObraCompletaViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ObraCompletaViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="play"/>
-                <relationship kind="outlet" name="autor" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="detalle" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="imagenObra" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="obra" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
-            </relationships>
-        </class>
-        <class className="ReaderSampleViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReaderSampleViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="play"/>
-                <relationship kind="action" name="scanButtonTapped"/>
-                <relationship kind="outlet" name="resultImage" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="resultText" candidateClass="UITextView"/>
-                <relationship kind="outlet" name="site" candidateClass="NSString"/>
-            </relationships>
-        </class>
-        <class className="VistaViewController" superclassName="Isgl3dViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/VistaViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="buttonClicked:"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <nil key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
