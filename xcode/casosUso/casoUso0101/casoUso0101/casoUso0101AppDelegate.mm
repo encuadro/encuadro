@@ -57,7 +57,7 @@ bool verbose = FALSE;
 	[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsLandscapeOnly;
 	
 	// Set the animation frame rate
-	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
+	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60.0];
     
 	// Add the OpenGL view to the view controller
     _viewController.view = glView;
