@@ -30,13 +30,14 @@ bool fin;
 }
 @property (nonatomic) float* eulerAngles;
 @property (nonatomic) float* traslacion;
+@property (nonatomic) float** rotacion;
 @property(nonatomic) float* distanciaMarcador;
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 
 - (bool) getSegments;
 - (bool) getCorners;
 - (bool) getReproyected;
-- (void) setRotacion:(float*) rot;
+
 
 @end
 

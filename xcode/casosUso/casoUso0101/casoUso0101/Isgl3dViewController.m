@@ -76,7 +76,7 @@ float **object, **objectCrop, f=589.141; /*f: focal length en pixels*/
 bool PosJuani=true;
 
 //modern coplanar requiere float** en lugar de [][]
-float *Tras;
+float *Tras,*TrasPrev;
 float **Rotmodern;                                 ///modern coplanar
 float center[2]={240, 180};           ///modern coplanar
 bool verbose;
@@ -112,6 +112,8 @@ float** errorMatrix;
 float** kalmanGain;
 float* states;
 kalman_state_3 state;
+
+float auxVal=0;
 
 
 - (CIContext* ) context
@@ -187,6 +189,11 @@ kalman_state_3 state;
         
         if ( [self.isgl3DView getSegments]) cgvista.segmentos = listFiltrada;
         if ( [self.isgl3DView getCorners]) cgvista.esquinas = imagePoints;
+        
+//        printf("\nImage Points\n");
+//        for (int i=0; i<listFiltradaSize; i++) {
+//            printf("%f\t %f\n",imagePoints[i][0],imagePoints[i][1]);
+//        }
         
         
         if ( [self.isgl3DView getReproyected])
@@ -382,7 +389,7 @@ kalman_state_3 state;
                 
                 }
                 Euler2Matrix(angles1, Rotmodern);
-                if(verbose) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+                if(false) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
             
             
@@ -419,29 +426,26 @@ kalman_state_3 state;
         
         /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
         
-        
-        rotacion[0]=Rotmodern[0][0];
-        rotacion[1]=Rotmodern[0][1];
-        rotacion[2]=Rotmodern[0][2];
-        rotacion[3]=Rotmodern[1][0];
-        rotacion[4]=Rotmodern[1][1];
-        rotacion[5]=Rotmodern[1][2];
-        rotacion[6]=Rotmodern[2][0];
-        rotacion[7]=Rotmodern[2][1];
-        rotacion[8]=Rotmodern[2][2];
-        
-        
-        
+
         if (verbose){
             printf("\nPrimera solucion\n");
             printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             printf("\nSegunda solicion\n");
             printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
         }
-        
-        [self.isgl3DView setRotacion:rotacion];
-        [self.isgl3DView setTraslacion:Tras];
-        
+        self.isgl3DView.rotacion=Rotmodern;
+        if(false){
+        printf("%f\t %f\t %f\n",TrasPrev[0]-Tras[0],TrasPrev[1]-Tras[1],TrasPrev[2]-Tras[2]);
+        float thresTras = 0.2;
+                if (auxVal<thresTras){
+            for (int i=0; i<3; i++) TrasPrev[i]=Tras[i];
+            self.isgl3DView.traslacion=TrasPrev;
+        }
+        auxVal = sqrtf((Tras[0]-TrasPrev[0])*(Tras[0]-TrasPrev[0])+(Tras[1]-TrasPrev[1])*(Tras[1]-TrasPrev[1]));
+        }
+        else{
+            self.isgl3DView.traslacion=Tras;
+        }
         
         /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
         
@@ -464,6 +468,7 @@ kalman_state_3 state;
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
     
     Tras=(float*)malloc(3*sizeof(float));
+    TrasPrev=(float*)malloc(3*sizeof(float));
 
     angles1=(float*)malloc(3*sizeof(float));
     angles2=(float*)malloc(3*sizeof(float));
@@ -498,7 +503,7 @@ kalman_state_3 state;
     /* READ MARKER MODEL */
     self.isgl3DView.distanciaMarcador = (float*) malloc(2*sizeof(float));
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2" ofType:@"txt"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2b" ofType:@"txt"];
     
     FILE *filePuntos;
     

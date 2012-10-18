@@ -44,6 +44,7 @@
 @synthesize cubito1 = _cubito1;
 @synthesize ufo = _ufo;
 @synthesize traslacion = _traslacion;
+@synthesize rotacion = _rotacion;
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
 @synthesize distanciaMarcador;
@@ -52,7 +53,6 @@ float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
 Isgl3dVector3 angles;
-float rotacion[3][3];
 bool verbose;
 int cantidadToques;
 NSString *estring;
@@ -74,21 +74,6 @@ bool corners, segments, reproyected;
     return reproyected;
 }
 
-- (void) setRotacion:(float*) rot
-{
-    rotacion[0][0] = rot[0];
-    rotacion[0][1] = rot[1];
-    rotacion[0][2] = rot[2];
-    
-    rotacion[1][0] = rot[3];
-    rotacion[1][1] = rot[4];
-    rotacion[1][2] = rot[5];
-    
-    rotacion[2][0] = rot[6];
-    rotacion[2][1] = rot[7];
-    rotacion[2][2] = rot[8];
-    
-}
 - (id) init {
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
@@ -164,21 +149,21 @@ bool corners, segments, reproyected;
 - (void) tick:(float)dt {
 	// Rotate the text around the y axis
     //NSLog(@"tick\n");
-    if (self.traslacion != nil & rotacion!=nil)
+    if (self.traslacion != nil & self.rotacion!=nil)
     {
-        Matriz.sxx = rotacion[0][0];
-        Matriz.sxy = rotacion[0][1];
-        Matriz.sxz = rotacion[0][2];
+        Matriz.sxx = self.rotacion[0][0];
+        Matriz.sxy = self.rotacion[0][1];
+        Matriz.sxz = self.rotacion[0][2];
         Matriz.tx = self.traslacion[0];
         
-        Matriz.syx = rotacion[1][0];
-        Matriz.syy = rotacion[1][1];
-        Matriz.syz = rotacion[1][2];
+        Matriz.syx = self.rotacion[1][0];
+        Matriz.syy = self.rotacion[1][1];
+        Matriz.syz = self.rotacion[1][2];
         Matriz.ty = self.traslacion[1];
         
-        Matriz.szx = rotacion[2][0];
-        Matriz.szy = rotacion[2][1];
-        Matriz.szz = rotacion[2][2];
+        Matriz.szx = self.rotacion[2][0];
+        Matriz.szy = self.rotacion[2][1];
+        Matriz.szz = self.rotacion[2][2];
         Matriz.tz = self.traslacion[2];
         
         Matriz.swx = 0;
@@ -197,7 +182,7 @@ bool corners, segments, reproyected;
         b[0]=puntoModelo3D1[0];
         b[1]=puntoModelo3D1[1];
         b[2]=puntoModelo3D1[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
+        MAT_DOT_VEC_3X3(a, self.rotacion, b);
         VEC_SUM(punto3D1,a,self.traslacion);
         
 //        /*project CoplanarPosit*/
@@ -218,7 +203,6 @@ bool corners, segments, reproyected;
         {
             
             _container.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
-            
             _container.rotationX =0;
             _container.rotationY = 0;
             _container.rotationZ = 0;
@@ -335,11 +319,11 @@ bool corners, segments, reproyected;
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
     
     
-    if (cantidadToques ==0){_cubito1.position = iv3(-distanciaMarcador[0],0,0); cantidadToques =1;
+    if (cantidadToques ==0){_cubito1.position = iv3(-distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =1;
     }
-    else if (cantidadToques ==1) {_cubito1.position = iv3(0,distanciaMarcador[1],0); cantidadToques =2;
+    else if (cantidadToques ==1) {_cubito1.position = iv3(distanciaMarcador[0]/2,distanciaMarcador[1]/2,0); cantidadToques =2;
     }
-    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0);; cantidadToques =0;}
+    else if (cantidadToques ==2) {_cubito1.position = iv3(distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =0;}
     
 }
 
