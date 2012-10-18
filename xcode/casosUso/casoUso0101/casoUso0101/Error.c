@@ -1,12 +1,12 @@
 #include "Error.h"
 
-static double x;
+static float x;
 
 #define round(a) (x=(a),(fabs(x - ceil(x))) < (fabs(x - floor(x))) ? \
 (ceil(x)) : (floor(x)))
 
 /**********************************************************************************************************/
-void Error(long int NP,double** impts,double** obpts,double f,double Rotat[3][3],double Translat[3],double* Er,long int* Epr,double* Erhvmax)
+void Error(long int NP,float** impts,float** obpts,float f,float Rotat[3][3],float Translat[3],float* Er,long int* Epr,float* Erhvmax)
 /*Error retourne differentes mesures d'erreurs fondees sur les ecarts Image TPP reconstruite/Image de*/
 /*depart:*/
 /*E est la distance euclidienne moyenne entre points images reconstruits et points images originaux*/
@@ -15,16 +15,16 @@ void Error(long int NP,double** impts,double** obpts,double f,double Rotat[3][3]
 
 {
 void   PerspMoveAndProj();
-double  **impredic,**ErVect;
+float  **impredic,**ErVect;
 long int    i,j,fr;
 
 /*allocations*/
-impredic=(double **)malloc(NP * sizeof(double *));
-ErVect=(double **)malloc(NP * sizeof(double *));
+impredic=(float **)malloc(NP * sizeof(float *));
+ErVect=(float **)malloc(NP * sizeof(float *));
 for (i=0;i<NP;i++)
   {
-    impredic[i]=(double *)malloc(2 * sizeof(double));
-    ErVect[i]=(double *)malloc(2 * sizeof(double));
+    impredic[i]=(float *)malloc(2 * sizeof(float));
+    ErVect[i]=(float *)malloc(2 * sizeof(float));
   }
 
 if ((Rotat[0][0])!=2.0) /*un "2" en premiere position des matrices de rotation signifie que la pose est*/
@@ -73,18 +73,18 @@ for (fr=0;fr<NP;fr++)
 void  PerspMoveAndProj(N,obj,r,t,foc,proj) /*synthese d'une image TPP pour la pose consideree (r,t)*/
 
 long int    N;
-double  **obj,**proj;
-double  r[3][3],t[3];
-double  foc;
+float  **obj,**proj;
+float  r[3][3],t[3];
+float  foc;
 
 {
-double  **moved;
+float  **moved;
 long int    i,j,k;
 
 
 /*allocations*/
-moved=(double **)malloc(N * sizeof(double *));
-for (i=0;i<N;i++) moved[i]=(double *)malloc(3 * sizeof(double));
+moved=(float **)malloc(N * sizeof(float *));
+for (i=0;i<N;i++) moved[i]=(float *)malloc(3 * sizeof(float));
 
 for (i=0;i<N;i++)
   {
