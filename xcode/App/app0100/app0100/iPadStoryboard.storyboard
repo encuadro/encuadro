@@ -163,9 +163,10 @@
                         <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RUG-Sf-pcd">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="qrcode_BLANES.png" translatesAutoresizingMaskIntoConstraints="NO" id="RUG-Sf-pcd">
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="988" id="7KT-NM-v3N"/>
+                                    <constraint firstAttribute="width" constant="458" id="6j3-mL-6d7"/>
+                                    <constraint firstAttribute="height" constant="527" id="qLK-39-kC0"/>
                                 </constraints>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Push Scan and focuse QR-code..." translatesAutoresizingMaskIntoConstraints="NO" id="pX9-1Z-lZe">
@@ -213,15 +214,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="73J-Po-kgo" firstAttribute="trailing" secondItem="gbu-gT-wZm" secondAttribute="trailing" type="default" id="0BM-S4-KaY"/>
-                            <constraint firstItem="zKj-CT-793" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" constant="385" id="CX4-8h-FEk"/>
-                            <constraint firstAttribute="bottom" secondItem="zKj-CT-793" secondAttribute="bottom" constant="168" id="DM0-Qt-Rba"/>
-                            <constraint firstItem="RUG-Sf-pcd" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" type="default" id="F5n-DM-evc"/>
+                            <constraint firstItem="RUG-Sf-pcd" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="38" id="BUu-hS-H4x"/>
+                            <constraint firstItem="RUG-Sf-pcd" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" constant="36" id="G4S-VI-SLE"/>
+                            <constraint firstItem="cwX-04-MqK" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="267" id="GcX-5V-ebD"/>
                             <constraint firstAttribute="bottom" secondItem="73J-Po-kgo" secondAttribute="bottom" constant="9" id="LRV-fz-Nbs"/>
-                            <constraint firstItem="RUG-Sf-pcd" firstAttribute="trailing" secondItem="gbu-gT-wZm" secondAttribute="trailing" type="default" id="MVf-3s-gnb"/>
-                            <constraint firstItem="cwX-04-MqK" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" constant="508" id="N7S-nB-qZd"/>
                             <constraint firstItem="73J-Po-kgo" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" type="default" id="NwV-X0-WQd"/>
-                            <constraint firstAttribute="bottom" secondItem="cwX-04-MqK" secondAttribute="bottom" constant="76" id="W4L-vP-HIj"/>
-                            <constraint firstItem="RUG-Sf-pcd" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="-45" id="okc-rf-PTr"/>
+                            <constraint firstAttribute="trailing" secondItem="zKj-CT-793" secondAttribute="trailing" constant="101" id="WqP-LC-Rwh"/>
+                            <constraint firstItem="zKj-CT-793" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="326" id="aIc-Ij-Ht9"/>
+                            <constraint firstAttribute="trailing" secondItem="cwX-04-MqK" secondAttribute="trailing" constant="242" id="fQH-Me-hBQ"/>
                             <constraint firstItem="pX9-1Z-lZe" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="-35" id="rkA-dX-vdR"/>
                             <constraint firstItem="pX9-1Z-lZe" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" constant="10" id="x2e-Ti-T2S"/>
                         </constraints>
@@ -235,7 +235,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KrI-X8-ERG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="92" y="655"/>
+            <point key="canvasLocation" x="-16" y="397"/>
         </scene>
         <!--Imagen Server View Controller - Art Recognition-->
         <scene sceneID="qI5-pe-ube">
@@ -311,7 +311,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZyP-iF-1aR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3706" y="-69"/>
+            <point key="canvasLocation" x="3926" y="-69"/>
         </scene>
         <!--Obra Completa View Controller - Cuadro-->
         <scene sceneID="dcO-PC-dJG">
@@ -342,7 +342,7 @@
                                 </state>
                                 <connections>
                                     <action selector="play" destination="P7g-iE-k9L" eventType="touchUpInside" id="Imr-tq-yPg"/>
-                                    <segue destination="HuG-xk-Kvv" kind="push" id="dJH-my-39P"/>
+                                    <segue destination="HuG-xk-Kvv" kind="push" identifier="AR" id="dJH-my-39P"/>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="taT-U1-kxM">
@@ -492,6 +492,7 @@
     </scenes>
     <resources>
         <image name="Default281x280.png" width="281" height="280"/>
+        <image name="qrcode_BLANES.png" width="320" height="320"/>
     </resources>
     <classes>
         <class className="AutorTableViewController" superclassName="UITableViewController">

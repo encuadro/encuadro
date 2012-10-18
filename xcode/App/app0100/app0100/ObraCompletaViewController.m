@@ -47,6 +47,8 @@
         self.imagenObra.image = [UIImage imageNamed: 
                                  [self.descripcionObra objectAtIndex:2]];
         self.detalle.text=[self.descripcionObra objectAtIndex:3];
+        
+        
 
     }else {
         //CAMINO AUTOMATICO
@@ -121,6 +123,22 @@
     }
     
     
+}
+
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([[segue identifier] isEqualToString:@"AR"])
+    {
+        
+        
+        VistaViewController *ARVistaViewController =
+        [segue destinationViewController];
+        
+        //falta ver como asignar el ARidObra
+       //ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
+    
+    }
 }
 
 @end

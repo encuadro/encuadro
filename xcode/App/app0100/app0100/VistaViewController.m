@@ -324,6 +324,7 @@ _button=nil;
 - (void)viewDidLoad
 {
     NSLog(@"VIEW DID LOAD VISTA");
+    //NSLog(@"ARID OBRA ES: %@",self.ARidObra);
     [super viewDidLoad];
  
 	// Do any additional setup after loading the view.

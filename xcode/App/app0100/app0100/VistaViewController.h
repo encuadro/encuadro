@@ -34,7 +34,7 @@
 //@property (readwrite) bool AugmReal;
 @property (nonatomic,retain) Isgl3dView * HWview;
 //- (IBAction)buttonClicked:(id)sender;
-
+@property (nonatomic, readwrite) NSInteger *ARidObra;
 
 
 @end
