@@ -18,6 +18,11 @@
 #include "math.h"
 #include <string.h>
 #include <stdbool.h>
+//
+//#include <iostream>
+//#include <fstream>
+//using namespace std;
+//#include "epnp.h"
 
 int main(int argc, char **argv)
 {
@@ -191,9 +196,8 @@ int main(int argc, char **argv)
      /* END MARKER*/
 
      
-     /*get memory for output list*/
+     /*output lists*/
     double *listFilt;
-    listFilt=(double *) malloc ( 100 * listDim * sizeof(double));
     double *list;
     
      /*colors*/
@@ -273,6 +277,21 @@ int main(int argc, char **argv)
     	/* chequeo si hay error de filtro o de Pose*/
     	CoplanarPosit(cantPtsDetectados, imagePointsCrop, objectCrop, f, center, Rot, Tras);
 
+//    	/****************ePnP******************/
+//    	epnp PnP;
+//    	PnP.set_internal_parameters(240, 320, 746, 746);
+//    	PnP.set_maximum_number_of_correspondences(cantPtsDetectados);
+//    	PnP.reset_correspondences();
+//    	for(int i = 0; i < cantPtsDetectados; i++) {
+//    	    PnP.add_correspondence(objectCrop[i][0], objectCrop[i][1], objectCrop[i][2],
+//    	    						imagePointsCrop[i][0], imagePointsCrop[i][1]);
+//    	}
+//    	double R_est[3][3], t_est[3];
+//    	double err2 = PnP.compute_pose(R_est, t_est);
+//    	cout << "Found pose:" << endl;
+//    	PnP.print_pose(R_est, t_est);
+//    	/**************************************/
+
     	printf("\nRotacion: \n");
     	printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
     	printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
@@ -317,10 +336,14 @@ int main(int argc, char **argv)
 				pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
 				// draw small corner circle
 				cvCircle(imgLsdFilt, pt3, 3, red, 1, 8, 0);
-				char ind[2];
-				sprintf(ind,"%d",j);
-				cvPutText(imgLsdFilt, ind, pt3, &font1 , blue);
+//				char ind[2];
+//				sprintf(ind,"%d",j);
+//				cvPutText(imgLsdFilt, ind, pt3, &font1 , blue);
 			}
+	    	for(i = 0; i < NumberOfPoints; i++) {
+	    		CvPoint pt4 = cvPoint(objectProy[i][0],objectProy[i][1]);
+				cvCircle(imgLsdFilt, pt4, 3, CV_RGB(255,128,0), 1, 8, 0);
+	    	}
 		}
 
 
