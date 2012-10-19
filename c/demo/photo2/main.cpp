@@ -13,25 +13,65 @@
 #include "lsd.h"
 #include "segments.h"
 #include "marker.h"
-#include "CoplanarPosit.h"
-#include "Composit.h"
 #include "math.h"
 #include <string.h>
 #include <stdbool.h>
-//
-//#include <iostream>
-//#include <fstream>
-//using namespace std;
-//#include "epnp.h"
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+#include "epnp.h"
+
+void Matrix2Euler(double** Rot, double* angles1,double* angles2) {
+    double theta1, theta2;
+    double phi1, phi2;
+    double psi1, psi2;
+
+    theta1=-asin(Rot[2][0]);
+    theta2= MY_PI - theta1;
+
+    if(abs(Rot[2][0])!=1){
+        psi1=atan2(Rot[2][1]/cos(theta1),Rot[2][2]/cos(theta1));
+        psi2=atan2(Rot[2][1]/cos(theta2),Rot[2][2]/cos(theta2));
+
+        phi1=atan2(Rot[1][0]/cos(theta1),Rot[0][0]/cos(theta1));
+        phi2=atan2(Rot[1][0]/cos(theta2),Rot[0][0]/cos(theta2));
+    }
+    else {
+        phi1=0;
+        phi2=0;
+        if (Rot[2][0]==-1) {
+            theta1=MY_PI/2;
+            psi1=phi1+atan2(Rot[0][1], Rot[0][2]);
+        }
+        else {
+            theta1=-MY_PI/2;
+            psi1=-phi1+atan2(-Rot[0][1], -Rot[0][2]);
+        }
+        theta2=0;
+        psi2=0;
+    }
+
+    angles1[0]=psi1;
+    angles1[1]=theta1;
+    angles1[2]=phi1;
+
+    angles2[0]=psi2;
+    angles2[1]=theta2;
+    angles2[2]=phi2;
+}
 
 int main(int argc, char **argv)
 {
+
+    IplImage* img = cvLoadImage(argv[1],CV_LOAD_IMAGE_COLOR);
+    int width  = img->width;
+    int height = img->height;
     
     /*Variable para openCV y LSD*/
-    int width, height;
 	double *image;
 	double **imagePoints, **imagePointsCrop;
-	int i, j, listSize = 0, listFiltSize = 0; 	int listDim = 7;
+	int listSize = 0, listFiltSize = 0; 	int listDim = 7;
 	int distance_thr = 25;	// 4 pixels
     double scale=0.6;
     
@@ -39,10 +79,6 @@ int main(int argc, char **argv)
     int NumberOfPoints,k, cantPtsDetectados;
     double **object, **objectCrop;
     float **objectProy;
-    double f; // Para el ipod y para el ipad tambien sirve /*f: focal length en pixels*/
-    double** Rot;
-    double* Tras;
-    double center[2];
     double angles1[3];
     double angles2[3];
 
@@ -50,36 +86,31 @@ int main(int argc, char **argv)
     NumberOfPoints=36;
     
     /*parametros intrinsecos*/  
-    f=745.43429;
-    center[0]=217.56288;
-    center[1]=292.80331;
-    float intrinsic[3][3]=  {	{745.43429,  0,			217.56288},
-    							{0,          746.36170,	292.80331},
+    double fc[2]= { 745.43429, 746.36170 } ;
+    double center[2]= { (width+1)/2, (height+1)/2 } ;
+    float intrinsic[3][3]=  {	{745,		0,			(width+1)/2},
+    							{0,			745,		(height+1)/2},
     							{0,          0,			1},
     						};
     
-    /*Reservamos memoria para pose*/
-    Rot=(double **)malloc(3 * sizeof(double *));
-    for (k=0;k<3;k++) Rot[k]=(double *)malloc(3 * sizeof(double));
-    Tras=(double *)malloc(3 * sizeof(double));
-    
+
     /*Reservo memoria para imagePioints*/
     imagePoints=(double **)malloc(NumberOfPoints*sizeof(double*));
-    for(i=0;i<NumberOfPoints;i++)imagePoints[i]=(double*)malloc(2*sizeof(double));
+    for(int i=0;i<NumberOfPoints;i++)imagePoints[i]=(double*)malloc(2*sizeof(double));
 
     /*Reservo memoria para imagePiointsCrop*/
     imagePointsCrop=(double **)malloc(NumberOfPoints*sizeof(double*));
-    for(i=0;i<NumberOfPoints;i++)imagePointsCrop[i]=(double*)malloc(2*sizeof(double));
+    for(int i=0;i<NumberOfPoints;i++)imagePointsCrop[i]=(double*)malloc(2*sizeof(double));
     
     /*Reservamos memoria para marcador*/
     object=(double **)malloc(NumberOfPoints * sizeof(double *));
-    for (k=0;k<NumberOfPoints;k++) object[k]=(double *)malloc(3 * sizeof(double));
+    for (int k=0;k<NumberOfPoints;k++) object[k]=(double *)malloc(3 * sizeof(double));
     
     objectCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
-    for (k=0;k<NumberOfPoints;k++) objectCrop[k]=(double *)malloc(3 * sizeof(double));
+    for (int k=0;k<NumberOfPoints;k++) objectCrop[k]=(double *)malloc(3 * sizeof(double));
         
     objectProy=(float **)malloc(NumberOfPoints * sizeof(float *));
-    for (k=0;k<NumberOfPoints;k++) objectProy[k]=(float *)malloc(2 * sizeof(float));
+    for (int k=0;k<NumberOfPoints;k++) objectProy[k]=(float *)malloc(2 * sizeof(float));
     
     /* BEGIN MARKER */
      //QlSet0
@@ -219,11 +250,6 @@ int main(int argc, char **argv)
     cvNamedWindow( "LSD",CV_WINDOW_AUTOSIZE);
     cvNamedWindow( "LSD filtered",CV_WINDOW_AUTOSIZE);
 
-    
-    IplImage* img = cvLoadImage(argv[1],CV_LOAD_IMAGE_COLOR);
-    width  = img->width;
-    height = img->height;
-
     IplImage *imgBW = cvCreateImage( cvSize( width, height ), IPL_DEPTH_8U, 1 );
     IplImage *imgLsd = cvCreateImage( cvSize( width, height ), IPL_DEPTH_8U, 3 );
     IplImage *imgLsdFilt = cvCreateImage( cvSize( width, height ), IPL_DEPTH_8U, 3 );
@@ -240,8 +266,8 @@ int main(int argc, char **argv)
 
     /*cast into LSD image type*/
     uchar *data = (uchar *)imgBW->imageData;
-    for (i=0;i<width;i++){
-    	for(j=0;j<height;j++){
+    for (int i=0;i<width;i++){
+    	for(int j=0;j<height;j++){
     		image[ i + j * width ] = data[ i + j * width];
     	};
     };
@@ -257,7 +283,7 @@ int main(int argc, char **argv)
     {
     	/*draw segments on frame and frameLsd*/
     	cvSet(imgLsd, black, 0);
-    	for (j=0; j<listSize ; j++){
+    	for (int j=0; j<listSize ; j++){
     		//define segment end-points
     		pt1 = cvPoint(list[ 0 + j * listDim ],list[ 1 + j * listDim ]);
     		pt2 = cvPoint(list[ 2 + j * listDim ],list[ 3 + j * listDim ]);
@@ -274,54 +300,51 @@ int main(int argc, char **argv)
 
     	cantPtsDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
 
-    	/* chequeo si hay error de filtro o de Pose*/
-    	CoplanarPosit(cantPtsDetectados, imagePointsCrop, objectCrop, f, center, Rot, Tras);
+    	/****************ePnP******************/
+    	epnp PnP;
+    	PnP.set_internal_parameters(center[0], center[1], fc[0], fc[1]);
+    	PnP.set_maximum_number_of_correspondences(cantPtsDetectados);
+    	PnP.reset_correspondences();
+    	for(int i = 0; i < cantPtsDetectados; i++) {
+    	    PnP.add_correspondence(objectCrop[i][0], objectCrop[i][1], objectCrop[i][2],
+    	    						imagePointsCrop[i][0], imagePointsCrop[i][1]);
+    	}
+    	double R_est[3][3], t_est[3];
+    	double err2 = PnP.compute_pose(R_est, t_est);
+    	cout << "Found pose:" << endl;
+    	PnP.print_pose(R_est, t_est);
+    	/**************************************/
 
-//    	/****************ePnP******************/
-//    	epnp PnP;
-//    	PnP.set_internal_parameters(240, 320, 746, 746);
-//    	PnP.set_maximum_number_of_correspondences(cantPtsDetectados);
-//    	PnP.reset_correspondences();
-//    	for(int i = 0; i < cantPtsDetectados; i++) {
-//    	    PnP.add_correspondence(objectCrop[i][0], objectCrop[i][1], objectCrop[i][2],
-//    	    						imagePointsCrop[i][0], imagePointsCrop[i][1]);
-//    	}
-//    	double R_est[3][3], t_est[3];
-//    	double err2 = PnP.compute_pose(R_est, t_est);
-//    	cout << "Found pose:" << endl;
-//    	PnP.print_pose(R_est, t_est);
-//    	/**************************************/
-
-    	printf("\nRotacion: \n");
-    	printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
-    	printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
-    	printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
-    	printf("Traslacion: \n");
-    	printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
-
-    	Matrix2Euler(Rot,angles1,angles2);
-
-    	printf("\nPrimera solicion\n");
-    	printf("theta1: %g\npsi1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-    	printf("\nSegunda solicion\n");
-    	printf("theta2: %g\npsi2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+//    	printf("\nRotacion: \n");
+//    	printf("%f\t %f\t %f\n",Rot[0][0],Rot[0][1],Rot[0][2]);
+//    	printf("%f\t %f\t %f\n",Rot[1][0],Rot[1][1],Rot[1][2]);
+//    	printf("%f\t %f\t %f\n",Rot[2][0],Rot[2][1],Rot[2][2]);
+//    	printf("Traslacion: \n");
+//    	printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+//
+//    	Matrix2Euler(R_est[0][0],angles1,angles2);
+//
+//    	printf("\nPrimera solicion\n");
+//    	printf("theta1: %g\npsi1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+//    	printf("\nSegunda solicion\n");
+//    	printf("theta2: %g\npsi2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
 
     	/*Poject object points and save reprojection error*/
-    	for(i=0;i<NumberOfPoints;i++){
+    	for(int i=0;i<NumberOfPoints;i++){
     		/*project CoplanarPosit*/
     		float a[3],b[3];
     		b[0]=object[i][0];
     		b[1]=object[i][1];
     		b[2]=object[i][2];
-    		MAT_DOT_VEC_3X3(a, Rot, b);
-    		VEC_SUM(b,a,Tras);
+    		MAT_DOT_VEC_3X3(a, R_est, b);
+    		VEC_SUM(b,a,t_est);
     		objectProy[i][0]=intrinsic[0][2]+intrinsic[0][0]*b[0]/b[2];
     		objectProy[i][1]=intrinsic[1][2]+intrinsic[1][1]*b[1]/b[2];
     	}
 
     	/*draw segments on actual frameLsdFilt*/
     	cvSet(imgLsdFilt, black, 0);
-    	for (j=0; j<listFiltSize ; j++){
+    	for (int j=0; j<listFiltSize ; j++){
     		//define segment end-points
     		pt1 = cvPoint(listFilt[ 0 + j * listDim ],listFilt[ 1 + j * listDim ]);
     		pt2 = cvPoint(listFilt[ 2 + j * listDim ],listFilt[ 3 + j * listDim ]);
@@ -331,7 +354,7 @@ int main(int argc, char **argv)
     	}
 		if (error_code>=0)
 		{	/*draw imgPts*/
-			for (j=0; j<36; j++){
+			for (int j=0; j<36; j++){
 				//define marker corners
 				pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
 				// draw small corner circle
@@ -340,11 +363,12 @@ int main(int argc, char **argv)
 //				sprintf(ind,"%d",j);
 //				cvPutText(imgLsdFilt, ind, pt3, &font1 , blue);
 			}
-	    	for(i = 0; i < NumberOfPoints; i++) {
+	    	for(int i = 0; i < NumberOfPoints; i++) {
 	    		CvPoint pt4 = cvPoint(objectProy[i][0],objectProy[i][1]);
 				cvCircle(imgLsdFilt, pt4, 3, CV_RGB(255,128,0), 1, 8, 0);
 	    	}
 		}
+
 
 
     } else
@@ -360,22 +384,15 @@ int main(int argc, char **argv)
 
     free(image);
 
-    for (i=0;i<3;i++){
-    	Rot[i][0]=0;
-    	Rot[i][1]=0;
-    	Rot[i][2]=0;
-    	Tras[i]=0;
-    }
-
     cvShowImage("LSD filtered",imgLsdFilt);
 
     cvWaitKey(0);
 
     /*free imagePoints memory*/
-    for(i = 0; i < 36; i++)
+    for(int i = 0; i < 36; i++)
         free(imagePoints[i]);
     free(imagePoints);
-    for(i = 0; i < 36; i++)
+    for(int i = 0; i < 36; i++)
             free(imagePointsCrop[i]);
         free(imagePointsCrop);
     /********************/
