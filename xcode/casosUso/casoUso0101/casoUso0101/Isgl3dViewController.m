@@ -63,7 +63,7 @@ float*listFiltrada;
 float **imagePoints,**imagePointsCrop;
 int listSize;
 int listFiltradaSize;
-float distance_thr=16;
+float distance_thr=36; /*16 Para el marcador grande*/
 float rotacion[9];
 float traslacion[3];
 int errorMarkerDetection; //Codigo de error del findPointCorrespondence
@@ -92,7 +92,7 @@ float quant = 2.0;       /* Bound to the quantization error on the
                            gradient norm.                                */
 float ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
 float log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
-float density_th = 0.0; //0.7  /* Minimal density of region points in rectangle. */
+float density_th = 0.7; //0.7  /* Minimal density of region points in rectangle. */
 int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
                            modulus.                                       */
 /*Up to here */
@@ -178,17 +178,23 @@ float auxVal=0;
         cgvista.dealloc=1;
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if ([self.isgl3DView getSegments] || [self.isgl3DView getCorners] || [self.isgl3DView getReproyected])
+    if ([self.isgl3DView getSegments] || [self.isgl3DView getCorners] || [self.isgl3DView getReproyected] || [self.isgl3DView getLsd_all])
     {
         
         cgvista.cantidadSegmentos = listFiltradaSize;
+        cgvista.cantidadLsd = listSize;
+        
+        
         cgvista.segments = [self.isgl3DView getSegments];
         cgvista.corners = [self.isgl3DView getCorners];
         cgvista.reproyected = [self.isgl3DView getReproyected];
+        cgvista.lsd_all = [self.isgl3DView getLsd_all];
         
         
         if ( [self.isgl3DView getSegments]) cgvista.segmentos = listFiltrada;
         if ( [self.isgl3DView getCorners]) cgvista.esquinas = imagePoints;
+        if ( [self.isgl3DView getLsd_all]) cgvista.segmentos_lsd = list;
+        
         
 //        printf("\nImage Points\n");
 //        for (int i=0; i<listFiltradaSize; i++) {
@@ -260,6 +266,9 @@ float auxVal=0;
         //NSLog(@"LSD in\n");
         list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
         //NSLog(@"LSD out\n");
+        
+//        printf("%d\n",listSize);
+//        printf("%f\t %f \t %f\t %f\n",list[(listSize-1)*7],list[(listSize-1)*7+1],list[(listSize-1)*7+2],list[(listSize-1)*7+3]);
         
         /*Se libera memoria*/
         free( (void *) image );
@@ -503,7 +512,7 @@ float auxVal=0;
     /* READ MARKER MODEL */
     self.isgl3DView.distanciaMarcador = (float*) malloc(2*sizeof(float));
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2b" ofType:@"txt"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
     
     FILE *filePuntos;
     

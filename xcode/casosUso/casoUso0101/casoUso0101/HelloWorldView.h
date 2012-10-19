@@ -37,7 +37,7 @@ bool fin;
 - (bool) getSegments;
 - (bool) getCorners;
 - (bool) getReproyected;
-
+- (bool) getLsd_all;
 
 @end
 

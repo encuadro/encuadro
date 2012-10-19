@@ -48,7 +48,7 @@
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
 @synthesize distanciaMarcador;
-float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-62.5,1};
+float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
@@ -57,7 +57,7 @@ bool verbose;
 int cantidadToques;
 NSString *estring;
 
-bool corners, segments, reproyected;
+bool corners, segments, reproyected, lsd_all;
 
 - (bool) getSegments
 {
@@ -72,6 +72,11 @@ bool corners, segments, reproyected;
 - (bool) getReproyected
 {
     return reproyected;
+}
+
+- (bool) getLsd_all
+{
+    return lsd_all;
 }
 
 - (id) init {
@@ -89,7 +94,7 @@ bool corners, segments, reproyected;
         
         // Create the primitive
 		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:125 height:125 depth:125 nx:40 ny:40];
+        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
         
         _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
         _cubito1.position = iv3(0,0,0);
@@ -123,6 +128,19 @@ bool corners, segments, reproyected;
         [reproyectedButton setX:30 andY:0];
         reproyectedButton.interactive = YES;
         [reproyectedButton addEvent3DListener:self method:@selector(reproyectedTouched:) forEventType:TOUCH_EVENT];
+        
+        /* Generamos el boton para dibujar los segmentos del LSD */
+        
+        Isgl3dTextureMaterial * lsdMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"LSD.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+		Isgl3dGLUIButton * lsdButton = [Isgl3dGLUIButton buttonWithMaterial:lsdMaterial width:14.4 height:9.8];
+		[self.scene addChild:lsdButton];
+    
+        
+         [lsdButton setX:20 andY:20];
+        
+        lsdButton.interactive = YES;
+        [lsdButton addEvent3DListener:self method:@selector(lsdTouched:) forEventType:TOUCH_EVENT];
+
         
         cantidadToques = 0;
         
@@ -319,11 +337,17 @@ bool corners, segments, reproyected;
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
     
     
-    if (cantidadToques ==0){_cubito1.position = iv3(-distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =1;
+//    if (cantidadToques ==0){_cubito1.position = iv3(-distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =1;
+//    }
+//    else if (cantidadToques ==1) {_cubito1.position = iv3(distanciaMarcador[0]/2,distanciaMarcador[1]/2,0); cantidadToques =2;
+//    }
+//    else if (cantidadToques ==2) {_cubito1.position = iv3(distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =0;}
+
+    if (cantidadToques ==0){_cubito1.position = iv3(190,-0,0); cantidadToques =1;
     }
-    else if (cantidadToques ==1) {_cubito1.position = iv3(distanciaMarcador[0]/2,distanciaMarcador[1]/2,0); cantidadToques =2;
+    else if (cantidadToques ==1) {_cubito1.position = iv3(0,100,0); cantidadToques =2;
     }
-    else if (cantidadToques ==2) {_cubito1.position = iv3(distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =0;}
+    else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
     
 }
 
@@ -354,6 +378,18 @@ bool corners, segments, reproyected;
     }
     else if (reproyected==NO) {
         reproyected=YES;
+    }
+}
+
+- (void) lsdTouched:(id)sender {
+    
+    if (lsd_all==YES) {
+        lsd_all =NO;
+        printf("LSD no\n");
+    }
+    else if (lsd_all==NO) {
+        lsd_all=YES;
+                printf("LSD si\n");
     }
 }
 
