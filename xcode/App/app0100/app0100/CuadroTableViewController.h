@@ -26,6 +26,7 @@ else-->Todos los autores
 @property (nonatomic, retain) NSArray *cuadroObra;
 @property (nonatomic, retain) NSArray *cuadroDescripcion;
 @property (nonatomic, retain) NSArray *nombre_audio;
+@property (nonatomic, retain) NSArray *ARid;
 
 
 

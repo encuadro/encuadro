@@ -40,7 +40,7 @@
 	_viewController.wantsFullScreenLayout = YES;
 //    [self.window setRootViewController:_viewController];
 
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPadStoryboard" bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
 	InicioViewController *inicioController = [storyboard instantiateInitialViewController];
     [self.window setRootViewController:inicioController];
     
@@ -185,4 +185,11 @@
 	[[Isgl3dDirector sharedInstance] addView:view];
 }
 
+//- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window
+//{
+//    // IPhone doesn't support upside down by default, while the IPad does.  Override to allow all orientations always, and let the root view controller decide whats allowed (the supported orientations mask gets intersected).
+//   // NSUInteger supportedInterfaceOrientations = (1 << UIInterfaceOrientationPortrait) | (1 << UIInterfaceOrientationLandscapeLeft) | (1 << UIInterfaceOrientationLandscapeRight) | (1 << UIInterfaceOrientationPortraitUpsideDown);
+//    NSUInteger supportedInterfaceOrientations=UIInterfaceOrientationPortrait;
+//    return supportedInterfaceOrientations;
+//}
 @end

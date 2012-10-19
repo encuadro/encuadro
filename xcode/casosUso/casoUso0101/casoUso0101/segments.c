@@ -56,7 +56,7 @@ int lineIntersection(	float Ax, float Ay,
 	float  distAB, theCos, theSin, newX, ABpos ;
 
 	//  Fail if either line is undefined.
-	if (Ax==Bx && Ay==By || Cx==Dx && Cy==Dy) return -1;
+	if ((Ax==Bx && Ay==By) || (Cx==Dx && Cy==Dy)) return -1;
 
 	//  (1) Translate the system so that point A is on the origin.
 	Bx-=Ax; By-=Ay;
@@ -106,7 +106,7 @@ int lineSegmentIntersection(	float Ax, float Ay,
 	float  distAB, theCos, theSin, newX, ABpos ;
 
 	//  Fail if either line is undefined.
-	if (Ax==Bx && Ay==By || Cx==Dx && Cy==Dy) return -1;
+	if ((Ax==Bx && Ay==By) || (Cx==Dx && Cy==Dy)) return -1;
 
 	//  (1) Translate the system so that point A is on the origin.
 	Bx-=Ax; By-=Ay;
@@ -125,7 +125,7 @@ int lineSegmentIntersection(	float Ax, float Ay,
 	Dy  =Dy*theCos-Dx*theSin; Dx=newX;
 
 	//  Fail if segment C-D doesn't cross line A-B.
-	if (Cy<0. && Dy<0. || Cy>=0. && Dy>=0.) return -1;
+	if ((Cy<0. && Dy<0.) || (Cy>=0. && Dy>=0.)) return -1;
 
 	//  (3) Discover the position of the intersection point along line A-B.
 	ABpos=Dx+(Cx-Dx)*Dy/(Dy-Cy);

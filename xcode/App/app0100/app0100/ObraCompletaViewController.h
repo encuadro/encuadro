@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "VistaViewController.h"
 
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
@@ -25,6 +26,7 @@ bool manual;
 @property (retain, nonatomic) IBOutlet UILabel *obra;
 @property (retain, nonatomic) IBOutlet UITextView *detalle;
 @property (retain, nonatomic) IBOutlet UIImageView *imagenObra;
+
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) IBOutlet UIButton *start;

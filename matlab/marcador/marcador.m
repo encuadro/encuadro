@@ -1,25 +1,25 @@
 
 clear all; close all; clc;
 %% QlSet Model
-l = 15;
+l = 30.8;
 
-Ql =[	+l		+l		0	;
-		+l		-l		0	;
-		-l		-l		0	;
-		-l		+l		0	;
-		+2*l	+2*l	0	;
-		+2*l	-2*l	0	;
-		-2*l	-2*l	0	;
-		-2*l	+2*l	0	;
-		+3*l	+3*l	0	;
-		+3*l	-3*l	0	;
-		-3*l	-3*l	0	;
-		-3*l	+3*l	0	;
+Ql =[	+32		+32		0	;
+		+32		-32		0	;
+		-32		-32		0	;
+		-32		+32		0	;
+		+63     +63     0	;
+		+63     -63     0	;
+		-63     -63     0	;
+		-63     +63     0	;
+		+93     +93     0	;
+		+93     -93     0	;
+		-93     -93     0	;
+		-93     +93 	0	;
 	];
 
-centerQl(1,:) = [0			0		0];
-centerQl(2,:) = [12*l+10	0		0] + centerQl(1,:);
-centerQl(3,:) = [0			6*l+10	0] + centerQl(1,:);
+centerQl(1,:) = [-787/2 -445/2 0];
+centerQl(2,:) = [787 0 0] + centerQl(1,:);
+centerQl(3,:) = [0 445 0] + centerQl(1,:);
 
 QlSet = zeros(12,3,3);
 for i=1:3
@@ -50,3 +50,19 @@ for i=1:3
 			indice=indice+1;
 	end
 end
+
+%% Print to file or cmdline in c language format
+
+fp=fopen('MarkerQR2.txt','w');
+
+
+template = '%f %f %f\n';
+
+
+for i=1:3
+	for j=1:12
+			fprintf(fp,template,QlSet(j,:,i));
+	end
+end
+
+fclose(fp)

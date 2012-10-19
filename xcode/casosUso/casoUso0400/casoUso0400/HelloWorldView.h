@@ -35,6 +35,7 @@ bool fin;
     Isgl3dDemoCameraController * _cameraController;
     Isgl3dNode * _container;
     Isgl3dSkeletonNode * _model;
+    Isgl3dSkeletonNode * _model2;
     Isgl3dAnimationController * _animationController;
 }
 @property (nonatomic) float* eulerAngles;

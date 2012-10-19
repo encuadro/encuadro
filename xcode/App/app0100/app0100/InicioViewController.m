@@ -68,7 +68,7 @@
 -(NSUInteger)supportedInterfaceOrientations
 {
     NSLog(@"supportedInterfaceOrientations INICIO");
-    return UIInterfaceOrientationMaskLandscape;
+    return UIInterfaceOrientationMaskLandscapeRight;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation

@@ -10,6 +10,6 @@
 #include <stdio.h>
 #include <math.h>
 
-void  PseudoInverse(double** A,long int N,double** B);
-void  PseudoInverseGen(double** A,int N,int M,double** B);
-void  svdcmp(double **a,int m,int n,double *w,double **v);
+void  PseudoInverse(float** A,long int N,float** B);
+void  PseudoInverseGen(float** A,int N,int M,float** B);
+void  svdcmp(float **a,int m,int n,float *w,float **v);

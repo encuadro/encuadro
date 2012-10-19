@@ -223,8 +223,9 @@
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate=self;
     picker.sourceType =UIImagePickerControllerSourceTypeCamera;
-    [self presentModalViewController:picker animated:YES];
-	// Do any additional setup after loading the view, typically from a nib.
+    //[self presentModalViewController:picker animated:YES];
+	[self presentViewController:picker animated:YES completion:NO];
+    // Do any additional setup after loading the view, typically from a nib.
     
     activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [self.view addSubview:activity]; // spinner is not visible until started
@@ -243,13 +244,31 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    NSLog(@"shouldAutorotateToInterfaceOrientation BOOL IMAGEN SERVER");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
         return YES;
     }
+//    return NO;
 }
 
+-(BOOL)shouldAutorotate
+{
+    NSLog(@"shouldAutorotate IMAGEN SERVER");
+    return NO;
+}
 
+-(NSUInteger)supportedInterfaceOrientations
+{
+    NSLog(@"supportedInterfaceOrientations NSUInteger IMAGEN SERVER");
+    return UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    NSLog(@"preferredInterfaceOrientationForPresentation IMAGEN SERVER");
+    return UIInterfaceOrientationLandscapeRight;
+}
 
 @end

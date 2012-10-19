@@ -20,7 +20,7 @@
 @synthesize cuadroObra=_cuadroObra;
 @synthesize cuadroDescripcion=_cuadroDescripcion;
 @synthesize nombre_audio = _nombre_audio;
-
+@synthesize ARid = _ARid;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -80,6 +80,14 @@
                               @"Blanes_laParaguaya.mp3", 
                               @"Blanes_sraCarlota.mp3", 
                               nil];
+         
+         self.ARid = [[NSArray alloc]
+                             initWithObjects:
+                             @"1",
+                             @"2",
+                             @"3",
+                             @"4",
+                             nil];
    
      }else if (opcionAutor==2) {//2--> Figari
          
@@ -136,6 +144,16 @@
                               @"Figari_toque.mp3",
                               nil];
          
+         self.ARid = [[NSArray alloc]
+                      initWithObjects:
+                      @"5",
+                      @"6",
+                      @"7",
+                      @"8",
+                      @"9",
+                      @"10",
+                      nil];
+         
          
      } else if (opcionAutor==3) {//3--> Torres Garcia
          NSLog(@"OPCION AUTOR ES 3---TORRES GARCIA");
@@ -178,12 +196,21 @@
          
          self.nombre_audio = [[NSArray alloc]
                               initWithObjects:
-                              @"Torres_constructiva.mp3", 
+                              @"Torres_constructiva.mp3",
                               @"Torres_constructiva2.mp3",
                               @"Torres_interior.mp3",
                               @"Torres_paisajeCiudad.mp3",
                               @"Torres_universal.mp3",
-                              nil];   
+                              nil];
+         
+         self.ARid = [[NSArray alloc]
+                      initWithObjects:
+                      @"11",
+                      @"12",
+                      @"13",
+                      @"14",
+                      @"15",
+                      nil];
         
         
     }else {//else-->Todos los autores 
@@ -287,6 +314,26 @@
                              @"Torres_paisajeCiudad.mp3",
                              @"Torres_universal.mp3",
                              nil];
+        
+        
+        self.ARid = [[NSArray alloc]
+                     initWithObjects:
+                     @"1",
+                     @"2",
+                     @"3",
+                     @"4",
+                     @"5",
+                     @"6",
+                     @"7",
+                     @"8",
+                     @"9",
+                     @"10",
+                     @"11",
+                     @"12",
+                     @"13",
+                     @"14",
+                     @"15",
+                     nil];
         
         
         
@@ -419,8 +466,10 @@
                                             [self.cuadroObra objectAtIndex:[myIndexPath row]],
                                             [self.cuadroImages objectAtIndex:[myIndexPath row]],
                                             [self.cuadroDescripcion objectAtIndex:[myIndexPath row]],
-                                            [self.nombre_audio objectAtIndex:[myIndexPath row]],          
+                                            [self.nombre_audio objectAtIndex:[myIndexPath row]],
+                                            [self.ARid objectAtIndex:[myIndexPath row]],
                                             nil];
+
     }
 }
 

@@ -37,11 +37,11 @@ for (i=0;i<np;i++)
 
 PseudoInverse(coplVectors,np,coplMatrix); /*coplMatrix est la pseudoinverse de coplVectors*/
 
-//for (i=0;i<3;i++)
-//{
-// printf("\n");
-//  for (j=0;j<np;j++) printf("%e ",coplMatrix[i][j]);
-//}
+for (i=0;i<3;i++)
+{
+ printf("\n");
+  for (j=0;j<np;j++) printf("%e ",coplMatrix[i][j]);
+}
 
 PositCopl(np,coplImage,copl,coplMatrix,fLength,
           POSITRot1,POSITTrans1,POSITRot2,POSITTrans2);
