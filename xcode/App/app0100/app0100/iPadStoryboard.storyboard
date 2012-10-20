@@ -13,9 +13,6 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zaW-lz-MVR">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="aSh-ny-iHZ"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Manual">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -28,10 +25,7 @@
                                     <segue destination="uQI-OA-3cW" kind="push" id="m5X-Qm-IZH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nHl-RZ-5uv">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="43" id="twj-l8-VL1"/>
-                                </constraints>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9os-nQ-Xs8">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Auto">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -41,7 +35,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="QXs-4c-4RK" kind="push" id="iKf-22-cHB"/>
+                                    <segue destination="QXs-4c-4RK" kind="push" id="L8b-8D-ia8"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mAs-uV-us6">
@@ -67,15 +61,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Hqu-4G-nMb" firstAttribute="top" secondItem="mAs-uV-us6" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="0Qc-Y0-AEH"/>
-                            <constraint firstItem="nHl-RZ-5uv" firstAttribute="baseline" secondItem="zaW-lz-MVR" secondAttribute="baseline" type="default" id="2zV-NC-8La"/>
-                            <constraint firstAttribute="bottom" secondItem="nHl-RZ-5uv" secondAttribute="bottom" constant="261" id="3FH-jU-235"/>
-                            <constraint firstItem="nHl-RZ-5uv" firstAttribute="leading" secondItem="zaW-lz-MVR" secondAttribute="leading" type="default" id="GTW-mA-X4f"/>
                             <constraint firstItem="zaW-lz-MVR" firstAttribute="top" secondItem="PXT-5F-Lve" secondAttribute="top" constant="311" id="LaX-HL-wzq"/>
+                            <constraint firstAttribute="bottom" secondItem="9os-nQ-Xs8" secondAttribute="bottom" constant="258" id="MNH-Tv-I4d"/>
                             <constraint firstAttribute="trailing" secondItem="zaW-lz-MVR" secondAttribute="trailing" constant="318" id="Mmt-fW-gVp"/>
                             <constraint firstItem="mAs-uV-us6" firstAttribute="leading" secondItem="PXT-5F-Lve" secondAttribute="leading" constant="154" id="PLs-V1-yg4"/>
+                            <constraint firstItem="9os-nQ-Xs8" firstAttribute="leading" secondItem="zaW-lz-MVR" secondAttribute="leading" type="default" id="Pzw-TZ-SC3"/>
                             <constraint firstItem="Hqu-4G-nMb" firstAttribute="leading" secondItem="mAs-uV-us6" secondAttribute="leading" type="default" id="WlK-uR-WUm"/>
                             <constraint firstItem="mAs-uV-us6" firstAttribute="top" secondItem="PXT-5F-Lve" secondAttribute="top" constant="76" id="lS6-Vw-hiK"/>
-                            <constraint firstItem="nHl-RZ-5uv" firstAttribute="trailing" secondItem="zaW-lz-MVR" secondAttribute="trailing" type="default" id="qOt-z1-JCH"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
@@ -85,7 +77,7 @@
             </objects>
             <point key="canvasLocation" x="-1201" y="-100"/>
         </scene>
-        <!--Autor Table View Controller-->
+        <!--Autor Table View Controller - Autores-->
         <scene sceneID="41z-Z6-sUk">
             <objects>
                 <tableViewController storyboardIdentifier="autores" id="uQI-OA-3cW" customClass="AutorTableViewController" sceneMemberID="viewController">
@@ -149,7 +141,7 @@
                             <outlet property="delegate" destination="uQI-OA-3cW" id="cSK-2k-R8K"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="rHF-vV-T6o"/>
+                    <navigationItem key="navigationItem" title="Autores" id="rHF-vV-T6o"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QDg-eo-oLa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -267,6 +259,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="tomarFoto:" destination="Hqs-IX-j7F" eventType="touchUpInside" id="M9j-JW-nSc"/>
+                                </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f0e-f9-6wX">
                                 <constraints>
@@ -313,7 +308,7 @@
             </objects>
             <point key="canvasLocation" x="3926" y="-69"/>
         </scene>
-        <!--Obra Completa View Controller - Cuadro-->
+        <!--Obra Completa View Controller - Detalle-->
         <scene sceneID="dcO-PC-dJG">
             <objects>
                 <viewController id="P7g-iE-k9L" customClass="ObraCompletaViewController" sceneMemberID="viewController">
@@ -330,6 +325,9 @@
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="play" destination="P7g-iE-k9L" eventType="touchUpInside" id="fo2-sX-828"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z00-ef-ddZ">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -341,7 +339,6 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="play" destination="P7g-iE-k9L" eventType="touchUpInside" id="Imr-tq-yPg"/>
                                     <segue destination="HuG-xk-Kvv" kind="push" identifier="AR" id="dJH-my-39P"/>
                                 </connections>
                             </button>
@@ -387,7 +384,7 @@
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Cuadro" id="EfQ-fZ-EsV"/>
+                    <navigationItem key="navigationItem" title="Detalle" id="EfQ-fZ-EsV"/>
                     <connections>
                         <outlet property="autor" destination="tgx-H5-aT2" id="78e-Ow-Wtn"/>
                         <outlet property="detalle" destination="taT-U1-kxM" id="Jgf-pu-5Eu"/>
@@ -399,10 +396,10 @@
             </objects>
             <point key="canvasLocation" x="2640" y="-69"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation View Controller-->
         <scene sceneID="bLw-vm-OvD">
             <objects>
-                <navigationController id="Su1-S5-Qlo" sceneMemberID="viewController">
+                <navigationController id="Su1-S5-Qlo" customClass="NavigationViewController" sceneMemberID="viewController">
                     <toolbarItems/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="phf-kT-IZ8">
@@ -418,7 +415,7 @@
             </objects>
             <point key="canvasLocation" x="-2533" y="-100"/>
         </scene>
-        <!--Cuadro Table View Controller-->
+        <!--Cuadro Table View Controller - Obras-->
         <scene sceneID="hCC-ga-VcH">
             <objects>
                 <tableViewController storyboardIdentifier="autorobra" id="up2-px-t2G" customClass="CuadroTableViewController" sceneMemberID="viewController">
@@ -482,7 +479,7 @@
                             <outlet property="delegate" destination="up2-px-t2G" id="TJg-Fi-9za"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="hEa-cY-yeg"/>
+                    <navigationItem key="navigationItem" title="Obras" id="hEa-cY-yeg"/>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8qb-kX-iSP" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -512,6 +509,9 @@
         <class className="ImagenServerViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ImagenServerViewController.h"/>
             <relationships>
+                <relationship kind="action" name="animate:"/>
+                <relationship kind="action" name="pressed:"/>
+                <relationship kind="action" name="stop:"/>
                 <relationship kind="action" name="tomarFoto:"/>
                 <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
@@ -531,6 +531,9 @@
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="NavigationViewController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavigationViewController.h"/>
         </class>
         <class className="ObraCompletaViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ObraCompletaViewController.h"/>

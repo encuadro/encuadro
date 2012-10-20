@@ -6,13 +6,23 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
+#ifdef __cplusplus
+extern "C"{
+#endif
+
 #import "isgl3d.h"
 #include "vvector.h"
 #import "configuration.h"
 #import <AVFoundation/AVFoundation.h>
 #import "claseDibujar.h"
 
+#ifdef __cplusplus
+}
+#endif
+
 bool fin;
+
+
 @interface videoView : UIImageView <AVAudioPlayerDelegate> {
 }
 //@property(nonatomic,retain) Isgl3dViewController* viewController;
@@ -27,6 +37,8 @@ bool fin;
     Isgl3dMeshNode * _3dText;
     Isgl3dDemoCameraController * _cameraController;
     Isgl3dNode * _container;
+    Isgl3dSkeletonNode * _model;
+    Isgl3dSkeletonNode * _model2;
 }
 @property (nonatomic) float* eulerAngles;
 @property (nonatomic) float* traslacion;
@@ -35,6 +47,7 @@ bool fin;
 
 - (bool) getDibujar;
 - (void) setRotacion:(float*) rot;
+
 
 @end
 

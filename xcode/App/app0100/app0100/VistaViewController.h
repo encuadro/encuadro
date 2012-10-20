@@ -13,6 +13,7 @@
 #import "HelloWorldView.h"
 
 
+bool DosCubos;
 @interface VistaViewController : UIViewController{
     
     UIImageView *resultImage;
@@ -34,7 +35,11 @@
 //@property (readwrite) bool AugmReal;
 @property (nonatomic,retain) Isgl3dView * HWview;
 //- (IBAction)buttonClicked:(id)sender;
-@property (nonatomic, readwrite) NSInteger *ARidObra;
+@property (nonatomic, readwrite) NSNumber *ARidObra;
+//@property (nonatomic, readwrite) bool *DosCubos;
+
+
+
 
 
 @end

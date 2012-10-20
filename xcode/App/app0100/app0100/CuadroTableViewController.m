@@ -82,12 +82,12 @@
                               nil];
          
          self.ARid = [[NSArray alloc]
-                             initWithObjects:
-                             @"1",
-                             @"2",
-                             @"3",
-                             @"4",
-                             nil];
+                      initWithObjects:
+                      [NSNumber numberWithInt:1],
+                      [NSNumber numberWithInt:2],
+                      [NSNumber numberWithInt:3],
+                      [NSNumber numberWithInt:4],
+                      nil];
    
      }else if (opcionAutor==2) {//2--> Figari
          
@@ -146,12 +146,12 @@
          
          self.ARid = [[NSArray alloc]
                       initWithObjects:
-                      @"5",
-                      @"6",
-                      @"7",
-                      @"8",
-                      @"9",
-                      @"10",
+                      [NSNumber numberWithInt:5],
+                      [NSNumber numberWithInt:6],
+                      [NSNumber numberWithInt:7],
+                      [NSNumber numberWithInt:8],
+                      [NSNumber numberWithInt:9],
+                      [NSNumber numberWithInt:10],
                       nil];
          
          
@@ -205,11 +205,11 @@
          
          self.ARid = [[NSArray alloc]
                       initWithObjects:
-                      @"11",
-                      @"12",
-                      @"13",
-                      @"14",
-                      @"15",
+                      [NSNumber numberWithInt:11],
+                      [NSNumber numberWithInt:12],
+                      [NSNumber numberWithInt:13],
+                      [NSNumber numberWithInt:14],
+                      [NSNumber numberWithInt:15],
                       nil];
         
         
@@ -318,21 +318,21 @@
         
         self.ARid = [[NSArray alloc]
                      initWithObjects:
-                     @"1",
-                     @"2",
-                     @"3",
-                     @"4",
-                     @"5",
-                     @"6",
-                     @"7",
-                     @"8",
-                     @"9",
-                     @"10",
-                     @"11",
-                     @"12",
-                     @"13",
-                     @"14",
-                     @"15",
+                     [NSNumber numberWithInt:1],
+                     [NSNumber numberWithInt:2],
+                     [NSNumber numberWithInt:3],
+                     [NSNumber numberWithInt:4],
+                     [NSNumber numberWithInt:5],
+                     [NSNumber numberWithInt:6],
+                     [NSNumber numberWithInt:7],
+                     [NSNumber numberWithInt:8],
+                     [NSNumber numberWithInt:9],
+                     [NSNumber numberWithInt:10],
+                     [NSNumber numberWithInt:11],
+                     [NSNumber numberWithInt:12],
+                     [NSNumber numberWithInt:13],
+                     [NSNumber numberWithInt:14],
+                     [NSNumber numberWithInt:15],
                      nil];
         
         

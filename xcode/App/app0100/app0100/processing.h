@@ -45,3 +45,10 @@ float * read_pgm_image_float(int * X, int * Y, char * name);
 
 static void gaussian_kernel(ntuple_list kernel, float sigma, float mean);
 image_float gaussian_sampler( image_float in, float scale, float sigma_scale );
+
+
+/*--------------------------------------Definiciones de funciones-------------------------------------*/
+void solveHomographie(double **imgPts, double **imgPts2, double *h);
+void matrixProduct(double ** A, int rowA, double ** B, int colB, double ** C);
+void matrixVectorProduct(double ** A, int rowA, double* B, double* C);
+void solveAffineTransformation(double **imgPts, double **imgPts2, double *h);

@@ -29,8 +29,8 @@
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.delegate=self;
     picker.sourceType =UIImagePickerControllerSourceTypeCamera;
-    [self presentModalViewController:picker animated:YES];
-    
+    //[self presentModalViewController:picker animated:YES];
+	[self presentViewController:picker animated:YES completion:NO];
     
 }
 

@@ -30,7 +30,12 @@
 @synthesize context = _context;
 @synthesize videoView = _videoView;
 @synthesize isgl3DView = _isgl3DView;
+@synthesize theMovie = _theMovie;
 
+@synthesize iPhone = _iPhone;
+@synthesize wSize = _wSize;
+@synthesize hSize = _hSize;
+@synthesize videoPlayer = _videoPlayer;
 
 /*para DIBUJAR*/
 claseDibujar *cgvista;
@@ -108,6 +113,10 @@ kalman_state_3 state;
 /* video rotation for App*/
 UIImageOrientation orientation;
 
+/* homographie variables*/
+double **imagePoints3;
+double **imagePoints4;
+double *h;
 
 
 - (CIContext* ) context
@@ -265,6 +274,27 @@ UIImageOrientation orientation;
         /*-------------------------------------|CORRESPONDENCIAS|-------------------------------------*/
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
+        
+        
+ /* aplicado al caso de uso de movie player-----------------*/
+ 
+        if (self.videoPlayer) {
+            for (int i=0; i<4; i++) {
+                
+                imagePoints4[i][0]=imagePoints[i+4][0]*self.wSize/480;
+                imagePoints4[i][1]=imagePoints[i+4][1]*self.hSize/360;
+                
+            }
+            // solveAffineTransformation(imagePoints, imagePoints3, h);
+            solveHomographie(imagePoints4, imagePoints3, h);
+            
+            [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+        }
+        
+        
+ /* aplicado al caso de uso de movie player-----------------*/
+       
+        
         
         if (verbose){
             printf("Tamano: %d\n", listSize);
@@ -445,6 +475,91 @@ UIImageOrientation orientation;
     
 }
 
+
+-(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux{
+    bool CGaffine=false;
+    
+    if (CGaffine) {
+        //  theMovie.view.frame = CGRectMake(imagePoints[6][0]*480/480, imagePoints[6][1]*320/360, 50, 50);
+        //  CGAffineTransform currentMatrix =  theMovie.view.transform;
+        //  CGAffineTransform translate = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+        CGAffineTransform affine = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
+        CGAffineTransform rotation = CGAffineTransformMake(h[0], h[3], h[1], h[4], 0, 0);
+        CGAffineTransform translation = CGAffineTransformMake(1, 0 , 0, 1, h[2], h[5]);
+        
+        //CGAffineTransform translate = CGAffineTransformMakeTranslation(200, 50);
+        // theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
+        //     theMovie.view.transform=newMatrix;
+        // theMovie.view.transform=translation;
+        theMovie.view.transform=rotation;
+        // theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,imagePoints[6][0],imagePoints[6][1]);
+        CGFloat x,y;
+        x=imagePoints[5][0]+imagePoints[6][0]+imagePoints[4][0]+imagePoints[7][0];
+        y=imagePoints[5][1]+imagePoints[6][1]+imagePoints[4][1]+imagePoints[7][1];
+        x=x*self.wSize/480;
+        y=y*self.hSize/360;
+        //  theMovie.view.frame.origin=CGPointMake(x,y);
+        [theMovie.view setCenter:CGPointMake(x/4, y/4)];
+        printf("imagePoints[5][0] %f",imagePoints[5][0]);
+        printf("imagePoints[6][0] %f",imagePoints[6][0]);
+        // theMovie.view.transform=newMatrix;
+        // theMovie.view.layer.transform=CATransform3DMakeAffineTransform(newMatrix);
+        //theMovie.view.frame=CGRectApplyAffineTransform(CGRectMake(10, 10, 50, 50), newMatrix);
+        
+    }else {
+        CALayer *layer = theMovie.view.layer;
+        
+        layer.frame = CGRectMake(0,0,60,60);
+        layer.anchorPoint = CGPointMake(0.0,0.0);
+        layer.zPosition = 0;
+        
+        
+        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+        
+        rotationAndPerspectiveTransform.m11 = h[0];
+        rotationAndPerspectiveTransform.m12 = h[3];
+        rotationAndPerspectiveTransform.m14 = h[6];
+        rotationAndPerspectiveTransform.m21 = h[1];
+        rotationAndPerspectiveTransform.m22 = h[4];
+        rotationAndPerspectiveTransform.m24 = h[7];
+        rotationAndPerspectiveTransform.m41 = h[2];
+        rotationAndPerspectiveTransform.m42 = h[5];
+        rotationAndPerspectiveTransform.m44 = 1;
+        
+        theMovie.view.layer.transform=rotationAndPerspectiveTransform;
+    }
+    
+    
+    
+}
+-(void) desplegarVideo{
+    
+    /////////viendo commit
+    
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
+    NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    //Place it in subview, else it won’t work
+    theMovie.view.frame = CGRectMake(0, 0, 60, 60);
+    //theMovie.fullscreen=YES;
+    theMovie.controlStyle=MPMovieControlStyleNone;
+    //theMovie.view.contentMode=UIViewContentModeScaleToFill;
+    theMovie.scalingMode=MPMovieScalingModeFill;
+    
+    [self.view addSubview:theMovie.view];
+    //Resize window – a bit more practical
+    UIWindow *moviePlayerWindow = nil;
+    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
+    //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+    // Play the movie.
+    [theMovie play];
+    
+}
+
+
 - (void) reservarMemoria {
     
     if (verbose) printf("Reservamos memoria");
@@ -478,6 +593,30 @@ UIImageOrientation orientation;
     
     imagePoints=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(float *)malloc(2 * sizeof(float));
+    
+    
+    //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
+    imagePoints3=(double **)malloc(4 * sizeof(double *));
+    for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
+    
+    imagePoints3[0][0]=60;
+    imagePoints3[0][1]=60;
+    
+    imagePoints3[1][0]=60;
+    imagePoints3[1][1]=0;
+    
+    imagePoints3[2][0]=0;
+    imagePoints3[2][1]=0;
+    
+    imagePoints3[3][0]=0;
+    imagePoints3[3][1]=60;
+    
+    
+    //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
+    imagePoints4=(double **)malloc(4 * sizeof(double *));
+    for (i=0;i<4;i++) imagePoints4[i]=(double *)malloc(2 * sizeof(double));
+    
+    h=(double *)malloc(8 * sizeof(double));
     
     //    coplMatrix=(float **)malloc(3 * sizeof(float *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(NumberOfPoints * sizeof(float));
@@ -688,9 +827,21 @@ UIImageOrientation orientation;
     if (verbose) printf("viewDidLoad\n");
     
     printf("VIEWDIDLOAD ISGL\n");
-    
-    orientation=UIImageOrientationUp;
     [super viewDidLoad];
+    self.iPhone=true;
+    
+    if (self.iPhone) {
+        self.wSize=480;
+        self.hSize=320;
+    }else {
+        self.wSize=1024;
+        self.hSize=768;
+    }
+    if (self.videoPlayer) {
+        [self desplegarVideo];
+    }
+    orientation=UIImageOrientationUp;
+    
     
     /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];

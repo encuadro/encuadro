@@ -20,6 +20,9 @@
 @synthesize vistaImg =_vistaImg;
 @synthesize button = _button;
 @synthesize HWview = _HWview;
+@synthesize ARidObra = _ARidObra;
+
+
 
 
 @synthesize viewController = _viewController;
@@ -106,12 +109,30 @@
 
 
 //- (IBAction)hacerRender:(id)sender
-- (void) hacerRender 
-{
+- (void) hacerRender{
     NSLog(@"HACER RENDER VISTA");
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
     
+    
+    if ([self.ARidObra intValue]<5){
+        NSLog(@"AR DOS CUBOS");
+        DosCubos=true;
+        _viewController.videoPlayer=false;
+        [self createViews];
+        
+     }else if([self.ARidObra intValue]>10) {
+        NSLog(@"AR UN CUBO y MODELOS");
+        DosCubos=false;
+        _viewController.videoPlayer=false;
+        [self createViews];
+        
+    }else{
+        DosCubos=false;
+        NSLog(@"AR VIDEO");
+        
+        _viewController.videoPlayer=true;
+    }
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
@@ -130,7 +151,7 @@
     [self.view bringSubviewToFront:self.viewController.view];
     self.viewController.view.opaque = NO;
     
-    [self createViews];
+    
     
     //activo procesamiento
    // _viewController.AugmReal=true;
@@ -153,72 +174,6 @@
 }
 
 
-- (void) hacerRenderPro
-{
- 
-    
-    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    NSLog(@"hacerRender PRO VISTA");
-    
-    //    isglYAVFoundProAppDelegate *appDelegate = (isglYAVFoundProAppDelegate *)[[UIApplication sharedApplication] delegate];
-    //     NSLog(@"appdelegate1");
-    //    self.viewController=(Isgl3dViewController*)appDelegate.viewController;
-    //     NSLog(@"appdelegate2");
-    self.viewController=[[Isgl3dViewController alloc] init];
-    self.viewController.wantsFullScreenLayout=YES;
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    
-    [_window makeKeyAndVisible];
-    
-    Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
-    [Isgl3dDirector sharedInstance].openGLView = glView;
-    _viewController.view = glView;
-    [_window addSubview:glView];
-    [self createViews];
-    [self.viewController createVideoWindow:_window];
-    [self.viewController viewDidLoad];
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    ///////////////////////////////////////////////
-    //    UIView* vista =self.viewController.view;
-    //    UIView* vista2=self.view;
-    //    [self.view addSubview:vista];
-    //
-    //    [self.view bringSubviewToFront:vista];
-    //    [self.view sendSubviewToBack:vista2];
-    
-    //    //agrego video
-    //    [self.view addSubview:self.viewController.videoView];
-    //    [self.view bringSubviewToFront:self.viewController.videoView];
-    //
-    //    //agrego render
-    //    [self.view addSubview:self.viewController.view];
-    //    [self.view bringSubviewToFront:self.viewController.view];
-    //    self.viewController.view.opaque = NO;
-    //
-    //    [self createViews];
-    //
-    //    //activo procesamiento
-    //   // _viewController.AugmReal=true;
-    
-    
-    ////////BOTON
-    
-        self.button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [self.button addTarget:self
-                   action:@selector(buttonClicked:)
-         forControlEvents:UIControlEventTouchDown];
-        [self.button setTitle:@"Back to Story" forState:UIControlStateNormal];
-        self.button.frame = CGRectMake(50,50, 120.0, 50.0);
-        [_window addSubview:self.button];
-    
-    
-    ////////BOTON
-    
-    // [[Isgl3dDirector sharedInstance] startAnimation];
-}
 
 
 - (void) removeViews {
@@ -237,7 +192,7 @@
 
 
 - (void) createViews {
-    printf("CREATE VIEWS\n");
+    NSLog(@"CREATE VIEWS");
 	// Set the device orientation
 	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
     
@@ -245,9 +200,11 @@
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000"; 
     
 	// Create view and add to Isgl3dDirector
-    self.HWview =[[Isgl3dView alloc] init];   
-    
+    self.HWview =[[Isgl3dView alloc] init];
+    NSLog(@"PRE INSTANCIA [HELLOWORLD VIEW]");
+    //[HelloWorldView s]
 	self.HWview = [HelloWorldView view];
+    NSLog(@"POST INSTANCIA [HELLOWORLD VIEW]");
     _viewController.isgl3DView = self.HWview;
 	[[Isgl3dDirector sharedInstance] addView:self.HWview];
 }
@@ -255,17 +212,12 @@
 //este metodo es igual a buttonclicked
 - (void) buttonBACK {
 NSLog(@"BUTTON BACK");
-NSLog(@"BUTTON BACK");
-NSLog(@"BUTTON BACK");
-NSLog(@"BUTTON BACK");
-NSLog(@"BUTTON BACK");
-NSLog(@"BUTTON BACK");
 // _viewController.AugmReal=false;
 
     [self removeViews];
 
     [self.viewController.session stopRunning];
-
+    [self.viewController.theMovie stop];
 
 //////////////////////////////////////////////////////    
 
@@ -301,21 +253,6 @@ _window = nil;
 [_button release];
 _button=nil;
 
-
-//_vistaImg =[[UIImageView alloc] init];
-//
-//_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
-//UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-//
-//VistaViewController *mainViewController = [storyboard instantiateInitialViewController];
-//self.window.rootViewController = mainViewController;
-
-//  code to configure the view controller would go here
-
-//[_window makeKeyAndVisible];
-
-
 }
 
 
@@ -327,13 +264,6 @@ _button=nil;
     //NSLog(@"ARID OBRA ES: %@",self.ARidObra);
     [super viewDidLoad];
  
-	// Do any additional setup after loading the view.
-    // Override back button action
-//    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"backacka" style:UIBarButtonItemStyleBordered target:self action:@selector(buttonClicked:)];
-//    
-//    self.navigationItem.hidesBackButton = YES;
-//    self.navigationItem.leftBarButtonItem = item;
-//    [item release];
     
     
 }
@@ -343,30 +273,12 @@ _button=nil;
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-  //  [self action:@selector(buttonClicked:)];
+
 
 //[self buttonBACK];
 }
 
-//- (void)viewWillDisappear:(BOOL)animated
-//{
-//    NSLog(@"TERMINANDO AR");
-//    NSLog(@"TERMINANDO AR");
-//    NSLog(@"TERMINANDO AR");
-//    NSLog(@"TERMINANDO AR");
-//    
-//    [self buttonBACK];
-////    if ([self.navigationController.viewControllers indexOfObject:self] == NSNotFound) {
-////        //[self.delegate setParentSelectedCity:self.selectedCity];
-////        NSLog(@"TERMINANDO AR");
-////        NSLog(@"TERMINANDO AR");
-////        NSLog(@"TERMINANDO AR");
-////        NSLog(@"TERMINANDO AR");
-////        
-////        [self buttonBACK];
-////    }
-//    [super viewWillDisappear:animated];
-//}
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -408,12 +320,7 @@ _button=nil;
 {
     NSLog(@"SHOULD Autorotate VISTA");
     return YES;
-//    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-//    [_viewController willRotateToInterfaceOrientation:interfaceOrientation duration:0.2];
-//    BOOL autorotate;
-//    autorotate=[_viewController shouldAutorotateToInterfaceOrientation:interfaceOrientation];
-//    return autorotate;
-    
+   
     
     
 }

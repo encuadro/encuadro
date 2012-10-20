@@ -125,18 +125,35 @@
     
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    // [self.navigationController setNavigationBarHidden:YES animated:animated];
+    
+    if (click!=0) {
+        [self.audioPlayer stop];
+        click=0;
+        [self.start setTitle:@"Start" forState:UIControlStateNormal];
+    }
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    
     if ([[segue identifier] isEqualToString:@"AR"])
     {
-        
+        if (click!=0) {
+            [self.audioPlayer stop];
+            click=0;
+            [self.start setTitle:@"Start" forState:UIControlStateNormal];
+        }
         
         VistaViewController *ARVistaViewController =
         [segue destinationViewController];
         
         //falta ver como asignar el ARidObra
-       //ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
+       ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
     
     }
 }

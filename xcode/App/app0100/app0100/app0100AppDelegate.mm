@@ -26,7 +26,7 @@
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Instantiate the Isgl3dDirector and set background color
-	[Isgl3dDirector sharedInstance].backgroundColorString = @"333333ff";
+	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000";
     
 	// Set the device orientation
  	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;   //TOUCH//
