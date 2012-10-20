@@ -130,7 +130,6 @@ bool corners, segments, reproyected;
         
         
 		[podImporter addMeshesToScene:_model];
-        [podImporter printPODInfo];
         [podImporter2 addMeshesToScene:_model2];;
 		
 //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
