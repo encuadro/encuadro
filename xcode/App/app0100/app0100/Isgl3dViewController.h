@@ -12,6 +12,8 @@
 #import "HelloWorldView.h"
 //#import "app0100AppDelegate.h"
 //#import "VistaViewController.h"
+//#import "TouchVista.h"
+
 
 #import "processing.h"
 #import "lsd.h"
@@ -23,8 +25,8 @@
 #import "configuration.h"
 #import "kalman.h"
 
-
-
+#include "AuxiVar.h"
+//bool fulls;
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     MPMoviePlayerController *theMovie;
@@ -45,6 +47,7 @@
 @property (nonatomic,readwrite) int wSize;
 @property (nonatomic,readwrite) int hSize;
 @property (nonatomic,readwrite) bool videoPlayer;
+@property (nonatomic,readwrite) bool* touchFull;
 
 - (void) procesamiento;
 - (void) reservarMemoria;

@@ -22,8 +22,7 @@
 @synthesize HWview = _HWview;
 @synthesize ARidObra = _ARidObra;
 
-
-
+@synthesize vistaTouch = _vistaTouch;
 
 @synthesize viewController = _viewController;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -41,71 +40,30 @@
     return self;
 }
 
-- (IBAction)buttonClicked:(id)sender{
-    NSLog(@"BUTTON CLICKED");
-     NSLog(@"BUTTON CLICKED");
-     NSLog(@"BUTTON CLICKED");
-     NSLog(@"BUTTON CLICKED");
-     NSLog(@"BUTTON CLICKED");
-     NSLog(@"BUTTON CLICKED");
-   // _viewController.AugmReal=false;
-    [self removeViews];  
-    
-    
-    
-//////////////////////////////////////////////////////    
-    
-    // applicationWillTerminate
-    // applicationWillTerminate
-    // applicationWillTerminate
-    
-    [[Isgl3dDirector sharedInstance].openGLView removeFromSuperview];
 
-	// End and reset the director
-	
-	//[Isgl3dDirector resetInstance];
-	
-	// Release
-	[_viewController release];
-	_viewController = nil;
-	[_window release];
-	_window = nil;
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
     
+    //[super touchesBegan:touches withEvent:event];
     
-    // applicationWillTerminate
-    // applicationWillTerminate
-    // applicationWillTerminate
-
+  
     
-//////////////////////////////////////////////////////    
-    [[Isgl3dDirector sharedInstance] resume];
-    
-    
-    //self.view=Nil;
-
-    
-    [_button release];
-    _button=nil;
-    
+    if (self.viewController.touchFull) {
+        NSLog(@" TOUCHFULL VISTA FALSE");
+        self.viewController.touchFull=false;
         
-    _vistaImg =[[UIImageView alloc] init];
+    }else{
+        NSLog(@" TOUCHFULL VISTA TRUE");
+        self.viewController.touchFull=true;
+    }
     
-    _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
-    
-    
-    
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-
-    VistaViewController *mainViewController = [storyboard instantiateInitialViewController];
-    self.window.rootViewController = mainViewController;
-    
-    //  code to configure the view controller would go here
-    
-    [_window makeKeyAndVisible];
     
     
 }
+
 
 
 //- (IBAction)hacerRender:(id)sender
@@ -141,6 +99,7 @@
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
 
+ 
     
     //agrego video
     [self.view addSubview:self.viewController.videoView];
@@ -151,7 +110,11 @@
     [self.view bringSubviewToFront:self.viewController.view];
     self.viewController.view.opaque = NO;
     
-    
+
+    //agrego vistaTouch
+    self.vistaTouch = [[TouchVista alloc] init];
+    self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
+    [self.view addSubview:self.vistaTouch];
     
     //activo procesamiento
    // _viewController.AugmReal=true;
@@ -256,8 +219,6 @@ _button=nil;
 }
 
 
-
-
 - (void)viewDidLoad
 {
     NSLog(@"VIEW DID LOAD VISTA");
@@ -298,6 +259,7 @@ _button=nil;
     
    // [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
+
 
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
