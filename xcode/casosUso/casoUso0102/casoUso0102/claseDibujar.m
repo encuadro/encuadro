@@ -45,7 +45,7 @@ UITextField *text;
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+//        self.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
     }
     return self;
 }

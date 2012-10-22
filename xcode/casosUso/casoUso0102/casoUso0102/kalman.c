@@ -97,25 +97,4 @@ void kalman_update_3x3(kalman_state_3* state, float* measurement,float** A, floa
     for (int i=0; i<3; i++) free(auxMat[i]);
     free(auxMat);
     free(auxVet);
-//
-//    //    //prediction update
-////    //omit x = x
-////    state->p = state->p + state->q;
-////    
-////    //measurement update
-////    state->k = state->p / (state->p + state->r);
-////    state->x = state->x + state->k * (measurement - state->x);
-////    state->p = (1 - state->k) * state->p;
-////
-//    
-////    x_prd = A * x_est;
-////    p_prd = A * p_est * A' + Q;
-////    S = H * p_prd' * H' + R;
-////    B = H * p_prd';
-////    klm_gain = (S \ B)';
-////    x_est = x_prd + klm_gain * (goodPoses(n,1:3)' - H * x_prd);
-////                                p_est = p_prd - klm_gain * H * p_prd;
-////                                y(n,1:3) = H * x_est;
-////}
-//
 }
