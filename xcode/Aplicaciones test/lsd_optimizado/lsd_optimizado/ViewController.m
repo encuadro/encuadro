@@ -33,7 +33,6 @@ image_float imagen_float;
 
 /*Para el LSD*/
 float* list;
-double* list_double;
 int listSize;
 
 float scale = 0.5;
@@ -81,7 +80,6 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     NSLog(@"Sale de rgb2gray\n");
     
-    free( (void *) image );
     /*-------------------------|PARA LEVANTAR EL PGM DESDE LA PC|-----------------------*/
     
     //char* nombre = "/Users/pablofloresguridi/repositorios/encuadro/xcode/Aplicaciones test/gaussian_sampler/gaussian_sampler/marker_0004.pgm";
@@ -92,34 +90,31 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     /*-------------------------|CORREMOS GAUSSIAN SAMPLER|-----------------------*/
     
-    NSLog(@"Entra a gaussian_sampler\n");
+
+    
     imagen_float = new_image_float_ptr( (unsigned int) width, (unsigned int) height, (float*)datafloat );
+    NSLog(@"Entra a gaussian_sampler\n");
     luminancia_sub = gaussian_sampler(imagen_float, scale, sigma_scale);
     NSLog(@"Sale de gaussian_sampler\n");
-       
-    [self reconstruirImg:datafloat width:width height:height];
     
+    [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
     
-    
+    free( (void *) image );
+    free_image_float(imagen_float);
 
      //cgvista=[[claseDibujar alloc] initWithFrame:self.vista.frame];
     
 }
-- (IBAction)lsd_optimizado:(id)sender {
+- (IBAction)lsd_oringinal:(id)sender {
     
-
-
 
     NSLog(@"LSD in\n");
     list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
     NSLog(@"LSD out\n");
     printf("Cantidad de segmentos detectados: %d\n",listSize);
-    
- 
-    free(list);
-    [self reconstruirImg:luminancia_sub->data width:luminancia_sub->xsize height:luminancia_sub->ysize];
-
+    [self dibujarSegmentos];
 }
+
 
 - (void) dibujarSegmentos{
 
