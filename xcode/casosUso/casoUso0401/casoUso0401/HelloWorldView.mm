@@ -119,10 +119,10 @@ bool corners, segments, reproyected;
 		_model = [_container createSkeletonNode];
 		//_model2 = [_container createSkeletonNode];
   
-        _model.scaleX=5;
-        _model.scaleY=5;
-        _model.scaleZ=5;
-        _model.rotationZ = 90;
+        _model.scaleX=50;
+        _model.scaleY=50;
+        _model.scaleZ=50;
+       // _model.rotationZ = 90;
         
 //        _model2.scaleX=15;
 //        _model2.scaleY=15;
@@ -131,13 +131,12 @@ bool corners, segments, reproyected;
         
 		[podImporter addMeshesToScene:_model];
 
-       // [podImporter printPODInfo];
+        [podImporter printPODInfo];
        // [podImporter2 addMeshesToScene:_model2];;
 		
-        //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
-        //		[_animationController start];
+
         
-        _model.position = iv3(0, -100, 0);
+        _model.position = iv3(380, -280, 0);
      //   _model2.position = iv3(190,-100,0);
         
         Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];

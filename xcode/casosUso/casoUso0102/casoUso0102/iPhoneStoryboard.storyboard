@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mEx-IC-q4b">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
+    </dependencies>
+    <scenes>
+        <!--Inicio View Controller-->
+        <scene sceneID="VHO-ft-TXt">
+            <objects>
+                <viewController id="7gV-mi-j0n" customClass="InicioViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mkj-d6-3Lb">
+                        <rect key="frame" x="0.0" y="64" width="480" height="212"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Caso de Uso 0102" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qks-u4-8r4">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FtJ-OD-zOP">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="inicio">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="D65-ID-drx" kind="push" id="ozx-mg-V6B"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="FtJ-OD-zOP" firstAttribute="centerX" secondItem="Qks-u4-8r4" secondAttribute="centerX" type="default" id="3E0-ED-RnY"/>
+                            <constraint firstItem="FtJ-OD-zOP" firstAttribute="leading" secondItem="mkj-d6-3Lb" secondAttribute="leading" constant="217" id="MKc-wg-as2"/>
+                            <constraint firstItem="FtJ-OD-zOP" firstAttribute="top" secondItem="mkj-d6-3Lb" secondAttribute="top" constant="120" id="lfb-q1-onJ"/>
+                            <constraint firstItem="Qks-u4-8r4" firstAttribute="top" secondItem="mkj-d6-3Lb" secondAttribute="top" constant="73" id="tq8-eY-2tb"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="bZ9-ng-It6"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bDo-8S-une" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="447" y="32"/>
+        </scene>
+        <!--Main View Controller-->
+        <scene sceneID="zQl-DD-A8N">
+            <objects>
+                <viewController autoresizesArchivedViewToFullSize="NO" id="D65-ID-drx" customClass="MainViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="o3g-NB-3Lc">
+                        <rect key="frame" x="0.0" y="44" width="480" height="232"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="36" minValue="9" maxValue="124" translatesAutoresizingMaskIntoConstraints="NO" id="9Ie-vp-D0f">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="114" id="UfH-fm-XVW"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="layer.transform.rotation.z" value="-1.570795"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="segmentsFilterThresh:" destination="D65-ID-drx" eventType="valueChanged" id="olC-zS-jDz"/>
+                                </connections>
+                            </slider>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1.5" minValue="0.0" maxValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="G3F-fa-VQl">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="114" id="qCi-XE-aQo"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="layer.transform.rotation.z" value="-1.570795"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="kalmanErrorGain:" destination="D65-ID-drx" eventType="valueChanged" id="y3l-Em-Slq"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="G3F-fa-VQl" firstAttribute="top" secondItem="9Ie-vp-D0f" secondAttribute="top" type="default" id="1Wv-jm-fdM"/>
+                            <constraint firstAttribute="bottom" secondItem="G3F-fa-VQl" secondAttribute="bottom" constant="70" id="CZY-SN-Q4X"/>
+                            <constraint firstAttribute="trailing" secondItem="9Ie-vp-D0f" secondAttribute="trailing" constant="12" id="fOz-KX-ppq"/>
+                            <constraint firstAttribute="trailing" secondItem="G3F-fa-VQl" secondAttribute="trailing" constant="43" id="iKM-r0-Rxu"/>
+                        </constraints>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <toolbarItems>
+                        <barButtonItem title="LSD" id="YEy-tC-7KU">
+                            <connections>
+                                <action selector="LSD:" destination="D65-ID-drx" id="qtV-P2-MhY"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="Segments" id="uaU-Qb-4gc">
+                            <connections>
+                                <action selector="Segments:" destination="D65-ID-drx" id="hKO-8C-tsD"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="Detected Pts" id="APn-ur-rW3">
+                            <connections>
+                                <action selector="detectedPts:" destination="D65-ID-drx" id="tus-Z1-hxc"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem title="Reproyected Pts" id="e6N-DJ-dcf">
+                            <connections>
+                                <action selector="reproyectedPts:" destination="D65-ID-drx" id="akV-do-uYF"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" id="J5a-QM-T96">
+                            <switch key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="JAE-VX-xs4">
+                                <rect key="frame" x="376" y="9" width="79" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="kalman:" destination="D65-ID-drx" eventType="valueChanged" id="gyq-NC-MLL"/>
+                                </connections>
+                            </switch>
+                            <connections>
+                                <action selector="kalman:" destination="D65-ID-drx" id="N63-hR-8IW"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" id="yfI-WM-OzK">
+                        <nil key="title"/>
+                        <barButtonItem key="rightBarButtonItem" title="RefPose" id="5cQ-XJ-h5U">
+                            <connections>
+                                <action selector="RefPose:" destination="D65-ID-drx" id="ocZ-9W-JQU"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="controlsView" destination="o3g-NB-3Lc" id="ovU-fN-xNJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ENe-xV-J59" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1161" y="32"/>
+        </scene>
+        <!--Nav Controller-->
+        <scene sceneID="TyJ-sc-RWl">
+            <objects>
+                <navigationController toolbarHidden="NO" id="mEx-IC-q4b" customClass="NavController" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hG9-vf-nXZ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="OQI-Vs-8kZ">
+                        <rect key="frame" x="0.0" y="276" width="480" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="7gV-mi-j0n" kind="relationship" relationship="rootViewController" id="gBH-0i-j7n"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eip-T2-VHP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-235" y="32"/>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="InicioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InicioViewController.h"/>
+        </class>
+        <class className="MainViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MainViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="RefPose:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="Segments:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="Sensors:" candidateClass="UISwitch"/>
+                <relationship kind="action" name="detectedPts:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="action" name="kalman:" candidateClass="UISwitch"/>
+                <relationship kind="action" name="kalmanErrorGain:" candidateClass="UISlider"/>
+                <relationship kind="action" name="segmentsFilterThresh:" candidateClass="UISlider"/>
+                <relationship kind="outlet" name="controlsView" candidateClass="UIView"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="NavController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavController.h"/>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>
