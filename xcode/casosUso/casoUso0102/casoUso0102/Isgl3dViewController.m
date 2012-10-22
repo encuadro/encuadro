@@ -288,6 +288,7 @@ float auxVal=0;
         /*-------------------------------------|FILTRADO|-------------------------------------*/
         free(listFiltrada);
         listFiltradaSize =0;
+//        printf("segmentFilterThresh= %f\n",_segmentFilterThres);
         /*Filtrado de segmentos detectados por el LSD */
         listFiltrada = filterSegments(&listFiltradaSize , &listSize ,list, _segmentFilterThres);
         
@@ -468,7 +469,7 @@ float auxVal=0;
 //                        measureNoise[2][0]=0;
 //                        measureNoise[2][1]=0;
 //                        measureNoise[2][2]=1;
-                        SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoise);
+                       
                         
                         state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
                         
@@ -479,6 +480,10 @@ float auxVal=0;
                         
                         init=false;
                     }
+                    
+//                    printf("kalmanErrorGain= %f\n",_kalmanErrorGain);
+                    SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoise);
+                    
                     /* kalman correlacionado */
                     kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
 
