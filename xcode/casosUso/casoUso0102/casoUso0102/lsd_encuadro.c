@@ -99,7 +99,7 @@
 #include <math.h>
 #include <limits.h>
 #include <float.h>
-#include "lsd.h"
+#include "lsd_encuadro.h"
 
 /** ln(10) */
 #ifndef M_LN10
@@ -532,14 +532,10 @@ static image_float new_image_float_ptr( unsigned int xsize,
 /*----------------------------- Gaussian filter ------------------------------*/
 /*----------------------------------------------------------------------------*/
 
+//*----------------------------------------------------------------------------*/
+/*-----------------------------GAUSSIAN KERNEL--------------------------------*/
 /*----------------------------------------------------------------------------*/
-/** Compute a Gaussian kernel of length 'kernel->dim',
-    standard deviation 'sigma', and centered at value 'mean'.
 
-    For example, if mean=0.5, the Gaussian will be centered
-    in the middle point between values 'kernel->values[0]'
-    and 'kernel->values[1]'.
- */
 static void gaussian_kernel(ntuple_list kernel, float sigma, float mean)
 {
     float sum = 0.0;
@@ -567,46 +563,123 @@ static void gaussian_kernel(ntuple_list kernel, float sigma, float mean)
     if( sum >= 0.0 ) for(i=0;i<kernel->dim;i++) kernel->values[i] /= sum;
 }
 
+
 /*----------------------------------------------------------------------------*/
-/** Scale the input image 'in' by a factor 'scale' by Gaussian sub-sampling.
+/*---------------------------- GAUSSIAN SAMPLER ------------------------------*/
+/*----------------------------------------------------------------------------*/
 
-    For example, scale=0.8 will give a result at 80% of the original size.
-
-    The image is convolved with a Gaussian kernel
-    @f[
-        G(x,y) = \frac{1}{2\pi\sigma^2} e^{-\frac{x^2+y^2}{2\sigma^2}}
-    @f]
-    before the sub-sampling to prevent aliasing.
-
-    The standard deviation sigma given by:
-    -  sigma = sigma_scale / scale,   if scale <  1.0
-    -  sigma = sigma_scale,           if scale >= 1.0
-
-    To be able to sub-sample at non-integer steps, some interpolation
-    is needed. In this implementation, the interpolation is done by
-    the Gaussian kernel, so both operations (filtering and sampling)
-    are done at the same time. The Gaussian kernel is computed
-    centered on the coordinates of the required sample. In this way,
-    when applied, it gives directly the result of convolving the image
-    with the kernel and interpolated to that particular position.
-
-    A fast algorithm is done using the separability of the Gaussian
-    kernel. Applying the 2D Gaussian kernel is equivalent to applying
-    first a horizontal 1D Gaussian kernel and then a vertical 1D
-    Gaussian kernel (or the other way round). The reason is that
-    @f[
-        G(x,y) = G(x) * G(y)
-    @f]
-    where
-    @f[
-        G(x) = \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{x^2}{2\sigma^2}}.
-    @f]
-    The algorithm first applies a combined Gaussian kernel and sampling
-    in the x axis, and then the combined Gaussian kernel and sampling
-    in the y axis.
- */
 //static image_float gaussian_sampler( float* in, int width,int height, int d, float scale,
 //float sigma_scale )
+image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
+{
+    image_float aux,out;
+    ntuple_list kernel;
+    unsigned int N,M,h,n,x,y,i;
+    int xc,yc,j,float_x_size,float_y_size;
+    float sigma,xx,yy,sum,prec;
+    
+    /* compute new image size and get memory for images */
+    if( in->xsize * scale > (float) UINT_MAX ||
+       in->ysize * scale > (float) UINT_MAX )
+        
+        error("gaussian_sampler: the output image size exceeds the handled size.");
+    N = (unsigned int) ceil( in->xsize * scale );
+    M = (unsigned int) ceil( in->ysize * scale );
+    
+    aux = new_image_float(N,in->ysize);
+    out = new_image_float(N,M);
+    
+    /* sigma, kernel size and memory for the kernel */
+    sigma = scale < 1.0 ? sigma_scale / scale : sigma_scale;
+    /*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
+     siempre se va a cumplir que sigma = sigma_scale / scale */
+    /*
+     The size of the kernel is selected to guarantee that the
+     the first discarded term is at least 10^prec times smaller
+     than the central value. For that, h should be larger than x, with
+     e^(-x^2/2sigma^2) = 1/10^prec.
+     Then,
+     x = sigma * sqrt( 2 * prec * ln(10) ).
+     */
+    prec = 3.0;
+    h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
+    /*La funcion log() corresponde al logaritmo neperiano*/
+    n = 1+2*h; /* kernel size */
+    kernel = new_ntuple_list(n);
+    
+    /* auxiliary float image size variables */
+    float_x_size = (int) (2 * in->xsize);
+    float_y_size = (int) (2 * in->ysize);
+    
+    gaussian_kernel( kernel, sigma, (float) h );
+    float scale_inv=1/scale;
+    
+    /* First subsampling: x axis */
+    for(x=3;x<aux->xsize-2;x++)
+    {
+        /*
+         x   is the coordinate in the new image.
+         xx  is the corresponding x-value in the original size image.
+         xc  is the integer value, the pixel coordinate of xx.
+         */
+        xx = (float) x * scale_inv; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
+        xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
+        
+        //        gaussian_kernel( kernel, sigma, (float) h + xx - (float) xc );
+        
+        /* the kernel must be computed for each x because the fine
+         offset xx-xc is different in each case */
+        
+        for(y=0;y<aux->ysize;y++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = xc - h + i;
+                sum += in->data[ j + y * in->xsize ] * kernel->values[i];
+            }
+            aux->data[ x + y * aux->xsize ] = sum;
+        }
+    }
+    
+    /* Second subsampling: y axis */
+    for(y=3;y<out->ysize-2;y++)
+    {
+        /*
+         y   is the coordinate in the new image.
+         yy  is the corresponding x-value in the original size image.
+         yc  is the integer value, the pixel coordinate of xx.
+         */
+        yy = (float) y * scale_inv;
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
+        yc = (int) floor( yy + 0.5 );
+        //gaussian_kernel( kernel, sigma, (float) h + yy - (float) yc );
+        /* the kernel must be computed for each y because the fine
+         offset yy-yc is different in each case */
+        
+        for(x=0;x<out->xsize;x++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = yc - h + i;
+                sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
+            }
+            out->data[ x + y * out->xsize ] = sum;
+        }
+    }
+    
+    /* free memory */
+    free_ntuple_list(kernel);
+    free_image_float(aux);
+    
+    return out;
+}
+
+
 
 
 /*----------------------------------------------------------------------------*/
@@ -2047,3 +2120,36 @@ float * LineSegmentDetection( int * n_out,
 }
 
 /*----------------------------------------------------------------------------*/
+
+
+float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height)
+{
+    
+    /* float scale_inv = 2;         scale_inv= 1/scale, scale=0.5*/
+    /* float sigma_scale = 0.6;     Sigma for Gaussian filter is computed as
+                                    sigma = sigma_scale/scale.                    */
+    /* float quant = 2.0;           Bound to the quantization error on the
+                                    gradient norm.                                */
+    /* float ang_th = 22.5;         Gradient angle tolerance in degrees.           */
+    /* float log_eps = 0.0;         Detection threshold: -log10(NFA) > log_eps     */
+    /* float density_th = 0.0; (0.7)Minimal density of region points in rectangle. */
+    /* int n_bins = 1024;           Number of bins in pseudo-ordering of gradient
+                                    modulus.                                       */
+    
+    image_float image;
+    image_float luminancia_sub;
+    float* list;
+    
+    image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+
+    luminancia_sub = gaussian_sampler(image, 0.5, 0.6);
+    
+    list = LineSegmentDetection(quantSegments, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize, 2.0, 0.6, 2.0, 22.5, 0.0, 0.0, 1024, NULL, NULL, NULL);
+
+    free( (void *) image );
+    free_image_float(luminancia_sub);
+    
+    return list;
+   
+   
+}
