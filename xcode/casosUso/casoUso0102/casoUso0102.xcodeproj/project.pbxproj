@@ -195,11 +195,10 @@
 		0544B68C162C83540005BFCC /* esquinas.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0544B67E162C83540005BFCC /* esquinas.jpg */; };
 		0544B68D162C83540005BFCC /* esquinas.png in Resources */ = {isa = PBXBuildFile; fileRef = 0544B67F162C83540005BFCC /* esquinas.png */; };
 		0544B68E162C83540005BFCC /* kalman.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B680162C83540005BFCC /* kalman.c */; };
-		0544B68F162C83540005BFCC /* lsd.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B682162C83540005BFCC /* lsd.c */; };
+		0544B68F162C83540005BFCC /* lsd_encuadro.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B682162C83540005BFCC /* lsd_encuadro.c */; };
 		0544B6B3162C83700005BFCC /* marker.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B691162C83700005BFCC /* marker.c */; };
 		0544B6B4162C83700005BFCC /* MarkerQR.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0544B693162C83700005BFCC /* MarkerQR.txt */; };
 		0544B6B5162C83700005BFCC /* ModernPosit.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B694162C83700005BFCC /* ModernPosit.c */; };
-		0544B6B8162C83700005BFCC /* processing.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B699162C83700005BFCC /* processing.c */; };
 		0544B6B9162C83700005BFCC /* red_checker.png in Resources */ = {isa = PBXBuildFile; fileRef = 0544B69B162C83700005BFCC /* red_checker.png */; };
 		0544B6BA162C83700005BFCC /* reproyected_points.png in Resources */ = {isa = PBXBuildFile; fileRef = 0544B69C162C83700005BFCC /* reproyected_points.png */; };
 		0544B6BB162C83700005BFCC /* segments.c in Sources */ = {isa = PBXBuildFile; fileRef = 0544B69D162C83700005BFCC /* segments.c */; };
@@ -609,15 +608,13 @@
 		0544B67F162C83540005BFCC /* esquinas.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = esquinas.png; sourceTree = "<group>"; };
 		0544B680162C83540005BFCC /* kalman.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = kalman.c; sourceTree = "<group>"; };
 		0544B681162C83540005BFCC /* kalman.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kalman.h; sourceTree = "<group>"; };
-		0544B682162C83540005BFCC /* lsd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsd.c; sourceTree = "<group>"; };
-		0544B690162C83700005BFCC /* lsd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lsd.h; sourceTree = "<group>"; };
+		0544B682162C83540005BFCC /* lsd_encuadro.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsd_encuadro.c; sourceTree = "<group>"; };
+		0544B690162C83700005BFCC /* lsd_encuadro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lsd_encuadro.h; sourceTree = "<group>"; };
 		0544B691162C83700005BFCC /* marker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = marker.c; sourceTree = "<group>"; };
 		0544B692162C83700005BFCC /* marker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = marker.h; sourceTree = "<group>"; };
 		0544B693162C83700005BFCC /* MarkerQR.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MarkerQR.txt; sourceTree = "<group>"; };
 		0544B694162C83700005BFCC /* ModernPosit.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ModernPosit.c; sourceTree = "<group>"; };
 		0544B695162C83700005BFCC /* ModernPosit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModernPosit.h; sourceTree = "<group>"; };
-		0544B699162C83700005BFCC /* processing.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = processing.c; sourceTree = "<group>"; };
-		0544B69A162C83700005BFCC /* processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = processing.h; sourceTree = "<group>"; };
 		0544B69B162C83700005BFCC /* red_checker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = red_checker.png; sourceTree = "<group>"; };
 		0544B69C162C83700005BFCC /* reproyected_points.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reproyected_points.png; sourceTree = "<group>"; };
 		0544B69D162C83700005BFCC /* segments.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = segments.c; sourceTree = "<group>"; };
@@ -1432,16 +1429,14 @@
 			children = (
 				05FE2CFB163185120044E914 /* PositCoplanar */,
 				057E18DD162F519300076D8F /* PositCoplFrances */,
-				0544B699162C83700005BFCC /* processing.c */,
-				0544B69A162C83700005BFCC /* processing.h */,
 				0544B673162C83540005BFCC /* claseDibujar.h */,
 				0544B674162C83540005BFCC /* claseDibujar.m */,
 				0544B680162C83540005BFCC /* kalman.c */,
 				0544B681162C83540005BFCC /* kalman.h */,
-				0544B682162C83540005BFCC /* lsd.c */,
 				0544B69E162C83700005BFCC /* segments.h */,
 				0544B69D162C83700005BFCC /* segments.c */,
-				0544B690162C83700005BFCC /* lsd.h */,
+				0544B682162C83540005BFCC /* lsd_encuadro.c */,
+				0544B690162C83700005BFCC /* lsd_encuadro.h */,
 				0544B692162C83700005BFCC /* marker.h */,
 				0544B691162C83700005BFCC /* marker.c */,
 				0544B695162C83700005BFCC /* ModernPosit.h */,
@@ -1736,10 +1731,9 @@
 				0544B686162C83540005BFCC /* claseDibujar.m in Sources */,
 				0544B688162C83540005BFCC /* CoplanarPosit.c in Sources */,
 				0544B68E162C83540005BFCC /* kalman.c in Sources */,
-				0544B68F162C83540005BFCC /* lsd.c in Sources */,
+				0544B68F162C83540005BFCC /* lsd_encuadro.c in Sources */,
 				0544B6B3162C83700005BFCC /* marker.c in Sources */,
 				0544B6B5162C83700005BFCC /* ModernPosit.c in Sources */,
-				0544B6B8162C83700005BFCC /* processing.c in Sources */,
 				0544B6BB162C83700005BFCC /* segments.c in Sources */,
 				05FE2D06163186BA0044E914 /* Composit.c in Sources */,
 				05FE2D07163186BA0044E914 /* Error.c in Sources */,

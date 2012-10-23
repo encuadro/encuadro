@@ -155,6 +155,7 @@
 
 - (IBAction)segmentsFilterThresh:(UISlider *)sender {
     self.viewController.segmentFilterThres = sender.value;
+    NSLog(@"filter thresh: %f",sender.value);
 }
 
 - (IBAction)RefPose:(UIBarButtonItem *)sender {
