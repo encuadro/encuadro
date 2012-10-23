@@ -20,7 +20,8 @@ http://code.google.com/p/encuadro/
 #include "marker.h"
 #include <time.h>
 
-#include "lsd.h"
+#include "lsd_encuadro.h"
+//#include "lsd.h"
 
 int main( int argc, char** argv){
 
@@ -53,7 +54,8 @@ int main( int argc, char** argv){
 	
 	IplImage *frame;
 	int width, height;
-	double *image;
+//	double *image;
+	float *imagef;
 	double **imagePoints;
 	int i, j, listSize = 0, listFiltSize = 0;
 	int listDim = 7;
@@ -67,9 +69,15 @@ int main( int argc, char** argv){
 	width  = frame->width;
 	height = frame->height;
 
-	/*create LSD image type*/
-	image = (double *) malloc( width * height * sizeof(double) );
- 	if( image == NULL ){
+//	/*create LSD image type*/
+//	image = (double *) malloc( width * height * sizeof(double) );
+// 	if( image == NULL ){
+//		fprintf(stderr,"error: not enough memory\n");
+//		exit(EXIT_FAILURE);
+//    }
+	/*create LSD_ENCUADRO image type*/
+	imagef = (float *) malloc( width * height * sizeof(float) );
+ 	if( imagef == NULL ){
 		fprintf(stderr,"error: not enough memory\n");
 		exit(EXIT_FAILURE);
     }
@@ -96,28 +104,30 @@ int main( int argc, char** argv){
 		uchar *data = (uchar *)frameBW->imageData;
 		for (i=0;i<width;i++){
 			for(j=0;j<height;j++){
-				image[ i + j * width ] = data[ i + j * width];
+				imagef[ i + j * width ] = data[ i + j * width];
+//				image[ i + j * width ] = data[ i + j * width];
 			};
 		};
 		
 		/*run LSD*/
-		double *list;
-	    double *listFilt;
+		float *list;
+//	    double *listFilt;
 	    start = clock();
+	    	list = lsd_encuadro( &listSize, imagef, width, height );
 //			list = lsd( &listSize, image, width, height );
-	    	list = lsd_scale( &listSize, image, width, height, 0.5 );
+//	    	list = lsd_scale( &listSize, image, width, height, 0.8 );
 	    end = clock();
 		printf("LSD TIME: %4.4fms\n",((double) (end - start))*1000.0 / CLOCKS_PER_SEC);
 		/********************/
 		
-		/*filter LSD segments*/
-	    start = clock();
-	    	listFilt = filterSegments( &listFiltSize , &listSize, list, distance_thr);
-	    end = clock();
-		printf("FILTER TIME: %4.4fms\n",((double) (end - start))*1000.0 / CLOCKS_PER_SEC);
-		//imagePoints = getCorners( &listFiltSize, listFilt);
-		int error_code = findPointCorrespondances(&listFiltSize, listFilt, imagePoints);
-		/********************/
+//		/*filter LSD segments*/
+//	    start = clock();
+//	    	listFilt = filterSegments( &listFiltSize , &listSize, list, distance_thr);
+//	    end = clock();
+//		printf("FILTER TIME: %4.4fms\n",((double) (end - start))*1000.0 / CLOCKS_PER_SEC);
+//		//imagePoints = getCorners( &listFiltSize, listFilt);
+//		int error_code = findPointCorrespondances(&listFiltSize, listFilt, imagePoints);
+//		/********************/
 		
 		/*draw segments on frame and frameLsd*/
 		cvSet(frameLsd, black, 0);
@@ -134,43 +144,44 @@ int main( int argc, char** argv){
 			
 		}
 		
-		/*draw segments on actual frameLsdFilt*/
-		cvSet(frameLsdFilt, white, 0);
-		for (j=0; j<listFiltSize ; j++){
-			//define segment end-points
-			pt1 = cvPoint(listFilt[ 0 + j * listDim ],listFilt[ 1 + j * listDim ]);
-			pt2 = cvPoint(listFilt[ 2 + j * listDim ],listFilt[ 3 + j * listDim ]);
-			// draw line on frameLsd
-			cvLine(frameLsdFilt,pt1,pt2,grey,1.5,8,0);
-		}
-		if (error_code>=0)
-		{	/*draw imgPts*/
-			for (j=0; j<36; j++){
-				//define marker corners
-				pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
-				// draw small corner circle
-				cvCircle(frameLsdFilt, pt3, 3, red, 1, 8, 0);
-				char ind[2];
-				sprintf(ind,"%d",j);
-				cvPutText(frameLsdFilt, ind, pt3, &font1 , blue);
-			}
-		}
+//		/*draw segments on actual frameLsdFilt*/
+//		cvSet(frameLsdFilt, white, 0);
+//		for (j=0; j<listFiltSize ; j++){
+//			//define segment end-points
+//			pt1 = cvPoint(listFilt[ 0 + j * listDim ],listFilt[ 1 + j * listDim ]);
+//			pt2 = cvPoint(listFilt[ 2 + j * listDim ],listFilt[ 3 + j * listDim ]);
+//			// draw line on frameLsd
+//			cvLine(frameLsdFilt,pt1,pt2,grey,1.5,8,0);
+//		}
+//		if (error_code>=0)
+//		{	/*draw imgPts*/
+//			for (j=0; j<36; j++){
+//				//define marker corners
+//				pt3 = cvPoint(imagePoints[j][0],imagePoints[j][1]);
+//				// draw small corner circle
+//				cvCircle(frameLsdFilt, pt3, 3, red, 1, 8, 0);
+//				char ind[2];
+//				sprintf(ind,"%d",j);
+//				cvPutText(frameLsdFilt, ind, pt3, &font1 , blue);
+//			}
+//		}
 
 		/* free memory */
 		free( (void *) list );
-	  	free( (void *) listFilt );
+//	  	free( (void *) listFilt );
 		listFiltSize = 0;
 		listSize = 0;
 		
 		cvShowImage("OpenCV on acid",frame);
 		cvShowImage("LSD",frameLsd);
-		cvShowImage("LSD filtered",frameLsdFilt);
+//		cvShowImage("LSD filtered",frameLsdFilt);
 		char c = cvWaitKey(1);
 		if( c == 27 ) break;
 	}
 	
 	/* free memory */
-  	free( (void *) image );
+//  	free( (void *) image );
+  	free( (void *) imagef );
 	/*free imagePoints memory*/
 	for(i = 0; i < 36; i++)
 		free(imagePoints[i]);
