@@ -29,7 +29,7 @@
             </objects>
             <point key="canvasLocation" x="-163" y="-8"/>
         </scene>
-        <!--Inicio View Controller-->
+        <!--Inicio View Controller - Instrucciones-->
         <scene sceneID="iIP-ZH-pEB">
             <objects>
                 <viewController id="B2p-Yg-ZQ8" customClass="InicioViewController" sceneMemberID="viewController">
@@ -49,29 +49,46 @@
                                     <constraint firstAttribute="width" constant="319" id="UKQ-kz-Sxg"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="CasoUso 0102" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRj-5A-2mD">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="CasoUso0102" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRj-5A-2mD">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="269" id="1d2-WP-dnj"/>
+                                    <constraint firstAttribute="width" constant="235" id="FeP-d0-aJi"/>
                                     <constraint firstAttribute="height" constant="72" id="MPL-Zn-SiZ"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="Chalkduster" family="Chalkduster" pointSize="34"/>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="34"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="168" translatesAutoresizingMaskIntoConstraints="NO" id="avf-AP-s04">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="91" id="DX0-3f-XYb"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="Aplicación de uso técnico para debugging  y tuneo de parámetros">
+                                        <attributes>
+                                            <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <font key="NSFont" size="17" name="Noteworthy-Light"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="avf-AP-s04" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" constant="54" id="2LU-w0-QIw"/>
+                            <constraint firstItem="FMO-RK-Gh8" firstAttribute="top" secondItem="gTz-Fu-ZBP" secondAttribute="top" constant="9" id="9YW-nB-oaS"/>
                             <constraint firstItem="Zmq-un-1T1" firstAttribute="top" secondItem="gTz-Fu-ZBP" secondAttribute="top" type="default" id="KOX-dZ-0sr"/>
-                            <constraint firstItem="FMO-RK-Gh8" firstAttribute="top" secondItem="gTz-Fu-ZBP" secondAttribute="top" constant="9" id="MuD-Fs-RKb"/>
-                            <constraint firstItem="cRj-5A-2mD" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" constant="32" id="XMG-YG-0eK"/>
-                            <constraint firstItem="cRj-5A-2mD" firstAttribute="top" secondItem="Zmq-un-1T1" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="a2Z-jk-oAr"/>
+                            <constraint firstItem="FMO-RK-Gh8" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" constant="288" id="e6K-Mm-meH"/>
+                            <constraint firstAttribute="bottom" secondItem="avf-AP-s04" secondAttribute="bottom" constant="207" id="jrl-fv-xhV"/>
                             <constraint firstItem="Zmq-un-1T1" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" type="default" id="ldL-lg-gRQ"/>
-                            <constraint firstItem="FMO-RK-Gh8" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" constant="288" id="orL-6I-k0e"/>
+                            <constraint firstItem="cRj-5A-2mD" firstAttribute="centerY" secondItem="FMO-RK-Gh8" secondAttribute="centerY" type="default" id="oRW-wH-lDH"/>
+                            <constraint firstItem="cRj-5A-2mD" firstAttribute="centerX" secondItem="Zmq-un-1T1" secondAttribute="centerX" type="default" id="sQg-NF-GU7"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="H0i-dQ-j8g">
+                    <navigationItem key="navigationItem" title="Instrucciones" id="H0i-dQ-j8g">
                         <barButtonItem key="rightBarButtonItem" title="Inicio" id="UvV-sC-okS">
                             <connections>
                                 <segue destination="qLV-Gf-k7N" kind="push" id="cAa-aB-kKg"/>
