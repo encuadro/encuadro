@@ -156,7 +156,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
         [cgvista setNeedsDisplay];
         
         cgvista.dealloc=0;
-        NSLog(@"frame");
+        //NSLog(@"frame");
         
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/

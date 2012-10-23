@@ -664,24 +664,23 @@ static image_float ll_angle( image_float in, float threshold,
                                            sizeof(struct coorlist *) );
   range_l_e = (struct coorlist **) calloc( (size_t) n_bins,
                                            sizeof(struct coorlist *) );
-//  if( list == NULL || range_l_s == NULL || range_l_e == NULL )
-//    error("not enough memory.");
-  for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL; /*Apuntamos a NULL a ambas estructuras*/
+
+  for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
 
   /* 'undefined' on the down and right boundaries */
-  for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
-  for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
-
-
+    /* 'undefined' on the rows {0,1,2} and {n-1,n-2,n-3} and in the columns{0,1,2} {p-1,p-2,p-3}*/
+    for(x=0;x<p;x++) g->data[(n-1)*p+x] = g->data[(n-2)*p+x] = g->data[(n-3)*p+x] = g->data[x] = g->data[p+x] =  g->data[p*2+x]=NOTDEF;
+    for(y=0;y<n;y++) g->data[p*y+p-1] =  g->data[p*y+p-2]   = g->data[p*y+p-3] =  g->data[p*y] =  g->data[p*y+1] = g->data[p*y+2]  = NOTDEF;
     
-    
+//    for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
+//    for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
+
   /* compute gradient on the remaining pixels */
-//  for(x=0;x<p-1;x++)
+//    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
-
-    for(x=0;x<p-1;x++)
-    for(y=0;y<n-1;y++)
-    {
+  for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
+      {
         adr = y*p+x;
 
         /*
@@ -702,8 +701,9 @@ static image_float ll_angle( image_float in, float threshold,
         gy = com1-com2; /* gradient y component */
 //        norm2 = gx*gx+gy*gy;
 //        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
-        norm = sqrt( gx*gx+gy*gy)*0.5; /* gradient norm */
-        
+          
+          norm = sqrt( gx*gx+gy*gy)*0.5; /* gradient norm */
+
         (*modgrad)->data[adr] = norm; /* store gradient norm */
 
         if( norm <= threshold ) /* norm too small, gradient no defined */
@@ -715,30 +715,12 @@ static image_float ll_angle( image_float in, float threshold,
 
             /* look for the maximum of the gradient */
             if( norm > max_grad ) max_grad = norm;
-              
-             
-              /*-------------------------------------*/
-               /* compute histogram of gradient values */
-//              i = (unsigned int) (norm * (float) n_bins / max_grad);
-//              if( i >= n_bins ) i = n_bins-1;
-//              if( range_l_e[i] == NULL )
-//                  range_l_s[i] = range_l_e[i] = list+list_count++;
-//              else
-//              {
-//                  range_l_e[i]->next = list+list_count;
-//                  range_l_e[i] = list+list_count++;
-//              }
-//              range_l_e[i]->x = (int) x;
-//              range_l_e[i]->y = (int) y;
-//              range_l_e[i]->next = NULL;
-              /*-------------------------------------*/
-              
-              
           }
       }
 
+    
   /* compute histogram of gradient values */
-//  for(x=0;x<p-1;x++)
+//    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
     for(x=3;x<p-3;x++)
     for(y=3;y<n-3;y++)
@@ -747,9 +729,9 @@ static image_float ll_angle( image_float in, float threshold,
         norm = (*modgrad)->data[y*p+x];
 
         /* store the point in the right bin according to its norm */
-        i = (unsigned int) (norm * (float) n_bins / max_grad);
-        if( i >= n_bins ) i = n_bins-1; /*Esto es por las dudas porque no deberia pasar*/
-        if( range_l_e[i] == NULL ) /*Si todavia no se le asigno ningun punto...*/
+        i = (unsigned int) (norm * (float) n_bins / 175);
+        if( i >= n_bins ) i = n_bins-1;
+        if( range_l_e[i] == NULL )
           range_l_s[i] = range_l_e[i] = list+list_count++;
         else
           {
@@ -1476,11 +1458,11 @@ static float get_theta( struct point * reg, int reg_size, float x, float y,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("get_theta: invalid region.");
-  if( reg_size <= 1 ) error("get_theta: region size <= 1.");
-  if( modgrad == NULL || modgrad->data == NULL )
-    error("get_theta: invalid 'modgrad'.");
-  if( prec < 0.0 ) error("get_theta: 'prec' must be positive.");
+//  if( reg == NULL ) error("get_theta: invalid region.");
+//  if( reg_size <= 1 ) error("get_theta: region size <= 1.");
+//  if( modgrad == NULL || modgrad->data == NULL )
+//    error("get_theta: invalid 'modgrad'.");
+//  if( prec < 0.0 ) error("get_theta: 'prec' must be positive.");
 
   /* compute inertia matrix */
   for(i=0; i<reg_size; i++)
@@ -1759,15 +1741,15 @@ static int reduce_region_radius( struct point * reg, int * reg_size,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("reduce_region_radius: invalid pointer 'reg'.");
-  if( reg_size == NULL )
-    error("reduce_region_radius: invalid pointer 'reg_size'.");
-  if( prec < 0.0 ) error("reduce_region_radius: 'prec' must be positive.");
-  if( rec == NULL ) error("reduce_region_radius: invalid pointer 'rec'.");
-  if( used == NULL || used->data == NULL )
-    error("reduce_region_radius: invalid image 'used'.");
-  if( angles == NULL || angles->data == NULL )
-    error("reduce_region_radius: invalid image 'angles'.");
+//  if( reg == NULL ) error("reduce_region_radius: invalid pointer 'reg'.");
+//  if( reg_size == NULL )
+//    error("reduce_region_radius: invalid pointer 'reg_size'.");
+//  if( prec < 0.0 ) error("reduce_region_radius: 'prec' must be positive.");
+//  if( rec == NULL ) error("reduce_region_radius: invalid pointer 'rec'.");
+//  if( used == NULL || used->data == NULL )
+//    error("reduce_region_radius: invalid image 'used'.");
+//  if( angles == NULL || angles->data == NULL )
+//    error("reduce_region_radius: invalid image 'angles'.");
 
   /* compute region points density */
   density = (float) *reg_size /
@@ -1834,16 +1816,6 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
   float angle,ang_d,mean_angle,tau,density,xc,yc,ang_c,sum,s_sum;
   int i,n;
 
-  /* check parameters */
-  if( reg == NULL ) error("refine: invalid pointer 'reg'.");
-  if( reg_size == NULL ) error("refine: invalid pointer 'reg_size'.");
-  if( prec < 0.0 ) error("refine: 'prec' must be positive.");
-  if( rec == NULL ) error("refine: invalid pointer 'rec'.");
-  if( used == NULL || used->data == NULL )
-    error("refine: invalid image 'used'.");
-  if( angles == NULL || angles->data == NULL )
-    error("refine: invalid image 'angles'.");
-
   /* compute region points density */
   density = (float) *reg_size /
                          ( dist(rec->x1,rec->y1,rec->x2,rec->y2) * rec->width );
@@ -1851,6 +1823,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
   /* if the density criterion is satisfied there is nothing to do */
   if( density >= density_th ) return TRUE;
 
+    
   /*------ First try: reduce angle tolerance ------*/
 
   /* compute the new mean angle and tolerance */
@@ -1935,11 +1908,9 @@ float * LineSegmentDetection( int * n_out,
 
   /* load and scale image (if necessary) and compute angle at each pixel */
   image = new_image_float_ptr( (unsigned int) X, (unsigned int) Y, img );
-    
-   // NSLog(@"ll_angle in\n");
+  
   angles = ll_angle( image, rho, &list_p, &mem_p, &modgrad, (unsigned int) n_bins );
-   // NSLog(@"ll_angle out\n");
-    
+ 
   xsize = angles->xsize;
   ysize = angles->ysize;
 
@@ -1997,9 +1968,12 @@ float * LineSegmentDetection( int * n_out,
            by R. Grompone von Gioi, J. Jakubowicz, J.M. Morel, and G. Randall.
            The original algorithm is obtained with density_th = 0.0.
          */
-        //if( !refine( reg, &reg_size, modgrad, reg_angle,
-          //           prec, p, &rec, used, angles, density_th ) ) continue;
+       /* if( !refine( reg, &reg_size, modgrad, reg_angle,
+                     prec, p, &rec, used, angles, density_th ) ) continue;*/
+          // Ahorramos como 20 ms en los casos en los que tenemos muchos segmentos en la imagen al no correr el refinamiento anterior. Obtenemos en cualquier caso el mismo resultado.
+          
 
+        
         /* compute NFA value */
         log_nfa = rect_improve(&rec,angles,logNT,log_eps);
         if( log_nfa <= log_eps ) continue;

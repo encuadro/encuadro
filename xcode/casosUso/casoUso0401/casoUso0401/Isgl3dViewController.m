@@ -499,7 +499,7 @@ kalman_state_3 state;
     
     
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2" ofType:@"txt"];
     
     FILE *filePuntos;
     

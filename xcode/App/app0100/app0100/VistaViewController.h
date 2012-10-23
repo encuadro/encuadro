@@ -12,6 +12,8 @@
 #import "app0100AppDelegate.h"
 #import "HelloWorldView.h"
 
+#import "TouchVista.h"
+
 
 bool DosCubos;
 @interface VistaViewController : UIViewController{
@@ -38,7 +40,7 @@ bool DosCubos;
 @property (nonatomic, readwrite) NSNumber *ARidObra;
 //@property (nonatomic, readwrite) bool *DosCubos;
 
-
+@property (nonatomic, retain) TouchVista *vistaTouch;
 
 
 
