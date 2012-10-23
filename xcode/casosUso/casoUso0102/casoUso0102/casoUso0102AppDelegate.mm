@@ -44,7 +44,7 @@ bool verbose = FALSE;
 	_viewController.wantsFullScreenLayout = YES;
     //    [self.window setRootViewController:_viewController];
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhoneStoryboard" bundle:nil];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPadStoryboard" bundle:nil];
 	InicioViewController *mc = [storyboard instantiateInitialViewController];
     [self.window setRootViewController:mc];
     

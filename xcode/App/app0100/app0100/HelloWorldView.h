@@ -54,9 +54,9 @@ bool fin;
 /*
  * Principal class to be instantiated in main.h.
  */
-#import "app0100AppDelegate.h"
-@interface AppDelegate : app0100AppDelegate
-- (void) createViews;
-@end
+//#import "app0100AppDelegate.h"
+//@interface AppDelegate : app0100AppDelegate
+//- (void) createViews;
+//@end
 
 

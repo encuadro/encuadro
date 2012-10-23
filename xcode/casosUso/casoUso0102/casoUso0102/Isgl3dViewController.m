@@ -97,19 +97,19 @@ float* angles1;
 float* angles2;
 
 /* LSD parameters */
-float scale_inv = 2; /*scale_inv= 1/scale, scale=0.5*/
-float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
-                           sigma = sigma_scale/scale.                    */
-float quant = 2.0;       /* Bound to the quantization error on the
-                           gradient norm.                                */
-float ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
-float log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
-float density_th = 0.0; //0.7  /* Minimal density of region points in rectangle. */
-int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
-                           modulus.                                       */
-/*Up to here */
-image_float luminancia_sub;
-image_float image;
+//float scale_inv = 2; /*scale_inv= 1/scale, scale=0.5*/
+//float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
+//                           sigma = sigma_scale/scale.                    */
+//float quant = 2.0;       /* Bound to the quantization error on the
+//                           gradient norm.                                */
+//float ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
+//float log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
+//float density_th = 0.0; //0.7  /* Minimal density of region points in rectangle. */
+//int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
+//                           modulus.                                       */
+///*Up to here */
+//image_float luminancia_sub;
+//image_float image;
 int cantidad;
 
 /*Kalman variables*/
@@ -169,7 +169,7 @@ float auxVal=0;
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
     
     [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
-    
+
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
     
@@ -209,11 +209,7 @@ float auxVal=0;
         if ( _LSD ) cgvista.segmentos_lsd = list;
         
         
-        //        printf("\nImage Points\n");
-        //        for (int i=0; i<listFiltradaSize; i++) {
-        //            printf("%f\t %f\n",imagePoints[i][0],imagePoints[i][1]);
-        //        }
-        
+        printf("Cantidad de segments cuando : %d\n",listSize);
         
         if ( _reproyectedPts )
         {
@@ -241,7 +237,7 @@ float auxVal=0;
         [cgvista setNeedsDisplay];
         
         cgvista.dealloc=0;
-        
+    
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
     
@@ -267,27 +263,17 @@ float auxVal=0;
         /*Ahora luminancia es la imagen en nivel de grises*/
         //NSLog(@"rgb2gray out\n");
         
-        /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
-        image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-        //NSLog(@"gaussian_sampler in\n");
-        luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
-        //NSLog(@"gaussian_sampler out\n");
-        
-        /*Se corre el LSD a la imagen escalada y filtrada*/
+        /*Se corre el LSD a la imagen en niveles de grises*/
         free(list);
         listSize =0;
-        // NSLog(@"LSD in\n");
-        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-        // NSLog(@"LSD out\n");
-        
-        /*Se libera memoria*/
-        free( (void *) image );
-        free_image_float(luminancia_sub);
-        
+        //NSLog(@"LSD in\n");
+        list = lsd_encuadro(&listSize, luminancia, width, height);
+        //NSLog(@"LSD out\n");
         
         /*-------------------------------------|FILTRADO|-------------------------------------*/
         free(listFiltrada);
         listFiltradaSize =0;
+//        printf("segmentFilterThresh= %f\n",_segmentFilterThres);
         /*Filtrado de segmentos detectados por el LSD */
         listFiltrada = filterSegments(&listFiltradaSize , &listSize ,list, _segmentFilterThres);
         
@@ -468,7 +454,7 @@ float auxVal=0;
 //                        measureNoise[2][0]=0;
 //                        measureNoise[2][1]=0;
 //                        measureNoise[2][2]=1;
-                        SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoise);
+                       
                         
                         state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
                         
@@ -479,6 +465,10 @@ float auxVal=0;
                         
                         init=false;
                     }
+                    
+//                    printf("kalmanErrorGain= %f\n",_kalmanErrorGain);
+                    SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoise);
+                    
                     /* kalman correlacionado */
                     kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
 

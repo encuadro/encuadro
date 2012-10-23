@@ -36,6 +36,7 @@
 @synthesize wSize = _wSize;
 @synthesize hSize = _hSize;
 @synthesize videoPlayer = _videoPlayer;
+@synthesize touchFull = _touchFull;
 
 /*para DIBUJAR*/
 claseDibujar *cgvista;
@@ -528,7 +529,18 @@ double *h;
         rotationAndPerspectiveTransform.m42 = h[5];
         rotationAndPerspectiveTransform.m44 = 1;
         
+        if (self.touchFull) {
+            theMovie.fullscreen=YES;
+            
+        }else{
+
         theMovie.view.layer.transform=rotationAndPerspectiveTransform;
+        }
+        
+        
+        
+ 
+       
     }
     
     
@@ -549,6 +561,9 @@ double *h;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
     
+    
+
+    
     [self.view addSubview:theMovie.view];
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
@@ -557,8 +572,18 @@ double *h;
     // Play the movie.
     [theMovie play];
     
+    
 }
 
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"TOUCH ISGL3D VIEWCONTROLLER");
+    NSLog(@"TOUCH ISGL3D VIEWCONTROLLER");
+    NSLog(@"TOUCH ISGL3D VIEWCONTROLLER");
+    
+    [super touchesBegan:touches withEvent:event];
+    
+    
+}
 
 - (void) reservarMemoria {
     

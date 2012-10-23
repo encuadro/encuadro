@@ -29,18 +29,66 @@
             </objects>
             <point key="canvasLocation" x="-163" y="-8"/>
         </scene>
-        <!--Inicio View Controller-->
+        <!--Inicio View Controller - Instrucciones-->
         <scene sceneID="iIP-ZH-pEB">
             <objects>
                 <viewController id="B2p-Yg-ZQ8" customClass="InicioViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gTz-Fu-ZBP">
                         <rect key="frame" x="0.0" y="64" width="1024" height="660"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="instructions.png" translatesAutoresizingMaskIntoConstraints="NO" id="FMO-RK-Gh8">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="772" id="xfQ-PH-rpK"/>
+                                    <constraint firstAttribute="height" constant="660" id="zYT-Mf-egJ"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="logoEncuadro.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="Zmq-un-1T1">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="319" id="RbH-ST-n70"/>
+                                    <constraint firstAttribute="width" constant="319" id="UKQ-kz-Sxg"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="CasoUso0102" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cRj-5A-2mD">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="235" id="FeP-d0-aJi"/>
+                                    <constraint firstAttribute="height" constant="72" id="MPL-Zn-SiZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="34"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="168" translatesAutoresizingMaskIntoConstraints="NO" id="avf-AP-s04">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="91" id="DX0-3f-XYb"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="Aplicación de uso técnico para debugging  y tuneo de parámetros">
+                                        <attributes>
+                                            <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <font key="NSFont" size="17" name="Noteworthy-Light"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="avf-AP-s04" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" constant="54" id="2LU-w0-QIw"/>
+                            <constraint firstItem="FMO-RK-Gh8" firstAttribute="top" secondItem="gTz-Fu-ZBP" secondAttribute="top" constant="9" id="9YW-nB-oaS"/>
+                            <constraint firstItem="Zmq-un-1T1" firstAttribute="top" secondItem="gTz-Fu-ZBP" secondAttribute="top" type="default" id="KOX-dZ-0sr"/>
+                            <constraint firstItem="FMO-RK-Gh8" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" constant="288" id="e6K-Mm-meH"/>
+                            <constraint firstAttribute="bottom" secondItem="avf-AP-s04" secondAttribute="bottom" constant="207" id="jrl-fv-xhV"/>
+                            <constraint firstItem="Zmq-un-1T1" firstAttribute="leading" secondItem="gTz-Fu-ZBP" secondAttribute="leading" type="default" id="ldL-lg-gRQ"/>
+                            <constraint firstItem="cRj-5A-2mD" firstAttribute="centerY" secondItem="FMO-RK-Gh8" secondAttribute="centerY" type="default" id="oRW-wH-lDH"/>
+                            <constraint firstItem="cRj-5A-2mD" firstAttribute="centerX" secondItem="Zmq-un-1T1" secondAttribute="centerX" type="default" id="sQg-NF-GU7"/>
+                        </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="H0i-dQ-j8g">
+                    <navigationItem key="navigationItem" title="Instrucciones" id="H0i-dQ-j8g">
                         <barButtonItem key="rightBarButtonItem" title="Inicio" id="UvV-sC-okS">
                             <connections>
                                 <segue destination="qLV-Gf-k7N" kind="push" id="cAa-aB-kKg"/>
@@ -52,7 +100,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="whs-V2-Tab" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="979" y="-8"/>
+            <point key="canvasLocation" x="987" y="-8"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="Fp6-DX-fMN">
@@ -64,7 +112,7 @@
                         <subviews>
                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="36" minValue="9" maxValue="124" translatesAutoresizingMaskIntoConstraints="NO" id="5kp-nH-nOx">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="114" id="KwX-Uw-QwJ"/>
+                                    <constraint firstAttribute="width" constant="467" id="Uq9-Vv-N9D"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="layer.transform.rotation.z" value="-1.570795"/>
@@ -73,9 +121,9 @@
                                     <action selector="segmentsFilterThresh:" destination="qLV-Gf-k7N" eventType="valueChanged" id="5o5-wB-QO4"/>
                                 </connections>
                             </slider>
-                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1.5" minValue="0.0" maxValue="20" translatesAutoresizingMaskIntoConstraints="NO" id="FiT-2a-96f">
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="FiT-2a-96f">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="114" id="stY-tE-wV9"/>
+                                    <constraint firstAttribute="width" constant="467" id="Ldw-8t-7dj"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="layer.transform.rotation.z" value="-1.570795"/>
@@ -89,7 +137,7 @@
                         <constraints>
                             <constraint firstItem="FiT-2a-96f" firstAttribute="top" secondItem="5kp-nH-nOx" secondAttribute="top" type="default" id="KpL-Db-G28"/>
                             <constraint firstAttribute="bottom" secondItem="FiT-2a-96f" secondAttribute="bottom" constant="70" id="Mwe-n6-Og4"/>
-                            <constraint firstAttribute="trailing" secondItem="FiT-2a-96f" secondAttribute="trailing" constant="43" id="c6H-Qk-5ov"/>
+                            <constraint firstAttribute="trailing" secondItem="FiT-2a-96f" secondAttribute="trailing" constant="44" id="TJd-QH-Qlf"/>
                             <constraint firstAttribute="trailing" secondItem="5kp-nH-nOx" secondAttribute="trailing" constant="12" id="o5c-Hs-NiI"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -156,6 +204,10 @@
             <point key="canvasLocation" x="2163" y="-22"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="instructions.png" width="1794" height="1743"/>
+        <image name="logoEncuadro.jpg" width="281" height="280"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>
