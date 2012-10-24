@@ -113,6 +113,17 @@
 
 }
 
+- (IBAction)LSD_original:(UIBarButtonItem *)sender {
+    if (self.viewController.LSD_original) {
+        self.viewController.LSD_original=false;
+    }
+    else{
+        self.viewController.LSD_original=true;
+    }
+    
+}
+
+
 - (IBAction)Segments:(UIBarButtonItem *)sender {
     if (self.viewController.segments) {
         self.viewController.segments=false;
@@ -151,11 +162,12 @@
 
 - (IBAction)kalmanErrorGain:(UISlider *)sender {
     self.viewController.kalmanErrorGain = sender.value;
+      NSLog(@"kalman error gain: %f",sender.value);
 }
 
 - (IBAction)segmentsFilterThresh:(UISlider *)sender {
     self.viewController.segmentFilterThres = sender.value;
-    NSLog(@"filter thresh: %f",sender.value);
+    NSLog(@"filter threshold: %f",sender.value);
 }
 
 - (IBAction)RefPose:(UIBarButtonItem *)sender {

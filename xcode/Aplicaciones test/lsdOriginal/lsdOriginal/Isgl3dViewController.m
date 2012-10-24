@@ -113,12 +113,17 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
     
-    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:YES];
     
+
+    
+    
+
+    //[self setImage:imagen];
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
-    
-    
+//    
+//    
     [imagen release];
     
     
@@ -127,8 +132,6 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 - (void) setImage: (UIImage*) imagen
 {
     self.videoView.image = imagen;
-    
-    
     
     if (cgvista.dealloc==0)
     {
@@ -382,6 +385,9 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
     dispatch_release(processQueue);
+
+    //[self.frameOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
+    
     
     /*Sin esta linea de codigo el context apunta siempre a nil*/
     self.context =  [CIContext contextWithOptions:nil];

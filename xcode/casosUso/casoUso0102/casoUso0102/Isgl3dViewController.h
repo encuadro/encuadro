@@ -15,6 +15,7 @@
 
 #import "processing.h"
 #import "lsd_encuadro.h"
+#import "lsd.h"
 #import "segments.h"
 #import "marker.h"
 #import "Composit.h"
@@ -39,6 +40,7 @@
 @property bool kalman;
 @property bool sensors;
 @property bool LSD;
+@property bool LSD_original;
 @property bool segments;
 @property bool detectedPts;
 @property bool reproyectedPts;
@@ -46,6 +48,7 @@
 @property float kalmanErrorGain;
 @property bool newRefPose;
 
+- (void) lsdOriginal;
 - (void) procesamiento;
 - (void) reservarMemoria;
 @end
