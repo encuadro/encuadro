@@ -1,0 +1,13 @@
+\chapter{LSD: ``Line Segment Detection''}
+
+\section{Introducción}
+LSD es un algoritmo de detección de segmentos publicado por Rafael Grompone von Gioi, Jérémie Jakubowicz, Jean-Michel Morel y Gregory Randall en abril de 2010. Es temporalmente lineal, con presición inferior a un píxel y que no requiere de un tuneo previo de parámetros, como casi todos los demás algoritmos de idéntica función; puede ser considerado el estado del arte en cuanto a detección de segmentos en imágenes digitales. Como cualquier otro algoritmo de detección de segmentos, LSD basa su estudio en la búsqueda de contornos angostos dentro de la imagen. Estos son regiones en donde el nivel de brillo de la imagen cambia notoriamente entre píxeles vecinos, por lo que el gradiente de la misma resulta de vital importancia. Puede verse como una composición de tres pasos:\\
+\begin{itemize}
+\item[(1)] División de la imagen en las llamadas \textit{line-support regions} que son grupos conexos de píxeles con idéntico gradiente, hasta cierta tolerancia. 
+\item[(2)] Búsqueda del segmento que mejor aproxime cada  \textit{line-support region}.
+\item[(3)] Validación o no de cada segmento detectado en el punto anterior. 
+Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel. 
+\end{itemize}
+
+\section{\textit{Line-support regions}}
+El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual gradiente, a menos de cierta tolerancia, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``región creciente''; cada región comienza por un píxel y cierto ángulo asociado al gradiente del mismo. Luego, se testean los ocho vecinos de dicho píxel y los que cuenten con un ángulo similar al del píxel original, son incluídos en la región. En cada iteración el ángulo asociado a la región es calculado como el promedio de los ángulos del gradiente de cada píxel; la iteración termina cuando ya no se pueden agregar más píxeles a una región.
