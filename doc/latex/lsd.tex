@@ -10,4 +10,13 @@ Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de 
 \end{itemize}
 
 \section{\textit{Line-support regions}}
-El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual gradiente, a menos de cierta tolerancia, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``región creciente''; cada región comienza por un píxel y cierto ángulo asociado al gradiente del mismo. Luego, se testean los ocho vecinos de dicho píxel y los que cuenten con un ángulo similar al del píxel original, son incluídos en la región. En cada iteración el ángulo asociado a la región es calculado como el promedio de los ángulos del gradiente de cada píxel; la iteración termina cuando ya no se pueden agregar más píxeles a una región.
+El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual gradiente, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``región creciente''; cada región comienza por un píxel y cierto ángulo asociado al gradiente del mismo. Luego, se testean los ocho vecinos de dicho píxel y los que cuenten con un ángulo similar al del píxel original son incluídos a la región. En cada iteración el ángulo asociado a la región es calculado como el promedio de los ángulos del gradiente de cada píxel; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_lsd/lsd_1.eps}
+\caption{Proceso de crecimiento de una región. El ángulo del gradiente de cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Fuente \cite{grompone10}.}
+\label{fig: lsd_1}
+\end{figure}
+Los píxels agregados a una región son marcados de manera que no se vuelvan a testear. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. 
+
