@@ -37,6 +37,7 @@
 @synthesize kalman = _kalman;
 @synthesize sensors = _sensors;
 @synthesize LSD = _LSD;
+@synthesize LSD_original = _LSD_original;
 @synthesize segments = _segments;
 @synthesize detectedPts = _detectedPts;
 @synthesize reproyectedPts = _reproyectedPts;
@@ -59,17 +60,20 @@ size_t height;
 size_t bitsPerComponent;
 size_t bitsPerPixel;
 float* luminancia;
+double* luminancia_double;
 int d;
 int dProcesamiento;
 UIImage *imagen;
 
 /*Variables para el procesamiento*/
 float* list;
+double* list_double;
 float*listFiltrada;
 //float** esquinas;
 
 float **imagePoints,**imagePointsCrop;
 int listSize;
+int listSize_original;
 int listFiltradaSize;
 float distance_thr=36;
 float rotacion[9];
@@ -92,7 +96,6 @@ float **RotRefTras;
 float **RotAux;
 float center[2]={240, 180};           
 bool verbose;
-float* luminancia;
 float* angles1;
 float* angles2;
 
@@ -164,16 +167,17 @@ float auxVal=0;
     CVPixelBufferLockBaseAddress(pb, 0);
     pixels = (unsigned char *)CVPixelBufferGetBaseAddress(pb);
     
-    [self procesamiento];
+    if(_LSD_original) [self lsdOriginal];
+    else [self procesamiento];
     
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
     
-    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
+    
+    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:YES];
 
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
     
-
     [imagen release];
     
     
@@ -182,8 +186,7 @@ float auxVal=0;
 - (void) setImage: (UIImage*) imagen
 {
     self.videoView.image = imagen;
-    
-    
+ 
     
     if (cgvista.dealloc==0)
     {
@@ -191,9 +194,28 @@ float auxVal=0;
         cgvista.dealloc=1;
     }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if (_segments || _detectedPts || _reproyectedPts || _LSD)
+    
+    if (_LSD_original && listSize_original!=0)
     {
+        cgvista.cantidadLsd_original=listSize_original;
+        cgvista.lsd_all_original = _LSD_original;
+        cgvista.segmentos_lsd_original = list_double;
         
+        listSize=0;
+        [self.videoView addSubview:cgvista];
+        
+        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+        
+        cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+        
+        [cgvista setNeedsDisplay];
+        
+        cgvista.dealloc=0;
+        
+    }
+    else if ((_segments || _detectedPts || _reproyectedPts || _LSD)&&listSize!=0)
+    {
+        cgvista.lsd_all_original = _LSD_original;
         cgvista.cantidadSegmentos = listFiltradaSize;
         cgvista.cantidadLsd = listSize;
         
@@ -203,13 +225,14 @@ float auxVal=0;
         cgvista.reproyected = _reproyectedPts;
         cgvista.lsd_all = _LSD;
         
+        listSize_original=0;
         
         if ( _segments ) cgvista.segmentos = listFiltrada;
         if ( _detectedPts ) cgvista.esquinas = imagePoints;
         if ( _LSD ) cgvista.segmentos_lsd = list;
         
         
-        printf("Cantidad de segments cuando : %d\n",listSize);
+        //printf("Cantidad de segments en dibujar : %d\n",listSize);
         
         if ( _reproyectedPts )
         {
@@ -226,7 +249,7 @@ float auxVal=0;
             cgvista.esquinasReproyectadas = reproyectados;
         }
         
-        
+    
         
         [self.videoView addSubview:cgvista];
         
@@ -258,19 +281,22 @@ float auxVal=0;
            /*-------------------------------------|PROCESAMIENTO|-------------------------------------*/
         //NSLog(@"rgb2gray in\n");
         /*Se pasa la imagen a nivel de grises*/
-        cantidad =width*height;
-        for(int pixelNr=0;pixelNr<cantidad;pixelNr++) luminancia[pixelNr] = 0.30*pixels[pixelNr*4+2] + 0.59*pixels[pixelNr*4+1] + 0.11*pixels[pixelNr*4];
-        /*Ahora luminancia es la imagen en nivel de grises*/
-        //NSLog(@"rgb2gray out\n");
         
+        cantidad =width*height;
+        for(int pixelNr=0;pixelNr<cantidad;pixelNr++) luminancia[pixelNr] =0.30*pixels[pixelNr*4+2] + 0.59*pixels[pixelNr*4+1] + 0.11*pixels[pixelNr*4];
+
         /*Se corre el LSD a la imagen en niveles de grises*/
+
+        
+                
         free(list);
-        listSize =0;
-        //NSLog(@"LSD in\n");
+        
+       // NSLog(@"LSD in\n");
         list = lsd_encuadro(&listSize, luminancia, width, height);
         //NSLog(@"LSD out\n");
-        
+
         /*-------------------------------------|FILTRADO|-------------------------------------*/
+        
         free(listFiltrada);
         listFiltradaSize =0;
 //        printf("segmentFilterThresh= %f\n",_segmentFilterThres);
@@ -532,6 +558,18 @@ float auxVal=0;
     
 }
 
+- (void) lsdOriginal{
+    
+    cantidad =width*height;
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) luminancia_double[pixelNr] =0.30*pixels[pixelNr*4+2] + 0.59*pixels[pixelNr*4+1] + 0.11*pixels[pixelNr*4];
+    
+    free(list_double);
+   // NSLog(@"LSD original in\n");
+    list_double = lsd(&listSize_original, luminancia_double, width, height);
+   // NSLog(@"LSD original out\n");
+    
+}
+
 - (void) reservarMemoria {
     
     if (verbose) printf("Reservamos memoria");
@@ -583,6 +621,7 @@ float auxVal=0;
     }
 
     luminancia = (float *) malloc(360*480*sizeof(float));
+    luminancia_double = (double *) malloc(360*480*sizeof(double));
     cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame]; 
     
     /* READ MARKER MODEL */
@@ -795,13 +834,13 @@ float auxVal=0;
     
     /*Le decimos al método que nuestro sampleBufferDelegate (al que se le pasan los pixeles por el metodo captureOutput) es el mismo*/
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
-    [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
-    dispatch_release(processQueue);
+   [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
+   dispatch_release(processQueue);
+//   [self.frameOutput setSampleBufferDelegate:self queue:dispatch_get_main_queue()];
     
     /*Sin esta linea de codigo el context apunta siempre a nil*/
     self.context =  [CIContext contextWithOptions:nil];
 
-    //[self reservarMemoria];
     [self.session startRunning];
     
     /* inicializo del motion manager*/
@@ -815,12 +854,12 @@ float auxVal=0;
     _kalman=true;
     _sensors=true;
     _LSD=false;
+    _LSD_original = false;
     _segments=false;
     _detectedPts=false;
     _reproyectedPts=false;
     
-
-    
+    listSize_original = 0;
 }
 
 //- (void) viewDidUnload {
