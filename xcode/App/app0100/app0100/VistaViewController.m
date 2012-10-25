@@ -46,7 +46,7 @@
     NSLog(@"TOUCH VISTA VIEWCONTROLLER");
     NSLog(@"TOUCH VISTA VIEWCONTROLLER");
     
-    //[super touchesBegan:touches withEvent:event];
+    [super touchesBegan:touches withEvent:event];
     
   
     
@@ -230,22 +230,21 @@ _button=nil;
 }
 
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-
-
-//[self buttonBACK];
-}
+//- (void)viewDidUnload
+//{
+//    [super viewDidUnload];
+//    // Release any retained subviews of the main view.
+//
+//
+////[self buttonBACK];
+//}
 
 
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    NSLog(@"WILL DIS VISTA");
     [super viewWillDisappear:animated];
-    
-   // [self.navigationController setNavigationBarHidden:YES animated:animated];
     
     [self buttonBACK];
 }
