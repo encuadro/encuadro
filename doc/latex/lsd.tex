@@ -1,22 +1,47 @@
 \chapter{LSD: ``Line Segment Detection''}
 
 \section{Introducción}
-LSD es un algoritmo de detección de segmentos publicado por Rafael Grompone von Gioi, Jérémie Jakubowicz, Jean-Michel Morel y Gregory Randall en abril de 2010. Es temporalmente lineal, con presición inferior a un píxel y que no requiere de un tuneo previo de parámetros, como casi todos los demás algoritmos de idéntica función; puede ser considerado el estado del arte en cuanto a detección de segmentos en imágenes digitales. Como cualquier otro algoritmo de detección de segmentos, LSD basa su estudio en la búsqueda de contornos angostos dentro de la imagen. Estos son regiones en donde el nivel de brillo de la imagen cambia notoriamente entre píxeles vecinos, por lo que el gradiente de la misma resulta de vital importancia. Puede verse como una composición de tres pasos:\\
+LSD es un algoritmo de detección de segmentos publicado por Rafael Grompone von Gioi, Jérémie Jakubowicz, Jean-Michel Morel y Gregory Randall en abril de 2010. Es temporalmente lineal, tiene presición inferior a un píxel y no requiere de un tuneo previo de parámetros, como casi todos los demás algoritmos de idéntica función; puede ser considerado el estado del arte en cuanto a detección de segmentos en imágenes digitales. Como cualquier otro algoritmo de detección de segmentos, LSD basa su estudio en la búsqueda de contornos angostos dentro de la imagen. Estos son regiones en donde el nivel de brillo de la imagen cambia notoriamente entre píxeles vecinos, por lo que el gradiente de la misma resulta de vital importancia. Se genera previo al análisis de la imagen, un campo de orientaciones asociadas a cada uno de los píxeles denominado por los autores \textit{level-line orientation field}. Dicho campo se obtiene de calcular las orientaciones ortogonales a los ángulos asociados al gradiente del la imagen. Luego, LSD puede verse como una composición de tres pasos:\\
 \begin{itemize}
-\item[(1)] División de la imagen en las llamadas \textit{line-support regions} que son grupos conexos de píxeles con idéntico gradiente, hasta cierta tolerancia. 
-\item[(2)] Búsqueda del segmento que mejor aproxime cada  \textit{line-support region}.
+\item[(1)] División de la imagen en las llamadas \textit{line-support regions}, que son grupos conexos de píxeles con idéntica orientación, hasta cierta tolerancia. 
+\item[(2)] Búsqueda del segmento que mejor aproxime cada  \textit{line-support region}: aproximación de las regiones por rectángulos.
 \item[(3)] Validación o no de cada segmento detectado en el punto anterior. 
-Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel. 
 \end{itemize}
+Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel. 
 
 \section{\textit{Line-support regions}}
-El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual gradiente, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``región creciente''; cada región comienza por un píxel y cierto ángulo asociado al gradiente del mismo. Luego, se testean los ocho vecinos de dicho píxel y los que cuenten con un ángulo similar al del píxel original son incluídos a la región. En cada iteración el ángulo asociado a la región es calculado como el promedio de los ángulos del gradiente de cada píxel; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.\\
+El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual orientación, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``región creciente''; cada región comienza por un píxel y cierto ángulo asociado al mismo. Luego, se testean sus ocho vecinos y los que cuenten con un ángulo similar al del píxel original son incluídos en la región. En cada iteración el ángulo asociado a la región es calculado como el promedio de las orientaciones de cada píxel dentro de la \textit{line-support region}; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.\\
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_lsd/lsd_1.eps}
-\caption{Proceso de crecimiento de una región. El ángulo del gradiente de cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Fuente \cite{grompone10}.}
+\caption{Proceso de crecimiento de una región. El ángulo asociado cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Fuente \cite{grompone10}.}
 \label{fig: lsd_1}
 \end{figure}
-Los píxels agregados a una región son marcados de manera que no se vuelvan a testear. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. 
 
+Los píxels agregados a una región son marcados de manera que no se vuelvan a testear. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. \\
+Existen algunos casos puntuales en los que el proceso de búsqueda de \textit{line-support regions} puede arrojar errores. Por ejemplo, cuando se tienen dos segmentos que se juntan y que son colineales a no ser por la tolerancia $\tau$ descripta anteriormente, se detectarán ambos segmentos como uno solo; ver figura \ref{fig: lsd_2}. Este potencial problema es heredado del algoritmo de Burns, Hanson y Riseman.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.25]{figs_lsd/lsd_2.eps}
+\caption{Potencial problema heredado del algoritmo de Burns, Hanson y Riseman. Izq.: Imagen original. Ctro.: Segmento detectado. Der.: Segmentos que deberían haberse detectado. Fuente \cite{grompone10}.}
+\label{fig: lsd_2}
+\end{figure}
+
+Sin embargo, LSD plantea un método para ahorraste este tipo de problemas. Durante el proceso de crecimiento de las regiones, también se realiza la aproximación rectangular a dicha región (paso (2) de los tres definidos anteriormente); y si menos del $50\%$ de los píxeles dentro del rectángulo corresponden a la \textit{line-support region}, entonces lo que se tiene no es un segmento. Se detiene entonces el crecimiento de la región.
+
+\section{Aproximación de las regiones por rectángulos}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_lsd/lsd_3.eps}
+\caption{Búsqueda del segmento que mejor aproxime cada \textit{line-support region}: aproximación de una región por un rectángulo. Izq.: Imagen original. Ctro.: Una de las regiones computadas. Der.: Aproximación rectangular que cubre el $99\%$ de la masa de la región. Fuente \cite{grompone10}.}
+\label{fig: lsd_3}
+\end{figure}
+
+Cada \textit{line-support region} debe ser asociada a un segmento. Cada segmento será determinado por su centro, su dirección, su anchura y su longitud. A diferencia de lo que pudiése dictar la intuición, la dirección asociada al segmento no se corresponde con la asociada a la región (el promedio de las direcciones de cada uno de los píxeles). Sin embargo, se elige el centro del segmento como el centro de masa de la región y su dirección como el eje de inercia principal de la misma; la magnitud del gradiente asociado a cada píxel hace las veces de masa. La idea detrás de este método es que los píxeles con un gradiente mayor en módulo, se corresponden mejor con la percepción de un borde. La anchura y la longitud del segmento son elegidos de manera de cubir el $99\%$ de la masa de la región.
+
+\section{Validación de segmentos}
+
+Wow!

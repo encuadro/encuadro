@@ -852,11 +852,11 @@ static int isaligned( int x, int y, image_float angles, float theta,
   float a;
 
   /* check parameters */
-  if( angles == NULL || angles->data == NULL )
-    error("isaligned: invalid image 'angles'.");
-  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
-    error("isaligned: (x,y) out of the image.");
-  if( prec < 0.0 ) error("isaligned: 'prec' must be positive.");
+//  if( angles == NULL || angles->data == NULL )
+//    error("isaligned: invalid image 'angles'.");
+//  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
+//    error("isaligned: (x,y) out of the image.");
+//  if( prec < 0.0 ) error("isaligned: 'prec' must be positive.");
 
   /* angle at pixel (x,y) */
   a = angles->data[ x + y * angles->xsize ];
