@@ -1,10 +1,14 @@
-//
-//  CoplanarPosit.c
-//  ModernCoplanarPosit
-//
-//  Created by Juan Ignacio Braun on 5/14/12.
-//  Copyright (c) 2012 juanibraun@gmail.com. All rights reserved.
-//
+/*
+ Program: CoplanarPosit.c
+ Proyect: encuadro - Facultad de Ingeniería - UDELAR
+ Author: Juan Ignacio Braun - juanibraun@gmail.com.
+ 
+ Description:
+ C implementation of modern copalanar posit, based on the IJCV 2004 SoftPOSIT paper by Daniel DeMenthon and coplanar posit paper.
+ 
+ Hosted on:
+ http://code.google.com/p/encuadro/
+ */
 
 
 #include "CoplanarPosit.h"
@@ -629,20 +633,28 @@ void Matrix2Euler(float** Rot, float* angles1,float* angles2){
         psi2=0;
     }
     
-    angles1[0]=(180/MY_PI)*psi1;
-    angles1[1]=(180/MY_PI)*theta1;
-    angles1[2]=(180/MY_PI)*phi1;
+//    angles1[0]=(180/MY_PI)*psi1;
+//    angles1[1]=(180/MY_PI)*theta1;
+//    angles1[2]=(180/MY_PI)*phi1;
+//    
+//    angles2[0]=(180/MY_PI)*psi2;
+//    angles2[1]=(180/MY_PI)*theta2;
+//    angles2[2]=(180/MY_PI)*phi2;
     
-    angles2[0]=(180/MY_PI)*psi2;
-    angles2[1]=(180/MY_PI)*theta2;
-    angles2[2]=(180/MY_PI)*phi2;
+    angles1[0]=psi1;
+    angles1[1]=theta1;
+    angles1[2]=phi1;
+    
+    angles2[0]=psi2;
+    angles2[1]=theta2;
+    angles2[2]=phi2;
 }
 
 void Euler2Matrix(float* angles, float** Rot){
     
-    angles[0]=angles[0]*(MY_PI/180);
-    angles[1]=angles[1]*(MY_PI/180);
-    angles[2]=angles[2]*(MY_PI/180);
+//    angles[0]=angles[0]*(MY_PI/180);
+//    angles[1]=angles[1]*(MY_PI/180);
+//    angles[2]=angles[2]*(MY_PI/180);
     
     Rot[0][0]=cos(angles[1])*cos(angles[2]);
     Rot[0][1]=sin(angles[0])*sin(angles[1])*cos(angles[2])-cos(angles[0])*sin(angles[2]);
@@ -653,5 +665,10 @@ void Euler2Matrix(float* angles, float** Rot){
     Rot[2][0]=-sin(angles[1]);
     Rot[2][1]=sin(angles[0])*cos(angles[1]);
     Rot[2][2]=cos(angles[0])*cos(angles[1]);
+    
+//    angles[0]=angles[0]*(180/MY_PI);
+//    angles[1]=angles[1]*(180/MY_PI);
+//    angles[2]=angles[2]*(180/MY_PI);
+
     
 }

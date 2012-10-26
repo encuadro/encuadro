@@ -1,10 +1,14 @@
-//
-//  CoplanarPosit.h
-//  ModernCoplanarPosit
-//
-//  Created by Juan Ignacio Braun on 5/14/12.
-//  Copyright (c) 2012 juanibraun@gmail.com. All rights reserved.
-//
+/*
+ Program: CoplanarPosit.c
+ Proyect: encuadro - Facultad de Ingeniería - UDELAR
+ Author: Juan Ignacio Braun - juanibraun@gmail.com.
+ 
+ Description:
+ C implementation of modern copalanar posit, based on the IJCV 2004 SoftPOSIT paper by Daniel DeMenthon and coplanar posit paper.
+ 
+ Hosted on:
+ http://code.google.com/p/encuadro/
+ */
 
 #include <stdio.h>
 #include <stdlib.h>

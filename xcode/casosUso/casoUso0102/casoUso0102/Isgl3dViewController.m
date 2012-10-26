@@ -13,11 +13,7 @@
 
 @interface Isgl3dViewController()
 
-@property(nonatomic, retain) AVCaptureSession * session;
-@property(nonatomic, retain) AVCaptureDevice * videoDevice;
-@property(nonatomic, retain) AVCaptureDeviceInput * videoInput;
-@property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
-@property(nonatomic, retain) CIContext* context;
+
 
 //@property(nonatomic, retain) CIImage* ciImage;
 //@property(nonatomic, retain) CVPixelBufferRef pb;
@@ -44,6 +40,7 @@
 @synthesize segmentFilterThres = _segmentFilterThres;
 @synthesize kalmanErrorGain = _kalmanErrorGain;
 @synthesize newRefPose = _newRefPose;
+@synthesize ini = _ini;
 
 /*para DIBUJAR*/
 claseDibujar *cgvista;
@@ -98,6 +95,7 @@ float center[2]={240, 180};
 bool verbose;
 float* angles1;
 float* angles2;
+float* measure;
 
 /* LSD parameters */
 //float scale_inv = 2; /*scale_inv= 1/scale, scale=0.5*/
@@ -118,15 +116,27 @@ int cantidad;
 /*Kalman variables*/
 kalman_state thetaState,psiState,phiState,xState,yState,zState;
 //bool kalman=true;
-bool init=true;
 float** measureNoise;
+float** measureNoiseRef;
 float** processNoise;
 float** stateEvolution;
 float** measureMatrix;
 float** errorMatrix;
 float** kalmanGain;
 float* states;
-kalman_state_3 state;
+kalman_state_n state;
+
+/*Variables para kalman de sensores*/
+float** measureNoiseSensors;
+float** measureNoiseSensorsRef;
+float** processNoiseSensors;
+float** stateEvolutionSensors;
+float** measureMatrixSensors;
+float** errorMatrixSensors;
+float** kalmanGainSensors;
+float* statesSensors;
+float* measureSensors;
+kalman_state_n stateSensors;
 
 int count;
 float auxVal=0;
@@ -274,7 +284,7 @@ float auxVal=0;
     
     if((pixels[0] != INFINITY)&(height!=0))
     {
-    if (true||init) {    
+    if (true) {
         
         if (verbose) NSLog(@"Procesando!\n");
         
@@ -347,14 +357,13 @@ float auxVal=0;
             if (_sensors) { //Esto es para usar pose de referencia e ir calculando cambios.
                 
                 /*Agarro refernecia de attitude*/
-                if(_newRefPose||init){
+                if(_newRefPose){
                     referenceAttitude = [manager.deviceMotion.attitude retain];
                     for(int i=0;i<3;i++){
                         RotRef[i][0]=Rot[i][0];
                         RotRef[i][1]=Rot[i][1];
                         RotRef[i][2]=Rot[i][2];
                     }
-                    Matrix2Euler(RotRef, angles1, angles2);
                     if(false){
                         printf("\nDeviceMotion refAttitude:\n");
                         printf("roll: %g\npitch: %g\nyaw: %g\n",(180.0/MY_PI)*(referenceAttitude.roll),(180.0/MY_PI)*(referenceAttitude.yaw),-(180.0/MY_PI)*(referenceAttitude.pitch));
@@ -366,6 +375,8 @@ float auxVal=0;
                     }
                     
                     if(false){
+                        Matrix2Euler(RotRef, angles1, angles2);
+
                         printf("\nPosit ref Attitude:\n");
                         printf("roll: %g\npitch: %g\nyaw: %g\n",angles1[0],angles1[1],angles1[2]);
                         
@@ -374,7 +385,7 @@ float auxVal=0;
                         printf("%g\t: %g\t: %g\n",RotRef[1][0],RotRef[1][1],RotRef[1][2]);
                         printf("%g\t: %g\t: %g\n",RotRef[2][0],RotRef[2][1],RotRef[2][2]);
                     }
-                    
+                    count = 0;
                     _newRefPose=false;
                 }
                 
@@ -406,116 +417,194 @@ float auxVal=0;
                 }
                 
                 
-                angles2[0]=(180.0/MY_PI)*attitude.roll;
-                angles2[1]=(180.0/MY_PI)*attitude.pitch;
-                angles2[2]=(180.0/MY_PI)*attitude.yaw;
+//                angles2[0]=(180.0/MY_PI)*attitude.roll;
+//                angles2[1]=(180.0/MY_PI)*attitude.pitch;
+//                angles2[2]=(180.0/MY_PI)*attitude.yaw;
                 
-                for (int i=0; i<3; i++) angles1[i]=1.0*angles2[i]+0.0*angles1[i];
-                Euler2Matrix(angles1, RotAux);
+                angles2[0]=attitude.roll;
+                angles2[1]=attitude.pitch;
+                angles2[2]=attitude.yaw;
                 
+                for(int i=0;i<3;i++){
+                  measureSensors[i]=angles1[i];
+                  measureSensors[i+3]=angles2[i];
+                }
                 
+                if (_kalman){
+                    if(_ini){
+                                                
+                        /* kalman correlacionado */
+                        IDENTITY_MATRIX_3X3(stateEvolutionSensors);
+                        measureMatrixSensors[0][0]=1;
+                        measureMatrixSensors[0][1]=0;
+                        measureMatrixSensors[0][2]=0;
+                        measureMatrixSensors[1][0]=0;
+                        measureMatrixSensors[1][1]=1;
+                        measureMatrixSensors[1][2]=0;
+                        measureMatrixSensors[2][0]=0;
+                        measureMatrixSensors[2][1]=0;
+                        measureMatrixSensors[2][2]=1;
+                        measureMatrixSensors[3][0]=1;
+                        measureMatrixSensors[3][1]=0;
+                        measureMatrixSensors[3][2]=0;
+                        measureMatrixSensors[4][0]=0;
+                        measureMatrixSensors[4][1]=1;
+                        measureMatrixSensors[4][2]=0;
+                        measureMatrixSensors[5][0]=0;
+                        measureMatrixSensors[5][1]=0;
+                        measureMatrixSensors[5][2]=1;
+                        IDENTITY_MATRIX_3X3(processNoiseSensors);
+                        IDENTITY_MATRIX_3X3(errorMatrixSensors);
+                        SCALE_MATRIX_3X3(errorMatrixSensors, 1, errorMatrixSensors);
+                        
+                        measureNoiseSensorsRef[0][0]=4.96249572803608;
+                        measureNoiseSensorsRef[0][1]=4.31450588099769;
+                        measureNoiseSensorsRef[0][2]=-0.0459669868120827;
+                        measureNoiseSensorsRef[0][3]=0;
+                        measureNoiseSensorsRef[0][4]=0;
+                        measureNoiseSensorsRef[0][5]=0;
+                        measureNoiseSensorsRef[1][0]=4.31450588099769;
+                        measureNoiseSensorsRef[1][1]=7.02354899298729;
+                        measureNoiseSensorsRef[1][2]=-0.0748919339531972;
+                        measureNoiseSensorsRef[1][3]=0;
+                        measureNoiseSensorsRef[1][4]=0;
+                        measureNoiseSensorsRef[1][5]=0;
+                        measureNoiseSensorsRef[2][0]=-0.0459669868120827;
+                        measureNoiseSensorsRef[2][1]=-0.0748919339531972;
+                        measureNoiseSensorsRef[2][2]=0.00106230567668207;
+                        measureNoiseSensorsRef[2][3]=0;
+                        measureNoiseSensorsRef[2][4]=0;
+                        measureNoiseSensorsRef[2][5]=0;
+                        measureNoiseSensorsRef[3][0]=0;
+                        measureNoiseSensorsRef[3][1]=0;
+                        measureNoiseSensorsRef[3][2]=0;
+                        measureNoiseSensorsRef[3][3]=1;
+                        measureNoiseSensorsRef[3][4]=0;
+                        measureNoiseSensorsRef[3][5]=0;
+                        measureNoiseSensorsRef[4][0]=0;
+                        measureNoiseSensorsRef[4][1]=0;
+                        measureNoiseSensorsRef[4][2]=0;
+                        measureNoiseSensorsRef[4][3]=0;
+                        measureNoiseSensorsRef[4][4]=1;
+                        measureNoiseSensorsRef[4][5]=0;
+                        measureNoiseSensorsRef[5][0]=0;
+                        measureNoiseSensorsRef[5][1]=0;
+                        measureNoiseSensorsRef[5][2]=0;
+                        measureNoiseSensorsRef[5][3]=0;
+                        measureNoiseSensorsRef[5][4]=0;
+                        measureNoiseSensorsRef[5][5]=1;
+
+                        for (int i=0; i<3; i++)statesSensors[i]=angles1[i];
+                        
+                        SCALE_MATRIX_6X6(measureNoiseSensors, 1.0, measureNoiseSensorsRef);
+
+                        stateSensors = kalman_init_n(processNoiseSensors,measureNoiseSensors, errorMatrixSensors,kalmanGainSensors,statesSensors);
+    
+                        _ini=false;
+                    }
+//                    printf("kalman error gain=%f\n",_kalmanErrorGain);
+//                    for(int i=0;i<6;i++){
+//                        for(int j=0;j<6;j++) measureNoiseSensors[i][j]=_kalmanErrorGain*measureNoiseSensorsRef[i][j];
+//                    }
+                    SCALE_MATRIX_6X6(measureNoiseSensors, _kalmanErrorGain, measureNoiseSensorsRef);
+                    
+                    /* kalman correlacionado */
+                    kalman_sensors_update(&stateSensors, measureSensors, stateEvolutionSensors, measureMatrixSensors);
+                   
+                    MAT_PRINT_6X6(measureNoiseSensors);
+                    Euler2Matrix(stateSensors.x, RotAux);
+                    VEC_PRINT(stateSensors.x);
+                    VEC_PRINT(angles1);
+                    VEC_PRINT(angles2);
+                
+                    count++;
+                    if (count>5) _newRefPose=true;
+        
+                }
+                else Euler2Matrix(angles2, RotAux);
+
+            
                 MATRIX_PRODUCT_3X3(Rot, RotRef, RotAux);
                 
                 if(false){
-                    printf("\nPosit attitude change rotation matrix:\n");
+                    printf("\nkalman sensors rotation matrix:\n");
                     printf("%g\t: %g\t: %g\n",Rot[0][0],Rot[0][1],Rot[0][2]);
                     printf("%g\t: %g\t: %g\n",Rot[1][0],Rot[1][1],Rot[1][2]);
                     printf("%g\t: %g\t: %g\n",Rot[2][0],Rot[2][1],Rot[2][2]);
                 }
+                
+            
             }
-            if (_kalman){
-                Matrix2Euler(Rot, angles1, angles2);
-                if(false){
-                    if(init){
-                        thetaState = kalman_init(1, 4, 1, angles1[0]);
-                        psiState = kalman_init(1, 7, 1, angles1[1]);
-                        phiState = kalman_init(1, 0.1, 1, angles1[2]);
-//                        xState = kalman_init(1, 8, 1, Tras[0]);
-//                        yState = kalman_init(1, 8, 1, Tras[1]);
-//                        zState = kalman_init(1, 8, 1, Tras[2]);
-                        init=false;
-                     }
-                     kalman_update(&thetaState, angles1[0]);
-                     kalman_update(&psiState, angles1[1]);
-                     kalman_update(&phiState, angles1[2]);
-//                     kalman_update(&xState, Tras[0]);
-//                     kalman_update(&yState, Tras[1]);
-//                     kalman_update(&zState, Tras[2]);
-                
-                     angles1[0]=thetaState.x;
-                     angles1[1]=psiState.x;
-                     angles1[2]=phiState.x;
-//                     Tras[0]=xState.x;
-//                     Tras[1]=yState.x;
-//                     Tras[2]=zState.x;
-                
-                     
-                
-                }
-                else{
-                    if(init){
+            else{
+                if (_kalman){
+                    Matrix2Euler(Rot, angles1, angles2);
+                    if(false){
+                        if(_ini){
+                            thetaState = kalman_init(1, 4, 1, angles1[0]);
+                            psiState = kalman_init(1, 7, 1, angles1[1]);
+                            phiState = kalman_init(1, 0.1, 1, angles1[2]);
+                            _ini=false;
+                        }
+                        kalman_update(&thetaState, angles1[0]);
+                        kalman_update(&psiState, angles1[1]);
+                        kalman_update(&phiState, angles1[2]);
+                        
+                        angles1[0]=thetaState.x;
+                        angles1[1]=psiState.x;
+                        angles1[2]=phiState.x;
+                    }
+                    else{
+                        if(_ini){
+                            /* kalman correlacionado */
+                            
+                            IDENTITY_MATRIX_3X3(stateEvolution);
+                            IDENTITY_MATRIX_3X3(measureMatrix);
+                            IDENTITY_MATRIX_3X3(processNoise);
+                            IDENTITY_MATRIX_3X3(errorMatrix);
+                            SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
+                            
+                            measureNoiseRef[0][0] =4.96249572803608;
+                            measureNoiseRef[0][1]=4.31450588099769;
+                            measureNoiseRef[0][2]=-0.0459669868120827;
+                            measureNoiseRef[1][0]=4.31450588099769;
+                            measureNoiseRef[1][1]=7.02354899298729;
+                            measureNoiseRef[1][2]=-0.0748919339531972;
+                            measureNoiseRef[2][0]=-0.0459669868120827;
+                            measureNoiseRef[2][1]=-0.0748919339531972;
+                            measureNoiseRef[2][2]=0.00106230567668207;
+                            
+                            for(int i=0;i<3;i++)states[i]=angles1[i];
+                            
+                            SCALE_MATRIX_3X3(measureNoise, 1.0,measureNoiseRef);
+                            state = kalman_init_n(processNoise,measureNoise, errorMatrix,kalmanGain,states);
+                            
+                            xState = kalman_init(1, 0.2, 1, Tras[0]);
+                            yState = kalman_init(1, 0.2, 1, Tras[1]);
+                            zState = kalman_init(1, 0.2, 1, Tras[2]);
+                            
+                            
+                            _ini=false;
+                        }
+                        
+                        SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoiseRef);
                         
                         /* kalman correlacionado */
-                        IDENTITY_MATRIX_3X3(stateEvolution);
-                        IDENTITY_MATRIX_3X3(measureMatrix);
-                        IDENTITY_MATRIX_3X3(processNoise);
-                        IDENTITY_MATRIX_3X3(errorMatrix);
-                        SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
+                        kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
                         
-                        measureNoise[0][0] =4.96249572803608;
-                        measureNoise[0][1]=4.31450588099769;
-                        measureNoise[0][2]=-0.0459669868120827;
-                        measureNoise[1][0]=4.31450588099769;
-                        measureNoise[1][1]=7.02354899298729;
-                        measureNoise[1][2]=-0.0748919339531972;
-                        measureNoise[2][0]=-0.0459669868120827;
-                        measureNoise[2][1]=-0.0748919339531972;
-                        measureNoise[2][2]=0.00106230567668207;
-//                        measureNoise[0][0]=1;
-//                        measureNoise[0][1]=0;
-//                        measureNoise[0][2]=0;
-//                        measureNoise[1][0]=0;
-//                        measureNoise[1][1]=1;
-//                        measureNoise[1][2]=0;
-//                        measureNoise[2][0]=0;
-//                        measureNoise[2][1]=0;
-//                        measureNoise[2][2]=1;
-                       
+                        kalman_update(&xState, Tras[0]);
+                        kalman_update(&yState, Tras[1]);
+                        kalman_update(&zState, Tras[2]);
                         
-                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
+                        Tras[0]=xState.x;
+                        Tras[1]=yState.x;
+                        Tras[2]=zState.x;
                         
-                        xState = kalman_init(1, 0.2, 1, Tras[0]);
-                        yState = kalman_init(1, 0.2, 1, Tras[1]);
-                        zState = kalman_init(1, 0.2, 1, Tras[2]);
-
-                        
-                        init=false;
                     }
+                    Euler2Matrix(state.x, Rot);
                     
-//                    printf("kalmanErrorGain= %f\n",_kalmanErrorGain);
-                    SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoise);
                     
-                    /* kalman correlacionado */
-                    kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
-
-                    kalman_update(&xState, Tras[0]);
-                    kalman_update(&yState, Tras[1]);
-                    kalman_update(&zState, Tras[2]);
-                    
-                    Tras[0]=xState.x;
-                    Tras[1]=yState.x;
-                    Tras[2]=zState.x;
-                    
-//                    VEC_PRINT(angles1);
-//                    VEC_PRINT(Tras);
-                
                 }
-                Euler2Matrix(angles1, Rot);
-                count=0;
-                
-                
             }
-            
         }
         
     }
@@ -656,6 +745,8 @@ float auxVal=0;
     
     measureNoise=(float **)malloc(3 * sizeof(float *));
     for (int k=0;k<3;k++) measureNoise[k]=(float *)malloc(3 * sizeof(float));
+    measureNoiseRef=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureNoiseRef[k]=(float *)malloc(3 * sizeof(float));
     
     processNoise=(float **)malloc(3 * sizeof(float *));
     for (int k=0;k<3;k++) processNoise[k]=(float *)malloc(3 * sizeof(float));
@@ -673,6 +764,37 @@ float auxVal=0;
     for (int k=0;k<3;k++) kalmanGain[k]=(float *)malloc(3 * sizeof(float));
     
     states=(float *)malloc(3 * sizeof(float));
+    
+    
+    /* Reservo memoria para variables de kalman de sensores*/
+    measureNoiseSensors=(float **)malloc(6 * sizeof(float *));
+    for (int k=0;k<6;k++) measureNoiseSensors[k]=(float *)malloc(6 * sizeof(float));
+    
+    measureNoiseSensorsRef=(float **)malloc(6 * sizeof(float *));
+    for (int k=0;k<6;k++) measureNoiseSensorsRef[k]=(float *)malloc(6 * sizeof(float));
+    
+    processNoiseSensors=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) processNoiseSensors[k]=(float *)malloc(3 * sizeof(float));
+    
+    stateEvolutionSensors=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) stateEvolutionSensors[k]=(float *)malloc(3 * sizeof(float));
+    
+    measureMatrixSensors=(float **)malloc(6 * sizeof(float *));
+    for (int k=0;k<6;k++) measureMatrixSensors[k]=(float *)malloc(3 * sizeof(float));
+    
+    errorMatrixSensors=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) errorMatrixSensors[k]=(float *)malloc(3 * sizeof(float));
+    
+    kalmanGainSensors=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) kalmanGainSensors[k]=(float *)malloc(6 * sizeof(float));
+    
+    statesSensors=(float *)malloc(3 * sizeof(float));
+    
+    measureSensors=(float *)malloc(6 * sizeof(float));
+    
+   
+
+
     
 }
 
@@ -848,9 +970,10 @@ float auxVal=0;
     referenceAttitude = nil;
     
     manager.deviceMotionUpdateInterval = 1.0/60.0;
-    [manager startDeviceMotionUpdates];
+    [manager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryCorrectedZVertical];
     
     _newRefPose=true;
+    _ini=true;
     _kalman=true;
     _sensors=true;
     _LSD=false;
@@ -858,7 +981,8 @@ float auxVal=0;
     _segments=false;
     _detectedPts=false;
     _reproyectedPts=false;
-    
+    _kalmanErrorGain=1;
+    _segmentFilterThres=36;
     listSize_original = 0;
 }
 
