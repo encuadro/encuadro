@@ -43,8 +43,28 @@ Sin embargo, LSD plantea un método para ahorraste este tipo de problemas. Durant
 Cada \textit{line-support region} debe ser asociada a un segmento. Cada segmento será determinado por su centro, su dirección, su anchura y su longitud. A diferencia de lo que pudiése dictar la intuición, la dirección asociada al segmento no se corresponde con la asociada a la región (el promedio de las direcciones de cada uno de los píxeles). Sin embargo, se elige el centro del segmento como el centro de masa de la región y su dirección como el eje de inercia principal de la misma; la magnitud del gradiente asociado a cada píxel hace las veces de masa. La idea detrás de este método es que los píxeles con un gradiente mayor en módulo, se corresponden mejor con la percepción de un borde. La anchura y la longitud del segmento son elegidos de manera de cubir el $99\%$ de la masa de la región.
 
 \section{Validación de segmentos}
-La validación de los segmentos previamente detectados se plantea como un método de test de hipótesis. Se utiliza un modelo \textit{a-contrario}: dada una imagen, sin ningún tipo de estructura, de ruido blanco y Gaussiano; se sabe que cualquier detección sobre la misma será casual y por lo tanto irrelevante. En rigor, se sabe que para cualquier imagen de este tipo, su \textit{level-line oriantation field} toma, para cada píxel, valores independientes y uniformemente distribuídos entre $[0,2\pi]$. Dado entonces un segmento en la imagen analizada, se estudia la posibilidad de que dicha detección se dé en la imagen de ruido, y si la probabilidad es lo suficientemente baja, se la considerará una detección válida, de lo contrario se considerará que se esta bajo la hipótesis $H_0$: un conjunto aleatorio de píxeles que casualmente se alinearon de manera de detectar un segmento.\\
-Para estudiar la probabilidad de una cierta detección en la imagen de ruido, se deben tomar en cuenta todos los posibles rectángulos en la imagen. Dada una imagen $N\times N$, habrán $N^4$ orientaciones potenciales para los segmentos, $N^2$ puntos de inicio y $N^2$ puntos de fin. Si se consideran $N$ posibles valores para la anchura de los rectángulos, se obtienen $N^5$ posibles segmentos. Por su parte, dado cierto rectángulo $r$, detectado en la imagen $x$, se denota $k(r,x)$ a la cantidad de píxeles alineados dentro del mismo. Se define además un valor llamado \textit{Number of False Alarms} (NFA) que corresponde a la probabilidad de detectar al rectángulo en cuestión en la imagen de ruido $X$:
+La validación de los segmentos previamente detectados se plantea como un método de test de hipótesis. Se utiliza un modelo \textit{a-contrario}: dada una imagen, sin ningún tipo de estructura, de ruido blanco y Gaussiano; se sabe que cualquier detección sobre la misma será casual y por lo tanto irrelevante. En rigor, se sabe que para cualquier imagen de este tipo, su \textit{level-line oriantation field} toma, para cada píxel, valores independientes y uniformemente distribuídos entre $[0,2\pi]$. Dado entonces un segmento en la imagen analizada, se estudia la probabilidad de que dicha detección se dé en la imagen de ruido, y si \'esta es lo suficientemente baja, se la considerará una detección válida, de lo contrario se considerará que se esta bajo la hipótesis $H_0$: un conjunto aleatorio de píxeles que casualmente se alinearon de manera de detectar un segmento.\\
+Para estudiar la probabilidad de una cierta detección en la imagen de ruido, se deben tomar en cuenta todos los posibles rectángulos en la imagen. Dada una imagen $N\times N$, habrán $N^4$ orientaciones potenciales para los segmentos, $N^2$ puntos de inicio y $N^2$ puntos de fin. Si se consideran $N$ posibles valores para la anchura de los rectángulos, se obtienen $N^5$ posibles segmentos. Por su parte, dado cierto rectángulo $r$, detectado en la imagen $x$, se denota $k(r,x)$ a la cantidad de píxeles alineados dentro del mismo. Se define además un valor llamado \textit{Number of False Alarms} (NFA) que está fuertemente relacionado con la probabilidad de detectar al rectángulo en cuestión en la imagen de ruido $X$:
 \[
-NFA(r,x) = N^5\P_{H_0}
+NFA(r,x) = N^5. P_{H_0}[k(r,X) \geq k(r,x) ]
 \]
+véase que el valor se logra multiplicando la probabilidad de que un segmento de la imagen de ruido, de tama\~no igual a $r$, tenga un número mayor o igual de píxeles alineados que éste, por la cantidad potencial de segmentos $N^5$. Cuanto menor sea el número NFA, más significativo será el segmento detectado r; pues tendrá una probabilidad de aparición menor en una imagen sin estructuras. De esta manera, se descartará $H_0$; o lo que es lo mismo, se aceptará el segmento detectado como válido, si y sólo si:
+\[
+NFA(r) \leq \epsilon
+\] 
+donde empiricamente $\epsilon=1$ para todos los casos.\\
+Si se toma en cuenta que cada píxel del gradiente de la imagen ruidosa toma un valor independiente de los demás, se concluye que también lo harán el gradiente y el \textit{level-line orientation field} de la misma. De esta menera, definido sobre ésta un segmento con cierta orientación, la probabilidad de que uno de sus píxeles cuente con la misma orientación, a menos de la ya mencionada tolerancia $\tau$; será:
+\[
+p = \frac{\tau}{\pi}
+\]
+además, se puede modelar la probabilidad de que cierto rectángulo en la imagen ruidosa, con cualquier orientación, formado por $n(r)$ píxeles, cuente con al menos $k(r)$ de ellos alineados, como una distribución binomial:
+\[
+P_{H_0}[k(r,X) \geq k(r,x) ] = B(n(r), k(r),p).
+\]
+Finalmente, el valor \textit{Number of False Alarms} será calculado para cada segmento detectado en la imgen analizada de la sigiuente manera:
+\[
+NFA(r,x) = B(n(r), k(r),p);
+\]
+si dicho valor es menor o igual a $\epsilon=1$, el segmento se tomará como válido; de lo contrario de dacartará.
+
+\section{Optimización del algoritmo para tiempo real}
