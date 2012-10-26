@@ -148,7 +148,7 @@ void kalman_sensors_update(kalman_state_n* state, float* measurement,float** A, 
     MAT_DOT_VEC_3X6(auxVec3, state->k, auxVec6);
 //    VEC_PRINT(auxVec3);
     VEC_SUM(state->x, state->x, auxVec3);
-    VEC_PRINT(state->x);
+//    VEC_PRINT(state->x);
     
     /*estimated P*/
     MATRIX_PRODUCT_6X3x3X3(auxMat6x3, H, state->p);
@@ -161,5 +161,5 @@ void kalman_sensors_update(kalman_state_n* state, float* measurement,float** A, 
     }
     free(S);
     free(Sinv);
-    printf("\n \n TERMINA KALMAN\n\n");
+//    printf("\n \n TERMINA KALMAN\n\n");
 }

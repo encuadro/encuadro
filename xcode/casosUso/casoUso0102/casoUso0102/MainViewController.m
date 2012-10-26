@@ -77,6 +77,19 @@
 
 }
 
+- (void) removeViews {
+    
+    NSLog(@"REMOVE VIEWS VISTA");
+	// Create view and add to Isgl3dDirector
+	//Isgl3dView * view = [HelloWorldView view];
+    
+    [self.viewController.view removeFromSuperview];
+    // [self.view removeFromSuperview:self.HWview];
+    _viewController.isgl3DView = nil;
+	[[Isgl3dDirector sharedInstance] removeView:self.HWview];
+    [self.HWview release];
+}
+
 - (void) createViews {
     printf("CREATE VIEWS\n");
 	// Set the device orientation
@@ -93,6 +106,54 @@
 	[[Isgl3dDirector sharedInstance] addView:self.HWview];
 }
 
+- (void) buttonBACK {
+    NSLog(@"BUTTON BACK");
+    // _viewController.AugmReal=false;
+    
+    [self removeViews];
+    
+    [self.viewController.session stopRunning];
+
+    
+    //////////////////////////////////////////////////////
+    
+    // applicationWillTerminate
+    // applicationWillTerminate
+    // applicationWillTerminate
+    
+    [[Isgl3dDirector sharedInstance].openGLView removeFromSuperview];
+    
+    // End and reset the director
+    
+    //[Isgl3dDirector resetInstance];
+    
+    // Release
+    [_viewController release];
+    _viewController = nil;
+    [_window release];
+    _window = nil;
+    
+    
+    // applicationWillTerminate
+    // applicationWillTerminate
+    // applicationWillTerminate
+    
+    
+    //////////////////////////////////////////////////////
+    [[Isgl3dDirector sharedInstance] resume];
+    
+    
+    //self.view=Nil;
+    
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    NSLog(@"WILL DIS VISTA");
+    [super viewWillDisappear:animated];
+    
+    [self buttonBACK];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -162,7 +223,6 @@
 
 - (IBAction)kalmanErrorGain:(UISlider *)sender {
     self.viewController.kalmanErrorGain = sender.value;
-      NSLog(@"kalman error gain: %f",sender.value);
 }
 
 - (IBAction)segmentsFilterThresh:(UISlider *)sender {

@@ -13,11 +13,7 @@
 
 @interface Isgl3dViewController()
 
-@property(nonatomic, retain) AVCaptureSession * session;
-@property(nonatomic, retain) AVCaptureDevice * videoDevice;
-@property(nonatomic, retain) AVCaptureDeviceInput * videoInput;
-@property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
-@property(nonatomic, retain) CIContext* context;
+
 
 //@property(nonatomic, retain) CIImage* ciImage;
 //@property(nonatomic, retain) CVPixelBufferRef pb;
@@ -121,6 +117,7 @@ int cantidad;
 kalman_state thetaState,psiState,phiState,xState,yState,zState;
 //bool kalman=true;
 float** measureNoise;
+float** measureNoiseRef;
 float** processNoise;
 float** stateEvolution;
 float** measureMatrix;
@@ -388,7 +385,7 @@ float auxVal=0;
                         printf("%g\t: %g\t: %g\n",RotRef[1][0],RotRef[1][1],RotRef[1][2]);
                         printf("%g\t: %g\t: %g\n",RotRef[2][0],RotRef[2][1],RotRef[2][2]);
                     }
-                    
+                    count = 0;
                     _newRefPose=false;
                 }
                 
@@ -500,27 +497,29 @@ float auxVal=0;
                         for (int i=0; i<3; i++)statesSensors[i]=angles1[i];
                         
                         SCALE_MATRIX_6X6(measureNoiseSensors, 1.0, measureNoiseSensorsRef);
-                        MAT_PRINT_6X6(measureNoiseSensors);
 
                         stateSensors = kalman_init_n(processNoiseSensors,measureNoiseSensors, errorMatrixSensors,kalmanGainSensors,statesSensors);
     
                         _ini=false;
                     }
-                    printf("kalman error gain=%f\n",_kalmanErrorGain);
+//                    printf("kalman error gain=%f\n",_kalmanErrorGain);
 //                    for(int i=0;i<6;i++){
 //                        for(int j=0;j<6;j++) measureNoiseSensors[i][j]=_kalmanErrorGain*measureNoiseSensorsRef[i][j];
 //                    }
-//                    SCALE_MATRIX_6X6(measureNoiseSensors, _kalmanErrorGain, measureNoiseSensorsRef);
-                    MAT_PRINT_6X6(measureNoiseSensors);
+                    SCALE_MATRIX_6X6(measureNoiseSensors, _kalmanErrorGain, measureNoiseSensorsRef);
                     
                     /* kalman correlacionado */
                     kalman_sensors_update(&stateSensors, measureSensors, stateEvolutionSensors, measureMatrixSensors);
                    
+                    MAT_PRINT_6X6(measureNoiseSensors);
                     Euler2Matrix(stateSensors.x, RotAux);
                     VEC_PRINT(stateSensors.x);
                     VEC_PRINT(angles1);
                     VEC_PRINT(angles2);
-                    
+                
+                    count++;
+                    if (count>5) _newRefPose=true;
+        
                 }
                 else Euler2Matrix(angles2, RotAux);
 
@@ -564,18 +563,19 @@ float auxVal=0;
                             IDENTITY_MATRIX_3X3(errorMatrix);
                             SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
                             
-                            measureNoise[0][0] =4.96249572803608;
-                            measureNoise[0][1]=4.31450588099769;
-                            measureNoise[0][2]=-0.0459669868120827;
-                            measureNoise[1][0]=4.31450588099769;
-                            measureNoise[1][1]=7.02354899298729;
-                            measureNoise[1][2]=-0.0748919339531972;
-                            measureNoise[2][0]=-0.0459669868120827;
-                            measureNoise[2][1]=-0.0748919339531972;
-                            measureNoise[2][2]=0.00106230567668207;
+                            measureNoiseRef[0][0] =4.96249572803608;
+                            measureNoiseRef[0][1]=4.31450588099769;
+                            measureNoiseRef[0][2]=-0.0459669868120827;
+                            measureNoiseRef[1][0]=4.31450588099769;
+                            measureNoiseRef[1][1]=7.02354899298729;
+                            measureNoiseRef[1][2]=-0.0748919339531972;
+                            measureNoiseRef[2][0]=-0.0459669868120827;
+                            measureNoiseRef[2][1]=-0.0748919339531972;
+                            measureNoiseRef[2][2]=0.00106230567668207;
                             
                             for(int i=0;i<3;i++)states[i]=angles1[i];
                             
+                            SCALE_MATRIX_3X3(measureNoise, 1.0,measureNoiseRef);
                             state = kalman_init_n(processNoise,measureNoise, errorMatrix,kalmanGain,states);
                             
                             xState = kalman_init(1, 0.2, 1, Tras[0]);
@@ -586,8 +586,7 @@ float auxVal=0;
                             _ini=false;
                         }
                         
-                        //                    printf("kalmanErrorGain= %f\n",_kalmanErrorGain);
-                        SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoise);
+                        SCALE_MATRIX_3X3(measureNoise, _kalmanErrorGain, measureNoiseRef);
                         
                         /* kalman correlacionado */
                         kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
@@ -746,6 +745,8 @@ float auxVal=0;
     
     measureNoise=(float **)malloc(3 * sizeof(float *));
     for (int k=0;k<3;k++) measureNoise[k]=(float *)malloc(3 * sizeof(float));
+    measureNoiseRef=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureNoiseRef[k]=(float *)malloc(3 * sizeof(float));
     
     processNoise=(float **)malloc(3 * sizeof(float *));
     for (int k=0;k<3;k++) processNoise[k]=(float *)malloc(3 * sizeof(float));
@@ -969,7 +970,7 @@ float auxVal=0;
     referenceAttitude = nil;
     
     manager.deviceMotionUpdateInterval = 1.0/60.0;
-    [manager startDeviceMotionUpdates];
+    [manager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryCorrectedZVertical];
     
     _newRefPose=true;
     _ini=true;
@@ -980,7 +981,8 @@ float auxVal=0;
     _segments=false;
     _detectedPts=false;
     _reproyectedPts=false;
-    
+    _kalmanErrorGain=1;
+    _segmentFilterThres=36;
     listSize_original = 0;
 }
 
