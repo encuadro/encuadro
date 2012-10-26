@@ -47,6 +47,7 @@
 @property float segmentFilterThres;
 @property float kalmanErrorGain;
 @property bool newRefPose;
+@property bool ini;
 
 - (void) lsdOriginal;
 - (void) procesamiento;

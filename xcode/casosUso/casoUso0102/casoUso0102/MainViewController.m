@@ -182,9 +182,12 @@
 - (IBAction)Sensors:(UISwitch *)sender {
     if (sender.on) {
         self.viewController.sensors=true;
+        self.viewController.newRefPose=true;
+        self.viewController.ini=true;
     }
     else{
         self.viewController.sensors=false;
+        self.viewController.ini=true;
     }
 }
 
