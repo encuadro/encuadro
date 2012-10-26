@@ -16,13 +16,34 @@ bla bla laaa
 jjjjj\\
 \section{QR}
 \subsection{QR. Una realidad}
-El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente debido al incremento significativo del uso de \textit{smart devices} el hecho de poder contar con cámara y poder de procesamiento hace que sea frecuente encontrar aplicaciones con el poder de reconocimiento de QRs. Son usados principalmente para vincular con páginas web o en algunos casos también como tarjetas personales. 
+El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente debido al incremento significativo del uso de \textit{smart devices} el hecho de poder contar con cámara y poder de procesamiento hace que sea frecuente encontrar aplicaciones con el poder de reconocimiento de QRs. Comenzaron a utilizarse en la industria automovolística japonesa como una solución para el trazado en la línea de producción pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web o en algunos casos también como tarjetas personales. 
 \subsection{Qué son realmente los QRs?}
-Se puede decir que los QRs tienen una función parecido a la de los códigos de barras pero en forma bidimensional. El hecho de contar con una dimensión más hace que se cuente con mucho más información que en un código de barras.
-Existen distintos tipos de QRs, con distintas capacidades de almacenamiento.
+Se puede decir que los QRs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QRs, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
+En la figura \ref{fig: implementacion_1} se pueden ver las distintas partes que componen un QR como ser el bloque de control compuesto por las tres esquinas que dan información de la posición, alineamiento y sincronismo, así como también información de versión, formato, corrección de errores y datos. Fuera de toda esa información que podríamos denominar encabezado haciendo analogía con los paquetes de las redes de datos se encuentra la información a almacenar propiamente dicha que conforma el cuerpo del QR.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_implementacion/qrcode_overview4.eps}
+\caption{Las distintas componentes de un QR. Fuente \cite{grompone10}.}
+\label{fig: implementacion_1}
+\end{figure}
+%fuente http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
+\newpage
 \subsection{Codificación y decodificación de QRs}
-Librerías
+Es fácil darse cuenta que la codificación resulta mucho más sencilla que la decodificación. Para la codificación es necesario comprender el protocolo, las distintas variantes y el tipo de información que se pretende almacenar. Sin embargo para la decodificación, además de tener que cumplir con lo anterior, es necesario contar con buenos sensores y ciertas condiciones de luminosidad y distancia que favorezcan a la cámara y se traduzcan en buenos resultados luego de la detección de errores. Si bien la plataforma es importante para lograr buenos resultados, dada una plataforma, existen variadas aplicaciones tanto para iOS como para Android que cuentan con performances bastante diferentes en función del algoritmo de procesamiento utilizado.\\
+Debido a que el centro del proyecto de fin de carrera no fue la codificación y decodificación de QRs y que además ya existen distintas librerías que resuelven este problema se optó por investigar las distintas variantes e incorporar la más adecuada para la aplicación.\\
+Dentro de todas las librerías que resuelven la decodificación se encuentran ZXing y ZBar como las más destacadas por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por "Zebra Crossing", es una librería open-source desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive C o JRuby entre otros.\\
+Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un SDK interesante para desarrollar fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector de QRs. Básicamente consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate} Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista de cámara. Luego el protocolo se encarga de la captura y procesamiento del QR teniendo como resultado la información que tiene el QR en la \textit{Key} denominada \textit{ZBarReaderControllerResults}. De esta manera se accede fácilmente al contenido  \\
+%fuente http://code.google.com/p/zxing/
 
+\subsection{Arte con QRs}
+La opci´on de usar los QRs de una manera distinta
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_implementacion/qrArtist.eps}
+\caption{Ejemplo de un QR artista. Fuente \cite{grompone10}.}
+\label{fig: implementacion_2}
+\end{figure}
+%fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
 \section{Servidor}
 sssssssssssssss
 \section{SIFT}
