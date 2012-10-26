@@ -35,6 +35,11 @@
 
 }
 
+@property(nonatomic, retain) AVCaptureSession * session;
+@property(nonatomic, retain) AVCaptureDevice * videoDevice;
+@property(nonatomic, retain) AVCaptureDeviceInput * videoInput;
+@property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
+@property(nonatomic, retain) CIContext* context;
 @property (readwrite, retain) IBOutlet UIImageView* videoView;
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
 @property bool kalman;
@@ -47,6 +52,7 @@
 @property float segmentFilterThres;
 @property float kalmanErrorGain;
 @property bool newRefPose;
+@property bool ini;
 
 - (void) lsdOriginal;
 - (void) procesamiento;

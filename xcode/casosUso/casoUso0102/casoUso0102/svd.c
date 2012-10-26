@@ -350,28 +350,28 @@ void  PseudoInverseGen(float** A,int N,int M,float** B) /*retourne en B la pseud
     /*decomposition en valeurs singulieres*/
     svdcmp(U,N,M,W,V);
     
-    printf("U:\n");
-    for (i=0;i<N; i++) {
-        for(j=0;j<M;j++){
-            printf("%f\t",U[i][j]);
-        }
-        printf("\n");
-    }
+//    printf("U:\n");
+//    for (i=0;i<N; i++) {
+//        for(j=0;j<M;j++){
+//            printf("%f\t",U[i][j]);
+//        }
+//        printf("\n");
+//    }
     
-    printf("V:\n");
-    for (i=0;i<M; i++) {
-        for(j=0;j<M;j++){
-            printf("%f\t",V[i][j]);
-        }
-        printf("\n");
-    }
+//    printf("V:\n");
+//    for (i=0;i<M; i++) {
+//        for(j=0;j<M;j++){
+//            printf("%f\t",V[i][j]);
+//        }
+//        printf("\n");
+//    }
 
     
-    printf("W:\n");
-        for(j=0;j<M;j++){
-            printf("%f\t",W[j]);
-        }
-        printf("\n");
+//    printf("W:\n");
+//        for(j=0;j<M;j++){
+//            printf("%f\t",W[j]);
+//        }
+//        printf("\n");
 
     
     /*seek greater singular value*/
@@ -427,8 +427,10 @@ void  PseudoInverseGen(float** A,int N,int M,float** B) /*retourne en B la pseud
     
     /*desallocations*/
     free(W); 
+    for (i=0;i<N;i++) free(U[i]);
     free(U);
     for (i=0;i<M;i++) free(V[i]);
+    free(V);
     
 }
 
