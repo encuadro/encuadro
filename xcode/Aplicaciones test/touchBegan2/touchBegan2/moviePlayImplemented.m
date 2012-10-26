@@ -24,10 +24,10 @@
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"TOUCH TOUCH MOVIE");
-    NSLog(@"TOUCH TOUCH MOVIE");
-    NSLog(@"TOUCH TOUCH MOVIE");
-    NSLog(@"TOUCH TOUCH MOVIE");
+    NSLog(@"TOUCH TOUCH");
+    NSLog(@"TOUCH TOUCH");
+    NSLog(@"TOUCH TOUCH");
+    NSLog(@"TOUCH TOUCH");
     
     UITouch *touch=[touches anyObject];
     
@@ -42,7 +42,6 @@
     
     
 }
-
 
 
 - (void)viewDidLoad

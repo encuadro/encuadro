@@ -26,7 +26,7 @@
 #import "kalman.h"
 
 #include "AuxiVar.h"
-//bool fulls;
+
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     MPMoviePlayerController *theMovie;

@@ -38,6 +38,7 @@
 @synthesize videoPlayer = _videoPlayer;
 @synthesize touchFull = _touchFull;
 
+int contador;
 /*para DIBUJAR*/
 claseDibujar *cgvista;
 float **reproyectados;
@@ -530,17 +531,18 @@ double *h;
         rotationAndPerspectiveTransform.m44 = 1;
         
         if (self.touchFull) {
-            theMovie.fullscreen=YES;
-            
-        }else{
+            [self.view reloadInputViews];
+            //[self.view removeFromSuperview];
+           // [self.view removeFromSuperview:theMovie.view];
+            [self.view addSubview:theMovie.view];
+            [self.view bringSubviewToFront:theMovie.view];
+            theMovie.view.frame=CGRectMake(0, 0, 100, 100);
+            //[theMovie setFullscreen:YES animated:YES];
 
-        theMovie.view.layer.transform=rotationAndPerspectiveTransform;
+         }else{
+         theMovie.view.layer.transform=rotationAndPerspectiveTransform;
         }
-        
-        
-        
  
-       
     }
     
     
@@ -548,7 +550,13 @@ double *h;
 }
 -(void) desplegarVideo{
     
+    
+    
+    
     /////////viendo commit
+    
+    
+    
     
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
@@ -561,8 +569,6 @@ double *h;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
     
-    
-
     
     [self.view addSubview:theMovie.view];
     //Resize window – a bit more practical
@@ -848,7 +854,7 @@ double *h;
 
 
 - (void) viewDidLoad{
-    
+    contador=0;
     if (verbose) printf("viewDidLoad\n");
     
     printf("VIEWDIDLOAD ISGL\n");

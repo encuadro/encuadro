@@ -1,1 +1,78 @@
-\section{Deteccion}
+\chapter{Detección}
+\label{ch:detection}
+Hola
+
+\section{Primitivas}
+\subsection{Puntos y esquinas}
+\subsubsection{Algortimos de puntos y esquinas}
+\subsection{Líneas}
+\subsubsection{Algortimos de líneas}
+\subsection{Segmentos}
+\subsubsection{Segmentos}
+
+\subsection{Cilindros y esferas}
+\subsubsection{Algortimos de cilindros y esferas}
+
+\section{Detección sin primitivas markerless}
+SIFT (puntero a capitulo que tiene SIFT para reconocimiento)
+SURF, ETC ETC.
+
+\section{Marcadores}
+\label{sec:detection_marcadores}
+Marcadores que se usan.
+Limitaciones
+
+La inclusión de \emph{marcadores}, \emph{marcas de referencia} o \emph{fiduciales}, en inglés \emph{markers}, \emph{landmarks} o \emph{fiducials}, en la escena ayuda al problema de extracción de características y por lo tanto al problema de estimación de pose \cite{Lepetit05b}. Estos por construcción son elementos que presentan una detección estable en la imagen para el tipo de característica que se desea extraer así como medidas facilmente utilizables para la estimación de la pose.
+
+Se distinguen dos tipos de \emph{fiduciales}. El primer tipo son los que se llaman puntos \emph{fiduciales} por que proveen una correspondencia de puntos entre la escena y la imagen. El segundo tipo, \emph{fiduciales planares}, se pueden obtener mediante la construcción en una geometría coplanar de una serie de \emph{puntos fiduciales} identificables como esquinas. Un único \emph{fiducial planar} puede contener por si solo todas las seis restricciones espaciales necesarias para definir el marco de coordenadas. 
+
+Como se explica en la sección \ref{sec:EstimacionPose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre el puntos 3D en la escena en coordenadas del mundo y puntos en la imagen. El enfoque elegido 
+
+\subsection{Marcador QR}
+El enfoque inicial elegido para la detección de \emph{puntos fiduciales} para marcadores parte del trabajo de fin de curso de Matías Tailanian para el curso \emph{Tratamiento de imágenes por computadora} de Facultad de Ingeniería, Universidad de la Republica\footnote{Autoposicionamiento 3D -  http://sites.google.com/site/autoposicionamiento3d/}. La elección se basa principalmente en los buenos resultados obtenidos para dicho trabajo con un enfoque relativamente simple. El trabajo desarrolla, entre otras cosas, un diseño de marcador y un sistema de detección de marcadores basado en el detector de segmentos LSD\cite{grompone10} por su buena performance y aparente bajo costo computacional. 
+
+El marcador utilizado está basado en la estructura de detección incluida en los códigos \emph{QR} y se muestra en la figura \ref{fig:Marker}. Éste consiste en trés grupos idénticos de tres cuadrados concéntricos superpuestos de tal forma que los lados de cada uno de trés cuadrados son visualizables. A diferencia de los códigos \emph{QR} la disposición de los grupos de cuadrados se distintos para evitar ambiguedades en la determinación  de su posicionamiento espacial. Estas dos características son escenciales para la extracción de los \emph{puntos fiduciales} de forma coherente, es decir, las correspondencias tienen que poder ser determinadas completamente bajo criterios razonables.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_detection/Marker.eps}
+\caption{Marcador propuesto basado en la estructura de detección de códigos QR.}
+\label{fig:Marker}
+\end{figure}
+
+\subsubsection{Diseño: estructura del marcador}
+En la presente subsección se presentan algunas definiciones de las estructuras formantes del marcador. Estas serán de utilidad para el diseño y formaran un flujo natural y escalable para el desarrollo del algoritmo de determinación de correspondencias.
+
+Los elementos mas básicos en la estructura son los \emph{segmentos} los cuales consisten en un par de puntos en la imagen, $\mathbf{p} = (p_x,p_y)$ y $\mathbf{q} = (q_x,q_y)$. Estos segmentos serán los lados del cuadrilátero, el próximo elemento en la estructura del marcador.
+
+Un \emph{cuadrilátero} o \texttt{Ql} está determinado por cuatro segmentos conexos y distintos entre sí. La propiedad de conexión se relaja a la intersección de dos discos de un cierto radio en torno a los puntos de dos segmentos vecinos. El cuadrilátero tiene dos propiedades notables; el \emph{centro} definido como el punto medio de sus vértices y el \emph{perímetro} definido como la suma de sus cuatro lados. Los \emph{vértices} de un cuadrilátero se determinan mediante la intersección, en un sentido amplio, de dos segmentos contiguos.
+
+Un \emph{grupo de cuadriláteros} o \texttt{QlSet}, se construye a partir de \texttt{M} cuadriláteros, de distinto tamaño, que comparten un mismo centro, con $\texttt{M}>1$. A partir de dichos cuadriláteros se construye un lista ordenada $(\texttt{Ql[0]},\texttt{Ql[1]},\dots,\texttt{Ql[M-1]})$ en donde el orden viene dado por el valor de perímetro de cada \texttt{Ql}. Se define el \emph{centro del grupo de cuadriláteros} como el baricentro, o promedio ponderado, de los centros de cada \texttt{Ql} de la lista ordenada.
+
+Finalmente el \emph{marcador QR} estará constituido por \texttt{N} \emph{grupos de cuadriláteros} dispuestos en una geometría particular. Esta geometría debe determinar un sistema de coordenadas, un origen y dos ejes. Se tendrá una lista ordenada  $(\texttt{QlSet[0]},\texttt{QlSet[1]},\dots,\texttt{QlSet[N-1]})$ en donde el orden se determinará mediante la geometría de los mismos.
+
+Un marcador proveerá un numero de $\texttt{4}\times\texttt{M}\times\texttt{N}$ vertices y por lo tanto la misma cantidad de puntos fiduciales para proveer las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ para el algoritmo de estimación de pose.
+
+\subsubsection{Diseño}
+Un detalle del marcador se muestra en la figura \ref{fig:MarkerDetail} en donde se define el grupo \texttt{i} de cuadrados concentricos como el \texttt{QlSet[i]} (sets de cuadriláteros) y se definen los respectivos centros $\mathbf{c}_i$ para cada \texttt{QlSet[i]}. Se considera además un eje de coordenadas que queda definido los vectores normalizados.
+$$\mathbf{x} = \frac{\mathbf{c}_1 - \mathbf{c}_0}{||\mathbf{c}_1-\mathbf{c}_0||}$$
+$$\mathbf{y} = \frac{\mathbf{c}_2 - \mathbf{c}_0}{||\mathbf{c}_2-\mathbf{c}_0||}$$
+Por otro lado la disposición de los \texttt{QlSet} es tal que la distancia indicada $\mathbf{d}_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $\mathbf{d}_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_detection/MarkerDetail.eps}
+\caption{Detalle del marcador propuesto formando un sistema de coordenadas.}
+\label{fig:MarkerDetail}
+\end{figure}
+
+En base al sistema de coordenadas definido en la figura \ref{fig:MarkerDetail} se puede fijar un orden determinado para los \emph{puntos fiduciales} que serán utilizados como correspondencias entre la imagen y la escena. Éstos se toman partiendo del cuadrado 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_detection/QlSetDetail.eps}
+\caption{Detalle de un QlSet indicando el orden de los puntos basados en el eje de coordenadas definido previamente.}
+\label{fig:QlSetDetail}
+\end{figure}
+
+\subsubsection{Filtrado de segmentos}
+
+
+\subsubsection{Determinación de correspondencias}
