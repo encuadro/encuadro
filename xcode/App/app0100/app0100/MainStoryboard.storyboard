@@ -380,7 +380,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Art Sign" id="qps-2j-z8Q"/>
+                    <navigationItem key="navigationItem" title="Art Sign" id="qps-2j-z8Q">
+                        <barButtonItem key="rightBarButtonItem" title="Tweet" id="qru-2m-vvN">
+                            <connections>
+                                <action selector="TWeet:" destination="hgg-ih-4R1" id="wXQ-4K-Y69"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="image" destination="SJz-ka-A9x" id="10G-PV-r2h"/>
                     </connections>
@@ -405,7 +411,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="AR" id="CfC-Yd-acK"/>
+                    <navigationItem key="navigationItem" title="AR" id="CfC-Yd-acK">
+                        <barButtonItem key="rightBarButtonItem" title="Tweet" id="4aD-uh-ys9">
+                            <connections>
+                                <action selector="TWeet:" destination="zzx-Qv-AUQ" id="atu-L8-p3R"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     <connections>
                         <outlet property="backround" destination="XCK-oF-gaF" id="bms-th-FZO"/>
@@ -520,6 +532,7 @@
         <class className="DrawSign" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DrawSign.h"/>
             <relationships>
+                <relationship kind="action" name="TWeet:"/>
                 <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
             </relationships>
         </class>
@@ -576,6 +589,7 @@
         <class className="VistaViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/VistaViewController.h"/>
             <relationships>
+                <relationship kind="action" name="TWeet:"/>
                 <relationship kind="outlet" name="backround" candidateClass="UIImageView"/>
             </relationships>
         </class>

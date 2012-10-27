@@ -30,6 +30,43 @@
     mouseMoved = 0;
 }
 
+-(IBAction)TWeet:(id)sender{
+    
+    if([TWTweetComposeViewController canSendTweet]) {
+        
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @juan_cardelino"];
+        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        
+        UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        [controller addImage:img];
+        // [controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];
+        UIGraphicsEndImageContext();
+        
+        
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            
+            [self dismissModalViewControllerAnimated:YES];
+            
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    break;
+                    
+                case TWTweetComposeViewControllerResultDone:
+                    break;
+                    
+                default:
+                    break;
+            }
+        };
+        
+        [self presentModalViewController:controller animated:YES];
+    }
+    
+    
+    
+}
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     mouseSwiped = NO;

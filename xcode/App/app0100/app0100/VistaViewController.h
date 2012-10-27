@@ -13,7 +13,7 @@
 #import "HelloWorldView.h"
 
 #import "TouchVista.h"
-
+#import <Twitter/Twitter.h>
 
 bool DosCubos;
 @interface VistaViewController : UIViewController{
@@ -44,6 +44,6 @@ bool DosCubos;
 @property (nonatomic, retain) MPMoviePlayerController *theMovieVista;
 
 @property (assign) IBOutlet UIImageView *backround;
-
+-(IBAction)TWeet:(id)sender;
 
 @end

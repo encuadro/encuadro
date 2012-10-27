@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import <Twitter/Twitter.h>
 @interface DrawSign : UIViewController{
     CGPoint point;
     UIImageView *image;
@@ -15,5 +15,5 @@
     int mouseMoved;
 }
 @property (retain, nonatomic)IBOutlet UIImageView *image;
-
+-(IBAction)TWeet:(id)sender;
 @end
