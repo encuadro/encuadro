@@ -27,6 +27,8 @@ bool manual;
 @property (retain, nonatomic) IBOutlet UITextView *detalle;
 @property (retain, nonatomic) IBOutlet UIImageView *imagenObra;
 
+@property (assign) IBOutlet UIImageView *mano1;
+@property (assign) IBOutlet UIImageView *mano4;
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) IBOutlet UIButton *start;

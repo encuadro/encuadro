@@ -41,7 +41,9 @@ bool DosCubos;
 //@property (nonatomic, readwrite) bool *DosCubos;
 
 @property (nonatomic, retain) TouchVista *vistaTouch;
+@property (nonatomic, retain) MPMoviePlayerController *theMovieVista;
 
+@property (assign) IBOutlet UIImageView *backround;
 
 
 @end

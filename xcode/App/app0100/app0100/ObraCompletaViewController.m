@@ -20,7 +20,8 @@
 @synthesize detalle = _detalle;
 @synthesize audioPlayer = _audioPlayer;
 @synthesize start = _start;
-
+@synthesize mano1;
+@synthesize mano4;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -77,15 +78,29 @@
         text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
         self.detalle.text=text;
     }
-     
+    
     justLoaded=true;
     
+
+    [UIView animateWithDuration:1
+                          delay:0.3
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         mano1.center=CGPointMake(-100,150);
+                         mano4.center=CGPointMake(700,150);
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+
+
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

@@ -15,6 +15,10 @@ int click;
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) IBOutlet UIButton *start;
+@property (assign) IBOutlet UIImageView *basketTop;
+@property (assign) IBOutlet UIImageView *basketBottom;
+
+
 
 - (IBAction) play;
 

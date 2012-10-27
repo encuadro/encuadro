@@ -14,6 +14,8 @@
 
 @implementation InicioViewController
 @synthesize audioPlayer,start;
+@synthesize basketTop;
+@synthesize basketBottom;
 
 
 
@@ -55,6 +57,33 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    CGRect basketTopFrame = basketTop.frame;
+    basketTopFrame.origin.x = -basketTopFrame.size.width;
+    
+    CGRect basketBottomFrame = basketBottom.frame;
+    basketBottomFrame.origin.y = self.view.bounds.size.height;
+    
+
+    [UIView animateWithDuration:1
+                          delay:1.0
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         basketTop.frame = basketTopFrame;
+                         basketBottom.frame = basketBottomFrame;
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+    
+
+    
+    
+    
+    
+    
+   
+    
     
 }
 
