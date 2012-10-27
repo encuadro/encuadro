@@ -187,22 +187,13 @@
     
     //backround.transform = CGAffineTransformMakeScale(0.1,0.1);
 
-    [UIView animateWithDuration:3
-                          delay:0.6
-                        options: UIViewAnimationCurveEaseOut
-                     animations:^{
-                        // backround.transform = CGAffineTransformMakeScale(20,20);
-                       //  backround.center=CGPointMake(100,100);
-                     }
-                     completion:^(BOOL finished){
-                         NSLog(@"Done!");
-                     }];
+    
     
     [UIView animateWithDuration:3
                           delay:0.6
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
-                         //backround.transform = CGAffineTransformMakeScale(20,20);
+                         
                          backround.center=CGPointMake(100,100);
                      }
                      completion:^(BOOL finished){

@@ -9,7 +9,8 @@
 #import "TouchVista.h"
 
 @implementation TouchVista
-
+@synthesize touchman;
+@synthesize obraCompleta;
 - (id)initWithFrame:(CGRect)frame
 {
     
@@ -25,7 +26,10 @@
     NSLog(@"TOUCH VISTA ");
     NSLog(@"TOUCH VISTA ");
     NSLog(@"TOUCH VISTA ");
-    
+    if (obraCompleta) {
+        touchman=true;
+    }
+   
     [super touchesBegan:touches withEvent:event];
     
     
