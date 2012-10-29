@@ -531,13 +531,13 @@ double *h;
         rotationAndPerspectiveTransform.m44 = 1;
         
         if (self.touchFull) {
-            [self.view reloadInputViews];
-            //[self.view removeFromSuperview];
-           // [self.view removeFromSuperview:theMovie.view];
-            [self.view addSubview:theMovie.view];
-            [self.view bringSubviewToFront:theMovie.view];
-            theMovie.view.frame=CGRectMake(0, 0, 100, 100);
-            //[theMovie setFullscreen:YES animated:YES];
+//            [self.view reloadInputViews];
+//            //[self.view removeFromSuperview];
+//           // [self.view removeFromSuperview:theMovie.view];
+//            [self.view addSubview:theMovie.view];
+//            [self.view bringSubviewToFront:theMovie.view];
+//            theMovie.view.frame=CGRectMake(0, 0, 100, 100);
+            [theMovie setFullscreen:YES animated:YES];
 
          }else{
          theMovie.view.layer.transform=rotationAndPerspectiveTransform;
@@ -859,7 +859,7 @@ double *h;
     
     printf("VIEWDIDLOAD ISGL\n");
     [super viewDidLoad];
-    self.iPhone=true;
+    self.iPhone=false;
     
     if (self.iPhone) {
         self.wSize=480;
