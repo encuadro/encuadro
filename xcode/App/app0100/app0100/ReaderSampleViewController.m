@@ -9,7 +9,7 @@
 
 @implementation ReaderSampleViewController
 
-@synthesize resultImage, resultText,site, audioPlayer,start;
+@synthesize resultImage, resultText,site, audioPlayer,start, backround;
 
 - (IBAction) scanButtonTapped
 {
@@ -184,6 +184,30 @@
 
     [super viewDidLoad];
     room=@"noroom";
+    
+    //backround.transform = CGAffineTransformMakeScale(0.1,0.1);
+
+    
+    
+    [UIView animateWithDuration:3
+                          delay:0.6
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         
+                         backround.center=CGPointMake(100,100);
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+    
+    
+   
+    
+    [UIView animateWithDuration:5 delay:3 options: UIViewAnimationCurveEaseOut animations:^{
+        backround.alpha = 0.0;
+    } completion:^(BOOL finished){
+        [backround removeFromSuperview];
+    }];
 
 }
 

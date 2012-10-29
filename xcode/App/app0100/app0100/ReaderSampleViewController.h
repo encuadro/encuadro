@@ -33,6 +33,7 @@ NSString *cad;
 @property (nonatomic, retain) IBOutlet NSString *site;
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) UIButton *start;
+@property (assign) IBOutlet UIImageView *backround;
 
 
 

@@ -23,6 +23,9 @@
 @synthesize ARidObra = _ARidObra;
 
 @synthesize vistaTouch = _vistaTouch;
+@synthesize theMovieVista = _theMovieVista;
+
+@synthesize backround;// = _backround;
 
 @synthesize viewController = _viewController;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -53,10 +56,18 @@
     if (self.viewController.touchFull) {
         NSLog(@" TOUCHFULL VISTA FALSE");
         self.viewController.touchFull=false;
+//        [self viewWillAppear:YES];
         
     }else{
         NSLog(@" TOUCHFULL VISTA TRUE");
         self.viewController.touchFull=true;
+        //self.view=_viewController.theMovie.view;
+        
+//        [self viewWillDisappear:YES];
+//        [self desplegarVideoVista];
+        
+
+        
     }
     
     
@@ -65,9 +76,48 @@
 }
 
 
+-(void) desplegarVideoVista{
+    
+    
+    
+    
+    /////////viendo commit
+    
+    
+    
+    
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
+    NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    self.theMovieVista = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+   // self.theMovieVista=self.viewController.theMovie;
+    //Place it in subview, else it won’t work
+    self.theMovieVista.view.frame = CGRectMake(0, 0, 1024, 768);
+    //theMovie.fullscreen=YES;
+    self.theMovieVista.controlStyle=MPMovieControlStyleNone;
+    //theMovie.view.contentMode=UIViewContentModeScaleToFill;
+    self.theMovieVista.scalingMode=MPMovieScalingModeFill;
+    
+    
+    [self.view addSubview:self.theMovieVista.view];
+    //Resize window – a bit more practical
+    UIWindow *moviePlayerWindow = nil;
+    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
+    //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+    // Play the movie.
+    [self.theMovieVista play];
+    
+    
+}
+
+
 
 //- (IBAction)hacerRender:(id)sender
 - (void) hacerRender{
+    
+    
+    
+    
     NSLog(@"HACER RENDER VISTA");
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
@@ -98,8 +148,10 @@
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
-
- 
+    
+    
+    self.viewController.videoView.alpha=0.0;
+    self.viewController.view.alpha=0.0;
     
     //agrego video
     [self.view addSubview:self.viewController.videoView];
@@ -110,11 +162,37 @@
     [self.view bringSubviewToFront:self.viewController.view];
     self.viewController.view.opaque = NO;
     
-
+    
     //agrego vistaTouch
     self.vistaTouch = [[TouchVista alloc] init];
     self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
     [self.view addSubview:self.vistaTouch];
+    
+    
+
+    [UIView animateWithDuration:4
+                          delay:0.6
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         backround.transform = CGAffineTransformMakeScale(20,20);
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+    
+    
+    
+    
+    [UIView animateWithDuration:5 delay:3 options: UIViewAnimationCurveEaseOut animations:^{
+        backround.alpha = 0.0;
+        self.viewController.videoView.alpha=1.0;
+        self.viewController.view.alpha=1.0;
+    } completion:^(BOOL finished){
+        [backround removeFromSuperview];
+         
+    }];
+    
+    
     
     //activo procesamiento
    // _viewController.AugmReal=true;
@@ -218,12 +296,39 @@ _button=nil;
 
 }
 
+//-(void)zoomInAndFadeOut{
+//
+//    [UIView animateWithDuration:4
+//                          delay:0.6
+//                        options: UIViewAnimationCurveEaseOut
+//                     animations:^{
+//                         backround.transform = CGAffineTransformMakeScale(20,20);
+//                     }
+//                     completion:^(BOOL finished){
+//                         NSLog(@"Done!");
+//                     }];
+//    
+//    
+//    
+//    
+//    [UIView animateWithDuration:5 delay:3 options: UIViewAnimationCurveEaseOut animations:^{
+//        backround.alpha = 0.0;
+//    } completion:^(BOOL finished){
+//        [backround removeFromSuperview];
+//    }];
+//    
+//    
+//}
+
+
 
 - (void)viewDidLoad
 {
     NSLog(@"VIEW DID LOAD VISTA");
     //NSLog(@"ARID OBRA ES: %@",self.ARidObra);
     [super viewDidLoad];
+    
+
  
     
     
@@ -254,6 +359,7 @@ _button=nil;
 {
     NSLog(@"VIEW WILL APPEAR VISTA");
     [super viewWillAppear:animated];
+   
     [self hacerRender];
     
    // [self.navigationController setNavigationBarHidden:NO animated:animated];
@@ -286,4 +392,44 @@ _button=nil;
     
 }
 
+-(IBAction)TWeet:(id)sender{
+    
+    if([TWTweetComposeViewController canSendTweet]) {
+        
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        [controller setInitialText:@"Arte Interactivo. Realidad Aumentada desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @juan_cardelino"];
+        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        
+        [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        //[self.HWview renderInContext:UIGraphicsGetCurrentContext()];
+        [self.viewController.videoView.layer renderInContext:UIGraphicsGetCurrentContext()];
+        
+        UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        [controller addImage:img];
+        // [controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];
+        UIGraphicsEndImageContext();
+        
+        
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            
+            [self dismissModalViewControllerAnimated:YES];
+            
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    break;
+                    
+                case TWTweetComposeViewControllerResultDone:
+                    break;
+                    
+                default:
+                    break;
+            }
+        };
+        
+        [self presentModalViewController:controller animated:YES];
+    }
+    
+    
+    
+}
 @end

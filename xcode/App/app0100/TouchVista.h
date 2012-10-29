@@ -10,5 +10,6 @@
 
 
 @interface TouchVista : UIView
-
+@property bool touchman;
+@property bool obraCompleta;
 @end

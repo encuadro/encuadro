@@ -20,8 +20,10 @@
 @synthesize detalle = _detalle;
 @synthesize audioPlayer = _audioPlayer;
 @synthesize start = _start;
-
-
+@synthesize mano1;
+@synthesize mano4;
+@synthesize upsi;
+@synthesize vistaTouch;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,7 +33,22 @@
     }
     return self;
 }
-
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+    NSLog(@"TOUCH OBRA ");
+    NSLog(@"TOUCH OBRA ");
+    NSLog(@"TOUCH OBRA ");
+    
+    if (self.vistaTouch.touchman) {
+        //call segue
+        //DrawSign *drawS = [[DrawSign alloc] init];
+        
+        // do any setup you need for myNewVC
+        [self performSegueWithIdentifier: @"todraw" sender: self];
+        //[self presentViewController:drawS animated:YES completion:NO];
+    }
+    
+    
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -77,15 +94,47 @@
         text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
         self.detalle.text=text;
     }
-     
+    
     justLoaded=true;
     
+
+    [UIView animateWithDuration:1
+                          delay:0.3
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         mano1.center=CGPointMake(-100,150);
+                         mano4.center=CGPointMake(700,150);
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+    
+    upsi.center=CGPointMake(400,340);
+    [UIView animateWithDuration:3
+                          delay:0.6
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         
+                         upsi.center=CGPointMake(400,270);
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+    
+    //agrego vistaTouch
+    self.vistaTouch = [[TouchVista alloc] init];
+    self.vistaTouch.obraCompleta=true;
+    self.vistaTouch.frame=CGRectMake(370,240, 100, 100);
+    [self.view addSubview:self.vistaTouch];
+
+
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
