@@ -72,5 +72,33 @@ Por lo que se vi\'o hasta el momento, la mejor aproximaci\'on rectangular a una 
 Lo que se hace es probar distintos valores para la anchura del segmento y para sus posiciones laterales, ya que estas son los par\'ametros peor estimados en la aproximaci\'on rectangular, pero tienen un efecto muy grande a la hora de validar los segmentos. Es que un error de un p\'ixel en el ancho de un segmento, agrega una gran cantidad de p\'ixeles no alineados a este, y esto se ve reflejado en un valor mayor de NFA y puede llevar a una no detecci\'on.\\
 Otro m\'etodo para el refinamiento de los candidatos es la disminución de la tolerancia $\tau$. Si los puntos dentro del rectángulo efectivamente corresponden a un segmento, aunque la tolerancia disminuya, se computará prácticamente misma cantidad de segmentos alineados, y con una probabilidad menor de ocurrencia ($\frac{\tau}{\pi}$), el valor NFA obtenido será menor. Los nuevos valores testeados de tolerancia son: $\frac{\tau}{2}$, $\frac{\tau}{4}$,$\frac{\tau}{8}$,$\frac{\tau}{16}$ y $\frac{\tau}{32}$. El valor NFA asociado al segmento será el menor de todos los calculados.\\  
 \section{Optimización del algoritmo para tiempo real}
+Que un algoritmo de procesamiento de imágenes digitales sea temporalmente lineal significa que su tiempo de ejecución crece linealmente con el tama\~no de la imagen en cuestión. Se sabe que estos algorimos son ideales para el procesamiento en tiempo real. Si bien, como se aclaró algunos párrafos atrás, el LSD es temporalmente lineal, este no fue pensado para ser ejecutado en tiempo real. Así entonces, para poder aumentar la tasa de cuadros por segundo total de la aplicación, hubo que realizar algunos cambios mínimos en el código, simpre buscando que estos no sean sustantivos, con el objetivo de mantener inalterado el desempe\~no del algoritmo. Se trabajó en algunos temas en particular el algoritmo.\\
 
-\section{Resutados}
+\subsection{Filtro Gaussiano}
+Antes de procesar la imagen con el algoritmo tal y como se vió en secciones anteriores, la misma es filtrada con un filtro Gaussiano. Se busca en primer lugar, disminuír el tama\~no de la imagen de entrada con el objetivo de disminuír el volumen de información procesada. Además, al difuminar la imagen, se conservan únicamente los bordes más pronunciados. Para este proyecto en particular, se utilizó la escala fija para todos los casos en $0,5$.\\
+El filtrado de la imgen se hace en dos pasos, primero a lo ancho y luego a lo largo. Se utiliza el núceo Gaussiano normalizado de la imagen \ref{fig: lsd_4}.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{figs_lsd/lsd_4.eps}
+\caption{Núcleo Gaussiano utilizado por el LSD. $\sigma=1,2$}
+\label{fig: lsd_4}
+\end{figure}
+
+De esta manera, se crea una imagen auxiliar vacía y escalada en $x$ pero no en $y$, y se recorre asignándole a cada píxel en $x$ su valor correspondiente, obtenido del promedio del píxel $\frac{x}{escala}$ en la imagen original y sus vecinos, todos ponderados por el filtro Gaussiano. Luego se crea otra imagen, pero esta vez escalada tanto en $x$ como en $y$, y se recorre asignándole a cada píxel en $y$ su valor correspondiente, obtenido del promedio del píxel $\frac{y}{escala}$ en la imagen auxiliar y sus vecinos, todos ponderados por el filtro Gaussiano. En la imagen \ref{fig: lsd_5} se muestra la relación entre las imágenes.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{figs_lsd/lsd_5.eps}
+\caption{Relación entre las imágenes en cuestión. Escala: $0,5$.}
+\label{fig: lsd_5}
+\end{figure}
+
+Cuando se trabaja con escalas genéricas ...
+\subsection{\textit{Level-line angles}}
+
+\subsection{Refinamiento de los candidatos}
+
+ \subsection{Algorirmo en presición simple}
+
+\subsection{Resultados}
