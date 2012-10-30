@@ -631,7 +631,7 @@ image_double gaussian_sampler3( image_double in, float scale, float sigma_scale 
     float scale_inv=1/scale;
     
     /* First subsampling: x axis */
-    for(x=3;x<aux->xsize-2;x++)
+    for(x=3;x<aux->xsize-3;x++)
     {
         /*
          x   is the coordinate in the new image.

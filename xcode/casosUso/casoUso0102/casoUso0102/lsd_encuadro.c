@@ -569,8 +569,6 @@ static void gaussian_kernel(ntuple_list kernel, float sigma, float mean)
 /*---------------------------- GAUSSIAN SAMPLER ------------------------------*/
 /*----------------------------------------------------------------------------*/
 
-//static image_float gaussian_sampler( float* in, int width,int height, int d, float scale,
-//float sigma_scale )
 image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
 {
     image_float aux,out;
@@ -752,8 +750,8 @@ static image_float ll_angle( image_float in, float threshold,
   /* compute gradient on the remaining pixels */
 //    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
-  for(x=3;x<p-3;x++)
-    for(y=3;y<n-3;y++)
+  for(x=3;x<p-2;x++)
+    for(y=3;y<n-2;y++)
       {
         adr = y*p+x;
 
@@ -796,8 +794,8 @@ static image_float ll_angle( image_float in, float threshold,
   /* compute histogram of gradient values */
 //    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
-    for(x=3;x<p-3;x++)
-    for(y=3;y<n-3;y++)
+    for(x=3;x<p-2;x++)
+    for(y=3;y<n-2;y++)
     
     {
         norm = (*modgrad)->data[y*p+x];
@@ -2042,7 +2040,7 @@ float * LineSegmentDetection( int * n_out,
            by R. Grompone von Gioi, J. Jakubowicz, J.M. Morel, and G. Randall.
            The original algorithm is obtained with density_th = 0.0.
          */
-       /* if( !refine( reg, &reg_size, modgrad, reg_angle,
+        /*if( !refine( reg, &reg_size, modgrad, reg_angle,
                      prec, p, &rec, used, angles, density_th ) ) continue;*/
           // Ahorramos como 20 ms en los casos en los que tenemos muchos segmentos en la imagen al no correr el refinamiento anterior. Obtenemos en cualquier caso el mismo resultado.
           
