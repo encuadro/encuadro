@@ -50,7 +50,7 @@ El marcador utilizado está basado en la estructura de detección incluida en los 
 \end{figure}
 
 \subsection{Estructura del marcador}
-A continuación se presentan algunas definiciones de las estructuras básicas que constituyen el marcador propuesto. Estas son de utilidad para el diseño y forman un flujo natural y escalable para el desarrollo del algoritmo de determinación de correspondencias.
+A continuación se presentan algunas definiciones de las estructuras básicas que constituyen el marcador propuesto. Estas son de utilidad para el diseño y forman un flujo natural y escalable para el desarrollo del algoritmo de determinación de correspondencias.\\
 
 Los elementos mas básicos en la estructura son los \emph{segmentos} los cuales consisten en un par de puntos en la imagen, $\mathbf{p} = (p_x,p_y)$ y $\mathbf{q} = (q_x,q_y)$. Estos \emph{segmentos} forman lo que son los lados del \emph{cuadrilátero}, el próximo elemento estructural del marcador.\\
 
@@ -59,17 +59,36 @@ Un \emph{cuadrilátero} o \emph{quadrilateral} en inglés, al que se le denomina $
 
 A un \emph{conjunto de cuadriláteros} o \emph{quadrilateral set} se le denomina $\text{QlSet}$, se construye a partir de $\text{M}$ cuadriláteros, que comparten un mismo centro, y se diferencian por un factor de escala, con $\text{M}>1$. A partir de dichos cuadriláteros se construye un lista ordenada $(\text{Ql}[0],\text{Ql}[1],\dots,\text{Ql}[\text{M}-1])$ en donde el orden viene dado por el valor de \emph{perímetro} de cada \texttt{Ql}. Se define el \emph{centro del grupo de cuadriláteros} como el promedio de los centros de cada $\text{Ql}$ de la lista ordenada.\\
 
-Finalmente el \emph{marcador QR} estará constituido por $\text{N}$ \emph{conjuntos de cuadriláteros} dispuestos en una geometría particular. Esta geometría debe determinar un sistema de coordenadas, un origen y dos ejes. Se tendrá una lista ordenada  $(\text{QlSet}[0],\text{QlSet}[1],\dots,\text{QlSet}[\text{N}-1])$ en donde el orden se determinará mediante la geometría de los mismos.\\
+Finalmente el \emph{marcador QR} está constituido por $\text{N}$ \emph{conjuntos de cuadriláteros} dispuestos en una geometría particular. Esta geometría permite la determinación un sistema de coordenadas; un origen y dos ejes a utilizar. Se tiene una lista ordenada  $(\text{QlSet}[0],\text{QlSet}[1],\dots,\text{QlSet}[\text{N}-1])$ en donde el orden se puede determinar mediante la geometría de los mismos o a partir de hipótesis razonables.\\
 
 Un marcador proveerá un numero de $\text{4}\times\text{M}\times\text{N}$ vértices y por lo tanto la misma cantidad de puntos fiduciales para proveer las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ al algoritmo de estimación de pose.\\
 
 \subsection{Diseño}
-En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo \emph{QR} lo que determina una cantidad de $3\times \text{QlSet}$'s conteniendo $3 \times \text{Ql}$'s cada uno. Bajo esta elección de parámetros se tienen $n=36$ \emph{segmentos} y \emph{vértices}.\\
+En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo \emph{QR} basado en \emph{cuadriláteros} y mas específicamente en tres conjuntos de tres cuadrados dispuestos en como se muestra en la figura \ref{fig:Marker}.\\
 
-Un detalle del marcador se muestra en la figura \ref{fig:MarkerDetail} en donde se define el conjunto $\text{i}$ de cuadriláteros concentricos como el $\text{QlSet}[i]$ y se definen los respectivos centros $\mathbf{c}_i$ para cada $\text{QlSet}[i]$. Se considera además un eje de coordenadas que queda definido por los vectores normalizados.
-$$\mathbf{x} = \frac{\mathbf{c}_1 - \mathbf{c}_0}{||\mathbf{c}_1-\mathbf{c}_0||}$$
-$$\mathbf{y} = \frac{\mathbf{c}_2 - \mathbf{c}_0}{||\mathbf{c}_2-\mathbf{c}_0||}$$
-Por otro lado la disposición de los $\text{QlSet}$ es tal que la distancia indicada $\mathbf{d}_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $\mathbf{d}_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $\mathbf{d}_{01}\gg\mathbf{d}_{02}$.
+Los tres \emph{cuadriláteros} correspondientes a un mismo \emph{conjunto de cuadriláteros} tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $\text{Ql}[0]$ tiene lado $l$ mientras que $\text{Ql}[1]$ y $\text{Ql}[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $\text{QlSet}$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Las direcciones de los ejes son muy utilizadas en el ambiente de las imágenes para definir los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los \emph{vértices} $v_{j_{1}}$ de cada \emph{cuadrilátero} $\text{Ql}[\text{j}]$ como, \\
+\begin{eqnarray}
+v_{j_{0}} = (\alpha,\alpha) && v_{j_{1}} = (\alpha,-\alpha)  \\
+v_{j_{2}} = (-\alpha,-\alpha) && v_{j_{3}} = (-\alpha,\alpha)
+\end{eqnarray}
+con $\alpha=(j+1)\times l$. El orden aquí explicado se puede ver también junto con el sistema de coordenadas en la figura \ref{fig:MarkerDetail}.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.35]{figs_detection/QlSetDetail.eps}
+\caption{Detalle de un QlSet. Orden de los \emph{cuadriláteros} a la izquiera. Órden de los \emph{vértices} a la derecha.}
+\label{fig:QlSetDetail}
+\end{figure}
+
+
+Un detalle del marcador se muestra en la figura \ref{fig:MarkerDetail} en donde se define el conjunto $\text{i}$ de cuadriláteros concéntricos como el $\text{QlSet}[\text{i}]$ y se definen los respectivos centros $\mathbf{c}_i$ para cada $\text{QlSet}[\text{i}]$. El sistema de coordenadas del \emph{marcador QR} tiene centro en el centro del $\text{QlSet}[0]$ y ejes de coordenadas idénticos al definido para cada $\text{Ql}$. Se tiene además que los ejes de coordenadas pueden ser obtenidos mediante los vectores normalizados,
+\begin{equation}
+\begin{split}
+\mathbf{x}  = \frac{\mathbf{c}_1 - \mathbf{c}_0}{||\mathbf{c}_1-\mathbf{c}_0||} & \quad
+\mathbf{y}  = \frac{\mathbf{c}_2 - \mathbf{c}_0}{||\mathbf{c}_2-\mathbf{c}_0||}
+\end{split}
+\end{equation}
+
+La disposición de los $\text{QlSet}$ es tal que la distancia indicada $\mathbf{d}_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $\mathbf{d}_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $\mathbf{d}_{01}\gg\mathbf{d}_{02}$. Este criterio facilita la identificación de los \emph{vértices} de los $\text{QlSet}$ entre sí basados únicamente en la posición de sus centros y se explicará en la parte de determinación de correspondencias (sec.: \ref{subsec:detection_correspondencias}).
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_detection/MarkerDetail.eps}
@@ -77,17 +96,12 @@ Por otro lado la disposición de los $\text{QlSet}$ es tal que la distancia indic
 \label{fig:MarkerDetail}
 \end{figure}
 
-En base al sistema de coordenadas definido en la figura \ref{fig:MarkerDetail} se puede fijar un orden determinado para los \emph{vértices} de cada $\text{QlSet}$. Éstos se toman partiendo del $\text{Ql}$
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.35]{figs_detection/QlSetDetail.eps}
-\caption{Detalle de un QlSet indicando el orden de los puntos basados en el eje de coordenadas definido previamente.}
-\label{fig:QlSetDetail}
-\end{figure}
+%  lo que determina una cantidad de $3\times \text{QlSet}$'s conteniendo $3 \times \text{Ql}$'s cada uno. Bajo esta elección de parámetros se tienen $36$ \emph{segmentos} y \emph{vértices}.\\
 
 \subsection{Filtrado de segmentos}
 
 \subsection{Determinación de correspondencias}
+\label{subsec:detection_correspondencias}
 
 \section{Resultados}
 
