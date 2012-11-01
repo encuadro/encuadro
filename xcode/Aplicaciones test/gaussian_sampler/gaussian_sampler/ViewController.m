@@ -20,7 +20,7 @@ FILE *in = 0 ;
 int err = 0;
 //VlPgmImage pim;
 unsigned char *datachar  = 0;
-float *datadouble = 0;
+float *datafloat = 0;
 int width;
 int height;
 float* brillo;
@@ -33,7 +33,7 @@ time_t start,end,t;
 	/*Aca levantamos la imagen, la pasamos a nivel de grises y la desplegamos*/
     
 /*-------------------------|PARA CORRER DESDE EL IPAD|-----------------------*/
-    UIImage* uiimage = [UIImage imageNamed:@"marker_0004.png"];
+    UIImage* uiimage = [UIImage imageNamed:@"marker_0007.png"];
     
     CGImageRef image = [uiimage CGImage];
     width = CGImageGetWidth(image);
@@ -50,11 +50,11 @@ time_t start,end,t;
     CGContextRelease(context);
     
 
-    datadouble = malloc(width*height*sizeof(float));
+    datafloat = malloc(width*height*sizeof(float));
     int cantidad =width*height;
      NSLog(@"Entra a rgb2gray\n");
-    //rgb2gray(datadouble, rawData, width, height, 4);
-    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datadouble[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
+    //rgb2gray(datafloat, rawData, width, height, 4);
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datafloat[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
 
      NSLog(@"Sale de rgb2gray\n");
 
@@ -62,9 +62,9 @@ time_t start,end,t;
     
     //char* nombre = "/Users/pablofloresguridi/repositorios/encuadro/xcode/Aplicaciones test/gaussian_sampler/gaussian_sampler/marker_0004.pgm";
     
-    //datadouble = read_pgm_image_double(&width,&height,nombre);
+    //datafloat = read_pgm_image_float(&width,&height,nombre);
     
-    [self reconstruirImg:datadouble width:width height:height];
+    [self reconstruirImg:datafloat width:width height:height];
      
     //free(datachar);
     
@@ -74,10 +74,10 @@ time_t start,end,t;
     
     float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
     float scale = 0.5;
-    image_double luminancia_sub;
-    image_double image;
+    image_float luminancia_sub;
+    image_float image;
   
-    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height,(float*) datadouble );
+    image = new_image_float_ptr( (unsigned int) width, (unsigned int) height,(float*) datafloat );
     
     NSLog(@"Entra a gaussian_sampler\n");
     luminancia_sub = gaussian_sampler(image, scale, sigma_scale);
@@ -85,23 +85,23 @@ time_t start,end,t;
     [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
     
     free( (void *) image );
-    free_image_double(luminancia_sub);
+    free_image_float(luminancia_sub);
 
 }
 - (IBAction)gaussian_2:(id)sender {
     float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
     float scale = 0.5;
-    image_double luminancia_sub;
-    image_double image;
+    image_float luminancia_sub;
+    image_float image;
     
-    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, (float*)datadouble );
+    image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, (float*)datafloat );
     NSLog(@"Entra a gaussian_sampler 2\n");
     luminancia_sub = gaussian_sampler2(image, scale, sigma_scale);
     NSLog(@"Sale de gaussian_sampler 2\n");
     [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
     
     free( (void *) image );
-    free_image_double(luminancia_sub);
+    free_image_float(luminancia_sub);
     
 
     
@@ -109,24 +109,24 @@ time_t start,end,t;
 - (IBAction)gaussian_3:(id)sender {
     float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as sigma = sigma_scale/scale. */
     float scale = 0.5;
-    image_double luminancia_sub;
-    image_double image;
+    image_float luminancia_sub;
+    image_float image;
     
-    image = new_image_double_ptr( (unsigned int) width, (unsigned int) height, (float*)datadouble );
+    image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, (float*)datafloat );
     NSLog(@"Entra a gaussian_sampler 3\n");
     luminancia_sub = gaussian_sampler3(image, scale, sigma_scale);
     NSLog(@"Sale de gaussian_sampler 3\n");
     [self reconstruirImg:luminancia_sub->data width:round(width*scale) height:round(height*scale)];
     
     free( (void *) image );
-    free_image_double(luminancia_sub);
+    free_image_float(luminancia_sub);
     
     
 
 }
 
 
-- (void) reconstruirImg: (float*)datadouble width: (int) width height: (int) height {
+- (void) reconstruirImg: (float*)datafloat width: (int) width height: (int) height {
 
     printf("width: %d \t height: %d\n",width, height);
     
@@ -136,9 +136,9 @@ time_t start,end,t;
     
     for(int i = 0; i < height * width; i++) {
         
-        result[i*4]=datadouble[i];
-        result[i*4+1]=datadouble[i];
-        result[i*4+2]=datadouble[i];
+        result[i*4]=datafloat[i];
+        result[i*4+1]=datafloat[i];
+        result[i*4+2]=datafloat[i];
         result[i*4+3]=0;
     }
     CGDataProviderRef provider  = CGDataProviderCreateWithData(NULL, result, width*height, NULL);
