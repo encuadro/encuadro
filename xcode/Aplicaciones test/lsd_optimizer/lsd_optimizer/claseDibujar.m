@@ -13,6 +13,11 @@
 @implementation claseDibujar
 
 @synthesize cantidadSegmentos = _cantidadSegmentos;
+@synthesize cantidadLsd=_cantidadLsd;
+@synthesize cantidadLsd_original=_cantidadLsd_original;
+
+@synthesize segmentos_lsd=_segmentos_lsd;
+@synthesize segmentos_lsd_original=_segmentos_lsd_original;
 @synthesize segmentos = _segmenos;
 @synthesize esquinas = _esquinas;
 @synthesize esquinasReproyectadas = _esquinasReproyectadas;
@@ -21,13 +26,15 @@
 @synthesize segments=_segments;
 @synthesize corners=_corners;
 @synthesize reproyected=_reproyected;
+@synthesize lsd_all=_lsd_all;
+@synthesize lsd_all_original=_lsd_all_original;
 
 
 CGFloat cgx1;
 CGFloat cgy1;
 CGFloat cgx2;
 CGFloat cgy2;
-CGPoint puntos2[2];
+CGPoint puntos3[2], puntos2[2], puntos[2];
 CGFloat cgesq1;
 CGFloat cgesq2;
 CGFloat cgrep1;
@@ -41,7 +48,7 @@ UITextField *text;
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        self.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
+//        self.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
     }
     return self;
 }
@@ -52,28 +59,28 @@ UITextField *text;
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    // Drawing code
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     /*Dibujo lineas*/
     
-    for(int i=0;i<self.cantidadSegmentos;i++){
+    
+    for(int i=0;i<self.cantidadLsd_original;i++){
         
-        /*Las primeras 4 lineas son las del borde de la pantalla*/
+        cgx1=self.segmentos_lsd_original[i*dim]*1024/480;
+        cgy1=self.segmentos_lsd_original[i*dim+1]*768/360;
+        cgx2=self.segmentos_lsd_original[i*dim+2]*1024/480;
+        cgy2=self.segmentos_lsd_original[i*dim+3]*768/360;
         
-
-            cgx1=self.segmentos[i*dim]*1024/480;
-            cgy1=self.segmentos[i*dim+1]*768/360;
-            cgx2=self.segmentos[i*dim+2]*1024/480;
-            cgy2=self.segmentos[i*dim+3]*768/360;
-            
-            
-            CGContextSetRGBStrokeColor(context, 255, 0, 0, 1);
-            puntos2[0]=CGPointMake(cgx1,cgy1);
-            puntos2[1]=CGPointMake(cgx2,cgy2);
-            CGContextStrokeLineSegments(context, puntos2, 2);
-          }
+        
+        
+        CGContextSetRGBStrokeColor(context, 255, 255, 255, 1);
+        puntos3[0]=CGPointMake(cgx1,cgy1);
+        puntos3[1]=CGPointMake(cgx2,cgy2);
+        CGContextStrokeLineSegments(context, puntos3, 2);
+        
+        
+    }
     
 }
 

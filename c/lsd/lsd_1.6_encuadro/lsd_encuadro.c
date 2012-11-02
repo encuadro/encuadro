@@ -590,7 +590,7 @@ image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
     out = new_image_float(N,M);
     
     /* sigma, kernel size and memory for the kernel */
-    sigma = scale < 1.0 ? sigma_scale / scale : sigma_scale;
+    sigma = sigma_scale / scale;
     /*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
      siempre se va a cumplir que sigma = sigma_scale / scale */
     /*

@@ -11,8 +11,8 @@
 //#import "vl/generic.h"
 //#import "vl/sift.h"
 #import "lsd.h"
-#import "processing.h"
-#import "claseDibujar.h"
+#import "lsd_encuadro.h"
+//#import "claseDibujar.h"
 
 @interface ViewController : UIViewController
 

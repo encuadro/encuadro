@@ -10,8 +10,23 @@ La aplicación consta de distintas funcionalidades que se describen en este capít
 \item[(4)] Detección SIFT
 \item[(5)] Diferentes realidades aumentadas según la obra.
 \end{itemize}
+En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final.
 \section{Diagrama global de la aplicación}
-bla bla laaa
+Para que sea más sencilla la comprensión de los bloques que componen la aplicación a continuación se muestra el \textit{Storyboard} de la aplicación que es la interfaz de usuario y que sirve para visualizar bastante cada una de las clases que intervienen y cómo es el flujo de la aplicación.\\
+\\
+IMAGEN DEL STORYBOARD COMPLETO
+\\
+\\
+ 
+La aplicación cuenta con una pantalla de inicio con instrucciones en formato de audio al presionar el botón respectivo y una presentación sobre cómo es el recorrido. Se da la opción de elegir entonces una forma de recorrer el museo de manera automática, esto es, utilizando QRs para detectar la zona del museo en la que se está, procesamiento de imágenes (SIFT) para identificar el cuadro que se tiene enfrente y comunicación con un servidor que hace de procesador y comunicador de resultados o una opción manual en la que el usuario es quien elige la zona del museo (autor) y el cuadro en el que está interesado.\\
+
+Una vez que se está frente al cuadro existe una serie de interacciones habilitadas para el usuario, como ser: audioguía sobre el cuadro en particular, dibujo con lienzo libre para realizar tweets con la imagen dibujada, o la realidad aumentada vinculada a la obra que seleccionó (recorrido maual) o la que fue derivada luego del reconocimiento de imagenes (recorrido automático)\\
+\\
+SEGUIR REDACTANDO ESTA SECCION
+\\
+\\
+
+
 \section{TableViewController}
 jjjjj\\
 \section{QR}
@@ -32,11 +47,15 @@ En la figura \ref{fig: implementacion_1} se pueden ver las distintas partes que 
 Es fácil darse cuenta que la codificación resulta mucho más sencilla que la decodificación. Para la codificación es necesario comprender el protocolo, las distintas variantes y el tipo de información que se pretende almacenar. Sin embargo para la decodificación, además de tener que cumplir con lo anterior, es necesario contar con buenos sensores y ciertas condiciones de luminosidad y distancia que favorezcan a la cámara y se traduzcan en buenos resultados luego de la detección de errores. Si bien la plataforma es importante para lograr buenos resultados, dada una plataforma, existen variadas aplicaciones tanto para iOS como para Android que cuentan con performances bastante diferentes en función del algoritmo de procesamiento utilizado.\\
 Debido a que el centro del proyecto de fin de carrera no fue la codificación y decodificación de QRs y que además ya existen distintas librerías que resuelven este problema se optó por investigar las distintas variantes e incorporar la más adecuada para la aplicación.\\
 Dentro de todas las librerías que resuelven la decodificación se encuentran ZXing y ZBar como las más destacadas por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por "Zebra Crossing", es una librería open-source desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive C o JRuby entre otros.\\
-Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un SDK interesante para desarrollar fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector de QRs. Básicamente consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate} Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista de cámara. Luego el protocolo se encarga de la captura y procesamiento del QR teniendo como resultado la información que tiene el QR en la \textit{Key} denominada \textit{ZBarReaderControllerResults}. De esta manera se accede fácilmente al contenido  \\
+Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un SDK interesante para desarrollar fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector de QRs. Básicamente consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate} Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista de cámara. Luego el protocolo se encarga de la captura y procesamiento del QR teniendo como resultado la información que tiene el QR en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una hash table con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
 %fuente http://code.google.com/p/zxing/
+\subsection{El QR en la aplicación}
+Para el caso particular de la aplicación se optó por tener un identificador QR para tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). Los mismos fueron Pedro Figari, Joaquín Torres García, Juan Manuel Blanes. De esta manera para el caso del recorrido del museo a través de la utilización con QRs es posible determinar la posición del usuario debido a imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero para el caso que el usuario sí decida escanear el QR entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos más reducida. \\
+
+
 
 \subsection{Arte con QRs}
-La opci´on de usar los QRs de una manera distinta
+La opción de usar los QRs de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QRs tradicionales para lograr un valor estético además del funcional. A continuación se muestran algunos ejemplos de tales casos en los que claramente se ve cómo puede lograrse el mismo resultado de información con el valor agregado de originalidad.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_implementacion/qrArtist.eps}
@@ -45,7 +64,45 @@ La opci´on de usar los QRs de una manera distinta
 \end{figure}
 %fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
 \section{Servidor}
-sssssssssssssss
+Si bien el desarrollo de la aplicación es un prototipo de una aplicación comercial y para tal caso no se manejan muchas imágenes y otros datos y registros, para lograr escalabilidad se hace imprescindible contar con un servior. Se pensó con el fin de almacenar toda aquella información relevante en cuanto a registro de obras (imagen, título y autor), descripciones de obras, audioguías, videos, modelos y animaciones para las realidades aumentadas asociadas y cualquier tipo de información que el museo quiera agregar y que por un tema de practicidad no se quiera almacenar dentro de la aplicación. En definitiva, almacenar toda esa información dentro de la aplicación quizá sea rentable para pocas obras, pero lo puede hacer inmanejable para un buen número de obras. Se pensó entonces en la instalación de un servidor que esté ubicado dentro del museo con el cual se tenga una conexión a través de una LAN de (54Mbps). Se aclara este punto pues, en caso de querer hacer un servidor remoto que tenga que ser accedido a través de internet, entonces todo es más lento, aunque funciona perfectamente.\\
+\subsection{Creando el servidor}
+Para la creación del servidor se buscó primeramente la alternativa de hacerlo sobre una máquina con sistema operativo con núcleo Linux, distribución Ubuntu. Luego también se buscó la posibilidad de tener el servidor corriendo sobre una plataforma Unix iOS. Para el segundo caso resultó incluso más sencilla que la primera dado que ya viene pensado por el sistema operativo el hecho de que funcione como servidor. A continuación se explica los pasos que se siguieron para implementar servidores en uno y otro sistema operativo.
+\subsubsection{Servidor iOS}
+redactar pasos...
+\subsubsection{Servidor LAMP}
+Se denota servidor LAMP por las siglas de Linux (Sistema Operativo), Apache (Servidor Web), MySQL (Gestor de base de datos), PHP/Perl/Python (lenguaje de programación).\\
+Se instaló entonces el servidor Web Apache, que tiene dentro de sus principales ventajas el hecho de ser multiplataforma, gratis y de código abierto. Para eso desde terminal se debe hacer lo siguiente:
+\begin{verbatim}
+sudo apt-get install apache2
+\end{verbatim}
+%\textit{sudo apt-get install apache2}
+Con este comando se descarga el paquete \textit{apache2} y se instala. Una vez finalizada la instalación de este paquete ya se cuenta con un servidor y se puede verificar ingresando desde la máquina donde se instaló el servidor abriendo el navegador e ingresando a \textit{http://localhost} o equivalentemente a \textit{http://127.0.0.1} y de esta manera aparece la página por defecto cuyo contenido está dado por el archivo \textit{/var/www/index.html}.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_implementacion/Itworks.eps}
+\caption{Impresión de pantalla al ingresar a http://localhost.}
+\label{fig: implementacion_3}
+\end{figure}
+Luego de tener instalado el Apache se procede a instalar el php de la siguiente manera
+\begin{verbatim}
+sudo apt-get install php5
+\end{verbatim}
+%fuente http://www.guia-ubuntu.org/index.php?title=Servidor_web
+Para el caso particular de los intereses del servidor creado no fue necesario instalar MySQL. Entonces con esto, luego de reiniciar el servidor apache ya se tiene un servidor con intérpetre php instalado. A partir de este momento todo se reduce a comprender bien el lenguaje php y poder realizar peque?os módulos de programación que puedan tomar entradas, procesarlas y arrojar una salida. 
+
+\subsection{Lenguaje php y principales scripts}
+Como fue dicho en la sección anterior para los intereses el servidor creado, lo fundamental es el hecho de poder recibir archivos o identificadores de los mismos, poder realizar un procesamiento en el servidor y devolver a la máquina cliente un archivo, mensaje o similar. Para esto se pasa a explicar algunos conceptos básicos de php. \\
+El análogo a un Hello World en php es así:
+\begin{verbatim}
+<?php 
+echo"Hola Mundo"; 
+?>
+\end{verbatim}
+Esto se guarda en un archivo que con extensión .php en la ruta por defecto donde se alojan los php /var/www/holamundo.php. De esta manera al ingresar a la dirección \textit{http://localhost/holamundo.php} se ve el print del texto.\\
+como leer un input y hacer algo (ejemplo suma.php)\\
+como hacer un acction.php ....\\
+MOU SIGUE ESTO...\\
+
 \section{SIFT}
 
 \section{Incorporación de la realidad aumentada a la aplicación}
