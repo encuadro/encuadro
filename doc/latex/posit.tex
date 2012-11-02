@@ -1,0 +1,103 @@
+\chapter{POSIT: \textit{POS} with \textit{IT}erations}
+
+\section{Introducción}
+En este capítulo se explica el algorítmo utilizado para el cálculo de la pose a partir de una imágen capturada por la cámara. Como lo dice el nombre de algorítmo se utliza una técnica llamada \textit{POS} (\textit{P}ose from \textit{O}rtography and \textit{S}caling), esta técnica consiste en aproximar la pose de la camara a partir de la proyección \textit{SOP}(\textit{S}caled \textit{O}rtographic \textit{Projection}). Se comienza el capítulo explicando en que consiste la proyección \textit{SOP} y como se estima la pose a partir ella. Con esto como fundamento teórico se explican las diferentes variantes de POSIT y finalmente se explica la implementación utilizada en la aplicación.
+
+\section{POSIT clásico}
+La primera versión de POSIT presentada por \textit{Daniel DeMenthon} y \textit{Larry Davis} en \cite{DeMenthon95} resuelve el problema de calcular la pose de la camara dados 4 o más puntos detectados en la imágen y sus correspodientes en el mundo real,  con la condición de que estos puntos no sean coplanares. Si bien no es la versión final que se utilizó vale la pena ser explicada ya que ayuda a sentar las bases de la implentación utilizada.
+
+\subsection{Notacion y definición formal del problema de estimación de pose}
+En la figura \ref{fig: posit_1} se puede ver un modelo de cámara pinhole, donde el centro es el punto $O$, $G$ es el plano imagen a una distancia focal $f$ de $O$. $O_x$ y $O_y$ son los ejes que apuntan en las direcciones de las filas y las columnas del sensor de la cámara respectivamente. $O_z$ es el eje que esta sobre el eje óptico de la camara y apunta en sentido saliente. Los versores para estos ejes son \textbf{i}, \textbf{j} y \textbf{k}.
+
+Se considera ahora un objeto con puntos característicos $M_0$, $M_1$, ...., $M_i$, ...., $M_n$, cuyo eje de cooredenadas esta centrado en  $M_0$ y está compuesto por los versores ($M_0u$, $M_0v$, $M_0w$ ). La geometría del objeto se asume conocida, por lo tanto las coordenadas de lo puntos característicos del objeto en el eje de coordenadas del mismo son conocidas. Por ejemplo ($U_i$, $V_i$, $W_i$) son las coordendas del punto $M_i$ en el marco de referencia del objeto.
+Los puntos correpondientes a los puntos del objeto $M_i$ en la imagen son conocidos y se identifican como $m_i$, ($x_i$, $y_i$) son las coordenadas de este punto en la imágen. Las coordenadas de los puntos $M_i$ en el eje de coordenadas de la camara, identificadas como ($X_i$, $Y_i$, $Z_i$), son desconocidas ya que no se conoce la pose del objeto respecto a la cámara.
+
+Se busca enotonces computar la matriz de rotación y el vector de traslación del objeto respecto a la cámara. La matriz de rotación \textbf{R} del objeto, es la matriz cuyas filas son las coordenadas del los versores $i$, $j$ y $k$ del sistema de coordenadas de la cámara expresados en el sistema de coordenadas del objeto ($u$, $v$, $w$). 
+
+La matriz  \textbf{R}  queda:
+
+
+\[ R=\left( \begin{array}{ccc}
+i_u & i_v & i_w \\
+j_u & j_v & j_w \\
+k_u & k_v & k_w \end{array} \right)\] 
+
+Para obtener la matriz de rotación solo es necesario obtener los versores  \textbf{i}  y  \textbf{j} , el versor  \textbf{k}  se obtiene de realizar el producto vectorial  \textbf{i} $\times$  \textbf{j}. El vector de traslación es el vector que va del centro del objeto $M_0$ a el centro del sistema de coordenadas de la cámara $O$. Por lo tanto las coordenadas del vector de traslación son ($X_0$,$Y_0$,$Z_0$). Si este punto $M_0$ es uno de los puntos visibles en la imagen, entonces el vector \textbf{T}  esta alineado con el vector $Om_0$ y es igual a ($Z_0$/$f$)$Om_0$. Como detalle a tener en cuenta, se observa que para calcular la traslación es necesario conocer el punto de referencia del objeto $M_0$, esta es la principal diferencia con la versión moderna de POSIT en la que para calcular la traslación no es necesario suponer nada acerca del punto de referencia del objeto. 
+
+Por lo tanto la pose queda determinada si se conocen  \textbf{i}, \textbf{j} y  \textbf{$Z_0$}. \\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{figs_posit/posit_1.eps}
+\caption{Proyección en perspectiva ($m_i$) y SOP ($p_i$) para un punto del modelo 3D $M_i$ y un punto de referncia del modelo $M_O$. Fuente: \cite{DeMenthon95} .}
+\label{fig: posit_1}
+\end{figure}
+
+\subsection{SOP: \textit{S}caled \textit{O}rtographic \textit{P}rojection}
+La proyección ortogonal escalada(SOP) es una aproximación a la proyección perspectiva. En esta aproximación se supone que las profundidades $Z_i$ de diferentes puntos $M_i$ en el eje de coordenadas de la cámara no difieren mucho entre sí, y por lo tanto se asume que todos los puntos $M_i$ tienen la misma profundidad que el punto $M_0$. 
+
+Para un punto $M_i$ la proyección perspectiva sobre el plano imagen estaría dada por:
+$$ x_i = f X_i/Z_i,   y_i = fY_i/Z_i, $$, mientras que la proyección SOP esta dada por: 
+$$ x^{'}_i = f X_i/Z_0,   y^{'}_i = fY_i/Z_0. $$ De aquí en más las proyecciones SOP de los puntos $M_i$ se identificaran como $p_i$ mientras que las proyecciones persepectivas, que son los puntos que se detectan en la imágen, se identifican como $m_i$. 
+Al término $s=f/Z_0$ se lo conoce como el factor de escala de la SOP. Se puede ver que para el caso particular del punto $M_0$ la proyeccion perspectiva $p_0$ y la SOP $m_0$ coinciden. 
+
+En la figura \ref{fig: posit_1} se puede ver como se construye la SOP. Primero se realiza la proyección orotgonal de todos los puntos $M_i$ sobre $K$, el plano paralelo al plano imagen que pasa por el punto $M_0$. Las preyecciones de los puntos $M_i$ sobre $K$ se llaman $P_i$. El segundo paso consiste en hacer la proyección perspectiva de los puntos $P_i$ sobre el plano imágen $G$ para obtener finalmente los puntos $p_i$. En la figura también se puede ver que el tama\~no del vector $m_0p_i$ es $s$ veces el tama\~o de $M_0P_i$. Teniendo esto en cuenta se pueden expresar las coordenadas de $p_i$ como:
+\begin{equation}\label{eq_1}
+\begin{split}
+x^{'}_i = fX_0/Z_0 + f(X_i - X_0)/Z_0 = x_0 + s(X_i - X_0)\\ 
+y^{'}_i = y_0 + s(Y_i - Y_0)
+\end{split}
+\end{equation}
+
+\subsection{Ecuaciones para calcular la proyección perspectiva}
+
+Como se mencionó anteriormente la pose queda determinada si se conocen los vectores \textbf{i},\textbf{j} y la coordenada \textbf{$Z_0$} del vector de traslación. Las ecuaciones que vinculan estas variables son:
+
+\begin{equation}\label{eq_2}
+\textbf{$M_0M_i$}\frac{f}{Z_0} \textbf{i}=x_i(1+\epsilon_i)-x_0
+\end{equation}
+\begin{equation}\label{eq_3}
+\textbf{$M_0M_i$}\frac{f}{Z_0} \textbf{j}=y_i(1+\epsilon_i)-y_0
+\end{equation}
+donde $\epsilon_i$ se define como
+\begin{equation}\label{eq_4}
+\epsilon_i=\frac{1}{Z_0}\textbf{$M_0M_i$} \textbf{k}
+\end{equation}
+
+Se puede ver que los terminos $x_i(1+\epsilon_i)$ y $y_i(1+\epsilon_i)$ son las coordeanadas $(x^{'}_i,y^{'}_i)$ de la SOP. Primero se descompone el vector $M_0M_i$ en la suma de $M_0P_i$ y $P_iM_i$. De la figura \ref{fig: posit_1} se puede ver que sentido del vector $P_iM_i$ se según el versor \textbf{k}. Al realizar el procucto escalar con \textbf{i} y \textbf{j} se tiene que:
+\begin{equation}\label{eq_5}
+\begin{split}
+M_0M_i \textbf{i}= M_0P_i \textbf{i} + P_iM_i \textbf{i} = \frac{Z_0}{f}m_0p_i \textbf{i} \\
+M_0M_i \textbf{j}= M_0P_i \textbf{j} + P_iM_i \textbf{j} = \frac{Z_0}{f}m_0p_i \textbf{j} 
+\end{split}
+\end{equation}
+
+Recordando que $p_i$ es la SOP y que $m_0$ es la proyección del punto de referencia del objeto, se tiene: 
+\begin{equation}\label{eq_6}
+\begin{split}
+m_0p_i \textbf{i}= x^{'}_i - x_0 \\
+m_0p_i \textbf{j}= y^{'}_i - y_0 
+\end{split}
+\end{equation}
+
+Finalmente si se sustituye en \ref{eq_5} y se compara con \ref{eq_2} y \ref{eq_3} se puede ver que:
+\begin{equation}\label{eq_7}
+\begin{split}
+x^{'}_i= x_i(1+\epsilon_i)\\
+y^{'}_i= y_i(1+\epsilon_i)
+\end{split}
+\end{equation}
+
+\subsection{Algortímo}
+Las ecuaciones \ref{eq_2} y \ref{eq_3} se puede reescribir como:
+\begin{equation}\label{eq_8}
+\textbf{$M_0M_i$} \textbf{I}=x_i(1+\epsilon_i)-x_0
+\end{equation}
+\begin{equation}\label{eq_9}
+\textbf{$M_0M_i$} \textbf{J}=y_i(1+\epsilon_i)-y_0
+\end{equation}
+
+\section{POSIT moderno}
+
+\section{SoftPOSIT}
+
+\section{POSIT Coplanar}
