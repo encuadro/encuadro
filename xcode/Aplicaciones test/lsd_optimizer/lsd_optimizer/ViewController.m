@@ -22,30 +22,14 @@ FILE *in = 0 ;
 int err = 0;
 //VlPgmImage pim;
 unsigned char *datachar  = 0;
-float *datafloat = 0;
+double *datadouble = 0;
 int width;
 int height;
 
-/*Para el gaussian sampler*/
-
-image_float luminancia_sub;
-image_float imagen_float;
 
 /*Para el LSD*/
-float* list;
-double* list_double;
+double* list;
 int listSize;
-
-float scale = 0.5;
-float sigma_scale = 0.6; /* Sigma for Gaussian filter is computed as
-                          sigma = sigma_scale/scale.                    */
-float quant = 2.0;       /* Bound to the quantization error on the
-                          gradient norm.                                */
-float ang_th = 22.5;     /* Gradient angle tolerance in degrees.           */
-float log_eps = 0.0;     /* Detection threshold: -log10(NFA) > log_eps     */
-float density_th = 0.7;  /* Minimal density of region points in rectangle. */
-int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
-                           modulus.                                       */
 
 /*para DIBUJAR*/
 //claseDibujar *cgvista;
@@ -56,7 +40,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 	/*Aca levantamos la imagen, la pasamos a nivel de grises y la desplegamos*/
     
     /*-------------------------|PARA CORRER DESDE EL IPAD|-----------------------*/
-    UIImage* uiimage = [UIImage imageNamed:@"marker_0004.png"];
+    UIImage* uiimage = [UIImage imageNamed:@"marker_0007.png"];
     
     CGImageRef image = [uiimage CGImage];
     width = CGImageGetWidth(image);
@@ -73,60 +57,130 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     CGContextRelease(context);
     
     
-    datafloat = malloc(width*height*sizeof(float));
+    datadouble = malloc(width*height*sizeof(double));
     int cantidad =width*height;
     NSLog(@"Entra a rgb2gray\n");
-    //rgb2gray(datafloat, rawData, width, height, 4);
-    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datafloat[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
-    
+    //rgb2gray(datadouble, rawData, width, height, 4);
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datadouble[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
     NSLog(@"Sale de rgb2gray\n");
     
-    free( (void *) image );
-    /*-------------------------|PARA LEVANTAR EL PGM DESDE LA PC|-----------------------*/
+   /*En datadouble tenemos los pixeles de la imagen*/
     
-    //char* nombre = "/Users/pablofloresguridi/repositorios/encuadro/xcode/Aplicaciones test/gaussian_sampler/gaussian_sampler/marker_0004.pgm";
-    
-    //datafloat = read_pgm_image_float(&width,&height,nombre);
-    
-    //free(datachar);
-    
-    /*-------------------------|CORREMOS GAUSSIAN SAMPLER|-----------------------*/
-    
-    NSLog(@"Entra a gaussian_sampler\n");
-    imagen_float = new_image_float_ptr( (unsigned int) width, (unsigned int) height, (float*)datafloat );
-    luminancia_sub = gaussian_sampler(imagen_float, scale, sigma_scale);
-    NSLog(@"Sale de gaussian_sampler\n");
        
-    [self reconstruirImg:datafloat width:width height:height];
+    [self reconstruirImg:datadouble width:width height:height];
     
     
     
 
      //cgvista=[[claseDibujar alloc] initWithFrame:self.vista.frame];
+
+}
+- (IBAction)imagen_1:(id)sender {
+    
+    UIImage* uiimage = [UIImage imageNamed:@"marker_0007.png"];
+    
+    CGImageRef image = [uiimage CGImage];
+    width = CGImageGetWidth(image);
+    height = CGImageGetHeight(image);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = malloc(height * width * 4);
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height),image);
+    CGContextRelease(context);
+    
+    
+    datadouble = malloc(width*height*sizeof(double));
+    int cantidad =width*height;
+    NSLog(@"Entra a rgb2gray\n");
+    //rgb2gray(datadouble, rawData, width, height, 4);
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datadouble[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
+    NSLog(@"Sale de rgb2gray\n");
+    
+    /*En datadouble tenemos los pixeles de la imagen*/
+    
+    
+    [self reconstruirImg:datadouble width:width height:height];
+    
+
+}
+
+
+- (IBAction)imagen_2:(id)sender {
+    
+    UIImage* uiimage = [UIImage imageNamed:@"zebras.png"];
+    
+    CGImageRef image = [uiimage CGImage];
+    width = CGImageGetWidth(image);
+    height = CGImageGetHeight(image);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    unsigned char *rawData = malloc(height * width * 4);
+    NSUInteger bytesPerPixel = 4;
+    NSUInteger bytesPerRow = bytesPerPixel * width;
+    NSUInteger bitsPerComponent = 8;
+    CGContextRef context = CGBitmapContextCreate(rawData, width, height, bitsPerComponent, bytesPerRow, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Big);
+    CGColorSpaceRelease(colorSpace);
+    
+    CGContextDrawImage(context, CGRectMake(0, 0, width, height),image);
+    CGContextRelease(context);
+    
+    
+    datadouble = malloc(width*height*sizeof(double));
+    int cantidad =width*height;
+    NSLog(@"Entra a rgb2gray\n");
+    //rgb2gray(datadouble, rawData, width, height, 4);
+    for(int pixelNr=0;pixelNr<cantidad;pixelNr++) datadouble[pixelNr] = 0.30*rawData[pixelNr*4+2] + 0.59*rawData[pixelNr*4+1] + 0.11*rawData[pixelNr*4];
+    NSLog(@"Sale de rgb2gray\n");
+    
+    /*En datadouble tenemos los pixeles de la imagen*/
+    
+    
+    [self reconstruirImg:datadouble width:width height:height];
+    
+
+}
+
+- (IBAction)lsd_original:(id)sender {
+    
+    NSLog(@"LSD_original in\n");
+    list = lsd(&listSize, datadouble, width, height);
+    NSLog(@"LSD_original out\n");
+    
+    printf("listSize_original: %d\n",listSize);
+    
+    [self reconstruirImg:datadouble width:width height:height];
+    
+    free(list);
+    
+    
     
 }
 - (IBAction)lsd_optimizado:(id)sender {
+
+    NSLog(@"LSD_encuadro in\n");
+    list = lsd_encuadro(&listSize, datadouble, width, height);
+    NSLog(@"LSD_encuadro out\n");
+
+    printf("listSize_encuadro: %d\n",listSize);
     
-
-
-
-    NSLog(@"LSD in\n");
-    list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-    NSLog(@"LSD out\n");
-    printf("Cantidad de segmentos detectados: %d\n",listSize);
+    [self reconstruirImg:datadouble width:width height:height];
     
- 
     free(list);
-    [self reconstruirImg:luminancia_sub->data width:luminancia_sub->xsize height:luminancia_sub->ysize];
 
 }
+
+
 
 - (void) dibujarSegmentos{
 
 //    [cgvista removeFromSuperview];
 // 
 //    cgvista.cantidadSegmentos = listSize;
-//    cgvista.segments = list;
+//    cgvista.segmentos_lsd = list;
 //
 //    [self.vista addSubview:cgvista];
 //    
@@ -141,7 +195,7 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 
 }
 
-- (void) reconstruirImg: (float*)datafloat width: (int) width height: (int) height {
+- (void) reconstruirImg: (double*)datadouble width: (int) width height: (int) height {
     
     printf("width: %d \t height: %d\n",width, height);
     
@@ -151,9 +205,9 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     
     for(int i = 0; i < height * width; i++) {
         
-        result[i*4]=datafloat[i];
-        result[i*4+1]=datafloat[i];
-        result[i*4+2]=datafloat[i];
+        result[i*4]=datadouble[i];
+        result[i*4+1]=datadouble[i];
+        result[i*4+2]=datadouble[i];
         result[i*4+3]=0;
     }
     CGDataProviderRef provider  = CGDataProviderCreateWithData(NULL, result, width*height, NULL);
@@ -166,11 +220,15 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
     CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
     CGImageRef imageRef = CGImageCreate(width, height, bitsPerComponent, bitsPerPixel, bytesPerRow, colorSpaceRef, bitmapInfo, provider, NULL, NO, renderingIntent);
     
-    self.vista.image = [UIImage imageWithCGImage:imageRef];
     
+        
+    
+    self.vista.image = [UIImage imageWithCGImage:imageRef];
+   
     
     CGColorSpaceRelease(colorSpaceRef);
     
+
     
 }
 

@@ -751,8 +751,8 @@ static image_float ll_angle( image_float in, float threshold,
   /* compute gradient on the remaining pixels */
 //    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
-  for(x=3;x<p-2;x++)
-    for(y=3;y<n-2;y++)
+  for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
       {
         adr = y*p+x;
 
@@ -795,8 +795,8 @@ static image_float ll_angle( image_float in, float threshold,
   /* compute histogram of gradient values */
 //    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
-    for(x=3;x<p-2;x++)
-    for(y=3;y<n-2;y++)
+    for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
     
     {
         norm = (*modgrad)->data[y*p+x];
