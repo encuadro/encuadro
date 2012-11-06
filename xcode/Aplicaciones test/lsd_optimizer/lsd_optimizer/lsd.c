@@ -163,14 +163,14 @@ static void error(char * msg)
 }
 
 /*----------------------------------------------------------------------------*/
-/** Doubles relative error factor
+/** doubles relative error factor
  */
 #define RELATIVE_ERROR_FACTOR 100.0
 
 /*----------------------------------------------------------------------------*/
 /** Compare doubles by relative error.
 
-    The resulting rounding error after floating point computations
+    The resulting rounding error after doubleing point computations
     depend on the specific operations done. The same number computed by
     different algorithms could present different rounding errors. For a
     useful comparison, an estimation of the relative rounding error

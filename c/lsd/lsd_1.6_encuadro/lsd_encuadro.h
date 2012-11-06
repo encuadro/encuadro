@@ -136,7 +136,7 @@
                        'out[7*n+0]' to 'out[7*n+6]'.
  */
 
-float * LineSegmentDetection( int * n_out,
+float * LineSegmentDetection_encuadro( int * n_out,
                                float * img, int X, int Y,
                                float scale_inv, float sigma_scale, float quant,
                                float ang_th, float log_eps, float density_th,
