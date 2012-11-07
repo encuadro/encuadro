@@ -15,15 +15,11 @@ Los puntos correpondientes a los puntos del objeto $M_i$ en la imagen son conoci
 Se busca enotonces computar la matriz de rotación y el vector de traslación del objeto respecto a la cámara. La matriz de rotación \textbf{R} del objeto, es la matriz cuyas filas son las coordenadas del los versores $i$, $j$ y $k$ del sistema de coordenadas de la cámara expresados en el sistema de coordenadas del objeto ($u$, $v$, $w$). 
 
 La matriz  \textbf{R}  queda:
-
-
 \[ R=\left( \begin{array}{ccc}
 i_u & i_v & i_w \\
 j_u & j_v & j_w \\
 k_u & k_v & k_w \end{array} \right)\] 
-
 Para obtener la matriz de rotación solo es necesario obtener los versores  \textbf{i}  y  \textbf{j} , el versor  \textbf{k}  se obtiene de realizar el producto vectorial  \textbf{i} $\times$  \textbf{j}. El vector de traslación es el vector que va del centro del objeto $M_0$ a el centro del sistema de coordenadas de la cámara $O$. Por lo tanto las coordenadas del vector de traslación son ($X_0$,$Y_0$,$Z_0$). Si este punto $M_0$ es uno de los puntos visibles en la imagen, entonces el vector \textbf{T}  esta alineado con el vector $Om_0$ y es igual a ($Z_0$/$f$)$Om_0$. Como detalle a tener en cuenta, se observa que para calcular la traslación es necesario conocer el punto de referencia del objeto $M_0$, esta es la principal diferencia con la versión moderna de POSIT en la que para calcular la traslación no es necesario suponer nada acerca del punto de referencia del objeto. 
-
 Por lo tanto la pose queda determinada si se conocen  \textbf{i}, \textbf{j} y  \textbf{$Z_0$}. \\
 \begin{figure}[h!]
 \centering
@@ -51,7 +47,6 @@ y^{'}_i = y_0 + s(Y_i - Y_0)
 \subsection{Ecuaciones para calcular la proyección perspectiva}
 
 Como se mencionó anteriormente la pose queda determinada si se conocen los vectores \textbf{i},\textbf{j} y la coordenada \textbf{$Z_0$} del vector de traslación. Las ecuaciones que vinculan estas variables son:
-
 \begin{equation}\label{eq_2}
 \textbf{$M_0M_i$}\frac{f}{Z_0} \textbf{i}=x_i(1+\epsilon_i)-x_0
 \end{equation}
@@ -62,7 +57,6 @@ donde $\epsilon_i$ se define como
 \begin{equation}\label{eq_4}
 \epsilon_i=\frac{1}{Z_0}\textbf{$M_0M_i$} \textbf{k}
 \end{equation}
-
 Se puede ver que los terminos $x_i(1+\epsilon_i)$ y $y_i(1+\epsilon_i)$ son las coordeanadas $(x^{'}_i,y^{'}_i)$ de la SOP. Primero se descompone el vector $M_0M_i$ en la suma de $M_0P_i$ y $P_iM_i$. De la figura \ref{fig: posit_1} se puede ver que sentido del vector $P_iM_i$ se según el versor \textbf{k}. Al realizar el procucto escalar con \textbf{i} y \textbf{j} se tiene que:
 \begin{equation}\label{eq_5}
 \begin{split}
@@ -70,7 +64,6 @@ M_0M_i \textbf{i}= M_0P_i \textbf{i} + P_iM_i \textbf{i} = \frac{Z_0}{f}m_0p_i \
 M_0M_i \textbf{j}= M_0P_i \textbf{j} + P_iM_i \textbf{j} = \frac{Z_0}{f}m_0p_i \textbf{j} 
 \end{split}
 \end{equation}
-
 Recordando que $p_i$ es la SOP y que $m_0$ es la proyección del punto de referencia del objeto, se tiene: 
 \begin{equation}\label{eq_6}
 \begin{split}
@@ -78,7 +71,6 @@ m_0p_i \textbf{i}= x^{'}_i - x_0 \\
 m_0p_i \textbf{j}= y^{'}_i - y_0 
 \end{split}
 \end{equation}
-
 Finalmente si se sustituye en \ref{eq_5} y se compara con \ref{eq_2} y \ref{eq_3} se puede ver que:
 \begin{equation}\label{eq_7}
 \begin{split}
@@ -94,9 +86,105 @@ Las ecuaciones \ref{eq_2} y \ref{eq_3} se puede reescribir como:
 \end{equation}
 \begin{equation}\label{eq_9}
 \textbf{$M_0M_i$} \textbf{J}=y_i(1+\epsilon_i)-y_0
+\end{equation} 
+en donde 
+\begin{equation}
+\textbf{I} = \frac{f}{Z_0}\textbf{i},  \textbf{J} = \frac{f}{Z_0}\textbf{j}
 \end{equation}
 
-\section{POSIT moderno}
+Si se conociera el valor de $\epsilon_i$, las ecuaciones \ref{eq_8} y \ref{eq_9} representan un sistema de ecuaciones en que las incógnitas son los vectores $\textbf{I}$ y $\textbf{J}$. Una vez obtenidos estos vectores es si pueden obtener los versores $\textbf{i}$ y $\textbf{j}$ normalizando, y $T_z$ se obtiene de la norma de cualquiera de los vectores  $\textbf{I}$ o $\textbf{J}$. A esta parte del del algorítmo se le llama \textit{POS} (\textit{P}ose from \textit{O}rthography and \textit{Scaling}), ya que estima la pose a partir de las proyecciones SOP de los puntos $M_i$.
+
+Si se conocieran los valores exactos de los $\epsilon_i$ la pose obtenida de resolver el sistema de ecuaciones sería la pose real del objeto, como no se conocen los valores exactos de $\epsilon_i$ se utiliza un método iterativo que tiende a la solción buscada. En la primera iteración se le toma $\epsilon_i = 0$, es decir, $p_i = m_i$. Esta suposición es razonable si se tiene que la relacion distancia camara objeto - profundidad del objeto es grande. La ecuacion para un punto cualquiera está dada por: 
+\begin{equation}\label{eq_10}
+\begin{split}
+M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
+M_0M_j\cdot\textbf{J} = y^{'}_i - y_0
+\end{split}
+\end{equation}
+Si se escribe la ecuación \ref{eq_10} para los $n$ puntos del modelo, se tiene un sistema de ecuaciones con \textbf{I} y \textbf{J} como incógnitas
+  \begin{equation}\label{eq_11}
+ \begin{split}
+ AI = \textbf{$x^{'} - x_0$} \\
+ AJ = \textbf{$y^{'} - y_0$}
+ \end{split}
+ \end{equation}
+\textbf{A} es una matriz $nx3$ con las coordenadas de los puntos del modelo $M_i$ en el marco de coordenadas del objeto. Si se tienen mas de 4 puntos y no son coplanares, la matriz \textbf{A} es de rango 3, y las soluciones al sistema están dadas por
+ \begin{equation}\label{eq_12}
+ \begin{split}
+ I = \textbf{B$x^{'}$} \\
+ J = \textbf{B$y^{'}$}
+ \end{split}
+ \end{equation}
+ \textbf{B} es la pseudo inversa de la matriz A. Se debe notar que la matriz \textbf{B} depende unicamente de la geometría del modelo que se asume conocida, por lo tanto solo es necesario calcular la matriz \textbf{B} una sola vez. 
+
+Una vez obtenidos \textbf{I} y \textbf{J} se calculan los versores \textbf{i}, \textbf{j} y \textbf{k}
+ \begin{equation}\label{eq_13}
+ \begin{split}
+ i = \frac{\textbf{I}}{\Vert\textbf{I}\Vert} \\
+ j = \frac{\textbf{J}}{\Vert\textbf{J}\Vert} \\
+ k = i \times j
+ \end{split}
+ \end{equation}
+El vector traslación del centro del objeto al centro de la cámara es el vector $OM_0$ 
+\begin{equation}\label{eq_14}
+OM_0 = \frac{Z_0}{f}Om_0 = \frac{Om_0}{s}
+\end{equation}
+El vector $Om_0$ es conocido ya que se conocen las cordenadas de los puntos $m_i$ y el factor de escala $s$ se obtiene de la norma de los vectores \textbf{I} o \textbf{J}.
+
+Una vez que se calcularon \textbf{i}, \textbf{j}, \textbf{k} y \textbf{T} se calculan los valores actualizados de $\epsilon_i$ segun la ecuación \ref{eq_4}. Si la variación de los $\epsilon_i$ es mayor a un determinado umbral, se repite el procedimiento actualizando las proyecciones SOP en \ref{eq_11}.
+
+\subsection{POSIT para puntos coplanares}
+
+Como se mencionó anteriormente, el algorítmo POSIT no funciona en el caso en que los puntos puntos del modelo pertenecen a un mismo plano. Como los marcadores utilizados son planos, se buscó una versión de POSIT que resuelve el problema de la estimación de pose para este caso. El algorítmo fue escrito por \textit{Denis Oberkampf}, \textit{Daniel DeMenthon} y \textit{Larry Davis} en   \cite{CoplanarPosit}.
+
+Para entender cual es el problema de trabajar con puntos coplanares se explica la situación desde un punto de vista geométrico. Como se vió anteriormente $$ M_0M_i\cdot\textbf{I}=x^{'}_i-x_0.$$Esto quiere decir que si se toma que la base de \textbf{I} en \textbf{$M_0$} , la punta del vector $\textbf{I}$ se proyecta sobre el vector $M_0M_i$ en un punto ${H_x}_i$, entonces todas las posibles puntas del vector \textbf{I} se encuentran en el plano perpendicular a $M_0M_i$ que pasa por el punto ${H_x}_i$. Si se tuvieran 4 puntos no coplanares $M_0$, $M_1$, $M_2$ y $M_3$, el vector \textbf{I} quedaría determinado. La base de \textbf{I} estaría en $M_0$ y la punta estaría en la intersección de los planos perpendiculares a $M_0M_1$, $M_0M_2$ y $M_0M_3$ por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$ respectivamente. Para este caso el sistema definido en \ref{eq_11} es de rango 3. 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_posit/posit_2.eps}
+\caption{Configuracion de puntos coplanares pertenecientes al plano \textit{D}. Los planos perpendiculares que pasan por los puntos ${H_x}_1$ y ${H_x}_2$ se intersectan en un recta que pasa por el punto \textit{Q}. Se puede ver que si hubiera un $4^{to}$ punto, el plano perpendicular correpondiente haria aparecer 2 rectas paralelas. Fuente: \cite{CoplanarPosit} .}
+\label{fig: posit_2}
+\end{figure}
+
+Si los puntos son coplanares, los vectores $M_0M_1$, $M_0M_2$ y $M_0M_3$ son todos coplanares y los planos perpendiculares que pasan por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$, se intersectan todos un una línea o en dos líneas paralelas por lo tanto hay inifinitas soluciones para el vector \textbf{I}. En este caso el sistema de ecuaciones \ref{eq_11} queda de rango 2. El vector solución que se obtiene al realizar la pseudo inversa de \textbf{A} es el que está a menor distancia de los planos, en la figura \ref{fig: posit_2} es el vector $\textbf{I}_{0}$. Esta la solución no es la solución al problema de los vectores de rotación, las soluciones se pueden expresar como
+\begin{equation}\label{eq_15}
+\begin{split}
+\textbf{I} = \textbf{I}_{0} + \lambda \textbf{u}\\
+\textbf{J} = \textbf{J}_{0}+ \mu \textbf{u}
+\end{split}
+\end{equation}
+donde \textbf{u} es un versor perpendicular al plano de los puntos, $\textbf{J}_{0}$ se calcula de manera análoga a $\textbf{I}_{0}$ y $\lambda$ y $\mu$ son las coordenadas de \textbf{I} y \textbf{J} según el versor \textbf{u}. Para encontrar las soluciones hay que calcular el versor \textbf{u} y los valores de $\lambda$ y $\mu$.
+
+Como el vector \textbf{u} es pependicular al plano de los puntos característicos se cumple $M_0M_i\cdot\textbf{u}=0$, se puede hallar  entonces como la base del núcleo de la matriz \textbf{A}. En la práctica este vector se halla a partir de la descomposición \textit{SVD} de la matriz \textbf{A}. La descomposición en valores singulares de la matriz \textbf{A} queda:
+\begin{equation}\label{eq_16}
+A = U \Sigma V^{T}
+\end{equation}
+donde $U \in \Re^{n\times n}$ es ortogonal, $\Sigma \in \Re^{n \times 3}$ es diagonal, con los valores singulares en la diagonal y $V \in \Re^{3 \times 3}$ es ortogonal. Como la matriz \textbf{A} es de rango 2, los dos primeros vectores columna de la matriz V corresponden a la base de ltodos los puntos que pertenecen al plano del modelo, mientras que el último vector de \textbf{V} es la base del núcleo de \textbf{A}, o sea el vector \textbf{u}. El cálculo \textbf{u} se realiza junto al calculo de la matriz \textbf{B}, ya que para ambos es necesario hacer la descomposición \textit{SVD} de \textbf{A}. 
+
+Para calcular los valores de $\lambda$ y $\mu$ se utilizan las condiciones de que \textbf{I} y \textbf{J} tienen que ser perpendiculares entre sí y del mismo largo. Como tienen que se perpendiculares se tiene que 
+$$
+\textbf{I}\cdot\textbf{J} = (\textbf{I}_{0} + \lambda \textbf{u})\cdot(\textbf{J}_{0}+ \mu \textbf{u}) = 0
+$$
+entonces se tiene que 
+\begin{equation}\label{eq_17}
+\lambda \mu = -\textbf{I}_{0} \cdot \textbf{J}_{0}
+\end{equation}
+Como tienen que ser del mismo largo se tiene que
+$$
+$$
+\begin{equation}\label{eq_18}
+(\textbf{I}_{0} + \lambda \textbf{u}) \cdot (\textbf{I}_{0} + \lambda \textbf{u}) = (\textbf{J}_{0} + \mu \textbf{u}) \cdot (\textbf{J}_{0} + \mu \textbf{u}) \Leftrightarrow \lambda^{2} - \mu^{2} = \textbf{J}_{0}^{2} - \textbf{I}_{0}^{2}
+\end{equation}
+ Se define el número complejo $C = \lambda + i\mu$, si se eleva al cuadrado queda $C^{2} = \lambda^{2} - \mu^{2} + i\lambda\mu$. Utilizando \ref{eq_17} y \ref{eq_18} se llega a que
+ \begin{equation}\label{eq_19}
+C^{2} = \textbf{J}_{0}^{2} - \textbf{I}_{0}^{2} - 2i\textbf{I}_{0} \cdot \textbf{J}_{0}
+ \end{equation}
+ y $\lambda$ y $\mu$ pueden calcularse como las partes real e imaginaria del complejo \textit{C}. 
+
+%%definido por
+%%\begin{equation}
+%%\overline{M_0{H_x}_i} = \dfrac{x^{'}_i-x_0}{\vert M_0M_i \vert}
+%%\end{equation}
+
 
 \section{SoftPOSIT}
 
