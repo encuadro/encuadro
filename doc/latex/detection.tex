@@ -57,7 +57,7 @@ Los elementos mas básicos en la estructura son los \emph{segmentos} los cuales c
 Un \emph{cuadrilátero} o \emph{quadrilateral} en inglés, al que se le denomina $\text{Ql}$, está determinado por cuatro segmentos conexos y distintos entre sí. El cuadrilátero tiene dos propiedades notables; el \emph{centro} definido como el punto medio entre sus cuatro vértices y el \emph{perímetro} definido como la suma de el largo de sus cuatro lados. Los \emph{vértices} de un \emph{cuadrilátero} se determinan mediante la intersección, en sentido amplio, de dos segmentos contiguos. Es decir, si $s_1$ es contiguo a $s_2$ dadas las recta $r_1$ que pasa por los puntos $\mathbf{p}_1$, $\mathbf{q}_1$ del segmento $s_1$ y la recta $r_2$ que pasa por los puntos $\mathbf{p}_2$, $\mathbf{q}_2$ del segmento $s_2$, se determina el vértice correspondiente como la intersección $r_1 \cap r_2$. \\
 %La propiedad de conexión entre dos segmentos se relaja a la intersección de dos discos de un cierto radio en torno a los puntos de dos segmentos vecinos. \\
 
-A un \emph{conjunto de cuadriláteros} o \emph{quadrilateral set} se le denomina $\text{QlSet}$, se construye a partir de $\text{M}$ cuadriláteros, que comparten un mismo centro, y se diferencian por un factor de escala, con $\text{M}>1$. A partir de dichos cuadriláteros se construye un lista ordenada $(\text{Ql}[0],\text{Ql}[1],\dots,\text{Ql}[\text{M}-1])$ en donde el orden viene dado por el valor de \emph{perímetro} de cada \texttt{Ql}. Se define el \emph{centro del grupo de cuadriláteros} como el promedio de los centros de cada $\text{Ql}$ de la lista ordenada.\\
+A un \emph{conjunto de cuadriláteros} o \emph{quadrilateral set} se le denomina $\text{QlSet}$, se construye a partir de $\text{M}$ cuadriláteros, que comparten un mismo centro, y se diferencian por un factor de escala, con $\text{M}>1$. A partir de dichos cuadriláteros se construye un lista ordenada $(\text{Ql}[0],\text{Ql}[1],\dots,\text{Ql}[\text{M}-1])$ en donde el orden viene dado por el valor de \emph{perímetro} de cada \text{Ql}. Se define el \emph{centro del grupo de cuadriláteros} como el promedio de los centros de cada $\text{Ql}$ de la lista ordenada.\\
 
 Finalmente el \emph{marcador QR} está constituido por $\text{N}$ \emph{conjuntos de cuadriláteros} dispuestos en una geometría particular. Esta geometría permite la determinación un sistema de coordenadas; un origen y dos ejes a utilizar. Se tiene una lista ordenada  $(\text{QlSet}[0],\text{QlSet}[1],\dots,\text{QlSet}[\text{N}-1])$ en donde el orden se puede determinar mediante la geometría de los mismos o a partir de hipótesis razonables.\\
 
@@ -68,10 +68,10 @@ En base a las estructuras previamente definidas es que se describe el diseño del
 
 Los tres \emph{cuadriláteros} correspondientes a un mismo \emph{conjunto de cuadriláteros} tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $\text{Ql}[0]$ tiene lado $l$ mientras que $\text{Ql}[1]$ y $\text{Ql}[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $\text{QlSet}$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Las direcciones de los ejes son muy utilizadas en el ambiente de las imágenes para definir los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los \emph{vértices} $v_{j_{1}}$ de cada \emph{cuadrilátero} $\text{Ql}[\text{j}]$ como, \\
 \begin{eqnarray}
-v_{j_{0}} = (\alpha,\alpha) && v_{j_{1}} = (\alpha,-\alpha)  \\
-v_{j_{2}} = (-\alpha,-\alpha) && v_{j_{3}} = (-\alpha,\alpha)
+v_{j_{0}} = (a/2,a/2) && v_{j_{1}} = (a/2,-a/2)  \\
+v_{j_{2}} = (-a/2,-a/2) && v_{j_{3}} = (-a/2,a/2)
 \end{eqnarray}
-con $\alpha=(j+1)\times l$. El orden aquí explicado se puede ver también junto con el sistema de coordenadas en la figura \ref{fig:MarkerDetail}.\\
+con $a=(j+1)\times l$. El orden aquí explicado se puede ver también junto con el sistema de coordenadas en la figura \ref{fig:MarkerDetail}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.35]{figs_detection/QlSetDetail.eps}
@@ -88,7 +88,7 @@ Un detalle del marcador se muestra en la figura \ref{fig:MarkerDetail} en donde 
 \end{split}
 \end{equation}
 
-La disposición de los $\text{QlSet}$ es tal que la distancia indicada $\mathbf{d}_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $\mathbf{d}_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $\mathbf{d}_{01}\gg\mathbf{d}_{02}$. Este criterio facilita la identificación de los \emph{vértices} de los $\text{QlSet}$ entre sí basados únicamente en la posición de sus centros y se explicará en la parte de determinación de correspondencias (sec.: \ref{subsec:detection_correspondencias}).
+La disposición de los $\text{QlSet}$ es tal que la distancia indicada $d_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $d_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $d_{01}\gg d_{02}$. Este criterio facilita la identificación de los \emph{vértices} de los $\text{QlSet}$ entre sí basados únicamente en la posición de sus centros y se explicará en la parte de determinación de correspondencias (sec.: \ref{subsec:detection_correspondencias}).
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_detection/MarkerDetail.eps}
@@ -96,12 +96,100 @@ La disposición de los $\text{QlSet}$ es tal que la distancia indicada $\mathbf{d
 \label{fig:MarkerDetail}
 \end{figure}
 
-%  lo que determina una cantidad de $3\times \text{QlSet}$'s conteniendo $3 \times \text{Ql}$'s cada uno. Bajo esta elección de parámetros se tienen $36$ \emph{segmentos} y \emph{vértices}.\\
 
-\subsection{Filtrado de segmentos}
+\subsubsection{Parámetros de diseño}
+Provisto el diseño del marcador antes descrito, quedan definidos ciertos parámetros \textbf{estructurales} que fueron de tomados fijos a lo largo del proyecto pero que podrían se variados en trabajos futuros asociados. Estos parámetros son:
+\begin{itemize}
+\item M: cantidad de \emph{conjuntos de cuadriláteros}.
+\item N: cantidad de \emph{cuadriláteros} por \emph{conjuntos de cuadriláteros}.
+\item Geometría: geometría de los cuadriláteros (Ql).
+\item Disposición: disposición espacial de los \emph{conjuntos de cuadriláteros} (QlSet).
+\end{itemize}
 
-\subsection{Determinación de correspondencias}
+El criterio de elección de M y N parte del diseño los códigos QR como ya fue explicado. La detección por segmentos de línea resulta una cantidad de $3\times \text{QlSet}$'s conteniendo $3 \times \text{Ql}$'s cada uno. Bajo esta elección de parámetros se tienen $36$ \emph{segmentos} y \emph{vértices}. Se tienen entonces un número de puntos característicos razonable para la estimación de pose.
+
+La elección de \emph{cuadrados} como parámetro de geometría se basa en la necesidad de tener igual resolución en los dos ejes del marcador. De esta forma se asegura una distancia límite en donde, en un caso ideal enfrentado al marcador, la detección de segmentos de línea falla simultaneamente en los segmentos verticales como en los horitonzales. De otra forma se tendría una dirección que limita mas que la otra desaprovechando resolución.
+
+La disposición espacial de los \emph{conjuntos de cuadriláteros} esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros.\\
+
+Por otro lado se tiene otro juego de parámetros que concluyen con el diseño del marcador. Estos parámetros conservan la estructura intrínseca del marcador permitiendo versatilidad en la aplicación y sin la necesidad de modificación alguna de los algoritmos desarrollados. Estos son:
+\begin{itemize}
+\item $d_{ij}$: distancia entre los \emph{centros} $\text{QlSet}[j]$ con $\text{QlSet}[i]$.
+\item $l$: lado del \emph{cuadrilátero} mas pequeño ($\text{Ql}[0]$) de los $\text{QlSet}$.
+\end{itemize}
+
+En este caso se debe siempre cumplir la condición impuesta previamente en donde $d_{01}\gg d_{02}$. De otra forma se deberán realizar ciertas hipótesis no genéricas o se deberá aumentar ligeramente la complejidad del algoritmo para la identificación del marcador.\\
+
+\subsubsection{Diseño \emph{test}}
+Durante el desarrollo de los algoritmos de detección e identificación de los \emph{vértices} del \emph{marcador QR} se trabajó con determinados parámetros de diseño de dimensiones apropiadas para posibilitar el traslado y las pruebas domésticas. 
+
+\subsubsection{Diseño \emph{Da Vinci}}
+
+\subsubsection{Diseño \emph{Artigas}}
+
+\subsubsection{Diseño \emph{Mapa}}
+
+\subsection{Detección}
+La etapa de detección del marcador se puede separar en tres grandes bloques; la detección de segmentos de línea, el filtrado de segmentos y la determinación de correspondencias (figura \ref{fig:detección_diagrama_marcador}).
+
+\subsubsection{Detección de segmentos de línea}
+La detección de segmentos de línea se realiza mediante el uso del algoritmo \emph{LSD} el cual se detalla en el capítulo \ref{ch:lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $m\times n$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
+\begin{itemize}
+\item[]
+\begin{verbatim}
+int nb;
+double *img;
+...
+out = lsd(&nb,img,m,n);
+\end{verbatim}
+\end{itemize}
+
+\subsubsection{Filtrado de segmentos}
+El filtrado de segmentos consiste en una búsqueda de conjuntos de cuatro segmentos conexos en la lísta de segmentos de línea detectados por \emph{LSD}. A continuación se realiza una breve descripción del algoritmo de filtrado de segmentos implementado.\\
+
+Se parte de una lista de $n$ segmentos de línea y se recorre la lista de segmentos en busca de segmentos vecinos. Para el $i$-ésimo segmento se testean sus dos puntos $\mathbf{p}_i$ y $\mathbf{q}_i$ con los puntos del $j$-ésimo segmento $\mathbf{p}_j$ y $\mathbf{q}_j$ para $j=(i+1,\dots,n)$. Dos segmentos son vecinos si se cumple que la distancia entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones.\\
+
+\begin{algorithm}[H]
+\KwData{list=\{$(\mathbf{p}_0,\mathbf{q}_0),(\mathbf{p}_1,\mathbf{q}_1),\dots,(\mathbf{p}_{n-1},\mathbf{q}_{n-1})$\}.}
+\KwResult{filteredlist=\{$(\mathbf{p}_0,\mathbf{q}_0),(\mathbf{p}_1,\mathbf{q}_1),\dots,(\mathbf{p}_{m-1},\mathbf{q}_{m-1})$\}. Lista ordenada.}
+\Begin{
+$V \longleftarrow U$\;
+$S \longleftarrow \emptyset$\;
+\For{$x\in X$}{
+$NbSuccInS(x) \longleftarrow 0$\;
+$NbPredInMin(x) \longleftarrow 0$\;
+$NbPredNotInMin(x) \longleftarrow |ImPred(x)|$\;
+}
+\For{$x \in X$}{
+\If{$NbPredInMin(x) = 0$ {\bf and} $NbPredNotInMin(x) = 0$}{
+$AppendToMin(x)$}
+}
+\nl\While{$S \neq \emptyset$}{\label{InRes1}
+\nlset{REM} remove $x$ from the list of $T$ of maximal index\;\label{InResR}
+\lnl{InRes2}\While{$|S \cap ImSucc(x)| \neq |S|$}{
+\For{$ y \in S-ImSucc(x)$}{
+\{ remove from $V$ all the arcs $zy$ : \}\;
+\For{$z \in ImPred(y) \cap Min$}{
+remove the arc $zy$ from $V$\;
+$NbSuccInS(z) \longleftarrow NbSuccInS(z) - 1$\;
+move $z$ in $T$ to the list preceding its present list\;
+\{i.e. If $z \in T[k]$, move $z$ from $T[k]$ to
+$T[k-1]$\}\;
+}
+$NbPredInMin(y) \longleftarrow 0$\;
+$NbPredNotInMin(y) \longleftarrow 0$\;
+$S \longleftarrow S - \{y\}$\;
+$AppendToMin(y)$\;
+}
+}
+$RemoveFromMin(x)$\;
+}
+}
+\caption{filterSegments\label{algo:filter_segments}}
+\end{algorithm}
+
+\subsubsection{Determinación de correspondencias}
 \label{subsec:detection_correspondencias}
 
-\section{Resultados}
+\subsubsection{Resultados}
 

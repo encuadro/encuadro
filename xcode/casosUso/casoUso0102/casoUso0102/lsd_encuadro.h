@@ -135,14 +135,14 @@
                        line segment number 'n+1' are obtained with
                        'out[7*n+0]' to 'out[7*n+6]'.
  */
-/*
-float * LineSegmentDetection( int * n_out,
+
+float * LineSegmentDetection_encuadro( int * n_out,
                                float * img, int X, int Y,
                                float scale_inv, float sigma_scale, float quant,
                                float ang_th, float log_eps, float density_th,
                                int n_bins,
                                int ** reg_img, int * reg_x, int * reg_y );
-*/
+
 /*----------------------------------------------------------------------------*/
 /** LSD Simple Interface with Scale and Region output.
 

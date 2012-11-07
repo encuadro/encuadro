@@ -849,6 +849,7 @@ static image_float ll_angle( image_float in, float threshold,
 static int isaligned( int x, int y, image_float angles, float theta,
                       float prec )
 {
+ 
   float a;
 
   /* check parameters */
@@ -1442,8 +1443,8 @@ static float rect_nfa(struct rect * rec, image_float angles, float logNT)
   int alg = 0;
 
   /* check parameters */
-  if( rec == NULL ) error("rect_nfa: invalid rectangle.");
-  if( angles == NULL ) error("rect_nfa: invalid 'angles'.");
+//  if( rec == NULL ) error("rect_nfa: invalid rectangle.");
+//  if( angles == NULL ) error("rect_nfa: invalid 'angles'.");
 
   /* compute the total number of pixels and of aligned points in 'rec' */
   for(i=ri_ini(rec); !ri_end(i); ri_inc(i)) /* rectangle iterator */
@@ -1951,7 +1952,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
 /*----------------------------------------------------------------------------*/
 /** LSD full interface.
  */
-float * LineSegmentDetection( int * n_out,
+float * LineSegmentDetection_encuadro( int * n_out,
                                float * img, int X, int Y,
                                float scale_inv, float sigma_scale, float quant,
                                float ang_th, float log_eps, float density_th,
@@ -2041,14 +2042,19 @@ float * LineSegmentDetection( int * n_out,
            by R. Grompone von Gioi, J. Jakubowicz, J.M. Morel, and G. Randall.
            The original algorithm is obtained with density_th = 0.0.
          */
-       /* if( !refine( reg, &reg_size, modgrad, reg_angle,
-                     prec, p, &rec, used, angles, density_th ) ) continue;*/
-          // Ahorramos como 20 ms en los casos en los que tenemos muchos segmentos en la imagen al no correr el refinamiento anterior. Obtenemos en cualquier caso el mismo resultado.
           
+          /*Aca compara la region con un umbral de densidad. Si la region no lo cumple trata de mojorarla.*/
+        /*if( !refine( reg, &reg_size, modgrad, reg_angle,
+                     prec, p, &rec, used, angles, density_th ) ) continue;*/
+                    
 
         
         /* compute NFA value */
-        log_nfa = rect_improve(&rec,angles,logNT,log_eps);
+        /*Aca calcula el valor NFA de la region y si es menor a cierto valor, trata de mejorar la region.*/
+        /*log_nfa = rect_improve(&rec,angles,logNT,log_eps);*/
+          
+        log_nfa = rect_nfa(&rec,angles,logNT);
+        
         if( log_nfa <= log_eps ) continue;
 
         /* A New Line Segment was found! */
@@ -2144,7 +2150,7 @@ float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height
 
     luminancia_sub = gaussian_sampler(image, 0.5, 0.6);
     
-    list = LineSegmentDetection(quantSegments, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize, 2.0, 0.6, 2.0, 22.5, 0.0, 0.0, 1024, NULL, NULL, NULL);
+    list = LineSegmentDetection_encuadro(quantSegments, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize, 2.0, 0.6, 2.0, 22.5, 0.0, 0.7, 1024, NULL, NULL, NULL);
 
     free( (void *) image );
     free_image_float(luminancia_sub);

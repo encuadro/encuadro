@@ -303,8 +303,9 @@ float auxVal=0;
         
        // NSLog(@"LSD in\n");
         list = lsd_encuadro(&listSize, luminancia, width, height);
-        //NSLog(@"LSD out\n");
+        ////NSLog(@"LSD out\n");
 
+      
         /*-------------------------------------|FILTRADO|-------------------------------------*/
         
         free(listFiltrada);
@@ -318,10 +319,10 @@ float auxVal=0;
         /*Correspondencias entre marcador real y puntos detectados*/
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
         
-        if (verbose){
-            printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);
-        }
+    
+//        printf("Tamano: %d\n", listSize);
+//        printf("Tamano filtrada: %d\n", listFiltradaSize);
+        
         
         
         if (errorMarkerDetection>=0) {
