@@ -165,7 +165,16 @@ d_u.f & 0 & u'_P & 0\\
 \end{array} \right)
 \]
 
-\underline{Nota:} Este modelo no tiene en cuenta los efectos de distorsión de la lente.
+\underline{Nota:} De forma genérica se puede agregar a la matriz de parámetros intrínsecos del modelo \textit{pin-hole} un parámetro \textbf{s} llamado en inglés \textit{skew parameter}, o ``parámetro de sesgado''  en Espa\~nol. Este parámetro toma valores distintos de cero muy rara vez, pues modela los casos en los que los ejes \textit{x} e \textit{y} de los píxeles de la cámara no son perpendiculares entre sí. En casos realistas, $s\neq 0$ cuando por ejemplo se toma una fotografía de una fotografía. La matriz de parámetros intrínsecos, tomando en cuenta este parámetro, tendrá la forma:\\
+
+\[
+I = 
+\left( \begin{array}{cccc}
+d_u.f & s & u'_P & 0\\ 
+0 & d_v.f & v'_P & 0\\
+0 & 0 & 1 & 0
+\end{array} \right)
+\]
 
 \item \textbf{Matriz de parámetros extrínsecos $(E)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(X_{m0}, Y_{m0}, Z_{m0}, T_{m0})$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$:\\
 Se obtiene de estimar la pose de la cámara respecto de los ejes del mundo y es la combinación de, primero una rotación $R$, y luego una traslación $T$. Se obtiene entonces la siguiente representación matricial:\\
@@ -228,6 +237,34 @@ T_{m0}
 \end{array} \right)
 \]
 
+% ------------------------------------------------------ DISTORSION INTRODUCIDA POR LAS LENTES -------------------------------------------------------
+\section{Distorsión introducida por las lentes}
+Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras en cuestión no son del todo buenas, la distorsión introducida por estas se hace cada vez más evidente. Dado un punto \textbf{M} de coordenadas $(X,Y,Z)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre la proyección ideal de dicho punto en el plano imagen $(u_0,v_0)$ y su proyección real $(\tilde{u_0},\tilde{v_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
+
+La forma de solucionar el presente problema es realizar una corrección de la distorsión, modelando a la misma de la siguiente manera:\\
+\[
+\left(
+\begin{array}{c}
+\tilde{u_0} \\
+\tilde{v_0}
+\end{array} \right)
+=
+L(r). \left( \begin{array}{c}
+u_0 \\
+v_0
+\end{array}
+\right),
+\]
+donde $r$ es la distancia radial $\sqrt{u_0^2 + v_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles en la imagen (sistema de coordenadas normalizadas de la imagen), se obtiene lo siguiente:
+\[
+\begin{array}{c}
+\tilde{u_0}' = u_P' + L(r)(u_0' - u_P') \\
+\tilde{v_0}' = v_P' + L(r)(v_0' - v_P') 
+\end{array}
+\]
+donde $(\tilde{u_0}',\tilde{v_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(u_0',v_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(u_P',v_P')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(u_0' - u_P')^2 +(v_0' - v_P') }$.\\
+
+La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. Una aproximación a la función arbitraria $L(r)$ puede ser una expansión de Taylor: $L(r) = 1 + k_1r + k_2r^2 + k_3r^3 + ...$. Finalmente, a la hora de calcular los parámetros intrínsecos de una cámara, también deben ser estimados sus coeficientes de distorsión radial $\{k_1,k_2,k_3,k_4,...\}$.\\
 \end{itemize}
 
 % ------------------------------------------------------ METODOS PARA CALIBRAR UNA CAMARA -------------------------------------------------------
