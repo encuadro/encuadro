@@ -13,10 +13,42 @@ La aplicación consta de distintas funcionalidades que se describen en este capít
 En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final.
 \section{Diagrama global de la aplicación}
 Para que sea más sencilla la comprensión de los bloques que componen la aplicación a continuación se muestra el \textit{Storyboard} de la aplicación que es la interfaz de usuario y que sirve para visualizar bastante cada una de las clases que intervienen y cómo es el flujo de la aplicación.\\
-\\
-IMAGEN DEL STORYBOARD COMPLETO
-\\
-\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/Storyboard_Global.eps}
+\caption{Diagrama global de la aplicación}
+\label{fig: implementacion_1}
+\end{figure}
+A continuación se pasará a explicar algunas de las clases implementadas en la aplicación y que tienen cierta relevancia. Se mostrarán sus principales características y su rol dentro de la aplicación.
+\subsection{NavigationViewController}
+La aplicación está embebida dentro de un \textit{UINavigationController}. Esto implica que cada uno de los ViewControllers que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las Toolbars ya sea arriba como encabezado o abajo al pie.\\
+Para el caso particular de esta aplicación se optó por reimplementar esta clase ya que se buscaba tener cierto control sobre las rotaciones. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
+\begin{verbatim}
+-(NSUInteger)supportedInterfaceOrientations
+{
+    NSLog(@"supportedInterfaceOrientations NAVIGATION");
+    return UIInterfaceOrientationMaskLandscapeRight;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    NSLog(@"preferredInterfaceOrientationForPresentation NAVIGATION");
+    return UIInterfaceOrientationLandscapeRight;
+}
+\end{verbatim}
+
+\subsection{InicioViewController}
+\subsection{ReaderSampleViewController}
+\subsection{ImagenServerViewController}
+\subsection{TableViewControllers}
+	\subsubsection{AutorTableViewController}
+	\subsubsection{CuadroTableViewController}
+	\subsubsection{CuadroTableViewCell}
+\subsection{ObraCompletaViewController}
+\subsection{VistaViewController}
+\subsection{DrawSign}
+\subsection{TouchVista}
+\subsection{Isgl3dViewController y app0100AppDelegate}
  
 La aplicación cuenta con una pantalla de inicio con instrucciones en formato de audio al presionar el botón respectivo y una presentación sobre cómo es el recorrido. Se da la opción de elegir entonces una forma de recorrer el museo de manera automática, esto es, utilizando QRs para detectar la zona del museo en la que se está, procesamiento de imágenes (SIFT) para identificar el cuadro que se tiene enfrente y comunicación con un servidor que hace de procesador y comunicador de resultados o una opción manual en la que el usuario es quien elige la zona del museo (autor) y el cuadro en el que está interesado.\\
 
@@ -39,7 +71,7 @@ En la figura \ref{fig: implementacion_1} se pueden ver las distintas partes que 
 \centering
 \includegraphics[scale=0.6]{figs_implementacion/qrcode_overview4.eps}
 \caption{Las distintas componentes de un QR. Fuente \cite{grompone10}.}
-\label{fig: implementacion_1}
+\label{fig: implementacion_2}
 \end{figure}
 %fuente http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
 \newpage
@@ -60,7 +92,7 @@ La opción de usar los QRs de una manera distinta ha comenzado a ser notoria en l
 \centering
 \includegraphics[scale=0.2]{figs_implementacion/qrArtist.eps}
 \caption{Ejemplo de un QR artista. Fuente \cite{grompone10}.}
-\label{fig: implementacion_2}
+\label{fig: implementacion_3}
 \end{figure}
 %fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
 \section{Servidor}
@@ -81,7 +113,7 @@ Con este comando se descarga el paquete \textit{apache2} y se instala. Una vez f
 \centering
 \includegraphics[scale=0.3]{figs_implementacion/Itworks.eps}
 \caption{Impresión de pantalla al ingresar a http://localhost.}
-\label{fig: implementacion_3}
+\label{fig: implementacion_4}
 \end{figure}
 Luego de tener instalado el Apache se procede a instalar el php de la siguiente manera
 \begin{verbatim}
