@@ -11,47 +11,75 @@
 
 @implementation HelloWorldView
 
+Isgl3dSkeletonNode * _model;
+Isgl3dNode * _container;
+
+
 - (id) init {
 	
 	if ((self = [super init])) {
 
+    
         
-		// Enable shadow rendering
-		[Isgl3dDirector sharedInstance].shadowRenderingMethod = Isgl3dShadowPlanar;
-		[Isgl3dDirector sharedInstance].shadowAlpha = 0.5;
+        /* Create a container node as a parent for all scene objects.*/
+        _container = [self.scene createNode];
         
-		Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"Scene_float.pod"];
-        		[podImporter printPODInfo];
+        // Create the primitive
+        //		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+        //        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+        //        _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
+        //        _cubito1.position = iv3(0,0,0);
+        
+        
+        
+        /*--------------|INTRODUCIMOS EL MODELO|------------------*/
+        
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas_original.pod"];
+        
+		_model = [_container createSkeletonNode];
+        
+//        _model.scaleX=0.1;
+//        _model.scaleY=0.1;
+//        _model.scaleZ=0.1;
+        //  _model.rotationX = 90;
+        
+
+        
+        [podImporter printPODInfo];
+        
+        
+		[podImporter addMeshesToScene:_model];
+
 		
-		// Add all meshes in POD to scene
-		[podImporter addMeshesToScene:self.scene];
+        //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
+        //		[_animationController start];
         
-		// Add light to scene and fix the Sphere01 mesh to it
-		Isgl3dShadowCastingLight * light  = [Isgl3dShadowCastingLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+        _model.position = iv3(0, 0, -100);
+        self.camera.position=iv3(0,50,100);
+        
+        Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
 		[self.scene addChild:light];
-		[podImporter configureLight:light fromNode:@"Sphere01"];
+        light.position = iv3(-2, 2, -10);
         
-		// Get the teapot for later use
-		_teapot = [podImporter meshNodeWithName:@"Teapot01"];
-		
-		// POD data has non-normalised normals
-		_teapot.mesh.normalizationEnabled = YES;
-		[podImporter meshNodeWithName:@"Plane01"].mesh.normalizationEnabled = YES;
+        //light.renderLight = YES;
         
-		// Make the teapot render shadows
-		_teapot.enableShadowCasting = YES;
+        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light2];
+        light2.position = iv3(2, 2, -10);
         
-		//light.planarShadowsNode = [podImporter meshNodeWithName:@"Plane01"];
-		light.planarShadowsNodeNormal = iv3(0, 1, 0);
+        //light2.renderLight = YES;
         
-		// Set the camera up as it has been saved in the POD
-		// Remove camera created in super, added from POD later
-		[self.camera removeFromParent];
-		self.camera = [podImporter cameraAtIndex:0];
-		[self.scene addChild:self.camera];
-		
-        self.camera.position = iv3(0,0, 400);
-		[self setSceneAmbient:[Isgl3dColorUtil rgbString:[podImporter ambientColor]]];
+        Isgl3dShadowCastingLight * light3  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light3];
+        light3.position = iv3(-2, -2, -10);
+        
+        //light3.renderLight = YES;
+        
+        
+        Isgl3dShadowCastingLight * light4  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light4];
+        light4.position = iv3(2, -2, -10);
+
 		
 		// Schedule updates
 		
