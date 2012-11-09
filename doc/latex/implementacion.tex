@@ -1,16 +1,16 @@
 \chapter{Implementación}
 
 \section{Introducción}
-En este capítulo se muestra la integración de los conocimientos adquiridos para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien era de gran interés del proyecto la exploración de distintos métodos y algoritmos parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial.\\
+En este capítulo se muestra la integración de los conocimientos adquiridos para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien era de gran interés del proyecto la exploración de distintos métodos y algoritmos parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García que se eligieron para hacer el prototipo.\\
 La aplicación consta de distintas funcionalidades que se describen en este capítulo, tales como:\\
  \begin{itemize}
-\item[(1)] QR
+\item[(1)] Detección QR
 \item[(2)] Navegación por listas de cuadros
-\item[(3)] Servidor
-\item[(4)] Detección SIFT
+\item[(3)] Comunicación con un Servidor con la base de datos.
+\item[(4)] Detección SIFT para identificar el cuadro.
 \item[(5)] Diferentes realidades aumentadas según la obra.
 \end{itemize}
-En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final.
+En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
 Para que sea más sencilla la comprensión de los bloques que componen la aplicación a continuación se muestra el \textit{Storyboard} de la aplicación que es la interfaz de usuario y que sirve para visualizar bastante cada una de las clases que intervienen y cómo es el flujo de la aplicación.\\
 \begin{figure}[h!]
@@ -21,7 +21,7 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \end{figure}
 A continuación se pasará a explicar algunas de las clases implementadas en la aplicación y que tienen cierta relevancia. Se mostrarán sus principales características y su rol dentro de la aplicación.
 \subsection{NavigationViewController}
-La aplicación está embebida dentro de un \textit{UINavigationController}. Esto implica que cada uno de los ViewControllers que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las Toolbars ya sea arriba como encabezado o abajo al pie.\\
+La aplicación está embebida dentro de un \textit{UINavigationController}. Esto implica que cada uno de los \textit{ViewControllers} que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las Toolbars ya sea arriba como encabezado o abajo al pie.\\
 Para el caso particular de esta aplicación se optó por reimplementar esta clase ya que se buscaba tener cierto control sobre las rotaciones. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
 \begin{verbatim}
 -(NSUInteger)supportedInterfaceOrientations
@@ -36,11 +36,46 @@ Para el caso particular de esta aplicación se optó por reimplementar esta clase 
     return UIInterfaceOrientationLandscapeRight;
 }
 \end{verbatim}
-
+Esto lo que hace es fijar la orientación de la interfaz de usuario a modo \textit{LandscapeRight}. También es posible lograr esto editando el archivo \textit{Info.plist} que toda aplicación de xcode tiene y agregando el item \textit{SupportedInterfaceOrientations} y completado las opciones que se desean. Las autorotaciones es algo que tiene bastante relevancia en las aplicaciones. En particular se optó por esta forma, es decir, bloquear las autorotaciones y dejar solamente la vista en un sentido, para facilitar la reproyección de la realidad aumentada. De no haberlo hecho de esta manera, con cada rotación de la interfaz se tendrían que intercambiar los ejes de coordenadas en función del sentido de la rotación. Esto es posible de hacer ya que con cada rotación se ejecuta una serie de métodos en forma automática entre los cuales se encuentra el siguiente
+\begin{verbatim}
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+\end{verbatim}
+Dentro de dicho método sería posible hacer el ajuste de coordenadas ya que el mismo se ejecuta previo a cualquier rotación. El tema de los métodos que son ejecutados al haber un evento del tipo rotación es algo que ha sufrido cambios recientes con la actualización de software a iOS 6. De todas formas, como ya se dijo, se optó por hacer esto más sencillo, simplemente evitando que la interfaz de usuario rote junto con el dispositivo, dejándola fija.
 \subsection{InicioViewController}
+Este \textit{ViewController} es la pantalla de inicio  de la aplicación. En la misma hay un botón que al ser presionado comienza un audio con instrucciones y una presentación sobre cómo es el recorrido y las funcionalidades con las que cuenta la aplicación. También hay dos botones más que dan la opción de elegir la forma de recorrer el museo. El botón de recorrido automático es un \textit{segue} al \textit{ReaderSampleViewController} y el de recorrido manual un \textit{segue} al \textit{AutorTableViewController}.
+
 \subsection{ReaderSampleViewController}
+Este \textit{ViewController} es el encargado de hacer la lectura de los código QR y de invocar a los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto e imagen asociadas al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en \ref{sec: QR}.
+
 \subsection{ImagenServerViewController}
+Este \textit{ViewController} es el encargado de la comunicación con el servidor. En el método \textit{viewDidLoad} se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se saca la foto la misma se muestra en una \textit{UIImageView} y existen dos botones. Uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de sacar otra foto y el otro botón inicia la comunicación con el servidor.\\
+\\
+PONER FOTO CON LA CAPTURA
+\\
+\\
+El botón de \textit{upload} es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se agrega la foto sacada previamente y se le agrega un string \textit{room}. Este string es completado previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando la información sobre en qué sala/región del museo se encuentra (sala Figari, sala Blanes o sala Torres García). Este string lo que permite es tener un identificador para poder hacer la búsqueda de la imagen sacada (luego de procesar la imagen con el algoritmo SIFT), en una base de datos más peque?a, que contenga solamente los cuadros de esa región del museo y no todos los cuadros del museo. En caso que el usuario no haya detectado ningún QR y haya seleccionado directamente la opción de sacar una foto para comenzar la comunicación con el servidor, entonces este string estará vacío y la búsqueda de la imagen más parecida se hace en toda la base de datos. En un primer caso, claramente los tiempos son mejores (del orden de 3s en una LAN) que en el segundo (del orden de 6s en una LAN).\\
+Luego de establecida la conexión y enviada la consulta POST, el servidor responde con un string \textit{returnString}. Este string contiene el resultado del procesamiento de la imagen enviada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que toma imágenes, ejecuta comandos en terminal (en este caso el ejecutable del algoritmo SIFT) y el resultado de esa ejecución se retorna como string en el php y el mismo se envía a la aplicación. Ese string resultado es recibido por la aplicación con una nomenclatura elegida que sigue la lógica Autor-Número, por ejemplo \textit{Figari3} que se corresponde con la obra número 3 de la base de datos del autor Figari. Ese pasa a ser el identificador de la obra para ir a buscarla a la base de datos del servidor. El servidor cuenta con varias carpetas según la información:
+\begin{itemize}
+\item[(1)] autor
+\item[(2)] obra
+\item[(3)] texto
+\item[(4)] imagen
+\item[(5)] audio
+\end{itemize}
+Para una obra dada, cuyo identificador sea \textit{Figari3} por ejemplo, los archivos correspondientes, con la información son:
+\begin{itemize}
+\item[(1)] http://IPservidor/autores/Figari3.txt
+\item[(2)] http://IPservidor/obras/Figari3.txt
+\item[(3)] http://IPservidor/textos/Figari3.txt
+\item[(4)] http://IPservidor/imagenes/Figari3.jpg
+\item[(5)] http://IPservidor/audios/Figari3.mp3
+\end{itemize}
+De esta manera una vez que se obtiene el identificador se hace una consulta al servidor que pide los distintos archivos de texto, audio e imágenes. Esta información solicitada es devuelta por el servidor y alojada en variables para ser mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, en el \textit{ObraCompletaViewController}.
+
+
+
 \subsection{TableViewControllers}
+ o una opción manual en la que el usuario es quien elige la zona del museo (autor) y el cuadro en el que está interesado.
 	\subsubsection{AutorTableViewController}
 	\subsubsection{CuadroTableViewController}
 	\subsubsection{CuadroTableViewCell}
@@ -50,7 +85,7 @@ Para el caso particular de esta aplicación se optó por reimplementar esta clase 
 \subsection{TouchVista}
 \subsection{Isgl3dViewController y app0100AppDelegate}
  
-La aplicación cuenta con una pantalla de inicio con instrucciones en formato de audio al presionar el botón respectivo y una presentación sobre cómo es el recorrido. Se da la opción de elegir entonces una forma de recorrer el museo de manera automática, esto es, utilizando QRs para detectar la zona del museo en la que se está, procesamiento de imágenes (SIFT) para identificar el cuadro que se tiene enfrente y comunicación con un servidor que hace de procesador y comunicador de resultados o una opción manual en la que el usuario es quien elige la zona del museo (autor) y el cuadro en el que está interesado.\\
+
 
 Una vez que se está frente al cuadro existe una serie de interacciones habilitadas para el usuario, como ser: audioguía sobre el cuadro en particular, dibujo con lienzo libre para realizar tweets con la imagen dibujada, o la realidad aumentada vinculada a la obra que seleccionó (recorrido maual) o la que fue derivada luego del reconocimiento de imagenes (recorrido automático)\\
 \\
@@ -62,6 +97,7 @@ SEGUIR REDACTANDO ESTA SECCION
 \section{TableViewController}
 jjjjj\\
 \section{QR}
+\label{sec: QR}
 \subsection{QR. Una realidad}
 El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente debido al incremento significativo del uso de \textit{smart devices} el hecho de poder contar con cámara y poder de procesamiento hace que sea frecuente encontrar aplicaciones con el poder de reconocimiento de QRs. Comenzaron a utilizarse en la industria automovolística japonesa como una solución para el trazado en la línea de producción pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web o en algunos casos también como tarjetas personales. 
 \subsection{Qué son realmente los QRs?}
@@ -96,7 +132,7 @@ La opción de usar los QRs de una manera distinta ha comenzado a ser notoria en l
 \end{figure}
 %fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
 \section{Servidor}
-Si bien el desarrollo de la aplicación es un prototipo de una aplicación comercial y para tal caso no se manejan muchas imágenes y otros datos y registros, para lograr escalabilidad se hace imprescindible contar con un servior. Se pensó con el fin de almacenar toda aquella información relevante en cuanto a registro de obras (imagen, título y autor), descripciones de obras, audioguías, videos, modelos y animaciones para las realidades aumentadas asociadas y cualquier tipo de información que el museo quiera agregar y que por un tema de practicidad no se quiera almacenar dentro de la aplicación. En definitiva, almacenar toda esa información dentro de la aplicación quizá sea rentable para pocas obras, pero lo puede hacer inmanejable para un buen número de obras. Se pensó entonces en la instalación de un servidor que esté ubicado dentro del museo con el cual se tenga una conexión a través de una LAN de (54Mbps). Se aclara este punto pues, en caso de querer hacer un servidor remoto que tenga que ser accedido a través de internet, entonces todo es más lento, aunque funciona perfectamente.\\
+Si bien el desarrollo de la aplicación es un prototipo de una aplicación comercial y para tal caso no se manejan muchas imágenes y otros datos y registros, para lograr escalabilidad se hace imprescindible contar con un servior. Se pensó con el fin de almacenar toda aquella información relevante en cuanto a registro de obras (imagen, título y autor), descripciones de obras, audioguías, videos, modelos y animaciones para las realidades aumentadas asociadas y cualquier tipo de información que el museo quiera agregar y que por un tema de practicidad no se quiera almacenar dentro de la aplicación. En definitiva, almacenar toda esa información dentro de la aplicación quizá sea rentable para pocas obras, pero lo puede hacer inmanejable para un buen número de obras. Se pensó entonces en la instalación de un servidor que esté ubicado dentro del museo con el cual se tenga una conexión a través de una LAN de (54Mbps). Se aclara este punto pues, en caso de querer hacer un servidor remoto que tenga que ser accedido a través de internet, entonces baja notoriamente su performance, aunque funciona perfectamente.\\
 \subsection{Creando el servidor}
 Para la creación del servidor se buscó primeramente la alternativa de hacerlo sobre una máquina con sistema operativo con núcleo Linux, distribución Ubuntu. Luego también se buscó la posibilidad de tener el servidor corriendo sobre una plataforma Unix iOS. Para el segundo caso resultó incluso más sencilla que la primera dado que ya viene pensado por el sistema operativo el hecho de que funcione como servidor. A continuación se explica los pasos que se siguieron para implementar servidores en uno y otro sistema operativo.
 \subsubsection{Servidor iOS}
@@ -107,7 +143,6 @@ Se instaló entonces el servidor Web Apache, que tiene dentro de sus principales 
 \begin{verbatim}
 sudo apt-get install apache2
 \end{verbatim}
-%\textit{sudo apt-get install apache2}
 Con este comando se descarga el paquete \textit{apache2} y se instala. Una vez finalizada la instalación de este paquete ya se cuenta con un servidor y se puede verificar ingresando desde la máquina donde se instaló el servidor abriendo el navegador e ingresando a \textit{http://localhost} o equivalentemente a \textit{http://127.0.0.1} y de esta manera aparece la página por defecto cuyo contenido está dado por el archivo \textit{/var/www/index.html}.\\
 \begin{figure}[h!]
 \centering
