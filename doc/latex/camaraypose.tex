@@ -1,0 +1,278 @@
+\chapter{Modelo de cámara y estimación de pose monocular}
+
+% !TEX encoding = IsoLatin
+
+%Definición de realidad aumentada, ejemplos. Breve mención de las cosas que se usan, modelo cámara pinhole, calibración, extracción de características(LSD,ORT), marcador utilizado.
+%Algoritmos de estimación de pose. Algoritmos de correspondencias. Toda la rama Posit
+%Habria que hacer un diagrama de bloques que muestre el flujo para hallar la pose
+
+\section{Introducción}
+% ------------------------------------------------------ INTRODUCCION: DEFINICION DE ESTIMACION DE POSE -------------------------------------------------------
+
+Se le llama ``estimación de pose'' al proceso mediente el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama \textit{ejes del mundo}. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.\\ 
+Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.\\
+Para poder estimar la pose de una cámara, resulta necesario modelarla adecuadamente ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la cámara se deben estimar ciertos \textit{parámetros intrínsecos} a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina \textit{calibración de la cámara}.
+%\begin{figure}[h]
+%\centering
+%\includegraphics[scale=1.5]{../imagenes/EstPose/EstPose_1.eps}
+%\caption{Diagrama de bloques para el proceso de estimación de pose.}
+%\label{EstPose_1}
+%\end{figure}
+%En este capítulo se presentan las técnicas realizadas para implementar la realidad aumentada
+
+% ------------------------------------------------------ CALIBRACION DE CAMARA: MODELO PIN-HOLE -------------------------------------------------------
+\section{Calibración de cámara: modelo pin-hole \cite{garciaocon07}}
+\label{sec:Calibracion de camara}
+
+
+\subsection{Fundamentos y definiciones}
+\label{sec:Fundamentos y definiciones}
+Este modelo consiste en un centro óptico C, en donde convergen todos los rayos de la proyección y un plano imagen en el cual la imagen es proyectada. Se define ``distancia focal'' ($f$) como la distancia entre el centro óptico C y el cruce del eje óptico por el plano imagen (punto P). Ver imagen \ref{fig:CalibracionCamara}.  
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.8]{figs_camaraypose/CalibracionCamara.eps}
+\caption{Modelo de cámara pin-hole.}
+\label{fig:CalibracionCamara}
+\end{figure}
+
+Para modelar el proceso de proyección (proceso en el que se asocia al punto \textbf{M} del mundo, un punto \textbf{m} en la imagen), es necesario referirse a varias transformaciones y varios ejes de coordenadas.
+\begin{itemize}
+\item \textit{Coordenadas del mundo}: son las coordenadas que describen la posición 3D del punto \textbf{M}. Se definen respecto de los \textit{ejes del mundo} $(X_m,Y_m,Z_m)$. La elección de los ejes del mundo es arbitraria.
+\item \textit{Coordenadas de la cámara}: son las coordenadas que describen la posición del punto \textbf{M} respecto de los ejes de la cámara $(X,Y,Z)$.
+\item \textit{Coordenadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del centro del plano imagen, P. Los ejes de este sistema de coordenadas son $(u,v)$.
+\item \textit{Coordenadas normalizadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del eje de coordenadas $(u',v')$ situado en la esquina superior izquierda del plano imagen.
+\end{itemize}
+La transformación que lleva del punto \textbf{M}, expresado respecto de las coordenadas del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(X,Y,Z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(u',v')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Se le llama al conjunto de valores que definen esta transformación \textit{parámetros intrínsecos} de la cámara. La segunda, es la transformación que lleva de expresar a un punto respecto de los ejes del mundo $(X_m,Y_m,Z_m)$, a los ejes de la cámara $(X,Y,Z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado \textit{parámetros extrínsecos} de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
+De lo anterior se concluye rápidamente que si se le llama $PY$ a la matriz proyección total, tal que:
+\[
+m = PY.M,
+\]
+entonces:
+\[
+PY = I.E
+\]
+donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsecos y $E$ corresponde a la matriz asociada a los parámetros extrínsecos. Ambos juegos de parámetros acarrean información información muy valiosa:  \\
+
+\begin{itemize}
+\item \textbf{Parámetros extrínsecos:} pose de la cámara.
+\begin{itemize}
+\item \underline{Traslación:} ubicación del centro óptico de la cámara respecto de los ejes del mundo.
+\item \underline{Rotación:} rotación del sistema de coordenadas de la cámara $(X,Y,Z)$, respecto de los ejes del mundo.
+\end{itemize}
+\item \textbf{Parámetros intrínsecos:} parámetros propios de la cámara. Dependen de su geometría interna y de su óptica.
+\begin{itemize}
+\item \underline{Punto principal (P = [$u'_P,v'_P$]):} es el punto intersección entre el eje óptico y el plano imagen. Las coordenadas de este punto vienen dadas en píxeles y son expresadas respecto del sistema normalizado de la imagen.
+\item \underline{Factores de conversión píxel-milímetros ($d_u,d_v$):} indican el número de píxeles por milímetro que utiliza la cámara en las direcciones $u$ y $v$ respectivamente.
+\item \underline{Distancia focal (f):} distancia entre el centro óptico (\textbf{C}) y el punto principa (\textbf{P}). Su unidad es el milímetro.
+\item \underline{Factor de proporción (s):} indica la proporción entre las dimensiones horizontal y vertical de un píxel.   
+\end{itemize}
+\end{itemize}
+
+
+\subsection{Matriz de proyección}
+\label{sec:Matriz de proyección}
+
+En la sección anterior se vió que es posible hallar una ``matriz de proyección'' PY que dependa tanto de los parámetros intrínsecos de la cámara como se sus parámetros extrínsecos:
+\[
+m = PY.M
+\] 
+donde \textbf{M} y \textbf{m} son los puntos ya definidos y vienen expresados en \textit{coordenadas homogéneas}. Por más información acerca de este tipo de coordenadas ver \cite{Hartley2004}.\\
+Para determinar la forma de la matriz de proyección se estudia cómo se relacionan las coordenadas de \textbf{M} con las coordenads de \textbf{m}; para hallar esta relación se debe analizar cada transformación, entre los sistemas de coordenadas mencionados con anterioridad, por separado.\\
+\begin{itemize}
+\item \textbf{Proyección 3D - 2D:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas en el sistema de coordenadas de la imagen $(u_0,v_0,s_0)$:\\
+Se desprende de la imagen \ref{fig:CalibracionCamara} y algo de geometría proyectiva la siguiente relación entre las coordenadas en cuestión y la distancia focal (f):
+\[
+\frac{f}{Z_0} = \frac{u_0}{X_0} = \frac{v_0}{Y_0}
+\]
+A partir de la relación anterior:
+\[
+\left( \begin{array}{c}
+u_0 \\
+v_0
+\end{array} \right)
+=
+\frac{f}{Z_0} 
+\left( \begin{array}{c}
+X_0 \\ 
+Y_0
+\end{array} \right)
+\]
+Expresado en forma matricial, en coordenadas homogéneas:
+\[
+\left( \begin{array}{c}
+u_0 \\
+v_0 \\
+s_0
+\end{array} \right)
+= 
+\left( \begin{array}{cccc}
+f & 0 & 0 & 0 \\ 
+0 & f & 0 & 0 \\
+0 & 0 & 1 & 0
+\end{array} \right)
+\left( \begin{array}{c}
+X_0 \\ 
+Y_0 \\
+Z_0 \\
+1
+\end{array} \right)
+\]
+\item \textbf{Transformación imagen - imagen:} de las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas de la imagen $(u_0,v_0,s_0)$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas normalizadas de la imagen $(u'_0,v'_0,s'_0)$:\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_camaraypose/ParametrosIntrinsecos.eps}
+\caption{Relación entre el sistema de coordenadas de la imagen y el sistema de coordenandas normalizadas de la imagen.}
+\label{fig:ParametrosIntrinsecos}
+\end{figure}
+
+
+Se les suma, a las coordenadas de \textbf{m} respecto del sistema de la imagen, la posición del punto P respecto del sistema normalizado de la imgen $(u'_P,v'_P)$. Las coordenadas de \textbf{m} dejan de ser expresadas en milímetros para ser expresadas en píxeles. Aparecen los factores de conversión $d_u$ y $d_v$:
+\[
+\begin{array}{c}
+u'_0 = d_u.u_0 + u'_P \\
+v'_0 = d_v.v_0 + v'_P
+\end{array}
+\]
+Se obtiene entonces la siguiente relación matricial, en coordenadas homogéneas:
+\[
+\left( \begin{array}{c}
+u'_0 \\
+v'_0 \\
+s'_0
+\end{array} \right)
+= 
+\left( \begin{array}{ccc}
+d_u & 0 & u'_P \\ 
+0 & d_v & v'_P \\
+0 & 0 & 1
+\end{array} \right)
+\left( \begin{array}{c}
+u_0 \\ 
+v_0 \\
+1
+\end{array} \right)
+\]
+\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(u'_0,v'_0,s'_0)$:\\
+Se obtiene combinando las dos últimas transformaciones. Nótese que como ya se aclaró, depende únicamente de parámetros propios de la construcción de la cámara:
+\[
+I = 
+\left( \begin{array}{cccc}
+d_u.f & 0 & u'_P & 0\\ 
+0 & d_v.f & v'_P & 0\\
+0 & 0 & 1 & 0
+\end{array} \right)
+\]
+
+\underline{Nota:} De forma genérica se puede agregar a la matriz de parámetros intrínsecos del modelo \textit{pin-hole} un parámetro \textbf{s} llamado en inglés \textit{skew parameter}, o ``parámetro de sesgado''  en Espa\~nol. Este parámetro toma valores distintos de cero muy rara vez, pues modela los casos en los que los ejes \textit{x} e \textit{y} de los píxeles de la cámara no son perpendiculares entre sí. En casos realistas, $s\neq 0$ cuando por ejemplo se toma una fotografía de una fotografía. La matriz de parámetros intrínsecos, tomando en cuenta este parámetro, tendrá la forma:\\
+
+\[
+I = 
+\left( \begin{array}{cccc}
+d_u.f & s & u'_P & 0\\ 
+0 & d_v.f & v'_P & 0\\
+0 & 0 & 1 & 0
+\end{array} \right)
+\]
+
+\item \textbf{Matriz de parámetros extrínsecos $(E)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(X_{m0}, Y_{m0}, Z_{m0}, T_{m0})$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$:\\
+Se obtiene de estimar la pose de la cámara respecto de los ejes del mundo y es la combinación de, primero una rotación $R$, y luego una traslación $T$. Se obtiene entonces la siguiente representación matricial:\\
+\[
+\left( \begin{array}{c}
+X_0 \\
+Y_0 \\
+Z_0 \\
+T_0
+\end{array} \right)
+= 
+\left( \begin{array}{cc}
+R & T \\ 
+0 & 1
+\end{array} \right)
+\left( \begin{array}{c}
+X_{m0} \\ 
+Y_{m0} \\
+Z_{m0} \\
+T_{m0}
+\end{array} \right)
+\]
+donde la matriz de parámetros extrínsecos desarrollada toma la forma:
+\[
+E =
+\left( \begin{array}{cccc}
+r_{11} & r_{12} & r_{13} & t_{x} \\ 
+r_{21} & r_{22} & r_{23} & t_{y}\\
+r_{31} & r_{32} & r_{33} & t_{z} \\
+0 & 0 & 0 & 1
+\end{array} \right)
+\]  
+\item \textbf{Matriz de proyección $(PY)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(X_{m0}, Y_{m0}, Z_{m0}, T_{m0})$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(u'_0,v'_0,s'_0)$:\\
+Es la proyección total y se obtiene combinando las dos transformaciones anteriores:
+\[
+\left( \begin{array}{c}
+u'_0 \\
+v'_0 \\
+s'_0
+\end{array} \right)
+= 
+\left( \begin{array}{cccc}
+d_u.f & 0 & u'_P & 0\\ 
+0 & d_v.f & v'_P & 0\\
+0 & 0 & 1 & 0
+\end{array} \right)
+.
+\left( \begin{array}{cccc}
+r_{11} & r_{12} & r_{13} & t_{x} \\ 
+r_{21} & r_{22} & r_{23} & t_{y}\\
+r_{31} & r_{32} & r_{33} & t_{z} \\
+0 & 0 & 0 & 1
+\end{array} \right)
+.
+\left( \begin{array}{c}
+X_{m0} \\ 
+Y_{m0} \\
+Z_{m0} \\
+T_{m0}
+\end{array} \right)
+\]
+
+% ------------------------------------------------------ DISTORSION INTRODUCIDA POR LAS LENTES -------------------------------------------------------
+\section{Distorsión introducida por las lentes}
+Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras en cuestión no son del todo buenas, la distorsión introducida por estas se hace cada vez más evidente. Dado un punto \textbf{M} de coordenadas $(X,Y,Z)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre la proyección ideal de dicho punto en el plano imagen $(u_0,v_0)$ y su proyección real $(\tilde{u_0},\tilde{v_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
+
+La forma de solucionar el presente problema es realizar una corrección de la distorsión, modelando a la misma de la siguiente manera:\\
+\[
+\left(
+\begin{array}{c}
+\tilde{u_0} \\
+\tilde{v_0}
+\end{array} \right)
+=
+L(r). \left( \begin{array}{c}
+u_0 \\
+v_0
+\end{array}
+\right),
+\]
+donde $r$ es la distancia radial $\sqrt{u_0^2 + v_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles en la imagen (sistema de coordenadas normalizadas de la imagen), se obtiene lo siguiente:
+\[
+\begin{array}{c}
+\tilde{u_0}' = u_P' + L(r)(u_0' - u_P') \\
+\tilde{v_0}' = v_P' + L(r)(v_0' - v_P') 
+\end{array}
+\]
+donde $(\tilde{u_0}',\tilde{v_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(u_0',v_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(u_P',v_P')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(u_0' - u_P')^2 +(v_0' - v_P') }$.\\
+
+La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. Una aproximación a la función arbitraria $L(r)$ puede ser una expansión de Taylor: $L(r) = 1 + k_1r + k_2r^2 + k_3r^3 + ...$. Finalmente, a la hora de calcular los parámetros intrínsecos de una cámara, también deben ser estimados sus coeficientes de distorsión radial $\{k_1,k_2,k_3,k_4,...\}$.\\
+\end{itemize}
+
+% ------------------------------------------------------ METODOS PARA CALIBRAR UNA CAMARA -------------------------------------------------------
+
+\section{Métodos para la calibración de cámara}
+\label{sec:Metodos de calibracion}
+
+Como se vió algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para dicho proceso, entre los que se destacan el método de Zhang \cite{Zhang99:8} y el método de Heikkilä y Silvén \cite{HeikkilaS97}. Como en este proyecto se utilizó una implementación basada en el primero de ellos (se hablará de dicha implementación un poco más adelante), este será explicado brevemente a continuación.\\
+
+
+

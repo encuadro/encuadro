@@ -112,21 +112,23 @@ bool corners, segments, reproyected;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"chihuahua.pod"];
-        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"sofa.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas.pod"];
+        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
         
 		_model = [_container createSkeletonNode];
 		_model2 = [_container createSkeletonNode];
         
-        _model.scaleX=5;
-        _model.scaleY=5;
-        _model.scaleZ=5;
-        _model.rotationZ = 90;
+    //    _model.scaleX=5;
+      //  _model.scaleY=5;
+        //_model.scaleZ=5;
+       // _model.rotationX = 90;
         
-        _model2.scaleX=15;
-        _model2.scaleY=15;
-        _model2.scaleZ=15;
-
+        _model2.scaleX=5;
+        _model2.scaleY=5;
+        _model2.scaleZ=5;
+        _model2.rotationY = 90;
+        
+        [podImporter printPODInfo];
         
         
 		[podImporter addMeshesToScene:_model];
