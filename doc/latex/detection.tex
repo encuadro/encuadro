@@ -36,7 +36,7 @@ La inclusión de \emph{marcadores}, \emph{marcas de referencia} o \emph{fiduciale
 
 Se distinguen dos tipos de \emph{fiduciales}. El primer tipo son los que se llaman puntos \emph{fiduciales} por que proveen una correspondencia de puntos entre la escena y la imagen. El segundo tipo, \emph{fiduciales planares}, se pueden obtener mediante la construcción en una geometría coplanar de una serie de \emph{puntos fiduciales} identificables como esquinas. Un único \emph{fiducial planar} puede contener por si solo todas las seis restricciones espaciales necesarias para definir el marco de coordenadas. 
 
-Como se explica en la sección \ref{ch:camaraypose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre puntos 3D en la escena en coordenadas del mundo y puntos en la imagen. El enfoque elegido 
+Como se explica en la sección \ref{ch:camaraypose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre puntos 3D en la escena en coordenadas del mundo y puntos en la imagen.
 
 \section{Marcador QR}
 El enfoque inicial elegido para la detección de \emph{puntos fiduciales} para marcadores parte del trabajo de fin de curso de Matías Tailanian para el curso \emph{Tratamiento de imágenes por computadora} de Facultad de Ingeniería, Universidad de la Republica\footnote{Autoposicionamiento 3D -  http://sites.google.com/site/autoposicionamiento3d/}. La elección se basa principalmente en los buenos resultados obtenidos para dicho trabajo con un enfoque relativamente simple. El trabajo desarrolla, entre otras cosas, un diseño de marcador y un sistema de detección de marcadores basado en el detector de segmentos LSD\cite{grompone10} por su buena performance y aparente bajo costo computacional. 
@@ -66,11 +66,11 @@ Un marcador proveerá un numero de $\text{4}\times\text{M}\times\text{N}$ vértice
 \subsection{Diseño}
 En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo \emph{QR} basado en \emph{cuadriláteros} y mas específicamente en tres conjuntos de tres cuadrados dispuestos en como se muestra en la figura \ref{fig:Marker}.\\
 
-Los tres \emph{cuadriláteros} correspondientes a un mismo \emph{conjunto de cuadriláteros} tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $\text{Ql}[0]$ tiene lado $l$ mientras que $\text{Ql}[1]$ y $\text{Ql}[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $\text{QlSet}$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Las direcciones de los ejes son muy utilizadas en el ambiente de las imágenes para definir los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los \emph{vértices} $v_{j_{1}}$ de cada \emph{cuadrilátero} $\text{Ql}[\text{j}]$ como, \\
-\begin{eqnarray}
-v_{j_{0}} = (a/2,a/2) && v_{j_{1}} = (a/2,-a/2)  \\
-v_{j_{2}} = (-a/2,-a/2) && v_{j_{3}} = (-a/2,a/2)
-\end{eqnarray}
+Los tres \emph{cuadriláteros} correspondientes a un mismo \emph{conjunto de cuadriláteros} tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $\text{Ql}[0]$ tiene lado $l$ mientras que $\text{Ql}[1]$ y $\text{Ql}[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $\text{QlSet}$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el ambiente del \emph{tratamiento de imágenes} para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los \emph{vértices} $v_{j_{1}}$ de cada \emph{cuadrilátero} $\text{Ql}[\text{j}]$ como, \\
+\begin{align*}
+v_{j_{0}} = (a/2,a/2) && v_{j_{2}} = (-a/2,-a/2)  \\
+v_{j_{1}} = (a/2,-a/2)&& v_{j_{3}} = (-a/2,a/2)
+\end{align*}
 con $a=(j+1)\times l$. El orden aquí explicado se puede ver también junto con el sistema de coordenadas en la figura \ref{fig:MarkerDetail}.\\
 \begin{figure}[h!]
 \centering
@@ -79,8 +79,7 @@ con $a=(j+1)\times l$. El orden aquí explicado se puede ver también junto con el
 \label{fig:QlSetDetail}
 \end{figure}
 
-
-Un detalle del marcador se muestra en la figura \ref{fig:MarkerDetail} en donde se define el conjunto $\text{i}$ de cuadriláteros concéntricos como el $\text{QlSet}[\text{i}]$ y se definen los respectivos centros $\mathbf{c}_i$ para cada $\text{QlSet}[\text{i}]$. El sistema de coordenadas del \emph{marcador QR} tiene centro en el centro del $\text{QlSet}[0]$ y ejes de coordenadas idénticos al definido para cada $\text{Ql}$. Se tiene además que los ejes de coordenadas pueden ser obtenidos mediante los vectores normalizados,
+Un detalle del marcador completo se muestra en la figura \ref{fig:MarkerDetail} en donde se define el conjunto $\text{i}$ de cuadriláteros concéntricos como el $\text{QlSet}[\text{i}]$ y se definen los respectivos centros $\mathbf{c}_i$ para cada $\text{QlSet}[\text{i}]$. El sistema de coordenadas del \emph{marcador QR} tiene centro en el centro del $\text{QlSet}[0]$ y ejes de coordenadas idénticos al definido para cada $\text{Ql}$. Se tiene además que los ejes de coordenadas pueden ser obtenidos mediante los vectores normalizados,
 \begin{equation}
 \begin{split}
 \mathbf{x}  = \frac{\mathbf{c}_1 - \mathbf{c}_0}{||\mathbf{c}_1-\mathbf{c}_0||} & \quad
@@ -145,24 +144,29 @@ out = lsd(&nb,img,m,n);
 \end{itemize}
 
 \subsubsection{Filtrado de segmentos}
-El filtrado de segmentos consiste en una búsqueda de conjuntos de cuatro segmentos conexos en la lísta de segmentos de línea detectados por \emph{LSD}. A continuación se realiza una breve descripción del algoritmo de filtrado de segmentos implementado.\\
+El filtrado de segmentos consiste en la búsqueda de conjuntos de cuatro segmentos conexos en la lísta de segmentos de línea detectados por \emph{LSD}. Los conjuntos de segmentos conexos encontrados se devuelven en una lista similar a la de \emph{LSD}. A continuación se realiza una breve descripción del algoritmo de filtrado de segmentos implementado.\\
 
-Se parte de una lista de $n$ segmentos de línea y se recorre la lista de segmentos en busca de segmentos vecinos. Para el $i$-ésimo segmento se testean sus dos puntos $\mathbf{p}_i$ y $\mathbf{q}_i$ con los puntos del $j$-ésimo segmento $\mathbf{p}_j$ y $\mathbf{q}_j$ para $j=(i+1,\dots,n)$. Dos segmentos son vecinos si se cumple que la distancia entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones.\\
+Se parte de una lista de $n$ segmentos de línea y se recorre en busca de segmentos vecinos. La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos $\mathbf{s}_j$ y $\mathbf{s}_k$ en forma de ``U'' y luego buscar un último segmento $\mathbf{s}_l$ que cierre la ``U''. Una vez encontrado el conjunto de cuatro segmentos conexos se marcan estos segmentos como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $n$ segmentos de la lista de entrada.
+
+testean sus dos puntos $\mathbf{p}_i$ y $\mathbf{q}_i$ con los puntos del $j$-ésimo segmento $\mathbf{s}_j$, $\mathbf{p}_j$ y $\mathbf{q}_j$ para $j=(i+1,\dots,n)$. 
+
+Dos segmentos son vecinos si se cumple que la distancia euclidiana entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$, $\mathbf{q}_i\leftrightarrow \mathbf{q}_j$, $\mathbf{p}_i\leftrightarrow \mathbf{q}_j$ o $\mathbf{q}_i\leftrightarrow \mathbf{p}_j$. Si se cumple alguna de las correspondencias se continúa buscando un segmento que sea vecino. Por ejemplo, si se tiene la correspondencia $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$ se busca el $k$-ésimo segmento $\mathbf{s}_k$ que cumple que la distancia euclidiana $d_{ij}$ es menor a cierto umbral para alguna de las combinaciones $\mathbf{q}_i\leftrightarrow \mathbf{p}_k$ y $\mathbf{q}_i\leftrightarrow \mathbf{q}_k$.
+
+La condición de vecindad se podría refinar de forma de disminuir el riesgo de tener ``falsos vecinos''. Esta situación se puede dar, por ejemplo, en un grupo de segmentos paralelos cercanos y de tamaño similar o en el caso de detectar cuadrados concéntricos en los que la distancia entre sus lados es inferior al umbral. En el primer caso se puede considerar un condición de vecindad que tome en cuenta la intersección de los segmentos y la distancia de la intersección a los puntos del segmento. De todas formas ninguna de las dos situaciones se hicieron presentes en casos prácticos y la implementación de soluciones no fue necesaria además de que aumentaría levemente la complejidad del algoritmo.
 
 \begin{algorithm}[H]
 \KwData{list=\{$(\mathbf{p}_0,\mathbf{q}_0),(\mathbf{p}_1,\mathbf{q}_1),\dots,(\mathbf{p}_{n-1},\mathbf{q}_{n-1})$\}.}
 \KwResult{filteredlist=\{$(\mathbf{p}_0,\mathbf{q}_0),(\mathbf{p}_1,\mathbf{q}_1),\dots,(\mathbf{p}_{m-1},\mathbf{q}_{m-1})$\}. Lista ordenada.}
 \Begin{
-$V \longleftarrow U$\;
-$S \longleftarrow \emptyset$\;
-\For{$x\in X$}{
-$NbSuccInS(x) \longleftarrow 0$\;
-$NbPredInMin(x) \longleftarrow 0$\;
-$NbPredNotInMin(x) \longleftarrow |ImPred(x)|$\;
-}
-\For{$x \in X$}{
-\If{$NbPredInMin(x) = 0$ {\bf and} $NbPredNotInMin(x) = 0$}{
-$AppendToMin(x)$}
+\For{$i=(0,1,\dots,n-1)$}{
+	\If{segmento $i$ no marcado}{
+	\For{$z \in ImPred(y) \cap Min$}{
+		remove the arc $zy$ from $V$\;
+		$NbSuccInS(z) \longleftarrow NbSuccInS(z) - 1$\;
+		move $z$ in $T$ to the list preceding its present list\;
+		\{i.e. If $z \in T[k]$, move $z$ from $T[k]$ to
+		$T[k-1]$\}\;
+}}
 }
 \nl\While{$S \neq \emptyset$}{\label{InRes1}
 \nlset{REM} remove $x$ from the list of $T$ of maximal index\;\label{InResR}
@@ -190,6 +194,90 @@ $RemoveFromMin(x)$\;
 
 \subsubsection{Determinación de correspondencias}
 \label{subsec:detection_correspondencias}
+Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador de forma de desarrollar un algoritmo modular, escalable y simple.
+
+Se toma como entrada la lista de segmentos filtrados
+\begin{equation}
+\mathbf{S} = \begin{pmatrix}
+			 \mathbf{s}_0 & \mathbf{s}_1 & \dots & \mathbf{s}_{i} & \mathbf{s}_{i+1} & \mathbf{s}_{i+2} & \mathbf{s}_{i+3} & \dots & \mathbf{s}_{n-1}
+			 \end{pmatrix}^t
+\end{equation}
+en donde cada segmento se compone de un punto inicial $\mathbf{p}_{i}$ y un punto final $\mathbf{q}_{i}$, $\mathbf{s}_{i} = (\mathbf{p}_{i},\mathbf{q}_{i})$, 
+con $n$ es múltiplo de cuatro. Si $i$ también lo es, entonces el sub-conjunto 
+\begin{equation}
+\mathbf{S}_i = \begin{pmatrix}
+				\mathbf{s}_{i} & \mathbf{s}_{i+1} & \mathbf{s}_{i+2} & \mathbf{s}_{i+3}
+				\end{pmatrix}^t
+\end{equation}
+corresponde a un conjunto de cuatro segmentos del línea conexos.\\
+
+Para cada sub-conjunto $\mathbf{S}_i$ se intersectan entre sí los segmentos obteniendo una lista de cuatro vértices,
+\begin{eqnarray}
+\mathbf{V}_i =  \begin{pmatrix}
+		 \mathbf{v}_{i} & \mathbf{v}_{i+1} & \mathbf{v}_{i+2} & \mathbf{v}_{i+3} 
+		 \end{pmatrix}^t
+\end{eqnarray}
+Si  $\mathbf{r}_i$ es la recta que pasa por los puntos $\mathbf{p}_i$ y $\mathbf{q}_i$ del segmento  $\mathbf{s}_i$, la lista de vértices se obtiene como sigue,
+\begin{eqnarray}
+\mathbf{v}_i = & \mathbf{r}_i\cap \mathbf{r}_{i+1} \nonumber\\
+\mathbf{v}_{i+1} = & \mathbf{r}_i\cap \mathbf{r}_{i+2} \nonumber\\
+\mathbf{v}_{i+2} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+2} \nonumber\\
+\mathbf{v}_{i+3} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+1} \nonumber
+\end{eqnarray}
+resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.8]{figs_detection/Vertices.eps}
+\caption{Posibles configuraciones de vértices posterior a la intersección de conjuntos de segmentos pertenecientes a un cuadrilátero.}
+\label{fig:Vertices}
+\end{figure}
+
+Posterior a la intersección se realiza un chequeo sobre el valor de las coordenadas de lo vértices. Si alguno de ellos se encuentra fuera de los límites de la imagen, todo el grupo de cuatro segmentos es marcado como inválido. Este chequeo resulta en el filtado de ``falsos cuadriláteros'' como por ejemplo un grupo de segmentos paralelos cercanos. 
+
+Para cada uno de los conjuntos de vértices se construye con ellos un elemento \emph{cuadrilátero} que se almacena en una lista de cuadriláteros
+\begin{eqnarray}
+ QlList =  \begin{pmatrix}
+            \text{Ql}[0] & \text{Ql}[1] & \dots & \text{Ql}[i] & \dots & \text{Ql}[\frac{n}{4}]
+           \end{pmatrix}^t
+\end{eqnarray}
+% en sentido amplio, de dos segmentos contiguos, $s_i\cap s_{i+1}$ dadas las recta $r_1$ que pasa por los puntos $\mathbf{p}_1$, $\mathbf{q}_1$ del segmento $s_1$ y la recta $r_2$ que pasa por los puntos $\mathbf{p}_2$, $\mathbf{q}_2$ del segmento $s_2$, se determina el vértice correspondiente como la intersección $r_1 \cap r_2$. \\
+% 
+% y se intersectan en grupos de cuatro obteniendo cuatro vértices por cada grupo. Para cada grupo de vértices $v_k$ se construye un elemento cuadrilátero $\text{Ql}[k]$ que se almacena en una lista de cuadriláteros. 
+
+A partir de esa lista de cuadriláteros, se buscan grupos de tres cuadriláteros $\text{QlSet}$ que ``compartan'' un mismo centro. Para esto se recorre ordenadamente la lista en $i$ buscando para cada cuadrilátero dos cuadriláteros $j$ y $k$ que cumplan que la distancia entre sus centros  y el del $i$-ésimo cuadrilátero sea menor a cierto umbral $d_{th}$,
+\begin{equation}
+\begin{split}
+ d_{ij} = ||\mathbf{c}_i - \mathbf{c}_j||<d_{th} & \quad  d_{ik} = ||\mathbf{c}_i - \mathbf{c}_k||<d_{th}
+\end{split}
+\end{equation}
+Estos cuadriláteros se marcan en la lista como utilizados con ellos se forma el $l$-ésimo $QlSet$ ordenándolos según su perímetro, de menor a mayor como  $QlSet[l] = \begin{pmatrix} Ql[0] & Ql[1] & Ql[2] \end{pmatrix}$ con $l = (0,1,2)$. Esta busqueda se realiza hasta encontrar un total de tres $QlSet$ completos de forma de obtener un marcador completo, esto es, detectando todos los cuadriláteros que lo componen. \\
+
+Una vez obtenida la lista $QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$ ésta se ordena de forma que su dispoción espacial se corresponda con la del \emph{marcador QR}. Se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, 
+$$\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i.$$
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.45]{figs_detection/Centros.eps}
+\caption{Posibles configuraciones de centros posterior a la elección del menor vector $\mathbf{u}_0$.}
+\label{fig:Centros}
+\end{figure}
+
+En caso de que no se encuentre ningún $QlSet$ completo se descarta la lista de segmentos y se indica que la determinación de correspondencias falló. Cabe la posibilidad de que los segmentos Debido a posibles oclusionesSi se encuentra un único $QlSet$ c
+
+
+
+
+
+
+Una vez obtenidos los 
+
+Los cuadriláteros de cada $\text{QlSet}$ se ordenan según su perímetro. 
+
+Se obtiene una lista de tres $\text{QlSet}$ la cual se ordena según la disposición espacial de sus centros logrando un ordenamiento que permite definir el sistema de coordenadas previamente explicado. 
+
+Los ejes de este sistema de coordenadas nos permite, para cada $\text{QlSet}$, proyectar los vértices sobre sus ejes y según el signo ordenarlos según el orden definido anteriormente. 
+
+De esta forma, recorriendo ordenadamente los elementos del marcador, se ordenan los vértices detectados obteniendo una lista de vértices que se corresponde con la lista de vértices del marcador en coordenadas del mundo. Se determinan las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose.
 
 \subsubsection{Resultados}
+Oh sí!
 
