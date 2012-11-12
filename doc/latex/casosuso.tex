@@ -1,0 +1,28 @@
+\chapter{Casos de Uso}
+
+\section{Introducción}
+En este capítulo se describen los distintos casos de uso que se implementaron con el fin de aplicar los algoritmos desarrollados en los capítulos anteriores. Se buscó generar distintos casos de uso que funcionaran como muestra de las funcionalidades que son posibles de realizar mediante la resolución de los algoritmos mencionados.
+\section{Caso de Uso 01}
+\subsection{Comentarios sobre el caso de uso}
+\subsection{Detalles constructivos}
+\section{Caso de Uso 02}
+\subsection{Comentarios sobre el caso de uso}
+Este caso de uso básicamente busca desplegar un video en una superfice dada del mundo real. Esto puede ser de gran interés como complemento de contenido para un cuadro o cualquier obra si se piensa en aplicarlo para museos. Es posible por ejemplo, generar un video que sea reproducido dentro de los marcos del propio cuadro, en un extremo o en una superficie cualquiera que resulte interesante desde el punto de vista artístico. A continuación se explican brevemente algunos detalles para lograr la implementación de este caso de uso.
+\subsection{Detalles constructivos}
+Para lograr lo propuesto para este caso de uso se implementó un proyecto que proyecta el video en uno de los cuadrados del marcador. De esta manera, de toda la lógica de estimación de pose, solamente se hace uso de la detección y filtrado. En particular no se hace uso de los resultados del posit. Teniendo entonces detectados los cuatro puntos en los que se quiere reproducir el video parecería que el problema está resuelto. Sin embargo, xcode no permite posicionar en forma directa una vista de video en cualquier conjunto de cuatro puntos. \\
+Si simplemente se quiere reproducir un video, y no se quiere procesar el contenido, lo más cómodo para hacerlo es utilizar la clase \textit{MPMoviePlayerController} que hereda de \textit{NSObject}. Una alternativa similar es haciendo uso de la clase \textit{MPMoviePlayerViewController} que hereda de \textit{UIViewController} y tiene como única propiedad una del tipo \textit{MPMoviePlayerController}. \\
+\textit{MPMoviePlayerController} tiene un atributo \textit{view} del tipo \textit{UIView} que es la vista y es este atributo el que se quiere posicionar en los cuatro puntos detectados por el filtro. Un atributo del tipo \textit{UIView} tiene un atributo \textit{frame} que es del tipo \textit{CGRect}\\
+\begin{verbatim}
+theMovie.view.frame = CGRectMake(0, 0, 60, 60);
+\end{verbatim}
+En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, se tiene el inconveniente de que en principio cualquier video parecería que solamente puede ser reproducido sobre rectángulos y no en cualquier polígono de cuatro puntos por ejemplo. Sin embargo algo que sí se puede hacer a las instancias de la clase \textit{UIView} es una transformación afin o incluso, de manera más genérica, una homografía. \\
+\subsection{\textit{CGAffineTransform} y \textit{CATransform3D}}
+La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que del tipo \textit{CGAffineTransform}. También tiene una pripiedad llamada \\
+\subsection{Resolución de Homografía}
+Cómo se resolvió la homografía...desarrollo de las cuentas y resolución del sistema de ecuaciones.
+\section{Caso de Uso 03}
+\subsection{Comentarios sobre el caso de uso}
+\subsection{Detalles constructivos}
+\section{Caso de Uso 04}
+\subsection{Comentarios sobre el caso de uso}
+\subsection{Detalles constructivos}

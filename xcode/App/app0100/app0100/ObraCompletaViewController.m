@@ -109,26 +109,100 @@
                          NSLog(@"Done!");
                      }];
     
+    [self UpsiAppear];
+    
+    //agrego vistaTouch
+    self.vistaTouch = [[TouchVista alloc] init];
+    self.vistaTouch.obraCompleta=true;
+    //self.vistaTouch.frame=CGRectMake(370,240, 100, 100);
+    [self.view addSubview:self.vistaTouch];
+
+
+}
+
+- (void)UpsiAppear
+{
+    
     upsi.center=CGPointMake(400,340);
-    [UIView animateWithDuration:3
+    [UIView animateWithDuration:2
                           delay:0.6
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
                          
                          upsi.center=CGPointMake(400,270);
+                         
+                         
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
+                         self.vistaTouch.frame=CGRectMake(370,240, 100, 100);
+                         [self UpsiUpMoveLeft];
                      }];
-    
-    //agrego vistaTouch
-    self.vistaTouch = [[TouchVista alloc] init];
-    self.vistaTouch.obraCompleta=true;
-    self.vistaTouch.frame=CGRectMake(370,240, 100, 100);
-    [self.view addSubview:self.vistaTouch];
-
-
 }
+
+
+- (void)UpsiUpMoveLeft
+{
+    
+    [UIView animateWithDuration:1
+                          delay:0.6
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         
+                         upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
+                         
+                         upsi.center=CGPointMake(70,70);
+                         
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                         //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
+                         self.vistaTouch.frame=CGRectMake(170,240, 100, 100);
+                         [self UpsiDownMoveLeft];
+                     }];
+}
+
+- (void)UpsiDownMoveLeft
+{
+    
+    [UIView animateWithDuration:1
+                          delay:0
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         
+                         upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
+                         
+                         upsi.center=CGPointMake(200,270);
+                         
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                         //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
+                         self.vistaTouch.frame=CGRectMake(170,240, 100, 100);
+                         [self UpsiDisAppear];
+                     }];
+}
+
+- (void)UpsiDisAppear
+{
+    
+    [UIView animateWithDuration:1
+                          delay:1
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                         
+                         upsi.center=CGPointMake(400,340);
+                         
+                         
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                         self.vistaTouch.frame=CGRectMake(370,320, 100, 100);
+                         [self UpsiAppear];
+                     }];
+}
+
+
 
 - (void)viewDidUnload
 {
@@ -172,6 +246,12 @@
     }
     
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    NSLog(@"viewWILL APPEAR");
+    self.vistaTouch.touchman=false;
 }
 
 - (void)viewWillDisappear:(BOOL)animated

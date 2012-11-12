@@ -64,20 +64,25 @@ Para el recorrido manual, el usuario es el encargado de seleccionar el autor, lu
 	Esta clase es muy similar a la clase \textit{AutorTableViewController} recién descripta difiriendo simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al ejecutrase el método \textit{viewDidLoad} se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, completando los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro. Esto se verá más adelante en la sección \ref{sec: realidad aumentada en la aplicación}. 
 	\subsubsection{CuadroTableViewCell}
 	Esta es una clase sencilla que hereda de la clase \textit{UITableViewCell} y simplemente tiene tres \textit{IBOutlets} como propiedades para vincularlas con una imagen, un nombre de autor y un nombre de la obra para cada celda de la tabla que se despliega.\\
-\\
-PONER FOTO DE AUTORTABLE ---CUADROTABLE
-\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/AutorYCuadroTable.eps}
+\caption{Autor y Cuadro TableViewControllers}
+%\label{fig: implementacion_1}
+\end{figure}
 
 \subsection{ReaderSampleViewController}
 Este \textit{ViewController} es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto e imagen asociadas al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
 
 \subsection{ImagenServerViewController}
 Este \textit{ViewController} es el encargado de la comunicación con el servidor. En el método \textit{viewDidLoad} se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se saca la foto, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de sacar otra foto y el otro botón inicia la comunicación con el servidor.\\
-\\
-PONER FOTO CON LA CAPTURA
-\\
-\\
-El botón de \textit{upload} es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se agrega la foto sacada previamente y se le agrega un string llamado \textit{room}. Este string es completado previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando la información sobre en qué sala/región del museo se encuentra (sala Figari, sala Blanes o sala Torres García). Este string lo que permite es tener un identificador para poder hacer la búsqueda de la imagen sacada (luego de procesar la imagen con el algoritmo SIFT), en una base de datos más peque?a, que contenga solamente los cuadros de esa región del museo y no todos los cuadros del museo. En caso que el usuario no haya detectado ningún QR y haya seleccionado directamente la opción de sacar una foto para comenzar la comunicación con el servidor, entonces este string estará vacío y la búsqueda de la imagen más parecida se hace en toda la base de datos. En un primer caso, claramente los tiempos son mejores (del orden de 3s en una LAN) que en el segundo (del orden de 6s en una LAN).\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/imagenServer.eps}
+\caption{Ejemplo de captura para reconocimiento SIFT}
+%\label{fig: implementacion_1}
+\end{figure}
+El botón encargado de la comunicación con el servidor, botón de \textit{upload}, es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se agrega la foto sacada previamente y se le agrega un string llamado \textit{room}. Este string es completado previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando la información sobre en qué sala/región del museo se encuentra (sala Figari, sala Blanes o sala Torres García). Este string lo que permite es tener un identificador para poder hacer la búsqueda de la imagen sacada (luego de procesar la imagen con el algoritmo SIFT), en una base de datos más peque?a, que contenga solamente los cuadros de esa región del museo y no todos los cuadros del museo. En caso que el usuario no haya detectado ningún QR y haya seleccionado directamente la opción de sacar una foto para comenzar la comunicación con el servidor, entonces este string estará vacío y la búsqueda de la imagen más parecida se hace en toda la base de datos. En un primer caso, claramente los tiempos son mejores (del orden de 3s en una LAN) que en el segundo (del orden de 6s en una LAN).\\
 Luego de establecida la conexión y enviada la consulta POST, el servidor responde con un string \textit{returnString}. Este string contiene el resultado del procesamiento de la imagen enviada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que toma imágenes, ejecuta comandos en terminal (en este caso el ejecutable del algoritmo SIFT) y el resultado de esa ejecución se retorna como string en el php y el mismo se envía a la aplicación. Ese string resultado es recibido por la aplicación con una nomenclatura elegida que sigue la lógica Autor-Número, por ejemplo \textit{Figari3} que se corresponde con la obra número 3 de la base de datos del autor Figari. Ese pasa a ser el identificador de la obra para ir a buscarla a la base de datos del servidor. El servidor cuenta con varias carpetas según la información:
 \begin{itemize}
 \item[(1)] autor
@@ -98,9 +103,12 @@ De esta manera una vez que se obtiene el identificador se hace una consulta al s
 
 \subsection{ObraCompletaViewController}
 Este \textit{ViewController} simplemente es la presentación de la obra, mostrando el cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. El primero de los botones dispara un audio donde se explican detalles de la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
-\\
-PONER FOTO DE OBRACOMPLETA
-\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/ObraCompleta.eps}
+\caption{Pantalla con la obra completa}
+%\label{fig: implementacion_1}
+\end{figure}
 
 \subsection{VistaViewController}
 \label{sec: vista}
@@ -127,7 +135,14 @@ Con lo anterior lo que se hace es generar una instancia de la clase \textit{app0
 
 \subsection{DrawSign}
 \label{sec: drawsign}
-Esta clase hereda de \textit{UIViewController} y está pensada para que el usuario pueda dibujar al tocar la pantalla. Se implementó haciendo una reimplementación de los siguientes tres métodos:
+Esta clase hereda de \textit{UIViewController} y está pensada para que el usuario pueda dibujar al tocar la pantalla. Un ejemplo de cómo queda el dibujo se puede ver en la siguiente figura.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_implementacion/Draw.eps}
+\caption{Ejemplo de dibujo libre}
+%\label{fig: implementacion_1}
+\end{figure}
+Se implementó haciendo una reimplementación de los siguientes tres métodos:
 \begin{verbatim}
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
@@ -154,15 +169,70 @@ A esta clase también se le agregó una \textit{IBAction} que genera un \textit{tw
 \end{verbatim}
 donde \textit{text} y \textit{img} son el texto del \textit{tweet} y la imagen adjunta. Finalmente se presenta la vista del \textit{TWTweetComposeViewController} y una vez finalizado se vuelve a la instancia \textit{DrawSign}.
 \subsection{TouchVista}
+Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar solamente una de las sub-vistas. Entonces lo que se hace en esos casos es agregar a la sub-vista en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama?o que la sub-vista. De esta manera al tocar la sub-vista se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente tiene el siguiente contenido:
+\begin{verbatim}
+[super touchesBegan:touches withEvent:event];
+\end{verbatim}
+También tiene el seteo de una bandera pero eso no tiene tanta relevancia. Lo que se hace en el código anterior es invocar al método \textit{touchesBegan} de la clase superior. Para el caso en que se tiene un \textit{ViewController}, con una sub-vista del tipo \textit{TouchVista} transparente, entonces esta línea invoca directamente el método \textit{touchesBegan} del \textit{ViewController}. Dos de los \textit{ViewControllers} que utilizan esto son \textit{VistaViewController} y \textit{ObraCompletaViewController}.
+
 \subsection{Isgl3dViewController y app0100AppDelegate}
- 
+Las clases \textit{Isgl3dViewController} y \textit{app0100AppDelegate} son clases que ya venían implementadas con \textit{Isgl3D}. En particular se tomó el proyecto \textit{Hello World} de dicho \textit{framework} y se trabajó sobre el mismo. \\
+El proyecto \textit{Hello World} es un proyecto básico que lo que hace es generar un \textit{render} sobre un fondo gris. Como lo que se buscó fue hacer realidad aumentada, entonces se trabajó para que el render estuviera por delante de la captura de la cámara. Para lograr esto en el \textit{app0100AppDelegate} se hicieron algunas modificaciones sobre las vistas. A continuación se muestra parte del código que logra esto:\\
+\begin{verbatim}
+UIImageView* vistaImg = [[UIImageView alloc] init];
 
+    /* Se ajusta la pantalla*/    
+UIScreen *screen = [UIScreen mainScreen];
+CGRect fullScreenRect = screen.bounds;   
 
-Una vez que se está frente al cuadro existe una serie de interacciones habilitadas para el usuario, como ser: audioguía sobre el cuadro en particular, dibujo con lienzo libre para realizar tweets con la imagen dibujada, o la realidad aumentada vinculada a la obra que seleccionó (recorrido maual) o la que fue derivada luego del reconocimiento de imagenes (recorrido automático)\\
-\\
-SEGUIR REDACTANDO ESTA SECCION
-\\
-\\
+[vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+[vistaImg setBounds:fullScreenRect];
+    
+[self.window addSubview:vistaImg];
+[self.window sendSubviewToBack:vistaImg];
+_viewController.videoView = vistaImg;
+\end{verbatim}
+Con esto se ajusta el atributo \textit{videoView} de la propiedad \textit{viewController} que pertenece a la clase \textit{app0100AppDelegate} y es instancia de la clase \textit{Isgl3dViewController}. Este atributo es el que luego se ajusta en forma periódica con cada cuadro en la clase \textit{Isgl3dViewController}. \\
+En xCode, si se quiere simplemente hacer una filmación, sacar fotos y acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Sin embargo si se desea tener una forma de hacer esto pero llegando a más bajo nivel para poder hacer procesamiento, teniendo acceso a los píxeles de la imagen, hacer modificaciones sobre los mismos y en definitiva manipular la salida, entonces la forma más indicada es usando el conocido \textit{Framework} llamado \textit{AVFoundation}. En la clase \textit{Isgl3dViewController} en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation} que permite realizar procesamiento en tiempo real. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
+\begin{verbatim}
+/*Creamos y seteamos la captureSession*/
+    self.session = [[AVCaptureSession alloc] init];
+    self.session.sessionPreset = AVCaptureSessionPresetMedium;
+    
+    /*Creamos al videoDevice*/
+    self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    /*Creamos al videoInput*/
+    self.videoInput  = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:nil];
+    
+    /*Creamos y seteamos al frameOutpt*/
+    self.frameOutput = [[AVCaptureVideoDataOutput alloc] init];
+    
+    self.frameOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id) kCVPixelBufferPixelFormatTypeKey];
+    
+    /*Ahora conectamos todos los objetos*/
+    /*Primero le agregamos a la sesion el videoInput y el videoOutput*/
+    
+    [self.session addInput: self.videoInput];
+    [self.session addOutput: self.frameOutput];
+\end{verbatim}
+Como se ve, es necesario crear una sesión de captura, un dispositivo de captura, una salida de los datos y agregarlas a la sesión. También se puede setear el tipo de captura de la cámara (tiene que ser soportado por el Hardware, sino se genera un error en este punto). \\
+Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.\\
+\begin{verbatim}
+    dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
+    [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
+    dispatch_release(processQueue);
+\end{verbatim}
+Con esto lo que se hace es hacer una instancia de una \textit{Queue}, que representa una cola de procesamiento. De esta manera se puede hacer que ciertas tareas se alojen en esa instancia de cola, que lógicamente es otra distinta que la cola de procesamiento principal (\textit{mainQueue}). Esto mismo es lo que se hace en la segunda línea del código anterior, diciendo que el \textit{Delegate} de los datos de salida (\textit{frameOutput}) es la propia clase y que ese \textit{Delegate} se ejecute en la \textit{Queue} que se instanció en la línea anterior. De esta manera todo lo que sea invocado por el \textit{Delegate} en forma periódica será enviado a una cola distinta de la principal, pudiendo tener entonces, una cola de procesamiento separada de la cola de interfaz de usuario. Esto es algo ampliamente utilizado y es una recomendación de la documentación de iOS, pues se basa en los conceptos de tener la mayor atención posible a la interfaz de usuario, impidiendo en lo posible dejar al usuario esperando por algún eventual procesamiento que se esté llevando a cabo.\\
+Finalmente se da comienzo a la sesión\\
+\begin{verbatim}
+[self.session startRunning];
+\end{verbatim}
+Con esto comienza a invocarse una serie de métodos en forma periódica. El hecho de suceda esto es porque esta clase implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}. Este protocolo es el que permite decir que el \textit{Delegate} de \textit{frameOutput} es él mismo. Al implementar este protocolo comienza a invocarse en forma periódica (frame a frame) el siguiente método\\
+\begin{verbatim}
+-(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
+\end{verbatim}
+donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene los píxeles de la cámara en ese momento. Así entonces, se accede a los píxeles y se invoca dentro del \textit{captureOutput} periódicamente al método \textit{procesamiento}, encargado de procesar la imagen recibida por la cámara.
 \section{QR}
 \label{sec: QR}
 \subsection{QR. Una realidad}
