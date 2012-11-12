@@ -239,7 +239,7 @@ T_{m0}
 
 % ------------------------------------------------------ DISTORSION INTRODUCIDA POR LAS LENTES -------------------------------------------------------
 \section{Distorsión introducida por las lentes}
-Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras en cuestión no son del todo buenas, la distorsión introducida por estas se hace cada vez más evidente. Dado un punto \textbf{M} de coordenadas $(X,Y,Z)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre la proyección ideal de dicho punto en el plano imagen $(u_0,v_0)$ y su proyección real $(\tilde{u_0},\tilde{v_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
+Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras no son del todo buenas, la distorsión introducida por estas se hace cada vez más evidente. Dado un punto \textbf{M} de coordenadas $(X,Y,Z)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre la proyección ideal de dicho punto en el plano imagen $(u_0,v_0)$ y su proyección real $(\tilde{u_0},\tilde{v_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
 
 La forma de solucionar el presente problema es realizar una corrección de la distorsión, modelando a la misma de la siguiente manera:\\
 \[
@@ -255,14 +255,14 @@ v_0
 \end{array}
 \right),
 \]
-donde $r$ es la distancia radial $\sqrt{u_0^2 + v_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles en la imagen (sistema de coordenadas normalizadas de la imagen), se obtiene lo siguiente:
+donde $r$ es la distancia radial $\sqrt{u_0^2 + v_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles, respecto del sistema de coordenadas normalizadas de la imagen; se obtiene lo siguiente:
 \[
 \begin{array}{c}
 \tilde{u_0}' = u_P' + L(r)(u_0' - u_P') \\
 \tilde{v_0}' = v_P' + L(r)(v_0' - v_P') 
 \end{array}
 \]
-donde $(\tilde{u_0}',\tilde{v_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(u_0',v_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(u_P',v_P')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(u_0' - u_P')^2 +(v_0' - v_P') }$.\\
+donde $(\tilde{u_0}',\tilde{v_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(u_0',v_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(u_P',v_P')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(u_0' - u_P')^2 +(v_0' - v_P')^2 }$.\\
 
 La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. Una aproximación a la función arbitraria $L(r)$ puede ser una expansión de Taylor: $L(r) = 1 + k_1r + k_2r^2 + k_3r^3 + ...$. Finalmente, a la hora de calcular los parámetros intrínsecos de una cámara, también deben ser estimados sus coeficientes de distorsión radial $\{k_1,k_2,k_3,k_4,...\}$.\\
 \end{itemize}
@@ -272,7 +272,102 @@ La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. U
 \section{Métodos para la calibración de cámara}
 \label{sec:Metodos de calibracion}
 
-Como se vió algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para dicho proceso, entre los que se destacan el método de Zhang \cite{Zhang99:8} y el método de Heikkilä y Silvén \cite{HeikkilaS97}. Como en este proyecto se utilizó una implementación basada en el primero de ellos (se hablará de dicha implementación un poco más adelante), este será explicado brevemente a continuación.\\
+Como se vió algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, entre los que se destacan el método de Zhang \cite{Zhang99:8} y el método de Heikkilä y Silvén \cite{HeikkilaS97}. En este proyecto, para calibrar las cámaras se utilizó una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dió resultados muy buenos. Por eso, se explicará a continuación, de forma breve, cómo funciona este método.\\
 
+El método de Zhang es muy sencillo y flexible. Sólo requiere de la cámara a calibrar, una computadora y una imagen patrón (plana), que puede ser impresa en cualquier impresora doméstica y pegada en cualquier superficie razonablemente plana y dura, a la que se le tomarán al menos dos fotografías desde orientaciones distintas. Ni las posiciones de la cámara en cada caso, ni el movimiento entre ellas tienen por qué ser conocidos. Este método devuelve los parámetros intrínsecos de la cámara correspondientes al modelo \textit{pin-hole} visto algunos párrafos antrás, sus parámetros extrínsecos para cada fotografía utilizada para la calibración y la distorsión radial de sus lentes.\\
 
+Recuérdese que la relación entre un punto 3D \textbf{M} expresado respecto de las coordenadas del mundo y su proyección en el plano imagen \textbf{m}, expresada respecto de los ejes normalizados de la imagen, viene dada por:
+\[
+m = I.E.M
+\]
+donde $E$ representa a la matriz de parámetros extrínsecos e $I$ representa a la matriz de par\'metros intrínsecos de la cámara. Además:
+\[
+I =
+\left( \begin{array}{ccc}
+\alpha & s & u'_P\\ 
+0 & \beta & v'_P\\
+0 & 0 & 1
+\end{array} 
+\right)
+\]
+con $\alpha = d_u.f$ y $\beta = d_v.f$.\\ 
 
+Se asume en este método que el sistema de coordenadas del mundo ``reposa'' sobre la imagen patrón; o lo que es lo mismo, que esta se encuentra en $Z=0$. Se obtiene entonces la siguiente simplificación:\\
+\[
+\left( \begin{array}{c}
+u'_0 \\
+v'_0 \\
+1
+\end{array} \right)
+= 
+I
+.
+\left( \begin{array}{cccc}
+r_{1} & r_{2} & r_{3} & t
+\end{array} \right)
+.
+\left( \begin{array}{c}
+X_{m0} \\ 
+Y_{m0} \\
+Z_{m0} \\
+1
+\end{array} \right)
+=
+I
+.
+\left( \begin{array}{cccc}
+r_{1} & r_{2}  & t
+\end{array} \right)
+.
+\left( \begin{array}{c}
+X_{m0} \\ 
+Y_{m0} \\
+1
+\end{array} \right)
+\]
+donde $(X_{m0}, Y_{m0}, Z_{m0}, 1 )^T$ denotan las coordenadas homogéneas del punto \textbf{M} respecto de los ejes del mundo y $(u'_0,v'_0,1)^T$ representan las coordenadas homogéneas de su proyección en el plano imagen, \textbf{m}, respecto de los ejes normalizados de la imagen. Se le llamó $r_i$ a la i-ésima columna de la matriz rotación de los parámetros extrínsecos de la cámara.\\
+
+Dada una fotografía de la imagen patrón plana, es posible estimar una homografía que relacione a ambas. Si se toma en cuenta dicha homografía $(PY)$ vale $PY =(h_{1}, h_{2}, h_{3}) = I.(r_{1}, r_{2}, t)$ y que las columnas $r_1$ y $r_2$ son ortonormales, realizando algo de matemática se llega a que:
+\[
+\begin{array}{c}
+h_1^T.(I^{-1})^T.I^{-1}.h_2 =0 \\
+h_1^T.(I^{-1})^T.I^{-1}.h_1 =h_2^T.(I^{-1})^T.I^{-1}.h_2 \\
+\end{array}
+\]
+Las anteriores son las únicas dos relaciones básicas entre parámetros intrínsecos que se pueden obtener a partir de una única homografía. Esto es porque una homografía tiene 8 grados de libartad y existen 6 parámetros extrínsecos (3 para la traslación y 3 para la rotación).\\
+
+Si se define la matriz $B$ como sigue:
+\[
+B = (I^{-1})^T.I^{-1} = 
+\left( \begin{array}{ccc}
+B_{11} & B_{21} & B_{31}\\ 
+B_{12} & B_{22} & B_{32}\\
+B_{13} & B_{23} & B_{33}
+\end{array} 
+\right)
+\]
+se demuestra fácilmente que la misma es simétrica, por lo que quedará absolutamente definida por un vector de 6 dimensiones:
+\[
+b = (B{11}, B_{12}, B_{22}, B_{13}, B_{23}, B_{33})^T
+\]
+Si además se define el vector variable $v_{ij}$ de la siguiente manera:
+\[
+v_{ij} = (h_{i1}.h_{j1}, h_{i1}.h_{j2}+h_{i2}.h_{j1}, h_{i2}.h_{j2},  h_{i3}.h_{j1}+h_{i1}.h_{j3}, h_{i3}.h_{j2}+h_{i2}.h_{j3}, h_{i3}.h_{j3})
+\]
+donde se referencia a la i-ésima columna de PY como $h_i = (h_{i1}, h_{i2}, h_{i3})^T$; se tiene que:
+\[
+h_i^T.B.h_j = V_{ij}^T.b
+\]
+Las dos relaciones básicas entre parámetros intrínsecos obtenidas de una única homografía, vistas anteriormente, pueden ser reescritas como:
+\[
+\left(
+\begin{array}{c}
+v_{12}^T \\
+(v_{11} - v_{22})^T
+\end{array}
+\right)
+.b = V.b = 0
+\]
+Utilizando $n$ fotografías distintas de la imagen patrón, y por lo tanto $n$ homografías distintas se obtiene una matriz V de tama\~no $2.n\times 6$. Es sabido que si $n\geq 3$, el sistema matricial anterior tendrá una solución $b$ única, que varía según cierto factor de escala. Sin embargo, si $n=2$, es posible imponer la condición $s=0$ y así también estimar el vector $b$ sin mayores problemas.\\
+
+Una vez estimado $b$ es posible recontruír la matriz de marámetros intrínsecos I, para luego utilizando I y las homografías PY obtener los parámetros extrínsecos de la cámara para cada fotografía utilizada para la calibración.\\ 
