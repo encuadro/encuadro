@@ -239,7 +239,7 @@ En el caso en que las dos soluciones sean validas para todas las iteraciones, el
 \includegraphics[scale=0.25]{figs_posit/posit_5.eps}
 \label{fig: posit_5}
 }
-\caption{\subref{fig: posit_4}:Caso en el que solo una pose de las dos iniciales es coherente, también en las siguientes iteraciones solo una de las dos poses es posible, se tiene un única solución. \subref{fig: posit_5}: Caso en el que en cada paso hay dos posibilidades, se opta por la mejor pose(++ mejor pose, + peor pose) en cada rama. Fuente: \cite{CoplanarPosit}.]}
+\caption{\subref{fig: posit_4}:Caso en el que solo una pose de las dos iniciales es coherente, también en las siguientes iteraciones solo una de las dos poses es posible, se tiene un única solución. \subref{fig: posit_5}: Caso en el que en cada paso hay dos posibilidades, se opta por la mejor pose(++ mejor pose, + peor pose) en cada rama. Fuente: \cite{CoplanarPosit}.}
 \end{figure}
 
 
@@ -247,7 +247,7 @@ En el caso en que las dos soluciones sean validas para todas las iteraciones, el
 \centering
 \includegraphics[scale=0.55]{figs_posit/posit_6}
 \label{fig: posit_6}
-\caption{Diagrama de flujo del algoritmo para puntos coplanares, \textit{E} es el error de reproyección, la condición $Z_i>0$ verifica que los puntos reproyectados están por delante del plano imagen. Fuente: \cite{CoplanarPosit}.]}
+\caption{Diagrama de flujo del algoritmo para puntos coplanares, \textit{E} es el error de reproyección, la condición $Z_i>0$ verifica que los puntos reproyectados están por delante del plano imagen. Fuente: \cite{CoplanarPosit}.}
 \end{figure}
 
 \section{SoftPOSIT}
@@ -256,13 +256,25 @@ Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo re
 \subsection{Modern POSIT}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. La razón por la cual se necesitó modificar el POSIT original es que la versión original requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calculaba el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
 
-El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la ecuación \ref{eq_10} que se presentó en la sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incongnitas de esta ecuacion eran los vectores \textbf{I} y \textbf{J}. 
+El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la ecuación \ref{eq_10} que se presentó en la sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran los vectores \textbf{I} y \textbf{J}. 
 \begin{equation*}
 \begin{split}
 M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
 M_0M_j\cdot\textbf{J} = y^{'}_i - y_0
 \end{split}
 \end{equation*}
-En este caso no se conocen las coordenadas de $m_0$, por lo que también hace falta calcularlas para obtener la traslación. S
+En este caso no se conocen las coordenadas de $m_0$, por lo que también hace falta calcularlas para obtener la traslación. Sabiendo que \begin{equation*}
+\begin{split}
+X_0 = x_0/s \\
+Y_0 = y_0/s
+\end{split}
+\end{equation*}
+se puede reescribir la ecuación \ref{eq_10} como
+\begin{equation}\label{eq_24}
+\begin{split}
+x^{'}_i = M_0M_i\cdot s\textbf{i} + sX_0\\
+y^{'}_i = M_0M_j\cdot s\textbf{j} + sY_0
+\end{split}
+\end{equation}
 
 \section{POSIT Coplanar}
