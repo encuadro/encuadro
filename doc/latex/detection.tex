@@ -50,6 +50,7 @@ El marcador utilizado está basado en la estructura de detección incluida en los 
 \end{figure}
 
 \subsection{Estructura del marcador}
+\label{sec:detection_estructuras}
 A continuación se presentan algunas definiciones de las estructuras básicas que constituyen el marcador propuesto. Estas son de utilidad para el diseño y forman un flujo natural y escalable para el desarrollo del algoritmo de determinación de correspondencias.\\
 
 Los elementos mas básicos en la estructura son los \emph{segmentos} los cuales consisten en un par de puntos en la imagen, $\mathbf{p} = (p_x,p_y)$ y $\mathbf{q} = (q_x,q_y)$. Estos \emph{segmentos} forman lo que son los lados del \emph{cuadrilátero}, el próximo elemento estructural del marcador.\\
@@ -84,7 +85,8 @@ Un detalle del marcador completo se muestra en la figura \ref{fig:MarkerDetail} 
 \begin{split}
 \mathbf{x}  = \frac{\mathbf{c}_1 - \mathbf{c}_0}{||\mathbf{c}_1-\mathbf{c}_0||} & \quad
 \mathbf{y}  = \frac{\mathbf{c}_2 - \mathbf{c}_0}{||\mathbf{c}_2-\mathbf{c}_0||}
-\end{split}
+\end{split} 
+\label{ec:detection_ejes}
 \end{equation}
 
 La disposición de los $\text{QlSet}$ es tal que la distancia indicada $d_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $d_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $d_{01}\gg d_{02}$. Este criterio facilita la identificación de los \emph{vértices} de los $\text{QlSet}$ entre sí basados únicamente en la posición de sus centros y se explicará en la parte de determinación de correspondencias (sec.: \ref{subsec:detection_correspondencias}).
@@ -194,7 +196,7 @@ $RemoveFromMin(x)$\;
 
 \subsubsection{Determinación de correspondencias}
 \label{subsec:detection_correspondencias}
-Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador de forma de desarrollar un algoritmo modular, escalable y simple.
+Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcado (sec.: \ref{sec:detection_estructuras}), de forma de desarrollar un algoritmo modular, escalable y simple.
 
 Se toma como entrada la lista de segmentos filtrados
 \begin{equation}
@@ -224,7 +226,7 @@ Si  $\mathbf{r}_i$ es la recta que pasa por los puntos $\mathbf{p}_i$ y $\mathbf
 \mathbf{v}_{i+2} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+2} \nonumber\\
 \mathbf{v}_{i+3} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+1} \nonumber
 \end{eqnarray}
-resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario.
+resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario partiendo de ${v}_i$.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/Vertices.eps}
@@ -232,7 +234,7 @@ resultando en dos posibles configuraciones de vértices. Las dos configuraciones 
 \label{fig:Vertices}
 \end{figure}
 
-Posterior a la intersección se realiza un chequeo sobre el valor de las coordenadas de lo vértices. Si alguno de ellos se encuentra fuera de los límites de la imagen, todo el grupo de cuatro segmentos es marcado como inválido. Este chequeo resulta en el filtado de ``falsos cuadriláteros'' como por ejemplo un grupo de segmentos paralelos cercanos. 
+Posterior a la intersección se realiza un chequeo sobre el valor de las coordenadas de lo vértices. Si alguno de ellos se encuentra fuera de los límites de la imagen, el conjunto de cuatro segmentos es marcado como inválido. Este chequeo resulta en el filtado de ``falsos cuadriláteros'' como por ejemplo un grupo de segmentos paralelos cercanos. 
 
 Para cada uno de los conjuntos de vértices se construye con ellos un elemento \emph{cuadrilátero} que se almacena en una lista de cuadriláteros
 \begin{eqnarray}
@@ -252,31 +254,50 @@ A partir de esa lista de cuadriláteros, se buscan grupos de tres cuadriláteros $
 \end{equation}
 Estos cuadriláteros se marcan en la lista como utilizados con ellos se forma el $l$-ésimo $QlSet$ ordenándolos según su perímetro, de menor a mayor como  $QlSet[l] = \begin{pmatrix} Ql[0] & Ql[1] & Ql[2] \end{pmatrix}$ con $l = (0,1,2)$. Esta busqueda se realiza hasta encontrar un total de tres $QlSet$ completos de forma de obtener un marcador completo, esto es, detectando todos los cuadriláteros que lo componen. \\
 
-Una vez obtenida la lista $QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$ ésta se ordena de forma que su dispoción espacial se corresponda con la del \emph{marcador QR}. Se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, 
+Una vez obtenida la lista de tres $QlSet$, $QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$, ésta se ordena de forma que su dispoción espacial se corresponda con la del \emph{marcador QR}. 
+
+Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, 
 $$\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i.$$
+
+Una vez seleccionado el vector $\mathbf{u}_i$, se tienen obtiene el juego de vectores $(\mathbf{u}_i,\mathbf{u}_{i+1},\mathbf{u}_{i+2})$ como se muestra en la figura \ref{fig:Centros}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.45]{figs_detection/Centros.eps}
-\caption{Posibles configuraciones de centros posterior a la elección del menor vector $\mathbf{u}_0$.}
+\caption{Posibles configuraciones de centros resultan en la orientación de los vectores $\mathbf{u}_{i+k}$.}
 \label{fig:Centros}
 \end{figure}
 
+Existen solo dos posibles configuraciones para estos vectores por lo que se utiliza este conocimiento para ordenar los $QlSet$ de la lista realizando el producto vectorial
+\begin{equation*}
+ \mathbf{b} = \mathbf{u}_i \times \mathbf{u}_{i+1}.
+\end{equation*}
+Si el vector $\mathbf{b}$ tiene valor en la coordenada $z$ positivo se ordena como
+\begin{eqnarray*}
+ QlSet[0]\longleftarrow & QlSet[i]\\
+ QlSet[1]\longleftarrow & QlSet[i+2]\\
+ QlSet[2]\longleftarrow & QlSet[i+1]
+\end{eqnarray*}
+de lo contratio se ordena como
+\begin{eqnarray*}
+ QlSet[0]\longleftarrow & QlSet[i+1]\\
+ QlSet[1]\longleftarrow & QlSet[i+2]\\
+ QlSet[2]\longleftarrow & QlSet[i]
+\end{eqnarray*}
+
+Por ultimo se construye un \emph{marcador QR} que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en \ref{ec:detection_ejes}.
+
+Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre sus ejes y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.8]{figs_detection/VerticesProyectados.eps}
+\caption{Posibles configuraciones de centros resultan en la orientación de los vectores $\mathbf{u}_{i+k}$.}
+\label{fig:VerticesProyectados}
+\end{figure}
+De esta forma, recorriendo ordenadamente los elementos del marcador, se ordenan los vértices detectados obteniendo una lista de vértices que se corresponde con la lista de vértices del marcador en coordenadas del mundo. 
+
+Se determinan las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose.
+
 En caso de que no se encuentre ningún $QlSet$ completo se descarta la lista de segmentos y se indica que la determinación de correspondencias falló. Cabe la posibilidad de que los segmentos Debido a posibles oclusionesSi se encuentra un único $QlSet$ c
-
-
-
-
-
-
-Una vez obtenidos los 
-
-Los cuadriláteros de cada $\text{QlSet}$ se ordenan según su perímetro. 
-
-Se obtiene una lista de tres $\text{QlSet}$ la cual se ordena según la disposición espacial de sus centros logrando un ordenamiento que permite definir el sistema de coordenadas previamente explicado. 
-
-Los ejes de este sistema de coordenadas nos permite, para cada $\text{QlSet}$, proyectar los vértices sobre sus ejes y según el signo ordenarlos según el orden definido anteriormente. 
-
-De esta forma, recorriendo ordenadamente los elementos del marcador, se ordenan los vértices detectados obteniendo una lista de vértices que se corresponde con la lista de vértices del marcador en coordenadas del mundo. Se determinan las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose.
 
 \subsubsection{Resultados}
 Oh sí!
