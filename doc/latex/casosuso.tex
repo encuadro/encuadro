@@ -18,6 +18,12 @@ theMovie.view.frame = CGRectMake(0, 0, 60, 60);
 En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, se tiene el inconveniente de que en principio cualquier video parecería que solamente puede ser reproducido sobre rectángulos y no en cualquier polígono de cuatro puntos por ejemplo. Sin embargo algo que sí se puede hacer a las instancias de la clase \textit{UIView} es una transformación afin o incluso, de manera más genérica, una homografía. \\
 \subsection{\textit{CGAffineTransform} y \textit{CATransform3D}}
 La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que es del tipo \textit{CGAffineTransform}. También tiene una pripiedad llamada layer\\
+\\
+\\
+\\
+EXPLICAR AMBOS MÉTODOS Y POR QUÉ SE ELIGIÓ UNO Y NO EL OTRO
+\\
+\\
 \subsection{Resolución de Homografía}
 A continuación se hace el desarrollo de la resolución del sistema de ecuaciones que se tuvo que resolver para hallar los parámetros de la homografía que transforma una imagen de referencia en la imagen que se tiene en cada momento como resultado de la captura de la cámara. Se asume entonces que se conocen los puntos de referencia y los puntos de referencia transformados (los detectados luego del filtrado de segmentos) y lo que se quiere averiguar es la matriz $h$ que logra dicha transformación. Esta homografía 2D-2D se puede expresar en forma matricial, en coordenadas homogéneas de la siguiente manera:
 \[
@@ -38,7 +44,7 @@ j \\
 k
 \end{array} \right)
 \]
-donde la matriz $h$  representa la transformación, el vector $(x,y,z)^t$  representa los puntos de referencia a ser transformados y el vector $(i,j,k)^t$  respresenta los puntos detectados cuadro a cuadro como las esquinas del marcador.\\
+donde la matriz $h_{3x3}$  representa la transformación homográfica, el vector $(x,y,z)^t$  representa los puntos de referencia a ser transformados y el vector $(i,j,k)^t$  respresenta los puntos detectados cuadro a cuadro como las esquinas del marcador.\\
 Asumiendo un valor unitario para las coordenadas $z$ y $k$ la resolución del sistema se simplifica mucho y no se pierde generalidad. Imponiendo esto entonces, el sistema anterior se puede expresar de la siguiente forma:
 \begin{equation}\label{eq_1}
 xh_{11} + yh_{12} + h_{13} = i
@@ -49,7 +55,7 @@ xh_{21} + yh_{22} + h_{23} = j
 \begin{equation}\label{eq_3}
 xh_{31} + yh_{32} + h_{33} = 1
 \end{equation}
-Multiplicando la ecuación \ref{eq_3} por $i$ e igualándola a la ecuación \ref{eq_1} se obtiene lo siguiente:
+Multiplicando la ecuación \eqref{eq_3} por $i$ e igualándola a la ecuación \eqref{eq_1} se obtiene lo siguiente:
 \begin{equation}
 xh_{11} + yh_{12} + h_{13} = ixh_{31} + iyh_{32} + ih_{33}
 \end{equation}
@@ -57,7 +63,7 @@ o lo que es lo mismo:
 \begin{equation}\label{eq_4}
 xh_{11} + yh_{12} + h_{13} - ixh_{31} - iyh_{32} - ih_{33}=0
 \end{equation}
-Procediendo de manera análoga y multiplicando la ecuación \eqref{eq_3} por $j$ e igualándola a la ecuación \ref{eq_2} se obtiene lo siguiente:
+Procediendo de manera análoga y multiplicando la ecuación \eqref{eq_3} por $j$ e igualándola a la ecuación \eqref{eq_2} se obtiene lo siguiente:
 \begin{equation}
 xh_{21} + yh_{22} + h_{23} = jxh_{31} + jyh_{32} + jh_{33}
 \end{equation}
@@ -65,7 +71,7 @@ o lo que es lo mismo:
 \begin{equation}\label{eq_4}
 xh_{21} + yh_{22} + h_{23} - jxh_{31} - jyh_{32} - jh_{33}=0
 \end{equation}
-Las ecuaciones \ref{eq_3} y \ref{eq_4} se pueden expresar en forma matricial, de la siguiente manera:
+Las ecuaciones \eqref{eq_3} y \eqref{eq_4} se pueden expresar en forma matricial, de la siguiente manera:
 \[
 \left( \begin{array}{ccccccccc}
 x & y & 1 & 0 & 0 & 0 & -ix & -iy & -i \\ 
@@ -95,8 +101,45 @@ h_{33}
 0
 \end{array} \right)
 \]
+Teniendo entonces 4 parejas de puntos referencia y puntos transformados y asumiendo $h_{33}$ de valor unitario se tiene entonces 8 ecuaciones y 8 incógnitas, lo que lo vuelve un sistema compatible determinado que se puede expresar de la siguiente manera:
+\[
+\left( \begin{array}{cccccccc}
+x_0 & y_0 & 1 &  0  &  0  & 0 & -i_0x_0 & -i_0y_0 \\ 
+0   &  0  & 0 & x_0 & y_0 & 1 & -j_0x_0 & -j_0y_0 \\
 
+x_1 & y_1 & 1 &  0  &  0  & 0 & -i_1x_1 & -i_1y_1 \\ 
+0   &  0  & 0 & x_1 & y_1 & 1 & -j_1x_1 & -j_1y_1 \\
 
+x_2 & y_2 & 1 &  0  &  0  & 0 & -i_2x_2 & -i_2y_2 \\ 
+0   &  0  & 0 & x_2 & y_2 & 1 & -j_2x_2 & -j_2y_2 \\
+
+x_3 & y_3 & 1 &  0  &  0  & 0 & -i_3x_3 & -i_3y_3 \\ 
+0   &  0  & 0 & x_3 & y_3 & 1 & -j_3x_3 & -j_3y_3  
+
+\end{array} \right)
+\left( \begin{array}{cccccccc}
+h_{11} \\ 
+h_{12} \\
+h_{13} \\
+h_{21} \\
+h_{22} \\
+h_{23} \\
+h_{31} \\
+h_{32} 
+\end{array} \right)
+=
+\left( \begin{array}{cccccccc}
+i_0 \\ 
+j_0 \\
+i_1 \\
+j_1 \\
+i_2 \\
+j_2 \\
+i_3 \\
+j_3
+\end{array} \right)
+\]
+Así entonces, lo que se hace para resolver la homografía es cuadro a cuadro tener detectados los puntos en los que se quiere presentar la vista del video que se corresponden con cuatro puntos detectados por el filtro y tener las correspondencias con el marcador real, se posiciona la vista en la posición de referencia y se le aplica la homografía hallada que vincula la posición referencia con los puntos detectados.
 \section{Caso de Uso 03}
 \subsection{Comentarios sobre el caso de uso}
 \subsection{Detalles constructivos}
