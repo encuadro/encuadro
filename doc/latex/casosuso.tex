@@ -17,9 +17,86 @@ theMovie.view.frame = CGRectMake(0, 0, 60, 60);
 \end{verbatim}
 En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, se tiene el inconveniente de que en principio cualquier video parecería que solamente puede ser reproducido sobre rectángulos y no en cualquier polígono de cuatro puntos por ejemplo. Sin embargo algo que sí se puede hacer a las instancias de la clase \textit{UIView} es una transformación afin o incluso, de manera más genérica, una homografía. \\
 \subsection{\textit{CGAffineTransform} y \textit{CATransform3D}}
-La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que del tipo \textit{CGAffineTransform}. También tiene una pripiedad llamada \\
+La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que es del tipo \textit{CGAffineTransform}. También tiene una pripiedad llamada layer\\
 \subsection{Resolución de Homografía}
-Cómo se resolvió la homografía...desarrollo de las cuentas y resolución del sistema de ecuaciones.
+A continuación se hace el desarrollo de la resolución del sistema de ecuaciones que se tuvo que resolver para hallar los parámetros de la homografía que transforma una imagen de referencia en la imagen que se tiene en cada momento como resultado de la captura de la cámara. Se asume entonces que se conocen los puntos de referencia y los puntos de referencia transformados (los detectados luego del filtrado de segmentos) y lo que se quiere averiguar es la matriz $h$ que logra dicha transformación. Esta homografía 2D-2D se puede expresar en forma matricial, en coordenadas homogéneas de la siguiente manera:
+\[
+\left( \begin{array}{ccc}
+h_{11} & h_{12} & h_{13} \\ 
+h_{21} & h_{22} & h_{23} \\
+h_{31} & h_{32} & h_{33} 
+\end{array} \right)
+\left( \begin{array}{c}
+x \\ 
+y \\
+z
+\end{array} \right)
+=
+\left( \begin{array}{c}
+i \\
+j \\
+k
+\end{array} \right)
+\]
+donde la matriz $h$  representa la transformación, el vector $(x,y,z)^t$  representa los puntos de referencia a ser transformados y el vector $(i,j,k)^t$  respresenta los puntos detectados cuadro a cuadro como las esquinas del marcador.\\
+Asumiendo un valor unitario para las coordenadas $z$ y $k$ la resolución del sistema se simplifica mucho y no se pierde generalidad. Imponiendo esto entonces, el sistema anterior se puede expresar de la siguiente forma:
+\begin{equation}\label{eq_1}
+xh_{11} + yh_{12} + h_{13} = i
+\end{equation}
+\begin{equation}\label{eq_2}
+xh_{21} + yh_{22} + h_{23} = j
+\end{equation}
+\begin{equation}\label{eq_3}
+xh_{31} + yh_{32} + h_{33} = 1
+\end{equation}
+Multiplicando la ecuación \ref{eq_3} por $i$ e igualándola a la ecuación \ref{eq_1} se obtiene lo siguiente:
+\begin{equation}
+xh_{11} + yh_{12} + h_{13} = ixh_{31} + iyh_{32} + ih_{33}
+\end{equation}
+o lo que es lo mismo:
+\begin{equation}\label{eq_4}
+xh_{11} + yh_{12} + h_{13} - ixh_{31} - iyh_{32} - ih_{33}=0
+\end{equation}
+Procediendo de manera análoga y multiplicando la ecuación \eqref{eq_3} por $j$ e igualándola a la ecuación \ref{eq_2} se obtiene lo siguiente:
+\begin{equation}
+xh_{21} + yh_{22} + h_{23} = jxh_{31} + jyh_{32} + jh_{33}
+\end{equation}
+o lo que es lo mismo:
+\begin{equation}\label{eq_4}
+xh_{21} + yh_{22} + h_{23} - jxh_{31} - jyh_{32} - jh_{33}=0
+\end{equation}
+Las ecuaciones \ref{eq_3} y \ref{eq_4} se pueden expresar en forma matricial, de la siguiente manera:
+\[
+\left( \begin{array}{ccccccccc}
+x & y & 1 & 0 & 0 & 0 & -ix & -iy & -i \\ 
+0 & 0 & 0 & x & y & 1 & -jx & -jy & -j
+\end{array} \right)
+\left( \begin{array}{ccccccccc}
+h_{11} \\ 
+h_{12} \\
+h_{13} \\
+h_{21} \\
+h_{22} \\
+h_{23} \\
+h_{31} \\
+h_{32} \\
+h_{33}
+\end{array} \right)
+=
+\left( \begin{array}{ccccccccc}
+0 \\ 
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0 \\
+0
+\end{array} \right)
+\]
+
+
 \section{Caso de Uso 03}
 \subsection{Comentarios sobre el caso de uso}
 \subsection{Detalles constructivos}
