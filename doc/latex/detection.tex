@@ -148,51 +148,33 @@ out = lsd(&nb,img,m,n);
 \subsubsection{Filtrado de segmentos}
 El filtrado de segmentos consiste en la búsqueda de conjuntos de cuatro segmentos conexos en la lísta de segmentos de línea detectados por \emph{LSD}. Los conjuntos de segmentos conexos encontrados se devuelven en una lista similar a la de \emph{LSD}. A continuación se realiza una breve descripción del algoritmo de filtrado de segmentos implementado.\\
 
-Se parte de una lista de $n$ segmentos de línea y se recorre en busca de segmentos vecinos. La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos $\mathbf{s}_j$ y $\mathbf{s}_k$ en forma de ``U'' y luego buscar un último segmento $\mathbf{s}_l$ que cierre la ``U''. Una vez encontrado el conjunto de cuatro segmentos conexos se marcan estos segmentos como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $n$ segmentos de la lista de entrada.
+Se parte de una lista de $m$ segmentos de línea,
+\begin{equation}
+ \mathbf{L} = \begin{pmatrix}
+               \mathbf{s}_0 & \mathbf{s}_1 & \dots & \mathbf{s}_{m-1} 
+              \end{pmatrix}^t
+\end{equation}
+y se recorre en $i$ en busca de segmentos vecinos.
 
-testean sus dos puntos $\mathbf{p}_i$ y $\mathbf{q}_i$ con los puntos del $j$-ésimo segmento $\mathbf{s}_j$, $\mathbf{p}_j$ y $\mathbf{q}_j$ para $j=(i+1,\dots,n)$. 
+La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos, en primero lugar $\mathbf{s}_j$ y en segundo lugar $\mathbf{s}_k$, de forma que se forme una ``U'' como se muestra en la figura \ref{fig:SegmentosRectas}. La tercer etapa de búsqueda consiste en completar ese conjunto con un cuarto segmento $\mathbf{s}_l$ que cierre la ``U''.
 
-Dos segmentos son vecinos si se cumple que la distancia euclidiana entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$, $\mathbf{q}_i\leftrightarrow \mathbf{q}_j$, $\mathbf{p}_i\leftrightarrow \mathbf{q}_j$ o $\mathbf{q}_i\leftrightarrow \mathbf{p}_j$. Si se cumple alguna de las correspondencias se continúa buscando un segmento que sea vecino. Por ejemplo, si se tiene la correspondencia $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$ se busca el $k$-ésimo segmento $\mathbf{s}_k$ que cumple que la distancia euclidiana $d_{ij}$ es menor a cierto umbral para alguna de las combinaciones $\mathbf{q}_i\leftrightarrow \mathbf{p}_k$ y $\mathbf{q}_i\leftrightarrow \mathbf{q}_k$.
+Dos segmentos son vecinos si se cumple que la distancia euclidiana entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$, $\mathbf{q}_i\leftrightarrow \mathbf{q}_j$, $\mathbf{p}_i\leftrightarrow \mathbf{q}_j$ o $\mathbf{q}_i\leftrightarrow \mathbf{p}_j$. En la primera etapa de la búsqueda se testean todas las posibilidades mientras que en la segunda etapa se testean solo los puntos del segmeneto que no fueron utilizados. Por ejemplo, si se encontró la correspondencia $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$ se busca el $k$-ésimo segmento $\mathbf{s}_k$ que cumple que la distancia euclidiana $d_{ij}$ es menor a cierto umbral para alguna de las combinaciones $\mathbf{q}_i\leftrightarrow \mathbf{p}_k$ y $\mathbf{q}_i\leftrightarrow \mathbf{q}_k$. En la tercer etapa la chequeo se realiza de forma mas aún mas restingida.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.8]{figs_detection/SegmentosRectas.eps}
+\caption{Conjunto de cuadriláteros conexos. A la izquiera el primer paso del filtrado en donde se busca una ``U'', a la derecha el último paso en donde se cierra la ``U''.}
+\label{fig:SegmentosRectas}
+\end{figure}
+
+Una vez encontrado el conjunto de cuatro segmentos conexos se marcan estos segmentos como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $m$ segmentos de la lista de entrada. De esta forma se obtiene una lista de salida $\mathbf{S}$ de $n$ segmentos en donde $n$ es por construcción múltiplo de cuatro.\\
 
 La condición de vecindad se podría refinar de forma de disminuir el riesgo de tener ``falsos vecinos''. Esta situación se puede dar, por ejemplo, en un grupo de segmentos paralelos cercanos y de tamaño similar o en el caso de detectar cuadrados concéntricos en los que la distancia entre sus lados es inferior al umbral. En el primer caso se puede considerar un condición de vecindad que tome en cuenta la intersección de los segmentos y la distancia de la intersección a los puntos del segmento. De todas formas ninguna de las dos situaciones se hicieron presentes en casos prácticos y la implementación de soluciones no fue necesaria además de que aumentaría levemente la complejidad del algoritmo.
-
-\begin{algorithm}[H]
-\KwData{list=\{$(\mathbf{p}_0,\mathbf{q}_0),(\mathbf{p}_1,\mathbf{q}_1),\dots,(\mathbf{p}_{n-1},\mathbf{q}_{n-1})$\}.}
-\KwResult{filteredlist=\{$(\mathbf{p}_0,\mathbf{q}_0),(\mathbf{p}_1,\mathbf{q}_1),\dots,(\mathbf{p}_{m-1},\mathbf{q}_{m-1})$\}. Lista ordenada.}
-\Begin{
-\For{$i=(0,1,\dots,n-1)$}{
-	\If{segmento $i$ no marcado}{
-	\For{$z \in ImPred(y) \cap Min$}{
-		remove the arc $zy$ from $V$\;
-		$NbSuccInS(z) \longleftarrow NbSuccInS(z) - 1$\;
-		move $z$ in $T$ to the list preceding its present list\;
-		\{i.e. If $z \in T[k]$, move $z$ from $T[k]$ to
-		$T[k-1]$\}\;
-}}
-}
-\nl\While{$S \neq \emptyset$}{\label{InRes1}
-\nlset{REM} remove $x$ from the list of $T$ of maximal index\;\label{InResR}
-\lnl{InRes2}\While{$|S \cap ImSucc(x)| \neq |S|$}{
-\For{$ y \in S-ImSucc(x)$}{
-\{ remove from $V$ all the arcs $zy$ : \}\;
-\For{$z \in ImPred(y) \cap Min$}{
-remove the arc $zy$ from $V$\;
-$NbSuccInS(z) \longleftarrow NbSuccInS(z) - 1$\;
-move $z$ in $T$ to the list preceding its present list\;
-\{i.e. If $z \in T[k]$, move $z$ from $T[k]$ to
-$T[k-1]$\}\;
-}
-$NbPredInMin(y) \longleftarrow 0$\;
-$NbPredNotInMin(y) \longleftarrow 0$\;
-$S \longleftarrow S - \{y\}$\;
-$AppendToMin(y)$\;
-}
-}
-$RemoveFromMin(x)$\;
-}
-}
-\caption{filterSegments\label{algo:filter_segments}}
-\end{algorithm}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.8]{figs_detection/FilterError.eps}
+\caption{Posible configuración de segmentos paralelos que ``sobreviven'' al filtrado. A la izquiera el grupo de segmentos, a la derecha se muestra como se cierra el conjunto partiendo de $\mathbf{s}_i$.}
+\label{fig:FilterError}
+\end{figure}
 
 \subsubsection{Determinación de correspondencias}
 \label{subsec:detection_correspondencias}
@@ -204,21 +186,15 @@ Se toma como entrada la lista de segmentos filtrados
 			 \mathbf{s}_0 & \mathbf{s}_1 & \dots & \mathbf{s}_{i} & \mathbf{s}_{i+1} & \mathbf{s}_{i+2} & \mathbf{s}_{i+3} & \dots & \mathbf{s}_{n-1}
 			 \end{pmatrix}^t
 \end{equation}
-en donde cada segmento se compone de un punto inicial $\mathbf{p}_{i}$ y un punto final $\mathbf{q}_{i}$, $\mathbf{s}_{i} = (\mathbf{p}_{i},\mathbf{q}_{i})$, 
-con $n$ es múltiplo de cuatro. Si $i$ también lo es, entonces el sub-conjunto 
-\begin{equation}
-\mathbf{S}_i = \begin{pmatrix}
+en donde cada segmento se compone de un punto inicial $\mathbf{p}_{i}$ y un punto final $\mathbf{q}_{i}$, $\mathbf{s}_{i} = (\mathbf{p}_{i},\mathbf{q}_{i})$, con $n$ es múltiplo de cuatro. Si $i$ también lo es, entonces el sub-conjunto, 
+$\mathbf{S}_i = \begin{pmatrix}
 				\mathbf{s}_{i} & \mathbf{s}_{i+1} & \mathbf{s}_{i+2} & \mathbf{s}_{i+3}
-				\end{pmatrix}^t
-\end{equation}
-corresponde a un conjunto de cuatro segmentos del línea conexos.\\
+				\end{pmatrix}^t$, corresponde a un conjunto de cuatro segmentos del línea conexos.
 
 Para cada sub-conjunto $\mathbf{S}_i$ se intersectan entre sí los segmentos obteniendo una lista de cuatro vértices,
-\begin{eqnarray}
-\mathbf{V}_i =  \begin{pmatrix}
+$\mathbf{V}_i =  \begin{pmatrix}
 		 \mathbf{v}_{i} & \mathbf{v}_{i+1} & \mathbf{v}_{i+2} & \mathbf{v}_{i+3} 
-		 \end{pmatrix}^t
-\end{eqnarray}
+		 \end{pmatrix}^t$. 
 Si  $\mathbf{r}_i$ es la recta que pasa por los puntos $\mathbf{p}_i$ y $\mathbf{q}_i$ del segmento  $\mathbf{s}_i$, la lista de vértices se obtiene como sigue,
 \begin{eqnarray}
 \mathbf{v}_i = & \mathbf{r}_i\cap \mathbf{r}_{i+1} \nonumber\\
@@ -237,11 +213,11 @@ resultando en dos posibles configuraciones de vértices. Las dos configuraciones 
 Posterior a la intersección se realiza un chequeo sobre el valor de las coordenadas de lo vértices. Si alguno de ellos se encuentra fuera de los límites de la imagen, el conjunto de cuatro segmentos es marcado como inválido. Este chequeo resulta en el filtado de ``falsos cuadriláteros'' como por ejemplo un grupo de segmentos paralelos cercanos. 
 
 Para cada uno de los conjuntos de vértices se construye con ellos un elemento \emph{cuadrilátero} que se almacena en una lista de cuadriláteros
-\begin{eqnarray}
+\begin{eqnarray*}
  QlList =  \begin{pmatrix}
             \text{Ql}[0] & \text{Ql}[1] & \dots & \text{Ql}[i] & \dots & \text{Ql}[\frac{n}{4}]
            \end{pmatrix}^t
-\end{eqnarray}
+\end{eqnarray*}
 % en sentido amplio, de dos segmentos contiguos, $s_i\cap s_{i+1}$ dadas las recta $r_1$ que pasa por los puntos $\mathbf{p}_1$, $\mathbf{q}_1$ del segmento $s_1$ y la recta $r_2$ que pasa por los puntos $\mathbf{p}_2$, $\mathbf{q}_2$ del segmento $s_2$, se determina el vértice correspondiente como la intersección $r_1 \cap r_2$. \\
 % 
 % y se intersectan en grupos de cuatro obteniendo cuatro vértices por cada grupo. Para cada grupo de vértices $v_k$ se construye un elemento cuadrilátero $\text{Ql}[k]$ que se almacena en una lista de cuadriláteros. 
@@ -249,17 +225,16 @@ Para cada uno de los conjuntos de vértices se construye con ellos un elemento \e
 A partir de esa lista de cuadriláteros, se buscan grupos de tres cuadriláteros $\text{QlSet}$ que ``compartan'' un mismo centro. Para esto se recorre ordenadamente la lista en $i$ buscando para cada cuadrilátero dos cuadriláteros $j$ y $k$ que cumplan que la distancia entre sus centros  y el del $i$-ésimo cuadrilátero sea menor a cierto umbral $d_{th}$,
 \begin{equation}
 \begin{split}
- d_{ij} = ||\mathbf{c}_i - \mathbf{c}_j||<d_{th} & \quad  d_{ik} = ||\mathbf{c}_i - \mathbf{c}_k||<d_{th}
+ d_{ij} = ||\mathbf{c}_i - \mathbf{c}_j||<d_{th}, & \quad  d_{ik} = ||\mathbf{c}_i - \mathbf{c}_k||<d_{th}.
 \end{split}
 \end{equation}
-Estos cuadriláteros se marcan en la lista como utilizados con ellos se forma el $l$-ésimo $QlSet$ ordenándolos según su perímetro, de menor a mayor como  $QlSet[l] = \begin{pmatrix} Ql[0] & Ql[1] & Ql[2] \end{pmatrix}$ con $l = (0,1,2)$. Esta busqueda se realiza hasta encontrar un total de tres $QlSet$ completos de forma de obtener un marcador completo, esto es, detectando todos los cuadriláteros que lo componen. \\
+Estos cuadriláteros se marcan en la lista como utilizados con ellos se forma el $l$-ésimo $QlSet$ ordenándolos según su perímetro, de menor a mayor como  
+$$QlSet[l] = \begin{pmatrix} Ql[0] & Ql[1] & Ql[2] \end{pmatrix}$$
+con $l = (0,1,2)$. Esta busqueda se realiza hasta encontrar un total de tres $QlSet$ completos de forma de obtener un marcador completo, esto es, detectando todos los cuadriláteros que lo componen. \\
 
-Una vez obtenida la lista de tres $QlSet$, $QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$, ésta se ordena de forma que su dispoción espacial se corresponda con la del \emph{marcador QR}. 
-
-Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, 
-$$\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i.$$
-
-Una vez seleccionado el vector $\mathbf{u}_i$, se tienen obtiene el juego de vectores $(\mathbf{u}_i,\mathbf{u}_{i+1},\mathbf{u}_{i+2})$ como se muestra en la figura \ref{fig:Centros}.
+Una vez obtenida la lista de tres $QlSet$, 
+$$QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$$
+ésta se ordena de forma que su dispoción espacial se corresponda con la del \emph{marcador QR}. Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, $\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i$. Una vez seleccionado el vector $\mathbf{u}_i$, se tienen obtiene el juego de vectores $(\mathbf{u}_i,\mathbf{u}_{i+1},\mathbf{u}_{i+2})$ como se muestra en la figura \ref{fig:Centros}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.45]{figs_detection/Centros.eps}
@@ -267,26 +242,24 @@ Una vez seleccionado el vector $\mathbf{u}_i$, se tienen obtiene el juego de vec
 \label{fig:Centros}
 \end{figure}
 
-Existen solo dos posibles configuraciones para estos vectores por lo que se utiliza este conocimiento para ordenar los $QlSet$ de la lista realizando el producto vectorial
+Existen solo dos posibles configuraciones para estos vectores por lo que se utiliza este conocimiento para ordenar los $QlSet$ de la lista realizando el producto vectorial, aumentando la dimensión de los vectores $\hat{\mathbf{u}_i}$ y $\hat{\mathbf{u}_{i+1}}$ con coordenada $z=0$,
 \begin{equation*}
- \mathbf{b} = \mathbf{u}_i \times \mathbf{u}_{i+1}.
+ \mathbf{b} = \hat{\mathbf{u}_i} \times \hat{\mathbf{u}_{i+1}}.
 \end{equation*}
-Si el vector $\mathbf{b}$ tiene valor en la coordenada $z$ positivo se ordena como
+Si el vector $\mathbf{b}$ tiene valor en la coordenada $z$ positivo se ordena como,
 \begin{eqnarray*}
  QlSet[0]\longleftarrow & QlSet[i]\\
  QlSet[1]\longleftarrow & QlSet[i+2]\\
  QlSet[2]\longleftarrow & QlSet[i+1]
 \end{eqnarray*}
-de lo contratio se ordena como
+o de lo contratio se ordena como,
 \begin{eqnarray*}
  QlSet[0]\longleftarrow & QlSet[i+1]\\
  QlSet[1]\longleftarrow & QlSet[i+2]\\
  QlSet[2]\longleftarrow & QlSet[i]
 \end{eqnarray*}
 
-Por ultimo se construye un \emph{marcador QR} que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en \ref{ec:detection_ejes}.
-
-Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre sus ejes y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
+Por ultimo se construye un \emph{marcador QR} que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre sus ejes y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/VerticesProyectados.eps}
@@ -296,6 +269,9 @@ Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$
 De esta forma, recorriendo ordenadamente los elementos del marcador, se ordenan los vértices detectados obteniendo una lista de vértices que se corresponde con la lista de vértices del marcador en coordenadas del mundo. 
 
 Se determinan las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose.
+
+\subsubsection{Robustificando la detección}
+En base al algoritmo de determinación de correspondencias previamente descrito se tienen ciertas limitantes que resultan afectar seriamente la performance de la aplicación. La primera de ellas 
 
 En caso de que no se encuentre ningún $QlSet$ completo se descarta la lista de segmentos y se indica que la determinación de correspondencias falló. Cabe la posibilidad de que los segmentos Debido a posibles oclusionesSi se encuentra un único $QlSet$ c
 
