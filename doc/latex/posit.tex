@@ -12,7 +12,7 @@ En la figura \ref{fig: posit_1} se puede ver un modelo de cámara pinhole, donde 
 Se considera ahora un objeto con puntos característicos $M_0$, $M_1$, ...., $M_i$, ...., $M_n$, cuyo eje de coordenadas esta centrado en  $M_0$ y está compuesto por los versores ($M_0u$, $M_0v$, $M_0w$ ). La geometría del objeto se asume conocida, por lo tanto las coordenadas de lo puntos característicos del objeto en el eje de coordenadas del mismo son conocidas. Por ejemplo ($U_i$, $V_i$, $W_i$) son las coordenadas del punto $M_i$ en el marco de referencia del objeto.
 Los puntos correspondientes a los puntos del objeto $M_i$ en la imagen son conocidos y se identifican como $m_i$, ($x_i$, $y_i$) son las coordenadas de este punto en la imagen. Las coordenadas de los puntos $M_i$ en el eje de coordenadas de la cámara, identificadas como ($X_i$, $Y_i$, $Z_i$), son desconocidas ya que no se conoce la pose del objeto respecto a la cámara.
 
-Se busca entonces computar la matriz de rotación y el vector de traslación del objeto respecto a la cámara. La matriz de rotación \textbf{R} del objeto, es la matriz cuyas filas son las coordenadas del los versores $i$, $j$ y $k$ del sistema de coordenadas de la cámara expresados en el sistema de coordenadas del objeto ($u$, $v$, $w$), se puede ver como la matriz de cambio de base que pasa coordenadas en la base del objeto a coordenadas en la base de la cámara. 
+Se busca computar la matriz de rotación y el vector de traslación del objeto respecto a la cámara. La matriz de rotación \textbf{R} del objeto, es la matriz cuyas filas son las coordenadas del los versores $i$, $j$ y $k$, expresados en el sistema de coordenadas del objeto ($u$, $v$, $w$), se puede ver como la matriz de cambio de base que pasa coordenadas en la base del objeto a coordenadas en la base de la cámara. 
 
 La matriz  \textbf{R}  queda:
 \[ R=\left( \begin{array}{ccc}
@@ -41,10 +41,10 @@ mientras que la proyección SOP esta dada por:
 \begin{align*}
 x^{'}_i &= f X_i/Z_0, & y^{'}_i& = fY_i/Z_0. 
 \end{align*}
- De aquí en más las proyecciones SOP de los puntos $M_i$ se identificaran como $p_i$ mientras que las proyecciones perspectivas, que son los puntos que se detectan en la imagen, se identifican como $m_i$. 
+ De aquí en más las proyecciones SOP de los puntos $M_i$ se identificaran como $p_i$, mientras que las proyecciones perspectivas, que son los puntos que se detectan en la imagen, se identifican como $m_i$. 
 Al término $s=f/Z_0$ se lo conoce como el factor de escala de la SOP. Se puede ver que para el caso particular del punto $M_0$ la proyección perspectiva $m_0$ y la SOP $p_0$ coinciden. 
 
-En la figura \ref{fig: posit_1} se puede ver como se construye la SOP. Primero se realiza la proyección ortogonal de todos los puntos $M_i$ sobre $K$, el plano paralelo al plano imagen que pasa por el punto $M_0$. Las proyecciones de los puntos $M_i$ sobre $K$ se llaman $P_i$. El segundo paso consiste en hacer la proyección perspectiva de los puntos $P_i$ sobre el plano imagen $G$ para obtener finalmente los puntos $p_i$. En la figura también se puede ver que el tama\~no del vector $m_0p_i$ es $s$ veces el tama\~o de $M_0P_i$. Teniendo esto en cuenta se pueden expresar las coordenadas de $p_i$ como:
+En la figura \ref{fig: posit_1} se puede ver como se construye la SOP. Primero se realiza la proyección ortogonal de todos los puntos $M_i$ sobre $K$, el plano paralelo al plano imagen que pasa por el punto $M_0$. Las proyecciones de los puntos $M_i$ sobre $K$ se llaman $P_i$. El segundo paso consiste en hacer la proyección perspectiva de los puntos $P_i$ sobre el plano imagen $G$ para obtener finalmente los puntos $p_i$. En la figura también se puede ver que el tama\~no del vector $m_0p_i$ es $s$ veces el tama\~no de $M_0P_i$. Teniendo esto en cuenta se pueden expresar las coordenadas de $p_i$ como:
 \begin{equation}\label{eq_1}
 \begin{split}
 x^{'}_i = fX_0/Z_0 + f(X_i - X_0)/Z_0 = x_0 + s(X_i - X_0)\\ 
@@ -65,27 +65,16 @@ donde $\epsilon_i$ se define como
 \begin{equation}\label{eq_4}
 \epsilon_i=\frac{1}{Z_0}\textbf{$M_0M_i$} \textbf{k}
 \end{equation}
-Se puede ver que los términos $x_i(1+\epsilon_i)$ y $y_i(1+\epsilon_i)$ son las coordenadas $(x^{'}_i,y^{'}_i)$ de la SOP. Primero se descompone el vector $M_0M_i$ en la suma de $M_0P_i$ y $P_iM_i$. De la figura \ref{fig: posit_1} se puede ver que sentido del vector $P_iM_i$ se según el versor \textbf{k}. Al realizar el producto escalar con \textbf{i} y \textbf{j} se tiene que:
-\begin{equation}\label{eq_5}
-\begin{split}
-M_0M_i \textbf{i}= M_0P_i \textbf{i} + P_iM_i \textbf{i} = \frac{Z_0}{f}m_0p_i \textbf{i} \\
-M_0M_i \textbf{j}= M_0P_i \textbf{j} + P_iM_i \textbf{j} = \frac{Z_0}{f}m_0p_i \textbf{j} 
-\end{split}
-\end{equation}
-Recordando que $p_i$ es la SOP y que $m_0$ es la proyección del punto de referencia del objeto, se tiene: 
-\begin{equation}\label{eq_6}
-\begin{split}
-m_0p_i \textbf{i}= x^{'}_i - x_0 \\
-m_0p_i \textbf{j}= y^{'}_i - y_0 
-\end{split}
-\end{equation}
-Finalmente si se sustituye en \ref{eq_5} y se compara con \ref{eq_2} y \ref{eq_3} se puede ver que:
-\begin{equation}\label{eq_7}
-\begin{split}
-x^{'}_i= x_i(1+\epsilon_i)\\
-y^{'}_i= y_i(1+\epsilon_i)
-\end{split}
-\end{equation}
+Se puede ver que los términos $x_i(1+\epsilon_i)$ y $y_i(1+\epsilon_i)$ son las coordenadas $(x^{'}_i,y^{'}_i)$ de la SOP. 
+En la expresion de $\epsilon_i$ en \ref{eq_4}, el producto escalar da la coordenada  \textit{z} de $M_0M_i$, $Z_i - Z_0$, entonces se tiene que 
+\begin{equation*}
+(1+\epsilon_i) = \frac{Z_i - Z_0}{Z_0} + 1 = \frac{Z_i}{Z_0}
+\end{equation*}
+ademas se tiene la proyección perspectiva $x_i=fX_i/Z_i$, combinando las dos expresiones se tiene
+\begin{equation*}
+x_i(1+\epsilon_i) = f\frac{X_i}{Z_i} \frac{Z_i}{Z_0} = f\frac{X_i}{Z_0}
+\end{equation*} 
+que es la coordenada $x^{'}_i$ del punto $p_i$.
 
 \subsection{Algoritmo}\label{sec:classicPosit4}
 Las ecuaciones \ref{eq_2} y \ref{eq_3} se puede reescribir como:
@@ -109,7 +98,7 @@ M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
 M_0M_j\cdot\textbf{J} = y^{'}_i - y_0
 \end{split}
 \end{equation}
-Si se escribe la ecuación \ref{eq_10} para los $n$ puntos del modelo, se tiene un sistema de ecuaciones con \textbf{I} y \textbf{J} como incógnitas
+Si se escribe la ecuación \ref{eq_10} para los $n$ puntos del modelo, se tiene un sistema de $n$ ecuaciones con \textbf{I} y \textbf{J} como incógnitas
   \begin{equation}\label{eq_11}
  \begin{split}
  AI = \textbf{$x^{'} - x_0$} \\
@@ -126,12 +115,14 @@ Si se escribe la ecuación \ref{eq_10} para los $n$ puntos del modelo, se tiene u
 donde \textbf{B} es la pseudo inversa de la matriz A. Se debe notar que la matriz \textbf{B} depende únicamente de la geometría del modelo que se asume conocida, por lo tanto solo es necesario calcular la matriz \textbf{B} una sola vez. 
 
 Una vez obtenidos \textbf{I} y \textbf{J} se calculan \textit{s} y los versores \textbf{i}, \textbf{j} y \textbf{k}
- \begin{align}\label{eq_13}
+\begin{subequations} \label{eq_13}
+ \begin{align}
  s& =\left(\vert\textbf{I}\vert \vert\textbf{J}\vert\right)^{1/2} \\
  i& = \frac{\textbf{I}}{s} \\
  j& = \frac{\textbf{J}}{s} \\
  k& = i \times j
  \end{align}
+ \end{subequations}
 El vector traslación del centro del objeto al centro de la cámara es el vector $OM_0$ 
 \begin{equation}\label{eq_14}
 OM_0 = \frac{Z_0}{f}Om_0 = \frac{Om_0}{s}
@@ -207,11 +198,11 @@ como se mencionó anteriormente $\lambda$ y $\mu$ son las partes real e imaginari
 Esto quiere decir que se obtienen dos soluciones para \textbf{I} y \textbf{J}
 \begin{subequations}\label{eq_23}
 \begin{align}
-\textbf{I}_1&= \textbf{I}_0 + \rho \cos \theta\textbf{u},  & \textbf{J}_1& = \textbf{J}_0 + \rho \sin \theta\textbf{u}\label{eq_24}\\
-\textbf{I}_2&= \textbf{I}_0 - \rho \cos \theta\textbf{u},   &\textbf{J}_2& = \textbf{J}_0 - \rho \sin \theta\textbf{u}\label{eq_25}
+\textbf{I}_1&= \textbf{I}_0 + \rho \cos \theta\textbf{u},  & \textbf{J}_1& = \textbf{J}_0 + \rho \sin \theta\textbf{u}\label{eq_23a}\\
+\textbf{I}_2&= \textbf{I}_0 - \rho \cos \theta\textbf{u},   &\textbf{J}_2& = \textbf{J}_0 - \rho \sin \theta\textbf{u}\label{eq_23b}
 \end{align}
 \end{subequations}
-Como el vector \textbf{u} es perpendicular la plano del objeto, la solución encontrada en \ref{eq_24} es simétrica a \ref{eq_25}.  Desde el punto de vista de la cámara, se puede ver que las dos posibles soluciones son aquellas que tienen la misma proyección SOP. Esto es equivalente a decir que para una misma proyección SOP hay dos posibles poses que que verifican las ecuaciones \ref{eq_11}. 
+Como el vector \textbf{u} es perpendicular la plano del objeto, la solución encontrada en \ref{eq_23a} es simétrica a \ref{eq_23b}.  Desde el punto de vista de la cámara, se puede ver que las dos posibles soluciones son aquellas que tienen la misma proyección SOP. Esto es equivalente a decir que para una misma proyección SOP hay dos posibles poses que que verifican las ecuaciones \ref{eq_11}. 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_posit/posit_3.eps}
@@ -242,28 +233,29 @@ En el caso en que las dos soluciones sean validas para todas las iteraciones, el
 \caption{\subref{fig: posit_4}:Caso en el que solo una pose de las dos iniciales es coherente, también en las siguientes iteraciones solo una de las dos poses es posible, se tiene un única solución. \subref{fig: posit_5}: Caso en el que en cada paso hay dos posibilidades, se opta por la mejor pose(++ mejor pose, + peor pose) en cada rama. Fuente: \cite{CoplanarPosit}.}
 \end{figure}
 
-
-\begin{figure}[ht]
+\begin{comment}
+\begin{figure}[h]
 \centering
-\includegraphics[scale=0.55]{figs_posit/posit_6}
+\includegraphics[scale=0.45]{figs_posit/posit_6}
 \label{fig: posit_6}
 \caption{Diagrama de flujo del algoritmo para puntos coplanares, \textit{E} es el error de reproyección, la condición $Z_i>0$ verifica que los puntos reproyectados están por delante del plano imagen. Fuente: \cite{CoplanarPosit}.}
 \end{figure}
+\end{comment}
 
 \section{SoftPOSIT}
 Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el capitulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudio el algoritmo SoftPOSIT desarrollado por \textit{Philip David}, \textit{Daniel DeMenthon}, \textit{Ramani Duraiswami} y \textit{Hanan Samet} presentado en \cite{David02softposit}. Este algoritmo recibe como entrada el modelo 3D y una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo. Utiliza un metodo llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT.
 
 \subsection{Modern POSIT}
-Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. La razón por la cual se necesitó modificar el POSIT original es que la versión original requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calculaba el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
+Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. Ademas la pose se calcula minimizando una funcion que mide la distancia entre la proyeccion SOP y los puntos estimados en cada iteración.
 
-El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la ecuación \ref{eq_10} que se presentó en la sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran los vectores \textbf{I} y \textbf{J}. 
+El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la ecuación \ref{eq_10} que se presentó en la sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran solamente los vectores \textbf{i}, \textbf{j}. 
 \begin{equation*}
 \begin{split}
 M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
 M_0M_j\cdot\textbf{J} = y^{'}_i - y_0
 \end{split}
 \end{equation*}
-En este caso no se conocen las coordenadas de $m_0$, por lo que también hace falta calcularlas para obtener la traslación. Sabiendo que \begin{equation*}
+En este caso no se conocen las coordenadas de $m_0$, por lo que también hace falta calcularlas para obtener el vector de traslación. Sabiendo que \begin{equation*}
 \begin{split}
 X_0 = x_0/s \\
 Y_0 = y_0/s
@@ -276,5 +268,127 @@ x^{'}_i = M_0M_i\cdot s\textbf{i} + sX_0\\
 y^{'}_i = M_0M_j\cdot s\textbf{j} + sY_0
 \end{split}
 \end{equation}
+El sistema a resolver queda
+\begin{equation}\label{eq_25}
+ A\cdot \left[ \begin{array}{cc}
+\textbf{I} & \textbf{J} \\
+sX_0 & sY_0 \end{array} \right] = \left[ \begin{array}{cc}
+x^{'} & y^{'} \end{array} \right] 
+\end{equation}
+donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver, utilizando minimos cuadrados, como se vio en la sección \ref{sec:classicPosit4}. Se calculan la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vio en \ref{eq_13}. Finalmente el vector de traslación se obtiene como.
+\begin{align}\label{eq_26}
+X_0 &= \frac{(sX_0)}{s}& Y_0 &= \frac{(sY_0)}{s}& Z_0 &= \frac{f}{s} 
+\end{align} 
+
+Sin embargo se propone un método que busca minimizar la distancia al cuadrado entre las proyecciones SOP de los puntos $M_i$ y las proyecciones SOP calculadas en cada iteración. En la figura \ref{fig: posit_7} se puede ver geométricamente cual es la distancia que se busca minimizar.
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=2]{figs_posit/posit_7}
+\label{fig: posit_7}
+\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la ecuación \ref{eq_24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la ecuación \ref{eq_24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{David02softposit}.}
+\end{figure}
+En el término de la derecha de \ref{eq_24},se tiene la proyección SOP de $M_i$, $p_i$. Las coordenadas de este punto son
+$$ p_i = s(M_0M_i\cdot \textbf{i} + X_0 , M_0M_i\cdot \textbf{j} + Y_0).$$
+Por otro lado, en el término de la izquierda de \ref{eq_24}, se tienen las coordenadas del punto $p^{'}_i$ 
+$$ p^{'}_i = (1 + \epsilon_i)(x_i, y_i).$$
+que es la proyección SOP de la intersección de la línea de vista del punto $m_i$ con el plano $G''$, esto esta demostrado en \cite{David02softposit}. La pose encontrada es correcta cuando ambos lados de \ref{eq_24} son iguales. Por lo tanto la ecuacion que se busca minimizar es la siguiente:
+\begin{equation}\label{eq_27}
+E = \sum _i \left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_i \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_i \right) ^2 \right)
+\end{equation}
+donde 
+\begin{equation}\label{eq_28}
+\begin{split}
+\textbf{Q}_1 = s(i,X_0)\\
+\textbf{Q}_2 = s(j,Y_0)
+\end{split}
+\end{equation}
+y $M_0M_i$ se toma en coordenadas homogeneas. 
+
+Los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ son aquellos que minimizan el valor $E$, por lo tanto se despejan de derivar la expresión de  $E$ e igualarla a cero. 
+\begin{comment}
+\begin{equation*}
+\begin{split}
+\frac{\partial E}{\partial \textbf{Q}_1} = \dfrac{\partial}{\partial \textbf{Q}_1}  \left[\sum _i \left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_i \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_i \right) ^2 \right)\right]\\ =\sum_i  2\left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_i \right) \dfrac{\partial }{\partial \textbf{Q}_1}\left(\textbf{Q}_1 \cdot M_0M_i\right) = \sum_i  2\left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_i \right) M_0M_i^T = 0 
+\end{split}
+\end{equation*}
+desarrollando término a la izquierda y despejando se tiene que:
+\begin{equation*}
+\sum_i \left(\textbf{Q}_1 \cdot M_0M_i M_0M_i^T\right) = \sum_i \left( (1+ \epsilon_i)x_i M_0M_i^T\right)
+\end{equation*}
+si se pasa $\textbf{Q}_1$  para afuera de la sumatoria y se despeja queda:
+\begin{equation}\label{eq_29}
+\textbf{Q}_1 = \left(\sum_i M_0M_i M_0M_i^T\right)^{-1}\left(\sum_i \left(1+ \epsilon_i\right)x_i M_0M_i^T\right)
+\end{equation}
+\end{comment}
+La expresión para calcular  $\textbf{Q}_1$ y $\textbf{Q}_2$ queda:
+\begin{equation}\label{eq_30}
+\textbf{Q}_1 = \left(\sum_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_i \left(1+ \epsilon_i\right)x_i M_0M_i\right)
+\end{equation}
+\begin{equation}\label{eq_31}
+\textbf{Q}_2 = \left(\sum_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_i \left(1+ \epsilon_i\right)y_i M_0M_i\right)
+\end{equation}
+La matriz $L = \left(\sum_i M_0M_i^T M_0M_i\right)$ es una matriz $4 \times 4$ y como solo depende de los puntos del modelo, puede ser calculada previamente.
+
+Para calcular la pose se procede como sigue:
+\begin{itemize}
+\item[1] Se calculan los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ asumiendo que se conocen los valores de $\epsilon_i$, para el paso inicial se supone que $\epsilon_i = 0$.
+
+\item[2] Con los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ calculados se calculan los $\epsilon_i$ corregidos. 
+\end{itemize}
+Cuando $E$ es menor a determinado umbral el algoritmo se detiene y se obtiene la pose calculada. 
+
+\subsection{Calculo de pose sin correspondencias}
+Se tienen \textit{N} puntos detectados en la imagen y \textit{M} puntos en el modelo. Cuando no se conocen las correspondencias cada punto detectado $p_j$ es candidato a corresponderse con cualquier punto del modelo $M_i$. La distancia que se busca minimizar es 
+\begin{equation*}
+d^2_{ji} = \left(\textbf{Q}_1 \cdot M_iM_0 - \left(1+\epsilon_i\right) x_j\right)^2 + \left(\textbf{Q}_2 \cdot M_iM_0 - \left(1+\epsilon_i\right) y_j\right)^2
+\end{equation*}
+Se puede ver que para cada punto de modelo hay \textit{N} candidatos, la distancia $d^2_{ji}$ da una idea de que tan cerca esta de ser el correspondiente. 
+Para resolver el problema de estimar la pose y las correspondencias simultáneamente se busca minimizar la siguiente función:
+\begin{equation}\label{eq_32}
+\begin{split}
+E = \sum_{j=1}^N \sum_{i=1}^M m_{ji}(d^2_{ji} - \alpha)\\
+  = \sum_{j=1}^N \sum_{i=1}^M m_{ji}\left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_j \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_j \right) ^2 \right)
+\end{split}
+\end{equation}
+donde $m_{ji}$ son pesos para cada una de las distancias $d^2_{ji}$. Los pesos $m_{ji}$ forman lo que se llama matriz de asignación, en esta matriz se puede ver el grado de correspondencia de cualquier punto detectado con cualquier punto del modelo. El valor $\alpha$ es la tolerancia que se le da a la medida de distancia.
+
+Las expresiones para los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ se modifican
+\begin{equation}\label{eq_33}
+\textbf{Q}_1 = \left(\sum_{i=1}^M m^{'}_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_{j=1}^N \sum_{i=1}^M m_{ji} \left(1+ \epsilon_i\right)x_j M_0M_i\right)
+\end{equation}
+\begin{equation}\label{eq_34}
+\textbf{Q}_2 = \left(\sum_{i=1}^M m^{'}_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_{j=1}^N \sum_{i=1}^M m_{ji} \left(1+ \epsilon_i\right)y_j M_0M_i\right)
+\end{equation}
+donde $m^{'}_i = \sum_{j=1}^N m_{ji}$. El termino $L = \sum_{i=1}^M m^{'}_i M_0M_i^T M_0M_i $ es una matriz $4\times 4$, para este caso \textit{L} no se puede calcular previamente porque la matriz de asignación cambia en cada iteración.
+
+Para minimizar \textit{E} se procede como sigue:
+\begin{itemize}
+\item[1] Se calculan las variables de la matriz de asignación asumiendo todo lo demas conocido.
+
+\item[2] Se calculan los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ asumiendo que se conocen los valores de $\epsilon_i$, para el paso inicial se supone que $\epsilon_i = 0$.
+
+\item[3] Con los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ calculados se calculan los $\epsilon_i$ corregidos. 
+\end{itemize}
+Esto se repite hasta que la pose converge. 
+
+\subsection{Matriz de asignación}
+Se busca tener una matriz \textit{m} que indique las correspondencias entre los \textit{N} puntos detectados y los \textit{M} puntos en del modelo, y ademas minimize \textit{E}. 
+La matriz de asignación tiene las siguientes características:
+\begin{itemize}
+\item[.] Tiene \textit{N+1} filas y \textit{M+1} columnas.
+\item[.] $m_{ji}\in\left[0,1\right]$. Si $m_{ji} = 1$ quiere decir que el punto detectado $p_j$ se corresponde con el punto del modelo $M_i$.
+\item[.] La fila \textit{N+1} y la columna\textit{M+1} se utilizan para ver si alguna correspondencia en esa fila o columna. Por ejemplo si el elemento \textit{j} de la columna \textit{M+1} es 1, significa que el punto detectado $p_j$ no se corresponde con ningún punto del modelo. 
+\item[.] La suma de los elementos a los largo de cualquier fila o columna es siempre 1. 
+\end{itemize}
+Para obtener una matriz \textit{m} que cumpla con las características mencionadas se utiliza una técnica llamada \textit{softassign}. Se comienza con una matriz $m^0$ en la que los elementos están dados por
+\begin{equation*}
+m^0_{ji} = \exp^{-\beta\left(d^2_{ji} - \alpha\right)}
+\end{equation*}
+en donde $\beta$ es una constante muy peque?a y la fila $N+1$ y la columna $M+1$ son inicializadas con constantes peque?as. Luego se itera utilizando los siguientes pasos hasta obtener la matriz \textit{m}.
+\begin{itemize}
+\item[1] Se normaliza cada fila y columna por la suma de los elementos de esa fila o columna respectivamente hasta que $\Vert m^i - m^{i-1}\Vert$ sea peque?o. La matriz resultante cumple que todas la filas y columnas suman 1.
+\item[2] Se incrementa el valor de $\beta$ a media que se itera. A medida que se agranda $\beta$ cada fila y columna de $m^0$ es renormalizada, los términos $m^0_{ji}$ correspondientes a las $d^2_{ji}$ convergen a 1, mientras que los demás convergen a 0.
+\end{itemize}
+Al final del algoritmo se observa que la matriz \textit{m} esta muy cerca de ser un matriz de ceros y unos. 
 
 \section{POSIT Coplanar}
