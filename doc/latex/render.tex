@@ -5,9 +5,82 @@
 \section{ISGL3D}
 ISGL3D es un \textit{framework} (marco de trabajo) para \textit{iPad}, \textit{iPhone} y \textit{iPod touch} escrito en \textit{Objective-C}, que sirve para crear escenas y \textit{renderizarlas} de forma sencilla. Es un proyecto en código abierto y gratis. En su sitio web oficial: \url{www.isgl3d.com}, se puede descargar el código de ISGL3D y de forma sencilla este puede ser agregado como un complemento de \textit{Xcode}. Además se pueden encontrar tutoriales, una \textit{Application Programming Interface} (API) y un acceso a un grupo de \textit{google} donde la comunidad pregunta y responde dudas propias y ajenas. \\
 
-Cuando se crea una aplicación ISGL3D, el núcleo de la misma es la llamada ``\textit{view}'' (``vista'' en Espa\~nol ). Una \textit{view} esta compuesta por una escena y una cámara:
+Cuando se crea una aplicación ISGL3D, el núcleo de la misma es la llamada ``\textit{view}'' (``vista'' en Espa\~nol ). Una \textit{view} esta compuesta principalmente por una escena y una cámara:
 \begin{itemize}
-\item Una \textbf{escena} (Isgl3dScene3D) a donde los objetos o modelos 3D son agregados como nodos. Todos los nodos pueden ser tanto trasladados como rotados y pueden tener otros nodos hijos; los nodos hijos son trasladados y rotados con sus padres. Así como objetos 3D, se pueden agregar luces de distinto tipo, que generarán en la escena efectos de sombra que luego serán adecuadamente \textit{renderizados} en función de dónde se encuentre y hacia dónde este mirando la cámara.
-\item Una \textbf{cámara} es utilizada para para visualizar la escena desde una posición y un ángulo en particular. La cámara se manipula como cualquier otro objeto o nodo en la escena, se puede trasladar, rotar y hasta indicar hacia dónde quiere uno que la cámara apunte. Es importante ajustar la cámara de manera que su arquitectura sea la que uno busca. Se puede entonces ajustar ciertos parámetros intrínsecos a esta como por ejemplo su campo visual, su distancia focal, su altura y anchura, etc.
+\item Una \textbf{escena} (Isgl3dScene3D) es donde los objetos o modelos 3D son agregados como nodos. Todos los nodos pueden ser tanto trasladados como rotados y pueden tener otros nodos hijos; los nodos hijos son trasladados y rotados con sus padres. Así como objetos 3D, se pueden agregar luces de distinto tipo, que generarán en la escena efectos de sombra que luego serán adecuadamente \textit{renderizados} en función de dónde se encuentre y hacia dónde este mirando la cámara.
+\item Una \textbf{cámara} es utilizada para para visualizar la escena desde una posición y un ángulo en particular. La cámara se manipula como cualquier otro objeto o nodo en la escena, se puede trasladar, rotar y hasta indicar hacia dónde quiere uno que la cámara apunte. Es importante ajustar la cámara de manera que su arquitectura sea la que uno busca. Se pueden entonces ajustar ciertos parámetros intrínsecos a esta como por ejemplo su campo visual, su distancia focal, la altura y la anchura del plano imagen, etc.
 \end{itemize}
-Es importante entender que el llamado \textit{render} se realiza sumando la información de la escena, objetos 3D y sus hijos, luces, etc.; más la información de dónde se encuentra la cámara, sus características y hacia dónde esta apunta.
+Es importante entender que el llamado \textit{render} se realiza sumando la información de la escena, objetos 3D y sus hijos, luces, etc.; más la información de dónde se encuentra la cámara, sus características y hacia dónde esta apunta.\\
+
+Un particularidad de la cámara de ISGL3D es que el parámetro intrínseco ``distancia focal'' visto la sección \ref{sec:Calibracion de camara}, no es directamente configurable. En cambio, el valor que sí se puede alterar es el llamado ``FOV'', acónimo de ``Fiel Of View''. El \textit{field of view} de una cámara no es más que su campo visual, y se mide como la extensión angular máxima mapeable en el plano imagen, medida desde el centro óptico \textit{C}. Puede ser medido de forma horizontal o de forma vertical; sin embargo, en ISGL3D es definido verticalmente. Ver figura \ref{fig:render1}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.7]{figs_render/render1}
+\caption{Definición gráfica del FOV.}
+\label{fig:render1}
+\end{figure}
+
+Realizando algo de geometría se ve que la relación entre la distancia focal y el FOV es:
+\[
+FOV = 2.arctg\left(\frac{h}{2.f}\right)
+\]
+donde $h$ denota la altura del plano imagen y $f$ la distancia focal de la cámara.\\
+
+ISGL3D cuanta con algunas estructuras primitivas que pueden ser usadas como modelos, o incluso combinadas de manera de formar modelos algo más complejos. Las principales estructuras primitivas de ISGL3D son:
+\begin{itemize}
+\item \textbf{Isgl3DArrow:} modelo correspondiente a una flecha. Tiene 4 parámetros configurables:
+\begin{itemize}
+\item \textit{headHeight:} altura de la punta.
+\item \textit{headRadius:} radio de la punta.
+\item \textit{height:} altura total de la flecha.
+\item \textit{radius:} radio de la base.
+\end{itemize} 
+\item \textbf{Isgl3DCone:} modelo correspondiente a un cono. Tiene 3 parámetros configurables:
+\begin{itemize}
+\item \textit{bottomRadius:} radio de la base inferior.
+\item \textit{height:} altura del cono.
+\item \textit{topRadius:} radio de la base superior.
+\end{itemize}
+\item \textbf{Isgl3DCube:} modelo correspondiente a un cubo. Tiene 3 parámetros configurables:
+\begin{itemize}
+\item \textit{depth:} profundidad del cubo. 
+\item \textit{height:} altura del cubo.
+\item \textit{width:} anchura del cubo.
+\end{itemize}
+\item \textbf{Isgl3DCylinder:} modelo correspondiente a un cilindro. Tiene 3 parámetros configurables:
+\begin{itemize}
+\item \textit{height:} altura del cilindio.
+\item \textit{radius:} radio del cilindro.
+\item \textit{openEnded:} indica si el cilindro cuenta con sus extremos abiertos o no.
+\end{itemize}
+\item \textbf{Isgl3DEllipsoid:} modelo correspondiente a una elipsoide. Cuenta con 3 parámetros configurables:
+\begin{itemize}
+\item \textit{radiusX:} radio de la elipsoide en la dirección \textit{x}.
+\item \textit{radiusY:} radio de la elipsoide en la dirección \textit{y}.
+\item \textit{radiusZ:} radio de la elipsoide en la dirección \textit{z}.
+\end{itemize}
+\item \textbf{Isgl3DOvoid:} modelo ovoide. Cuenta con 3 parámetros configurables:
+\begin{itemize}
+\item \textit{a:} radio del ovoide en la dirección \textit{x}. 
+\item \textit{b:} radio del ovoide en la dirección \textit{y}.
+\item \textit{k:} factor que modifica la forma de la curva. Cuando toma el valor 0, el modelo se corresponde con el de una ellipsoide.
+\end{itemize}
+\item \textbf{Isgl3DSphere:} modello correspondiente a una esfera. Tiene un único parámetro configurable:
+\begin{itemize}
+\item \textit{radius:} radio de la esfera.
+\end{itemize}
+\item \textbf{Isgl3DTorus:} modelo correspondiente a un toroide. Cuenta con 2 parámetros configurables:
+\begin{itemize}
+\item \textit{radius:} radio desde el origen del toroide hasta el centro del tubo.
+\item \textit{tubeRadius:} radio del tubo del toroide.
+\end{itemize}
+\end{itemize}
+Para cada primitiva, se debe especificar además, la cantidad de segmentos utilizados en las distintas dimensiones para su creación. Por detalles referirse a la API de ISGL3D en: \url{http://isgl3d.com/resources/api}. En la figura \ref{fig:render2} se pueden ver  todas las primitivas anteriores.\\
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.2]{figs_render/render2}
+\caption{Principales primitivas en ISGL3D.}
+\label{fig:render2}
+\end{figure}
