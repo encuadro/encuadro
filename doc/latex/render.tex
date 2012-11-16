@@ -1,0 +1,13 @@
+\chapter{Rendering}
+\section{Introducción}
+\textit{Rendering} es un término en inglés que denota el proceso de generar una imagen 2D a partir de un modelo digital 3D o un conjunto de ellos, a los que se les llama ``escena''. Puede ser comparado a tomar una foto o filmar una escena en la vida real.
+
+\section{ISGL3D}
+ISGL3D es un \textit{framework} (marco de trabajo) para \textit{iPad}, \textit{iPhone} y \textit{iPod touch} escrito en \textit{Objective-C}, que sirve para crear escenas y \textit{renderizarlas} de forma sencilla. Es un proyecto en código abierto y gratis. En su sitio web oficial: \url{www.isgl3d.com}, se puede descargar el código de ISGL3D y de forma sencilla este puede ser agregado como un complemento de \textit{Xcode}. Además se pueden encontrar tutoriales, una \textit{Application Programming Interface} (API) y un acceso a un grupo de \textit{google} donde la comunidad pregunta y responde dudas propias y ajenas. \\
+
+Cuando se crea una aplicación ISGL3D, el núcleo de la misma es la llamada ``\textit{view}'' (``vista'' en Espa\~nol ). Una \textit{view} esta compuesta por una escena y una cámara:
+\begin{itemize}
+\item Una \textbf{escena} (Isgl3dScene3D) a donde los objetos o modelos 3D son agregados como nodos. Todos los nodos pueden ser tanto trasladados como rotados y pueden tener otros nodos hijos; los nodos hijos son trasladados y rotados con sus padres. Así como objetos 3D, se pueden agregar luces de distinto tipo, que generarán en la escena efectos de sombra que luego serán adecuadamente \textit{renderizados} en función de dónde se encuentre y hacia dónde este mirando la cámara.
+\item Una \textbf{cámara} es utilizada para para visualizar la escena desde una posición y un ángulo en particular. La cámara se manipula como cualquier otro objeto o nodo en la escena, se puede trasladar, rotar y hasta indicar hacia dónde quiere uno que la cámara apunte. Es importante ajustar la cámara de manera que su arquitectura sea la que uno busca. Se puede entonces ajustar ciertos parámetros intrínsecos a esta como por ejemplo su campo visual, su distancia focal, su altura y anchura, etc.
+\end{itemize}
+Es importante entender que el llamado \textit{render} se realiza sumando la información de la escena, objetos 3D y sus hijos, luces, etc.; más la información de dónde se encuentra la cámara, sus características y hacia dónde esta apunta.
