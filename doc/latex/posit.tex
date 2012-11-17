@@ -407,9 +407,65 @@ En este caso el término $L = \sum_{i=1}^M m^{'}_i M_0M_i^{*T} M_0M_i^* $ es una 
 Una vez que se tienen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se procede como se vio en la sección \ref{sec:classicPosit5}
 
 \section{Resultados}
-Se realizo un comparación entre la implementación en C de POSIT clásico para puntos coplanares, obtenida de la sitio web de \textit{Daniel DeMenthon} \footnote{\url{http://www.cfar.umd.edu/~daniel/Site_2/Code.html}}, y una version desarrollada para esta aplicación de POSIT moderno para puntos coplanares. 
+Se realizo un comparación entre la implementación en C de POSIT clásico para puntos coplanares, obtenida de la sitio web de \textit{Daniel DeMenthon} \footnote{\url{http://www.cfar.umd.edu/~daniel/Site_2/Code.html}}, y una versión desarrollada para esta aplicación de POSIT moderno para puntos coplanares. 
 
 Se utilizaron imágenes de prueba obtenidas con el iPad e imágenes sintéticas. Para ambos grupos de imágenes se midió el error de proyección obtenido entre los puntos del modelo y los puntos detectados. Para las imágenes sintéticas, como se cuenta con la información de la pose, se midió el error obtenido en cada ángulo y en la traslación.
+
+Para el caso de las imágenes de prueba del iPad se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la figura \ref{fig: posit_8} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se vario la posición muy poco, intentando simular el movimiento que se tiene tuvo al sacar las fotos con el iPad. En total se probaron 900 imágenes. 
+ 
+A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de la imágenes para un mismo caso. En las tablas hay valores que no pudieron ser calculados debido a que el filtro de segmentos no pudo detectar todos los segmentos. Estos comportamientos fueron discutidos en \ref{ch:detection}. En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de modern POSIT. 
+
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.25]{figs_posit/posit_8}
+\label{fig: posit_8}
+\caption{Posiciones que se utilizaron para las imágenes de prueba}
+\end{figure}
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l||r|r|r|r|}
+\hline
+ & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} \\ \hline \hline
+\textbf{Caso1} & 3.6136 &     0.8104 &     4.5979 &     1.1392 \\ \hline
+\textbf{Caso2} &     0.8449 &     0.4153 &     0.9275 &     0.4415 \\ \hline
+\textbf{Caso3} &        - &        - &        - &        - \\ \hline
+\textbf{Caso4} &     1.5894 &     0.2600 &     1.1081 &     0.1696 \\ \hline
+\textbf{Caso5} &        - &        - &        - &        - \\ \hline
+\textbf{Caso6} &        - &        - &        - &        - \\ \hline
+\textbf{Caso7} &     0.6742 &     0.1468 &     0.5416 &     0.1022 \\ \hline
+\textbf{Caso8} &        - &        - &        - &        - \\ \hline
+\textbf{Caso9} &        - &        - &        - &        - \\ \hline
+\end{tabular}
+\caption{Error de proyección de imagenes de pruebas}
+\label{posit_tabla1}
+\end{table}
+\begin{figure}[ht]
+\centering
+\includegraphics[scale=0.5]{figs_posit/posit_9}
+\label{fig: posit_9}
+\caption{Posiciones que se utilizaron para las imágenes sintéticas}
+\end{figure}
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|l||r|r|r|r|}
+\hline
+ & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} \\ \hline \hline
+\textbf{Caso1} &   4.2712 &     0.3192 &     5.7352 &     0.4525 \\ \hline
+\textbf{Caso2} &     1.0831 &     0.0375 &     1.0889 &     0.0358 \\ \hline
+\textbf{Caso3} &        - &        - &        - &        - \\ \hline
+\textbf{Caso4} &     0.7975 &     0.0169 &     0.9778 &     0.0185 \\ \hline
+\textbf{Caso5} &        - &        - &        - &        - \\ \hline
+\textbf{Caso6} &        - &        - &        - &        - \\ \hline
+\textbf{Caso7} &     0.3796 &     0.0121 &     0.4761 &     0.0077 \\ \hline
+\textbf{Caso8} &        - &        - &        - &        - \\ \hline
+\textbf{Caso9} &        - &        - &        - &        - \\ \hline
+\end{tabular}
+\caption{Error de proyección en imágenes sintéticas}
+\label{posit_tabla2}
+\end{table}
+
+
+
 
 
 
