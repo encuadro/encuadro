@@ -76,7 +76,6 @@ ISGL3D cuanta con algunas estructuras primitivas que pueden ser usadas como mode
 \item \textit{tubeRadius:} radio del tubo del toroide.
 \end{itemize}
 \end{itemize}
-Para cada primitiva, se debe especificar además, la cantidad de segmentos utilizados en las distintas dimensiones para su creación. Por detalles referirse a la API de ISGL3D en: \url{http://isgl3d.com/resources/api}. En la figura \ref{fig:render2} se pueden ver  todas las primitivas anteriores.\\
 
 \begin{figure}
 \centering
@@ -84,3 +83,20 @@ Para cada primitiva, se debe especificar además, la cantidad de segmentos utiliz
 \caption{Principales primitivas en ISGL3D.}
 \label{fig:render2}
 \end{figure}
+
+Para cada primitiva, se debe especificar además, la cantidad de segmentos utilizados en las distintas dimensiones para su creación. Por detalles referirse a la API de ISGL3D en: \url{http://isgl3d.com/resources/api}. En la figura \ref{fig:render2} se pueden ver  todas las primitivas anteriores.\\
+
+A veces lo que se quiere no es agregar a la escena una primitiva sino un modelo previamente creado. Los modelos son realizados en herramientas de creado y animación de gráficos 3D como por ejemplo \textit{Blender}, \textit{MeshLab}, \textit{Autodesk Maya} o \textit{Autodesk 3ds Max}. Luego deben ser exportados en un formato llamado \textit{COLLADA}, acrónimo de ``COLLAborative Design Activity'', que sirve para el intercambio de contenido digital 3D entre distintas aplicaciones de modelado. Por su parte, ISGL3D permite importar modelos pero en un formato llamado \textit{POD}. Se usó entonces, una aplicación llamada \textit{Collada2POD} que lo que hace es convertir modelos tridimensionales en formato \textit{COLLADA} al formato \textit{POD}. \textit{Collada2POD} puede ser descargada gratuitamente de la página oficial de \textit{Imagination Technologies}, su desarrollador: \url{http://www.imgtec.com/}.\\
+
+Una vez que se tiene al objeto 3D en el formato \textit{POD}, este puede ser importado en ISGL3D de forma sencilla:
+\footnotesize
+\begin{verbatim}
+Isgl3dNode * _container = [self.scene createNode];
+
+Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@``modelo.pod''];
+
+Isgl3dSkeletonNode * _model = [_container createSkeletonNode];
+
+[podImporter addMeshesToScene:_model];
+
+\end{verbatim}
