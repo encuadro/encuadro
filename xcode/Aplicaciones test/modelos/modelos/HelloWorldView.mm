@@ -12,6 +12,7 @@
 @implementation HelloWorldView
 
 Isgl3dSkeletonNode * _model;
+Isgl3dSkeletonNode * _model2;
 Isgl3dNode * _container;
 
 
@@ -34,10 +35,10 @@ Isgl3dNode * _container;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas_original.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas.pod"];
         
 		_model = [_container createSkeletonNode];
-        
+        _model2 = [_container createSkeletonNode];
 //        _model.scaleX=0.1;
 //        _model.scaleY=0.1;
 //        _model.scaleZ=0.1;
@@ -49,36 +50,42 @@ Isgl3dNode * _container;
         
         
 		[podImporter addMeshesToScene:_model];
+        [podImporter addMeshesToScene:_model2];
 
 		
         //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
         //		[_animationController start];
         
-        _model.position = iv3(0, 0, -100);
-        self.camera.position=iv3(0,50,100);
+        _model2.position = iv3(-75, -82, -150);
+        _model2.rotationY = 90;
         
-        Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+        _model.position = iv3(25, -82, -150);
+        _model.rotationY = -30;
+
+        self.camera.position=iv3(0,0,100);
+        
+        Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
 		[self.scene addChild:light];
-        light.position = iv3(-2, 2, -10);
+        light.position = iv3(-2, 2, 0);
         
         //light.renderLight = YES;
         
-        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
-		[self.scene addChild:light2];
-        light2.position = iv3(2, 2, -10);
+//        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
+//		[self.scene addChild:light2];
+//        light2.position = iv3(2, 2, 0);
         
         //light2.renderLight = YES;
         
-        Isgl3dShadowCastingLight * light3  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+        Isgl3dShadowCastingLight * light3  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
 		[self.scene addChild:light3];
-        light3.position = iv3(-2, -2, -10);
+        light3.position = iv3(-2, -2, 0);
         
         //light3.renderLight = YES;
         
         
-        Isgl3dShadowCastingLight * light4  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+        Isgl3dShadowCastingLight * light4  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
 		[self.scene addChild:light4];
-        light4.position = iv3(2, -2, -10);
+        light4.position = iv3(2, -2, 0);
 
 		
 		// Schedule updates

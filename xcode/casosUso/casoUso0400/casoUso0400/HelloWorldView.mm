@@ -115,8 +115,10 @@ bool corners, segments, reproyected;
         Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas.pod"];
         Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
         
-		_model = [_container createSkeletonNode];
-		_model2 = [_container createSkeletonNode];
+        
+      
+        _model = [_container createSkeletonNode];
+		_model2 = [_container createNode];
         
         _model.scaleX=2;
         _model.scaleY=2;
