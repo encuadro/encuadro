@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2010-2011 Stuart Caunt
  * 
- * This class is inspired from equivalent functionality provided by cocos2d :
+ * This class is inspired fro.m equivalent functionality provided by cocos2d :
  * cocos2d for iPhone: http://www.cocos2d-iphone.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -1,10 +1,13 @@
 \chapter{Rendering}
 \section{Introducción}
-\textit{Rendering} es un término en inglés que denota el proceso de generar una imagen 2D a partir de un modelo digital 3D o un conjunto de ellos, a los que se les llama ``escena''. Puede ser comparado a tomar una foto o filmar una escena en la vida real.\\
-FALTA DECIR ALGO MÁS...
+\textit{Rendering} es un término en inglés que denota el proceso de generar una imagen 2D a partir de un modelo digital 3D o un conjunto de ellos, a los que se les llama ``escena''. Puede ser comparado a tomar una foto o filmar una escena en la vida real. Afortunadamente, existen varias herramientas de \textit{rendering} para plataformas móviles, en especial que funcionen sobre iOS, algunas de ellas serán comentadas a contuniación.\\ 
+
+La primera en ser tomada en cuenta fue ``Open Graphics Library Embedded Systems'' (Open GL ES), que es un subconjunto de las herramientas de gráficos 3D de Open GL. Fue dise\~nado para ser utilizado sobre sistemas embebidos (dispositivos móviles, consolas de video juegos, etc.); Open GL es el estándar más ampliamente usado alrededor del mundo para la creación de gráficos 2D y 3D, es grátis y multiplataforma. Como la programación en Open GL y en particular en Open GL ES es de muy bajo nivel y por lo tanto bastante complicada, se optó por investigar otras herramientas. La primera que se encontró fue ``ISGL3D''. ISGL3D es un \textit{framework} (marco de trabajo) escrito en Objective-C que trabaja sobre Open GL ES y que busca facilitar la tarea del programador a la hora de crear y manipular escenas 3D mediante una ``\textit{Application Program Interface}'' (API) sencilla e intuitiva. Es un proyecto grátis y en código abierto. Luego de varias horas de trabajo con la herramienta e importantes avances desde el punto de vista del manejo de la misma se descubrió la existencia de otro \textit{framework} de idénticas características que ISGL3D, ``Cocos3D''. Cocos3D es una extensión de ``Cocos2D'', una herramienta para la generación de gráficos 2D,  muy popular entre los desarrolladores de aplicaciones para iOS. Como no se identificaron diferencias significativas entre ISGL3D y Cocos3D, y como ya se había generado cierto conocimiento en el uso de la primera de ellas; se optó por continuar utilizando ISGL3D.\\
+
+En este capítulo...
 
 \section{ISGL3D}
-ISGL3D es un \textit{framework} (marco de trabajo) para \textit{iPad}, \textit{iPhone} y \textit{iPod touch} escrito en \textit{Objective-C}, que sirve para crear escenas y \textit{renderizarlas} de forma sencilla. Es un proyecto en código abierto y gratis. En su sitio web oficial: \url{www.isgl3d.com}, se puede descargar su código, y de forma sencilla ISGL3D puede ser agregado como un complemento de \textit{Xcode}. Además se pueden encontrar tutoriales, una \textit{Application Programming Interface} (API) y un acceso a un grupo de \textit{google} donde la comunidad pregunta y responde dudas propias y ajenas. Una buena manera de iniciarse en manejo de la herramienta es siguiendo los tutoriales en: \url{www.isgl3d.com/resources/tutorials}; al menos este fué el camino elegido por el grupo. Los tutoriales son 6, y abarcan distintos tópicos:
+ISGL3D es un \textit{framework} para \textit{iPad}, \textit{iPhone} y \textit{iPod touch} escrito en \textit{Objective-C}, que sirve para crear escenas y \textit{renderizarlas} de forma sencilla. Es un proyecto en código abierto y gratis. En su sitio web oficial: \url{www.isgl3d.com}, se puede descargar su código, y de forma sencilla ISGL3D puede ser agregado como un complemento de \textit{Xcode}. Además se pueden encontrar tutoriales, detaller de la API y un acceso a un grupo de \textit{google} donde la comunidad pregunta y responde dudas propias y ajenas. Una buena manera de iniciarse en manejo de la herramienta es siguiendo los tutoriales en: \url{www.isgl3d.com/resources/tutorials}; al menos este fué el camino elegido por el grupo. Los tutoriales son 6, y abarcan distintos tópicos:
 \begin{itemize}
 \item \textbf{Tutorial 0:} primer paso en el creado de una aplicación ISGL3D. Cubre algunos conceptos básicos y muestra cómo integrar la herramienta a \textit{Xcode}.
 \item \textbf{Tutorial 1:} mustra cómo crear una escena bien simple, con tan sólo un cubo en rotación continua.
@@ -14,14 +17,14 @@ ISGL3D es un \textit{framework} (marco de trabajo) para \textit{iPad}, \textit{i
 \item \textbf{Tutorial 5:} se ven algunas nuevas primitivas y se muestra cómo \textit{renderizar} objetos con transparencia.
 \end{itemize}
 
-Cuando se descarga e instala ISGL3D, se puede ver que la herramienta incluye un proyecto \textit{Xcode} integrado por varios ejemplos para ejecutar y a la vez ver su código, otra buena forma de aprender cómo realizar distintas tareas de interés. Entre los ejemplos se encuentra cada uno de los tutoriales realizados adecuadamente.\\ 
+Cuando se descarga e instala ISGL3D, se puede ver que la herramienta incluye un proyecto \textit{Xcode} integrado por varios ejemplos para ejecutar y a la vez ver su código, otra buena forma de aprender cómo realizar distintas tareas de interés. Entre los ejemplos se encuentra ``la solución'' a cada uno de los tutoriales.\\ 
 
 A continuación se comentarán algunas características y conceptos de ISGL3D que fueron importantes para el proyecto; por detalles de algunos temas en particular referirse a la ya mencionada API en: \url{www.isgl3d.com/resources/api}.\\
 
 Cuando se crea una aplicación ISGL3D, el núcleo de la misma es la llamada ``\textit{view}'' (``vista'' en Espa\~nol ). Una \textit{view} esta compuesta principalmente por una escena y una cámara:
 \begin{itemize}
 \item Una \textbf{escena} (Isgl3dScene3D) es donde los objetos o modelos 3D son agregados como nodos. Todos los nodos pueden ser tanto trasladados como rotados y pueden tener otros nodos hijos; los nodos hijos son trasladados y rotados con sus padres. Así como objetos 3D, se pueden agregar luces de distinto tipo, que generarán en la escena efectos de sombra que luego serán adecuadamente \textit{renderizados} en función de dónde se encuentre y hacia dónde este mirando la cámara.
-\item Una \textbf{cámara} es utilizada para para visualizar la escena desde una posición y un ángulo en particular. La cámara se manipula como cualquier otro objeto o nodo en la escena, se puede trasladar, rotar y hasta indicar hacia dónde quiere uno que la cámara apunte. Es importante ajustar la cámara de manera que su arquitectura sea la que uno busca. Se pueden entonces ajustar ciertos parámetros intrínsecos a esta como por ejemplo su campo visual, su distancia focal, la altura y la anchura del plano imagen, etc.
+\item Una \textbf{cámara} que es utilizada para para ver la escena desde una posición y un ángulo en particular. La cámara se manipula como cualquier otro objeto o nodo en la escena, se puede trasladar, rotar y hasta indicar hacia dónde quiere uno que la cámara apunte. Es importante ajustar la cámara de manera que su arquitectura sea la que uno busca. Se pueden entonces ajustar ciertos parámetros intrínsecos a esta como por ejemplo su campo visual, su distancia focal, la altura y la anchura del plano imagen, etc.
 \end{itemize}
 Es importante entender que el llamado \textit{render} se realiza sumando la información de la escena, objetos 3D y sus hijos, luces, etc.; más la información de dónde se encuentra la cámara, sus características y hacia dónde esta apunta.\\
 
@@ -97,7 +100,7 @@ ISGL3D cuanta con algunas estructuras primitivas que pueden ser usadas como mode
 \label{fig:render2}
 \end{figure}
 
-Para la creación de cada primitiva, se debe especificar además, la cantidad de segmentos utilizados en las distintas dimensiones. En la figura \ref{fig:render2} se pueden ver todas las primitivas anteriores. Es fácil ver que dichas primitivas cuentan con cierta textura cuadriculada de colores rojo y blanco, que fue lograda mapeando una imagen sobre cada una de ellas:\\
+Para la creación de cada primitiva, se debe especificar además, la cantidad de segmentos utilizados en las distintas dimensiones. En la figura \ref{fig:render2} se pueden ver todas las primitivas anteriores. Es fácil ver que dichas primitivas cuentan con cierta textura cuadriculada de colores rojo y blanco, que fue lograda mapeando una imagen sobre cada una de ellas. La porción de código que se usó para realizar tal mapeo se muestra a continuación:\\
 \footnotesize
 \begin{verbatim}
 Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial
@@ -109,7 +112,7 @@ Isgl3dMeshNode * _torus = [self.scene createNodeWithMesh:torusMesh andMaterial:m
 \end{verbatim}
 
 \normalsize
-En la primera línea de código se crea el material. Dicho material es del tipo \textit{Isgl3dTextureMaterial}; y la imagen con la que este se creal es la de la figura \ref{fig:render3}. Luego, se crea el toroide asignándole los parámetros vistos más atrás en esta sección; y finalmente, se crea y se agrega a la escena el nodo asociado al toroide, con el material creado anteriormente. \\
+En la primera línea de código se crea el material. Dicho material es del tipo \textit{Isgl3dTextureMaterial}; y la imagen con la que este se crea es la de la figura \ref{fig:render3}. Luego, se crea el toroide asignándole los parámetros vistos más atrás en esta sección; y finalmente, se crea y se agrega a la escena el nodo asociado al toroide, con el material creado al principio. \\
 
 \begin{figure}[h!]
 \centering
@@ -138,6 +141,6 @@ En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} q
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_render/render4}
-\caption{Dos vistas de un modelo de José Artigas en una misma escena.}
+\caption{Modelo de José Artigas agregado dos veces en una misma escena, pero visto desde ángulos distintos.}
 \label{fig:render4}
 \end{figure}
