@@ -9,9 +9,11 @@
 \section{Introducción}
 % ------------------------------------------------------ INTRODUCCION: DEFINICION DE ESTIMACION DE POSE -------------------------------------------------------
 
-Se le llama ``estimación de pose'' al proceso mediente el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama ``ejes del mundo''. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.\\ 
-Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.\\
-Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
+Se le llama ``estimación de pose'' al proceso mediente el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama ``ejes del mundo''. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.  Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.\\
+
+Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.\\
+
+En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle un en particular, el método de Zhang. \textbf{JUANI ACÁ TENES QUE PONER VOS QUÉ MÁS VA A TENER ESTE CAPÍTULO.} 
 %\begin{figure}[h]
 %\centering
 %\includegraphics[scale=1.5]{../imagenes/EstPose/EstPose_1.eps}
@@ -21,7 +23,7 @@ Para poder obtener información relevante a partir de las imágenes tomadas por un
 %En este capítulo se presentan las técnicas realizadas para implementar la realidad aumentada
 
 % ------------------------------------------------------ CALIBRACION DE CAMARA: MODELO PIN-HOLE -------------------------------------------------------
-\section{Calibración de cámara: modelo pin-hole \cite{garciaocon07}}
+\section{Modelo de cámara \textit{pin-hole} \cite{garciaocon07}}
 \label{sec:Calibracion de camara}
 
 
