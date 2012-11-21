@@ -13,6 +13,7 @@
 
 Isgl3dSkeletonNode * _model;
 Isgl3dSkeletonNode * _model2;
+Isgl3dSkeletonNode * _model3;
 Isgl3dNode * _container;
 
 
@@ -35,32 +36,47 @@ Isgl3dNode * _container;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado01.pod"];
+        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado02.pod"];
+        Isgl3dPODImporter * podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado03.pod"];
         
 		_model = [_container createSkeletonNode];
         _model2 = [_container createSkeletonNode];
-//        _model.scaleX=0.1;
-//        _model.scaleY=0.1;
-//        _model.scaleZ=0.1;
+        _model3 = [_container createSkeletonNode];
+        
+        _model.scaleX=1.5;
+        _model.scaleY=1.5;
+        _model.scaleZ=1.5;
+        
+        _model2.scaleX=1.5;
+        _model2.scaleY=1.5;
+        _model2.scaleZ=1.5;
+        
+        _model3.scaleX=1.5;
+        _model3.scaleY=1.5;
+        _model3.scaleZ=1.5;
         //  _model.rotationX = 90;
         
 
         
-        [podImporter printPODInfo];
+        //[podImporter printPODInfo];
         
         
 		[podImporter addMeshesToScene:_model];
-        [podImporter addMeshesToScene:_model2];
+        [podImporter2 addMeshesToScene:_model2];
+        [podImporter3 addMeshesToScene:_model3];
 
 		
         //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
         //		[_animationController start];
         
-        _model2.position = iv3(-75, -82, -150);
-        _model2.rotationY = 90;
+        _model.position = iv3(-90, -60, -150);
         
-        _model.position = iv3(25, -82, -150);
-        _model.rotationY = -30;
+        _model2.position = iv3(0, -60, -150);
+//        _model2.rotationY = 90;
+        
+        _model3.position = iv3(90, -60, -150);
+//        _model.rotationY = -30;
 
         self.camera.position=iv3(0,0,100);
         
