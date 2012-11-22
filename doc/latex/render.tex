@@ -102,7 +102,7 @@ Para la creación de cada primitiva, se debe especificar además, la cantidad de s
 \footnotesize
 \begin{verbatim}
 Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial
- 															materialWithTextureFile:@"red_checker.png" shininess:0.9];
+                  materialWithTextureFile:@"red_checker.png" shininess:0.9];
 	
 Isgl3dTorus * torusMesh = [Isgl3dTorus meshWithGeometry:2 tubeRadius:1 ns:32 nt:32];
 
@@ -134,7 +134,7 @@ Isgl3dNode * _model = [self.scene createNode];
 \end{verbatim}
 
 \normalsize
-En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} que sirve para transformar modelos POD a objetos ISGL3D, y se le asigna a la misma el modelo \textit{modelo.pod}. Luego, se crea un nodo llamado ``$\_$model'', al que se le asignará el modelo; y se agrega a la escena. Finalmente, se le asigna al modelo una posición en la escena. En la figura \ref{fig:render4} se puede ver un modelo de José Artigas, agregado dos veces a una misma escena, pero visto desde ángulos distintos.\\
+En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} que sirve para transformar modelos POD a objetos ISGL3D, y se le asigna a la misma el modelo \textit{modelo.pod}. Luego, se crea un nodo llamado ``$\_$model'', al que se le asignará el modelo; y se agrega a la escena. Finalmente, se le asigna al modelo una posición. En la figura \ref{fig:render4} se puede ver un modelo de José Artigas, agregado dos veces a una misma escena, pero visto desde ángulos distintos.\\
 
 \begin{figure}[h!]
 \centering
@@ -142,3 +142,28 @@ En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} q
 \caption{Modelo de José Artigas agregado dos veces en una misma escena, pero visto desde ángulos distintos.}
 \label{fig:render4}
 \end{figure}
+
+Si lo que se quiere es que los modelos sean animados, o lo que es lo mismo, que tengan movimiento, hay dos soluciones posibles a tomar en consideración:
+
+\begin{itemize}
+\item{\textbf{Modelo animado}}: muchas veces lo que se tiene es un modelo 3D animado desde su construcción. Estos pueden ser creados, al igual que los modelos 3D inanimados, con las herramientas para el creado y la animación de gráficos 3D antedichas. Existe mucha bibliografía al respecto, además de haber múltiples sitios en internet de donde bajar los modelos, incluso en forma gratuita. Luego de obtenido el modelo animado, lo que se tendrá será precisamente al modelo, pero con una línea de tiempo con las animaciones. Nuevamente, habrá que convertirlo a formato POD para ser usado en ISGL3D. El código para poder visualizar al modelo será:
+\footnotesize
+\begin{verbatim}
+Isgl3dPODImporter * podImporter = [Isgl3dPODImporter 
+             podImporterWithFile:@"animated_model.pod"];
+
+Isgl3dSkeletonNode *_model = [self.scene createSkeletonNode];
+   
+[podImporter addMeshesToScene:_model];
+   
+Isgl3dAnimationController * _animationController = [[Isgl3dAnimationController alloc] 
+            initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
+                                    
+[_animationController start];
+\end{verbatim}
+\normalsize
+En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter}, y se le asigna a la misma el modelo animado ``animated$\_$model.pod''.  Luego, se crea y se agrega a la escena un nodo del tipo \textit{Isgl3dSkeletonNode} llamado ``$\_$model'' que contendrá al modelo animado. La clase \textit{Isgl3dSkeletonNode} provee una interfaz sencilla para animar al ahora objeto ISGL3D, que con la ayuda de la clase \textit{Isgl3dAnimationController}, logra automatizar el movimiento del mismo. Finalmente, se instancia y configura la clase \textit{Isgl3dAnimationController} y se le da inicio a la animación en la última línea.\\
+
+\item\textbf{Múltiples modelos inanimados:}
+\end{itemize}
+
