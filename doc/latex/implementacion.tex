@@ -75,39 +75,34 @@ Para el recorrido manual, el usuario es el encargado de seleccionar el autor, lu
 Este \textit{ViewController} es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto e imagen asociadas al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
 
 \subsection{ImagenServerViewController}
-Este \textit{ViewController} es el encargado de la comunicación con el servidor. En el método \textit{viewDidLoad} se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se saca la foto, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de sacar otra foto y el otro botón inicia la comunicación con el servidor.\\
+Este \textit{ViewController} es el encargado de la comunicación con el servidor. Al instanciarse una clase, también se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se toma una fotografía a la obra, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de volver a tomar la fotografía y el otro botón inicia la comunicación con el servidor. Ver figura \ref{fig: imagenServer}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/imagenServer.eps}
 \caption{Ejemplo de captura para reconocimiento SIFT}
-%\label{fig: implementacion_1}
+\label{fig: imagenServer}
 \end{figure}
-El botón encargado de la comunicación con el servidor, botón de \textit{upload}, es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se agrega la foto sacada previamente y se le agrega un string llamado \textit{room}. Este string es completado previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando la información sobre en qué sala/región del museo se encuentra (sala Figari, sala Blanes o sala Torres García). Este string lo que permite es tener un identificador para poder hacer la búsqueda de la imagen sacada (luego de procesar la imagen con el algoritmo SIFT), en una base de datos más peque?a, que contenga solamente los cuadros de esa región del museo y no todos los cuadros del museo. En caso que el usuario no haya detectado ningún QR y haya seleccionado directamente la opción de sacar una foto para comenzar la comunicación con el servidor, entonces este string estará vacío y la búsqueda de la imagen más parecida se hace en toda la base de datos. En un primer caso, claramente los tiempos son mejores (del orden de 3s en una LAN) que en el segundo (del orden de 6s en una LAN).\\
-Luego de establecida la conexión y enviada la consulta POST, el servidor responde con un string \textit{returnString}. Este string contiene el resultado del procesamiento de la imagen enviada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que toma imágenes, ejecuta comandos en terminal (en este caso el ejecutable del algoritmo SIFT) y el resultado de esa ejecución se retorna como string en el php y el mismo se envía a la aplicación. Ese string resultado es recibido por la aplicación con una nomenclatura elegida que sigue la lógica Autor-Número, por ejemplo \textit{Figari3} que se corresponde con la obra número 3 de la base de datos del autor Figari. Ese pasa a ser el identificador de la obra para ir a buscarla a la base de datos del servidor. El servidor cuenta con varias carpetas según la información:
+
+El botón encargado de la comunicación con el servidor, botón de \textit{upload}, es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se adjunta la foto tomada previamente y se le agrega una variable llamada \textit{room}. Esta variable es completada previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando la información sobre en qué sala/región del museo se encuentra el usuario (sala Figari, sala Blanes o sala Torres García). Esta variable lo que permite es tener un identificador para poder realizar la búsqueda de la imagen tomada en una base de datos más peque\~na, que contenga solamente los cuadros de la región del museo en cuestión. En caso que el usuario se haya salteado la detección QR y haya seleccionado directamente la opción de tomar una fotografía a la obra para comenzar la comunicación con el servidor, entonces la variable \textit{room} estará vacía y la búsqueda de la obra se realiza en toda la base de datos del museo. El gran valor agregado de la detecci\'on QR es en la velocidad con la que el servidor devuelve informaci\'on respecto de a qu\'e obra se fotografi\'o. Para la b\'usqueda con detecci\'on QR, los tiempos son claramente mejores (del orden de 3s en una LAN), mientras que cuando el usuario se ahorra este paso, los tiempos aumentan al doble (del orden de 6s en una LAN).\\
+
+Luego de establecida la conexión y enviada la consulta POST, el servidor responde con otra variable llamada \textit{returnString}. Esta variable contiene un identificador de obra que indica qué obra fue fotografiada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que recibe la imagen y le ejecuta un algoritmo de detección de características llamado SIFT, que le retorna al PHP el identificador en cuestión. \textit{upload.php} entrega esta informaci\'on a la aplicaci\'on. La variable \textit{returnString} es recibida por la aplicación con cierta nomenclatura en particular, que sigue la lógica Autor-Número, por ejemplo \textit{Figari3} que se corresponde con la obra número 3 de la base de datos del autor Figari. Con este identificador de obra, la aplicación le pide al servidor cierta información de interés acerca de la misma, como por ejemplo el nombre completo de la obra, el nombre su autor, una breve descripción. El servidor cuenta con varias carpetas a las que la aplicación accede remotamente:
 \begin{itemize}
-\item[(1)] autor
-\item[(2)] obra
-\item[(3)] texto
-\item[(4)] imagen
-\item[(5)] audio
+\item[(1)] \textbf{autor:} contiene el nombre del autor de cada obra. 
+\item[(2)] \textbf{obra:} contiene el nombre completo de cada obra.
+\item[(3)] \textbf{texto:} contiene una breve descripción de cada obra.
+\item[(4)] \textbf{imagen:} contiene una imagen de cada obra.
+\item[(5)] \textbf{audio:} contiene una audioguía asociada a cada obra.
 \end{itemize}
-Para una obra dada, cuyo identificador sea \textit{Figari3} por ejemplo, los archivos correspondientes, con la información son:
-\begin{itemize}
-\item[(1)] http://IPservidor/autores/Figari3.txt
-\item[(2)] http://IPservidor/obras/Figari3.txt
-\item[(3)] http://IPservidor/textos/Figari3.txt
-\item[(4)] http://IPservidor/imagenes/Figari3.jpg
-\item[(5)] http://IPservidor/audios/Figari3.mp3
-\end{itemize}
-De esta manera una vez que se obtiene el identificador se hace una consulta al servidor que pide los distintos archivos de texto, audio e imágenes. Esta información solicitada es devuelta por el servidor y alojada en variables para ser mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, en el \textit{ObraCompletaViewController}.
+
+Esta información solicitada es alojada en variables que serán mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, en el \textit{ObraCompletaViewController}. Ver figura \ref{fig: obraCompleta}.
 
 \subsection{ObraCompletaViewController}
-Este \textit{ViewController} simplemente es la presentación de la obra, mostrando el cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. El primero de los botones dispara un audio donde se explican detalles de la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
+Este \textit{ViewController} simplemente es la presentación de la obra, muestra una imagen del cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. El primero de los botones dispara una audioguía relacionada con la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/ObraCompleta.eps}
 \caption{Pantalla con la obra completa}
-%\label{fig: implementacion_1}
+\label{fig: obraCompleta}
 \end{figure}
 
 \subsection{VistaViewController}
