@@ -12,14 +12,23 @@ La aplicación consta de distintas funcionalidades que se describen en este capít
 \end{itemize}
 En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
-Para que sea más sencilla la comprensión de los bloques que componen la aplicación a continuación se muestra el \textit{Storyboard} de la aplicación que es la interfaz de usuario y que sirve para visualizar bastante cada una de las clases que intervienen y cómo es el flujo de la aplicación.\\
+En la descripción de las clases que conforman los bloques principales de la aplicación se hace referencia a conceptos de desarrollo sobre Objective-C, así como también a \textit{frameworks} y herramientas utilizadas que fueron explicadas en el capítulo \ref{chap: hwysw}. Para la comprensión del detalle de la implementación es importante conocer estos conceptos de desarrollo.\\
+Para que sea más sencilla la comprensión de los bloques que componen la aplicación, en la figura \ref{fig: Diaglobal} se muestra un diagrama esquemático de la aplicación que sirve para visualizar cómo es el flujo de la aplicación \textit{a nivel de usuario}.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/diagramaGlobal2.png}
+\caption{Diagrama global de la aplicación}
+\label{fig: Diaglobal}
+\end{figure}
+Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera autónoma (\textit{Por galería}) o de manera automática (\textit{Por navegación}). En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de leer códigos QR desplegados en las distintas salas o secciones del museo, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: reconocimiento de obra. El reconocimiento de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y con información extra de la misma como una breve descripción, el nombre del autor y ofrece la posibilidad de interactuar con la misma. \\
+De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y generando interacción. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la figura \ref{fig: story}, se presenta el Storyboard de la aplicación, que muestra la relación de las distintas clases. A su vez, a dicha imagen se le agregó un número identificador en cada ViewController para poder hacer referencia en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/Storyboard_Global.eps}
 \caption{Diagrama global de la aplicación}
-\label{fig: implementacion_1}
+\label{fig: story}
 \end{figure}
-A continuación se pasará a explicar algunas de las clases implementadas en la aplicación y que tienen cierta relevancia. Se mostrarán sus principales características y su rol dentro de la aplicación.
+En las próximas subsecciones se pasan a explicar algunas de las clases implementadas en la aplicación y que tienen cierta relevancia. Se muestran su rol dentro de la aplicación y sus principales características.
 \subsection{NavigationViewController}
 La aplicación está embebida dentro de un \textit{UINavigationViewController}. Esto implica que cada uno de los \textit{ViewControllers} que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las Toolbars ya sea arriba como encabezado o abajo al pie.\\
 Para el caso particular de esta aplicación se optó por reimplementar esta clase ya que se buscaba tener cierto control sobre las rotaciones. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
