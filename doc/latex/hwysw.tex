@@ -128,15 +128,26 @@ Con esta capa de iOS en general es difícil que el desarrollador tenga que involu
 
 
 \subsubsection{Simulador}
-Uno de los detalles más importantes del entorno de desarrollo es la capacidad de simular lo que se programa antes de probarlo en un dispositivo. Esto es útil por cuestiones de seguridad e incluso permite programar sin la necesidad a priori de contar con una plataforma. Esto existe para \textit{Xcode} y es necesario decir que funciona muy bien, generando una representación bastante fiel de lo que sucede en el dispositivo real. La única crítica que se le podría hacer es el hecho de no contar con cámara y para el caso de aplicaciones de realidad aumentada esto es algo bastante importante. Sin embargo, sin ser eso, el simulador cuenta con conexión a internet, pantalla multitáctil, con información de GPS ingresada por el programador, acceso a la galería de fotos, capacidad de procesamiento y todas las funcionalidades que un dispositivo real tiene. 
+Uno de los detalles más importantes del entorno de desarrollo es la capacidad de simular lo que se programa antes de probarlo en un dispositivo. Esto es útil por cuestiones de seguridad e incluso permite programar sin la necesidad de contar con una plataforma. Esto existe para \textit{Xcode} y es necesario decir que funciona muy bien, generando una representación bastante fiel de lo que sucede en el dispositivo real. La única crítica que se le podría hacer es el hecho de no contar con cámara y para el caso de aplicaciones de realidad aumentada esto es algo bastante importante. Sin embargo, sin ser eso, el simulador cuenta con conexión a internet, pantalla multitáctil, con información de GPS ingresada por el programador, acceso a la galería de fotos, capacidad de procesamiento y todas las funcionalidades que un dispositivo real tiene. 
 \subsubsection{Instruments}
 %https://developer.apple.com/library/ios/#documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004652
-Dentro de las herramientas que vienen con el entorno de desarrollo viene \textit{Instruments}, un set de herramientas que permiten analizar la performance de una aplicación para iOS o para Mac OS X desde distintos puntos de vista. Resulta muy útil pues muchas veces sucede que una aplicación compila y se ejecuta correctamente y sin embargo puede el desarrollador puede no estar conforme en cuanto a los tiempos de procesamiento o el uso de memoria consumido.\\
-El el presente proyecto se hizo uso principalmente del \textbf{Time Profiler} que permite analizar tiempos y del \textbf{Memory Leak} que permite hacer un análisis de la reserva de memoria no liberada.\\
-El \textbf{Time Profiler}....\\
-El \textbf{Memory Leak} ...\\
+Dentro de las herramientas que vienen con el entorno de desarrollo viene \textit{Instruments}, un conjunto de herramientas que permiten analizar la performance de una aplicación para iOS o para Mac OS X desde distintos puntos de vista. Resulta muy útil pues muchas veces sucede que una aplicación compila y se ejecuta correctamente y sin embargo puede que el desarrollador no esté conforme en cuanto a los tiempos de procesamiento o el uso de memoria consumido.\\
+Para poder hacer uso del \textit{Instruments}, es necesario correr la aplicación en modo \textit{Profile}. Eso despliega una ventana como la de la Figura \ref{fig: instru}. Allí es posible elegir dentro de cada una de las posibilidades que ofrece \textit{Instruments}, si se quiere analizar tiempos, memoria, recursos de CPU, \textit{multithreading} entre otros tipos de datos de interés que es posible recoger de la aplicación. También es posible elegir la plataforma, ya sea iOS, simulador iOS o Mac OS X.\\
 
-
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_hwysw/instrumentsWindow.png}
+\caption{Distintas opciones de \textit{Instruments}.}
+\label{fig: instru}
+\end{figure}
+Luego de elegir el tipo de datos a ser recolectados según lo que se busque analizar, se despliega una ventana como se ve en la Figura \ref{fig: instru2}. Allí es necesario registrar durante varios segundos los datos mientras se corre la aplicación y luego de terminado el registro, \textit{Instruments} dedica un tiempo a analizar los datos recolectados. En el detalle inferior, se desglozan los procesos que corre la aplicación en forma de árbol. Cuando se desea medir tiempos por ejemplo, esto resulta muy útil porque entre otras cosas se puede analizar qué porcentaje del tiempo de la aplicación es consumido por un método en particular. Esto es posible simplemente buscando dentro del árbol mencionado, al método y leyendo el valor asignado de tiempo. Para el caso de análisis de memoria también es posible identificar fácilmente en qué parte del código se está dando algún problema de reserva de memoria no liberada.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_hwysw/instruments_tracing.png}
+\caption{Trazado y análisis de datos recogidos.}
+\label{fig: instru2}
+\end{figure}
+En el presente proyecto se hizo uso principalmente del \textbf{Time Profiler} que permite analizar tiempos y del \textbf{Memory Leak} que permite hacer un análisis de la reserva de memoria no liberada. Con los mismos fue posible optimizar tiempos en determinados métodos del procesamiento, así como también eliminar problemas de memoria no liberada que desencadenaban en la interrupción abrupta de la aplicación luego de llegado un cierto nivel de reserva. Esta interrupción abrupta es una forma de proteger la memoria del dispositivo y evitar que se vea afectada cierta memoria útil a otros efectos. El resto de las herramientas de \textit{Instruments} fueron probadas pero no utilizadas en detalle para resolver problemas particulares.
 
 \section{Herramientas}
 Herramientas
