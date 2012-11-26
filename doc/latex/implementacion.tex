@@ -1,8 +1,8 @@
 \chapter{Implementación}
 
 \section{Introducción}
-En este capítulo se muestra la integración de los conocimientos adquiridos para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien era de gran interés del proyecto la exploración de distintos métodos y algoritmos parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García que se eligieron para hacer el prototipo.\\
-La aplicación consta de distintas funcionalidades que se describen en este capítulo, tales como:\\
+En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García que se eligieron para hacer el prototipo.\\
+La aplicación consta de distintas funcionalidades tales como:\\
  \begin{itemize}
 \item[(1)] Detección QR
 \item[(2)] Navegación por listas de cuadros
@@ -10,10 +10,10 @@ La aplicación consta de distintas funcionalidades que se describen en este capít
 \item[(4)] Detección SIFT para identificar el cuadro.
 \item[(5)] Diferentes realidades aumentadas según la obra.
 \end{itemize}
-En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
+En las próximas secciones se describen más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
 En la descripción de las clases que conforman los bloques principales de la aplicación se hace referencia a conceptos de desarrollo sobre Objective-C, así como también a \textit{frameworks} y herramientas utilizadas que fueron explicadas en el capítulo \ref{chap: hwysw}. Para la comprensión del detalle de la implementación es importante conocer estos conceptos de desarrollo.\\
-Para que sea más sencilla la comprensión de los bloques que componen la aplicación, en la figura \ref{fig: Diaglobal} se muestra un diagrama esquemático de la aplicación que sirve para visualizar cómo es el flujo de la aplicación \textit{a nivel de usuario}.\\
+Para que sea más sencilla la comprensión de los bloques que componen la aplicación, en la Figura \ref{fig: Diaglobal} se muestra un diagrama esquemático de la aplicación que sirve para visualizar cómo es el flujo de la aplicación \textit{a nivel de usuario}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/diagramaGlobal2.png}
@@ -21,7 +21,7 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \label{fig: Diaglobal}
 \end{figure}
 Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera autónoma (\textit{Por galería}) o de manera automática (\textit{Por navegación}). En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de leer códigos QR desplegados en las distintas salas o secciones del museo, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: reconocimiento de obra. El reconocimiento de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y con información extra de la misma como una breve descripción, el nombre del autor y ofrece la posibilidad de interactuar con la misma. \\
-De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y generando interacción. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la figura \ref{fig: story}, se presenta el Storyboard de la aplicación, que muestra la relación de las distintas clases. A su vez, a dicha imagen se le agregó un número identificador en cada ViewController para poder hacer referencia en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
+De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y generando interacción. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la Figura \ref{fig: story}, se presenta el Storyboard de la aplicación, que muestra la relación de las distintas clases. Se recuerda al lector que el Storyboard es una herramienta de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una contraparte de interfaz de usuario. A su vez, a la imagen del Storyboard se le agregó un número identificador en cada ViewController para poder hacer referencia en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/Storyboard_Global.eps}
@@ -30,8 +30,19 @@ De esta manera es que se da el flujo de la aplicación a nivel de usuario, para l
 \end{figure}
 En las próximas subsecciones se pasan a explicar algunas de las clases implementadas en la aplicación y que tienen cierta relevancia. Se muestran su rol dentro de la aplicación y sus principales características.
 \subsection{NavigationViewController}
-La aplicación está embebida dentro de un \textit{UINavigationViewController}. Esto implica que cada uno de los \textit{ViewControllers} que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las Toolbars ya sea arriba como encabezado o abajo al pie.\\
-Para el caso particular de esta aplicación se optó por reimplementar esta clase ya que se buscaba tener cierto control sobre las rotaciones. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
+La aplicación está embebida dentro de un \textit{UINavigationViewController}. Esto implica que cada uno de los \textit{ViewControllers} que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las \textit{Toolbars} ya sea arriba como encabezado o abajo al pie.\\
+El hecho de contar con una jerarquía permite entre otras cosas, la posibilidad de hacer un cambio (de interfaz de usuario por ejemplo), en todos los ViewControllers, simplemente afectando a la clase NavigationViewController y sin necesidad de hacer el cambio en cada uno de los ViewControllers por separado. Esto resulta particularmente práctico en aplicaciones con bastantes ViewControllers y lo único que tiene que hacer el desarrollador es aclarar que ciertos atributos sean manejados por la clase encargada de la navegación dentro de la aplicación. \\
+Una característica importante que es deseable que tenga un criterio común para todos los ViewControllers es la orientación de la aplicación con respecto a la orientación del dispositivo. Es decir, es posible lograr por ejemplo, que frente a rotaciones del dispositivo, la interfaz de usuario acompa?e la rotación y gire también o también es posible permitir que rotaciones del dispositivo en determinado sentido se vean reflejados en una rotación de la interfaz de usuario y otras no. Para esto se definen cuatro posibles posiciones para el dispositivo con respecto a la referencia del acelerómetro: \textit{Potrait}, \textit{Upside Down}, \textit{Landscape Left} y \textit{Landscape Right}. Las mismas se pueden ver en la Figura \ref{fig: orientaciones}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_implementacion/orientaciones.png}
+\caption{Orientaciones posibles del dispositivo.}
+\label{fig: orientaciones}
+\end{figure}
+%http://developer.apple.com/library/ios/#featuredarticles/ViewControllerPGforiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40007457-CH1-SW1
+
+Para el caso particular de esta aplicación se optó por reimplementar la clase \textit{UINavigationViewController} bajo el nombre \textit{NavigationViewController} ya que se buscaba tener cierto control sobre las rotaciones y se eligió afectar los métodos que estuvieran a cargo de las rotaciones de interfaz de usuario. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
 \begin{verbatim}
 -(NSUInteger)supportedInterfaceOrientations
 {
@@ -45,34 +56,46 @@ Para el caso particular de esta aplicación se optó por reimplementar esta clase 
     return UIInterfaceOrientationLandscapeRight;
 }
 \end{verbatim}
-Esto lo que hace es fijar la orientación de la interfaz de usuario a modo \textit{LandscapeRight}. También es posible lograr esto editando el archivo \textit{Info.plist} que toda aplicación de xcode tiene y agregando el item \textit{SupportedInterfaceOrientations} y completado las opciones que se desean. Las autorotaciones es algo que tiene bastante relevancia en las aplicaciones. En particular se optó por esta forma, es decir, bloquear las autorotaciones y dejar solamente la vista en un sentido, para facilitar la reproyección de la realidad aumentada. De no haberlo hecho de esta manera, con cada rotación de la interfaz se tendrían que intercambiar los ejes de coordenadas en función del sentido de la rotación. Esto es posible de hacer ya que con cada rotación se ejecuta una serie de métodos en forma automática entre los cuales se encuentra el siguiente
+Esto lo que hace es fijar la orientación de la interfaz de usuario a modo \textit{LandscapeRight}. También es posible lograr esto editando el archivo \textit{Info.plist} que toda aplicación de Xcode tiene y agregando el item \textit{SupportedInterfaceOrientations} y completado las opciones que se desean. Las rotaciones de interfaz de usuario son algo con bastante relevancia en las aplicaciones. En particular se optó por esta forma, es decir, bloquear las rotaciones de interfaz y dejar solamente la interfaz en un sentido, para facilitar la reproyección de la realidad aumentada. De no haberlo hecho de esta manera, con cada rotación de la interfaz se tendrían que intercambiar los ejes de coordenadas en función del sentido de la rotación. Esto es posible de hacer ya que con cada rotación se ejecuta una serie de métodos en forma automática entre los cuales se encuentra el siguiente
 \begin{verbatim}
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)
+toInterfaceOrientation duration:(NSTimeInterval)duration;
 \end{verbatim}
-Dentro de dicho método sería posible hacer el ajuste de coordenadas ya que el mismo se ejecuta previo a cualquier rotación. El tema de los métodos que son ejecutados al haber un evento del tipo rotación es algo que ha sufrido cambios recientes con la actualización de software a iOS 6. De todas formas, como ya se dijo, se optó por hacer esto más sencillo, simplemente evitando que la interfaz de usuario rote junto con el dispositivo, dejándola fija.
+Dentro de dicho método sería posible hacer el ajuste de coordenadas ya que el mismo se ejecuta previo a cualquier rotación. La serie de métodos que son ejecutados al haber un evento del tipo rotación es algo que ha sufrido cambios recientes con la actualización de software a iOS 6. De todas formas, como ya se dijo, se optó por hacer esto más sencillo, simplemente evitando que la interfaz de usuario rote junto con el dispositivo, dejándola fija.
 \subsection{InicioViewController}
-Este \textit{ViewController} es la pantalla de inicio  de la aplicación. En la misma hay un botón que al ser presionado comienza un audio con instrucciones y una presentación sobre cómo es el recorrido y las funcionalidades con las que cuenta la aplicación. También hay dos botones más que dan la opción de elegir la forma de recorrer el museo. El botón de recorrido automático es un \textit{segue} al \textit{ReaderSampleViewController} y el de recorrido manual un \textit{segue} al \textit{AutorTableViewController}.
+Este \textit{ViewController} es la pantalla de inicio  de la aplicación. En la misma hay un botón que al ser presionado comienza un audio con instrucciones y una presentación sobre cómo es el recorrido y las funcionalidades con las que cuenta la aplicación. También hay dos botones más que dan al usuario la opción de elegir la forma de recorrer el museo: autónoma o automática. El botón de recorrido automático instancia al \textit{ReaderSampleViewController} y el de recorrido autónomo instancia al \textit{AutorTableViewController}.
 
-\subsection{TableViewControllers}
-Para el recorrido manual, el usuario es el encargado de seleccionar el autor, luego las obras disponibles del autor seleccionado y luego se muestra un detalle de la obra seleccionada por el usuario presentando una instancia del \textit{ViewController} llamado \textit{ObraCompletaViewController}. Este recorrido que parece bastante intuitivo aparece en muchas aplicaciones de iOS en las que existe una lista de datos. Como ejemplo se ve en aplicaciones que gestionan contenido musical que está ordenado en base a autores, dentro de los mismos, sus discos y dentro de los discos sus canciones por ejemplo. Dado que es algo bastante frecuente, el hecho de navegar en listas de datos, xcode ya tiene implementada una clase llamada \textit{UITableViewController}. De esta manera lo que se hizo fue crear varias clases que heredan de \textit{UITableViewController} y manejar los contenidos de manera jerárquica. A continuación siguen dos clases que se resolvieron de esta manera.
+\subsection{UITableViewControllers}
+Para el recorrido manual, el usuario es el encargado de seleccionar el autor, luego las obras disponibles del autor seleccionado y luego se muestra un detalle de la obra seleccionada por el usuario presentando una instancia del \textit{ViewController} llamado \textit{ObraCompletaViewController}. Este recorrido que parece bastante intuitivo aparece en muchas aplicaciones de iOS en las que existen listas de datos. Como ejemplo se ve en aplicaciones que gestionan contenido musical que está ordenado en base a autores, dentro de los mismos, sus discos y dentro de los discos sus canciones. Como navegar en listas de datos es algo bastante frecuente, Xcode ya tiene implementada una clase llamada \textit{UITableViewController}. En la Figura \ref{fig: tablas} se puede ver un ejemplo con varios tipos de tablas que organizan la información. Como se puede ver la tabla es una forma sencilla de organizar la información en la que existe una sola columna y muchas filas. También pueden existir secciones, con un encabezado y pie de sección.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{figs_implementacion/types_of_table_views.jpg}
+\caption{Ejemplos de TableViewControllers con distintos tipos de tablas.}
+\label{fig: tablas}
+\end{figure}
+%http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/TableView_iPhone/AboutTableViewsiPhone/AboutTableViewsiPhone.html#//apple_ref/doc/uid/TP40007451-CH1-SW1
+Volviendo a la aplicación lo que se hizo entonces fue crear varias clases que heredan de \textit{UITableViewController} y manejar los contenidos de manera jerárquica. A continuación siguen dos clases que se resolvieron de esta manera.
 	\subsubsection{AutorTableViewController}
-	Esta clase hereda de \textit{UITableViewController}. En particular tiene algunos métodos que son importantes de destacar si se quiere implementar algo parecido con una lista de datos. El siguiente método:
+	Esta clase hereda de \textit{UITableViewController} y cumple la función de almacenar la lista de autores disponibles dentro del museo que a los efectos del prototipo como se dijo son: Figari,Blanes y Torres García. En lo que sigue se explican algunos detalles importantes que se tuvieron que comprender para poder organizar la información en tablas de datos (lo cual también aplica para la clase CuadroTableViewController que se describe en la siguiente subsección).\\
+Uno de los métodos implementados por esta clase es el siguiente:
 	\begin{verbatim}
 	- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 	\end{verbatim}
-	por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones con las que cuenta una tabla. Para que tenga sentido y al instanciarse la clase se vea algo de contenido tiene que retornar algo distinto de \textit{0}. Otro método importante es el siguiente:
+que por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones con las que cuenta una tabla. Para que tenga sentido y al instanciarse la clase se vea algo de contenido tiene que retornar algo distinto de \textit{0}. Otro método importante es el siguiente:
 	\begin{verbatim}
-	- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+	- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:
+	(NSInteger)section
 	\end{verbatim}
-	El mismo es el encargado de devolver un número con la cantidad de filas con las que cuenta la sección de la tabla. En esta implementación se devuelve la cantidad de autores.\\ Un tercer método que tiene mayor importancia es el siguiente:
+	El mismo es el encargado de devolver un número con la cantidad de filas con las que cuenta la sección de la tabla. En esta implementación se devuelve la cantidad de autores.\\ Un tercer método que tiene mayor importancia, es el siguiente:
 	\begin{verbatim}
-	- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+	- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:
+	(NSIndexPath *)indexPath
 	\end{verbatim}
-	El mismo es el encargado de devolver una \textit{UITableViewCell} que es la que se despliega. Es en este método que se configura el formato de la celda. Para el caso de la aplicación se resolvió generar una clase que hereda de \textit{UITableViewCell} que se llama \textit{CuadroTableViewCell} y que tiene ciertas características como una imagen, autor y obra que son mostradas en la celda. En este método se asocian las características mencionadas de la celda en función del número de fila. Esta clase implementa un método \textit{prepareForSegue} que setea la variable \textit{opcionAutor} en función del autor seleccionado. Esto permite luego en la clase \textit{CuadroTableViewController} desplegar distintas listas de cuadros en función del autor seleccionado.
+	El mismo es el encargado de devolver una \textit{UITableViewCell} que es la que se despliega. Es en este método que se configura el formato de la celda. Para el caso de la aplicación se resolvió generar una clase que hereda de \textit{UITableViewCell} que se llama \textit{CuadroTableViewCell} y que tiene ciertas características como una imagen, autor y obra que son mostradas en la celda. En este método se asocian las características mencionadas de la celda en función del número de fila. Esta clase implementa un método \textit{prepareForSegue} que le asigna un valor a la variable \textit{opcionAutor} en función del autor seleccionado. Esto permite luego en la clase \textit{CuadroTableViewController} desplegar distintas listas de cuadros en función del autor seleccionado.
 	\subsubsection{CuadroTableViewController}
-	Esta clase es muy similar a la clase \textit{AutorTableViewController} recién descripta difiriendo simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al ejecutrase el método \textit{viewDidLoad} se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, completando los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro. Esto se verá más adelante en la sección \ref{sec: realidad aumentada en la aplicación}. 
+	Esta clase es muy similar a la clase \textit{AutorTableViewController} recién descripta difiriendo simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al instanciarse la clase se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, completando los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro. Esto se verá más adelante en la sección \ref{sec: realidad aumentada en la aplicación}. 
 	\subsubsection{CuadroTableViewCell}
-	Esta es una clase sencilla que hereda de la clase \textit{UITableViewCell} y simplemente tiene tres \textit{IBOutlets} como propiedades para vincularlas con una imagen, un nombre de autor y un nombre de la obra para cada celda de la tabla que se despliega.\\
+	Esta es una clase sencilla que hereda de la clase \textit{UITableViewCell} y simplemente tiene tres  atributos asociados a nivel de interfaz de usuario una imagen, un nombre de autor y un nombre de la obra para cada celda de la tabla que se despliega.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/AutorYCuadroTable.eps}
@@ -84,7 +107,7 @@ Para el recorrido manual, el usuario es el encargado de seleccionar el autor, lu
 Este \textit{ViewController} es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto e imagen asociadas al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
 
 \subsection{ImagenServerViewController}
-Este \textit{ViewController} es el encargado de la comunicación con el servidor. Al instanciarse una clase, también se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se toma una fotografía a la obra, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de volver a tomar la fotografía y el otro botón inicia la comunicación con el servidor. Ver figura \ref{fig: imagenServer}.\\
+Este \textit{ViewController} es el encargado de la comunicación con el servidor. Al instanciarse una clase, también se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se toma una fotografía a la obra, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de volver a tomar la fotografía y el otro botón inicia la comunicación con el servidor. Ver Figura \ref{fig: imagenServer}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/imagenServer.eps}
@@ -103,7 +126,7 @@ Luego de establecida la conexión y enviada la consulta POST, el servidor respond
 \item[(5)] \textbf{audio:} contiene una audioguía asociada a cada obra.
 \end{itemize}
 
-Esta información solicitada es alojada en variables que serán mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, en el \textit{ObraCompletaViewController}. Ver figura \ref{fig: obraCompleta}.
+Esta información solicitada es alojada en variables que serán mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, en el \textit{ObraCompletaViewController}. Ver Figura \ref{fig: obraCompleta}.
 
 \subsection{ObraCompletaViewController}
 Este \textit{ViewController} simplemente es la presentación de la obra, muestra una imagen del cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. El primero de los botones dispara una audioguía relacionada con la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
@@ -139,12 +162,12 @@ Con lo anterior lo que se hace es generar una instancia de la clase \textit{app0
 
 \subsection{DrawSign}
 \label{sec: drawsign}
-Esta clase hereda de \textit{UIViewController} y está pensada para que el usuario pueda dibujar al tocar la pantalla. Un ejemplo de cómo queda el dibujo se puede ver en la siguiente figura.\\
+Esta clase hereda de \textit{UIViewController} y está pensada para que el usuario pueda dibujar al tocar la pantalla. Un ejemplo de cómo queda el dibujo se puede ver en la Figura \ref{fig: draw}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_implementacion/Draw.eps}
 \caption{Ejemplo de dibujo libre}
-%\label{fig: implementacion_1}
+\label{fig: draw}
 \end{figure}
 Se implementó haciendo una reimplementación de los siguientes tres métodos:
 \begin{verbatim}
@@ -243,7 +266,7 @@ donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene lo
 El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente debido al incremento significativo del uso de \textit{smart devices} el hecho de poder contar con cámara y poder de procesamiento hace que sea frecuente encontrar aplicaciones con el poder de reconocimiento de QRs. Comenzaron a utilizarse en la industria automovolística japonesa como una solución para el trazado en la línea de producción pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web o en algunos casos también como tarjetas personales. 
 \subsection{Qué son realmente los QRs?}
 Se puede decir que los QRs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QRs, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
-En la figura \ref{fig: implementacion_1} se pueden ver las distintas partes que componen un QR como ser el bloque de control compuesto por las tres esquinas que dan información de la posición, alineamiento y sincronismo, así como también información de versión, formato, corrección de errores y datos. Fuera de toda esa información que podríamos denominar encabezado haciendo analogía con los paquetes de las redes de datos se encuentra la información a almacenar propiamente dicha que conforma el cuerpo del QR.\\
+En la Figura \ref{fig: implementacion_1} se pueden ver las distintas partes que componen un QR como ser el bloque de control compuesto por las tres esquinas que dan información de la posición, alineamiento y sincronismo, así como también información de versión, formato, corrección de errores y datos. Fuera de toda esa información que podríamos denominar encabezado haciendo analogía con los paquetes de las redes de datos se encuentra la información a almacenar propiamente dicha que conforma el cuerpo del QR.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.6]{figs_implementacion/qrcode_overview4.eps}
