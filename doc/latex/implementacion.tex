@@ -204,15 +204,15 @@ A esta clase también se le agregó una \textit{IBAction} que genera un \textit{tw
 \end{verbatim}
 donde \textit{text} e \textit{img} son el texto del \textit{tweet} y la imagen adjunta. Finalmente se presenta la \textit{view} del \textit{TWTweetComposeViewController} y una vez finalizado se vuelve a la instancia \textit{DrawSign}.
 \subsection{TouchVista}
-Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar solamente una de las sub-vistas. Entonces lo que se hace en esos casos es agregar a la sub-vista en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama?o que la sub-vista. De esta manera al tocar la sub-vista se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente tiene el siguiente contenido:
+Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar tan sólo una de ellas. Entonces lo que se hace en esos casos es agregar a la \textit{subview} en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama\~no. De esta manera al tocar la \textit{subview} se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente configura una bandera y configura lo siguienteo:
 \begin{verbatim}
 [super touchesBegan:touches withEvent:event];
 \end{verbatim}
-También tiene el seteo de una bandera pero eso no tiene tanta relevancia. Lo que se hace en el código anterior es invocar al método \textit{touchesBegan} de la clase superior. Para el caso en que se tiene un \textit{ViewController}, con una sub-vista del tipo \textit{TouchVista} transparente, entonces esta línea invoca directamente el método \textit{touchesBegan} del \textit{ViewController}. Dos de los \textit{ViewControllers} que utilizan esto son \textit{VistaViewController} y \textit{ObraCompletaViewController}.
 
-\subsection{Isgl3dViewController y app0100AppDelegate}
-Las clases \textit{Isgl3dViewController} y \textit{app0100AppDelegate} son clases que ya venían implementadas con \textit{Isgl3D}. En particular se tomó el proyecto \textit{Hello World} de dicho \textit{framework} y se trabajó sobre el mismo. \\
-El proyecto \textit{Hello World} es un proyecto básico que lo que hace es generar un \textit{render} sobre un fondo gris. Como lo que se buscó fue hacer realidad aumentada, entonces se trabajó para que el render estuviera por delante de la captura de la cámara. Para lograr esto en el \textit{app0100AppDelegate} se hicieron algunas modificaciones sobre las vistas. A continuación se muestra parte del código que logra esto:\\
+Lo que se hace en el código anterior es invocar al método \textit{touchesBegan} de la clase superior. Para el caso en que se tiene un \textit{ViewController}, con una \textit{subview} del tipo \textit{TouchVista} transparente, entonces esta línea invoca directamente el método \textit{touchesBegan} del \textit{ViewController}. Dos de los \textit{ViewControllers} que utilizan esto son \textit{VistaViewController} y \textit{ObraCompletaViewController}.
+
+\subsection{Realidad Aumentada en ISGL3D}
+Para realizar realidad aumentada se necesita poder hacer un \textit{render} por encima de las imágenes capturadas por la cámara del dispositivo en tiempo real. Sin embargo, cuando se crea un proyecto de ISGL3D, este permite realizar \textit{renders} pero sobre un fondo estático y gris (o cualquier otro color configurable). Resulta entonces necesario configurar el proyecto de manera de reemplzar al fondo antes mencionado por imágenes capturadas por la cámara. Para lograr esto, hubo que trabajar sobre las clases \textit{Isgl3dViewController} y \textit{app0100AppDelegate}. A continuación se muestran algunas modificaciones sobre estas dos clases\\
 \begin{verbatim}
 UIImageView* vistaImg = [[UIImageView alloc] init];
 
@@ -227,8 +227,10 @@ CGRect fullScreenRect = screen.bounds;
 [self.window sendSubviewToBack:vistaImg];
 _viewController.videoView = vistaImg;
 \end{verbatim}
-Con esto se ajusta el atributo \textit{videoView} de la propiedad \textit{viewController} que pertenece a la clase \textit{app0100AppDelegate} y es instancia de la clase \textit{Isgl3dViewController}. Este atributo es el que luego se ajusta en forma periódica con cada cuadro en la clase \textit{Isgl3dViewController}. \\
-En xCode, si se quiere simplemente hacer una filmación, sacar fotos y acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Sin embargo si se desea tener una forma de hacer esto pero llegando a más bajo nivel para poder hacer procesamiento, teniendo acceso a los píxeles de la imagen, hacer modificaciones sobre los mismos y en definitiva manipular la salida, entonces la forma más indicada es usando el conocido \textit{Framework} llamado \textit{AVFoundation}. En la clase \textit{Isgl3dViewController} en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation} que permite realizar procesamiento en tiempo real. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
+
+Con esto se ajusta el atributo \textit{videoView} de la propiedad \textit{viewController} que pertenece a la clase \textit{app0100AppDelegate} y es instancia de la clase \textit{Isgl3dViewController}. \\
+
+En Xcode, si se quiere simplemente hacer una filmación, sacar fotos o acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Si lo que se desea es acceder a los píxeles de las imágenes capturadas, para luego por procesarlos en tiempo real, entonces la forma más indicada es usando el conocido \textit{framework} \textit{AVFoundation}. En la clase \textit{Isgl3dViewController}, en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation}. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
 \begin{verbatim}
 /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];
@@ -251,21 +253,25 @@ En xCode, si se quiere simplemente hacer una filmación, sacar fotos y acceder a 
     [self.session addInput: self.videoInput];
     [self.session addOutput: self.frameOutput];
 \end{verbatim}
-Como se ve, es necesario crear una sesión de captura, un dispositivo de captura, una salida de los datos y agregarlas a la sesión. También se puede setear el tipo de captura de la cámara (tiene que ser soportado por el Hardware, sino se genera un error en este punto). \\
+
+Como se ve, es necesario crear una sesión de captura, luego un dispositivo de captura y una salida de los datos y agregarlos a la sesión. También se puede configurar el tipo de captura de la cámara (tiene que ser soportado por el \textit{hardware}, sino se genera un error en este punto). \\
 Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.\\
 \begin{verbatim}
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
     dispatch_release(processQueue);
 \end{verbatim}
+
 Con esto lo que se hace es hacer una instancia de una \textit{Queue}, que representa una cola de procesamiento. De esta manera se puede hacer que ciertas tareas se alojen en esa instancia de cola, que lógicamente es otra distinta que la cola de procesamiento principal (\textit{mainQueue}). Esto mismo es lo que se hace en la segunda línea del código anterior, diciendo que el \textit{Delegate} de los datos de salida (\textit{frameOutput}) es la propia clase y que ese \textit{Delegate} se ejecute en la \textit{Queue} que se instanció en la línea anterior. De esta manera todo lo que sea invocado por el \textit{Delegate} en forma periódica será enviado a una cola distinta de la principal, pudiendo tener entonces, una cola de procesamiento separada de la cola de interfaz de usuario. Esto es algo ampliamente utilizado y es una recomendación de la documentación de iOS, pues se basa en los conceptos de tener la mayor atención posible a la interfaz de usuario, impidiendo en lo posible dejar al usuario esperando por algún eventual procesamiento que se esté llevando a cabo.\\
-Finalmente se da comienzo a la sesión\\
+
+Finalmente se da comienzo a la sesión:\\
 \begin{verbatim}
 [self.session startRunning];
 \end{verbatim}
-Con esto comienza a invocarse una serie de métodos en forma periódica. El hecho de suceda esto es porque esta clase implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}. Este protocolo es el que permite decir que el \textit{Delegate} de \textit{frameOutput} es él mismo. Al implementar este protocolo comienza a invocarse en forma periódica (frame a frame) el siguiente método\\
+Como la clase \textit{Isgl3dViewController} implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}, una vez que comienza la sesión, se invoca cuadro a cuadro el siguiente método:\\
 \begin{verbatim}
--(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
+-(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer
+:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
 \end{verbatim}
 donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene los píxeles de la cámara en ese momento. Así entonces, se accede a los píxeles y se invoca dentro del \textit{captureOutput} periódicamente al método \textit{procesamiento}, encargado de procesar la imagen recibida por la cámara.
 \section{QR}
