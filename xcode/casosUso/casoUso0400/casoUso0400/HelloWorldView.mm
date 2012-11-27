@@ -112,17 +112,17 @@ bool corners, segments, reproyected;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas.pod"];
-        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado02.pod"];
+        //Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
         
         
       
         _model = [_container createSkeletonNode];
 		_model2 = [_container createNode];
         
-        _model.scaleX=2;
-        _model.scaleY=2;
-        _model.scaleZ=2;
+        _model.scaleX=5;
+        _model.scaleY=5;
+        _model.scaleZ=5;
         _model.rotationX = 90;
         
         _model2.scaleX=5;
@@ -134,7 +134,7 @@ bool corners, segments, reproyected;
         
         
 		[podImporter addMeshesToScene:_model];
-        [podImporter2 addMeshesToScene:_model2];;
+        //[podImporter2 addMeshesToScene:_model2];;
 		
 //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
 //		[_animationController start];
@@ -147,10 +147,10 @@ bool corners, segments, reproyected;
         light.position = iv3(-2, 2, -10);
 
         //light.renderLight = YES;
-        
-        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
-		[self.scene addChild:light2];
-        light2.position = iv3(2, 2, -10);
+//        
+//        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+//		[self.scene addChild:light2];
+//        light2.position = iv3(2, 2, -10);
         
         //light2.renderLight = YES;
         
@@ -168,37 +168,37 @@ bool corners, segments, reproyected;
         //light4.renderLight = YES;
 
 
-        /*--------------|INTRODUCIMOS EL MODELO|------------------*/
+        /*--------------|LOS BOTONES LOCOS|------------------*/
 
         /* Generamos el boton para dibujar los segmentos detectados */
         
-        Isgl3dTextureMaterial * segmentsMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_segments.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * segmentsButton = [Isgl3dGLUIButton buttonWithMaterial:segmentsMaterial width:14.4 height:9.8];
-		[self.scene addChild:segmentsButton];
-        
-        [segmentsButton setX:30 andY:20];
-        segmentsButton.interactive = YES;
-        [segmentsButton addEvent3DListener:self method:@selector(segmentsTouched:) forEventType:TOUCH_EVENT];
+//        Isgl3dTextureMaterial * segmentsMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_segments.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+//		Isgl3dGLUIButton * segmentsButton = [Isgl3dGLUIButton buttonWithMaterial:segmentsMaterial width:14.4 height:9.8];
+//		[self.scene addChild:segmentsButton];
+//        
+//        [segmentsButton setX:30 andY:20];
+//        segmentsButton.interactive = YES;
+//        [segmentsButton addEvent3DListener:self method:@selector(segmentsTouched:) forEventType:TOUCH_EVENT];
         
         /* Generamos el boton para dibujar las esquinas detectadas */
         
-        Isgl3dTextureMaterial * cornersMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * cornersButton = [Isgl3dGLUIButton buttonWithMaterial:cornersMaterial width:14.4 height:9.8];
-		[self.scene addChild:cornersButton];
-        
-        [cornersButton setX:30 andY:10];
-        cornersButton.interactive = YES;
-        [cornersButton addEvent3DListener:self method:@selector(cornersTouched:) forEventType:TOUCH_EVENT];
+//        Isgl3dTextureMaterial * cornersMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+//		Isgl3dGLUIButton * cornersButton = [Isgl3dGLUIButton buttonWithMaterial:cornersMaterial width:14.4 height:9.8];
+//		[self.scene addChild:cornersButton];
+//        
+//        [cornersButton setX:30 andY:10];
+//        cornersButton.interactive = YES;
+//        [cornersButton addEvent3DListener:self method:@selector(cornersTouched:) forEventType:TOUCH_EVENT];
         
         /* Generamos el boton para dibujar las esquinas reproyectadas */
         
-        Isgl3dTextureMaterial * reproyectedMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"reproyected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * reproyectedButton = [Isgl3dGLUIButton buttonWithMaterial:reproyectedMaterial width:14.4 height:9.8];
-		[self.scene addChild:reproyectedButton];
-        
-        [reproyectedButton setX:30 andY:0];
-        reproyectedButton.interactive = YES;
-        [reproyectedButton addEvent3DListener:self method:@selector(reproyectedTouched:) forEventType:TOUCH_EVENT];
+//        Isgl3dTextureMaterial * reproyectedMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"reproyected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+//		Isgl3dGLUIButton * reproyectedButton = [Isgl3dGLUIButton buttonWithMaterial:reproyectedMaterial width:14.4 height:9.8];
+//		[self.scene addChild:reproyectedButton];
+//        
+//        [reproyectedButton setX:30 andY:0];
+//        reproyectedButton.interactive = YES;
+//        [reproyectedButton addEvent3DListener:self method:@selector(reproyectedTouched:) forEventType:TOUCH_EVENT];
 
         
         self.camera.position = iv3(0,0,0.01);
