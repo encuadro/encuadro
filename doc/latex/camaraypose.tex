@@ -29,7 +29,7 @@ En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, toman
 
 \subsection{Fundamentos y definiciones}
 \label{sec:Fundamentos y definiciones}
-Este modelo consiste en un centro óptico C, en donde convergen todos los rayos de la proyección y un plano imagen en el cual la imagen es proyectada. Se define ``distancia focal'' ($f$) como la distancia entre el centro óptico C y el cruce del eje óptico por el plano imagen (punto P). Ver imagen \ref{fig:CalibracionCamara}.  
+Este modelo consiste en un centro óptico O, en donde convergen todos los rayos de la proyección y un plano imagen en el cual la imagen es proyectada. Se define \textit{distancia focal} ($f$) como la distancia entre el centro óptico O y el cruce del eje óptico por el plano imagen (punto C). Ver Figura \ref{fig:CalibracionCamara}.  
 
 \begin{figure}[h!]
 \centering
@@ -40,12 +40,12 @@ Este modelo consiste en un centro óptico C, en donde convergen todos los rayos d
 
 Para modelar el proceso de proyección (proceso en el que se asocia al punto \textbf{M} del mundo, un punto \textbf{m} en la imagen), es necesario referirse a varias transformaciones y varios ejes de coordenadas.
 \begin{itemize}
-\item \textit{Coordenadas del mundo}: son las coordenadas que describen la posición 3D del punto \textbf{M}. Se definen respecto de los \textit{ejes del mundo} $(X_m,Y_m,Z_m)$. La elección de los ejes del mundo es arbitraria.
-\item \textit{Coordenadas de la cámara}: son las coordenadas que describen la posición del punto \textbf{M} respecto de los ejes de la cámara $(X,Y,Z)$.
-\item \textit{Coordenadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del centro del plano imagen, P. Los ejes de este sistema de coordenadas son $(u,v)$.
-\item \textit{Coordenadas normalizadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del eje de coordenadas $(u',v')$ situado en la esquina superior izquierda del plano imagen.
+\item \textit{Coordenadas del mundo}: son las coordenadas que describen la posición 3D del punto \textbf{M} respecto de los ejes del mundo $(x,y,z)$. La elección de los ejes del mundo es arbitraria.
+\item \textit{Coordenadas de la cámara}: son las coordenadas que describen la posición del punto \textbf{M} respecto de los ejes de la cámara $(u,v,w)$.
+\item \textit{Coordenadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m} respecto del centro del plano imagen, C. Los ejes de este sistema de coordenadas son $(x,y)$.
+\item \textit{Coordenadas normalizadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del eje de coordenadas $(x',y')$ situado en la esquina superior izquierda del plano imagen.
 \end{itemize}
-La transformación que lleva al punto \textbf{M}, expresado respecto de los ejes del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(X,Y,Z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(u',v')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Al conjunto de valores que definen esta transformación, se le llama ``{parámetros intrínsecos'' de la cámara. La segunda, es la transformación que lleva de expresar a un punto respecto de los ejes del mundo $(X_m,Y_m,Z_m)$, a los ejes de la cámara $(X,Y,Z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado ``parámetros extrínsecos'' de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
+La transformación que lleva al punto \textbf{M}, expresado respecto de los ejes del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(x,y,z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(x',y')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Al conjunto de valores que definen esta transformación, se le llama ``{parámetros intrínsecos'' de la cámara. La segunda, es la transformación que lleva de expresar a un punto respecto de los ejes del mundo $(u,v,w)$, a los ejes de la cámara $(x,y,z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado ``parámetros extrínsecos'' de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
 De lo anterior se concluye rápidamente que si se le llama $H$ a la matriz proyección total, tal que:
 \[
 m = H.M,
@@ -60,13 +60,13 @@ donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsec
 \item \textbf{Parámetros extrínsecos:} pose de la cámara.
 \begin{itemize}
 \item \underline{Traslación:} ubicación del centro óptico de la cámara respecto de los ejes del mundo.
-\item \underline{Rotación:} rotación del sistema de coordenadas de la cámara $(X,Y,Z)$, respecto de los ejes del mundo.
+\item \underline{Rotación:} rotación del sistema de coordenadas de la cámara $(x,y,z)$, respecto de los ejes del mundo.
 \end{itemize}
 \item \textbf{Parámetros intrínsecos:} parámetros propios de la cámara. Dependen de su geometría interna y de su óptica.
 \begin{itemize}
-\item \underline{Punto principal (P = [$u'_P,v'_P$]):} es el punto intersección entre el eje óptico y el plano imagen. Las coordenadas de este punto vienen dadas en píxeles y son expresadas respecto del sistema normalizado de la imagen.
-\item \underline{Factores de conversión píxel-milímetros ($d_u,d_v$):} indican el número de píxeles por milímetro que utiliza la cámara en las direcciones $u$ y $v$ respectivamente.
-\item \underline{Distancia focal (f):} distancia entre el centro óptico (\textbf{C}) y el punto principa (\textbf{P}). Su unidad es el milímetro.
+\item \underline{Punto principal (C = [$x'_C,y'_C$]):} es el punto intersección entre el eje óptico y el plano imagen. Las coordenadas de este punto vienen dadas en píxeles y son expresadas respecto del sistema normalizado de la imagen.
+\item \underline{Factores de conversión píxel-milímetros ($d_x,d_y$):} indican el número de píxeles por milímetro que utiliza la cámara en las direcciones $x$ y $y$ respectivamente.
+\item \underline{Distancia focal (f):} distancia entre el centro óptico (\textbf{O}) y el punto principa (\textbf{C}). Su unidad es el milímetro.
 \item \underline{Factor de proporción (s):} indica la proporción entre las dimensiones horizontal y vertical de un píxel.   
 \end{itemize}
 \end{itemize}
@@ -82,16 +82,16 @@ m = H.M
 donde \textbf{M} y \textbf{m} son los puntos ya definidos y vienen expresados en ``coordenadas homogéneas''. Por más información acerca de este tipo de coordenadas ver \cite{Hartley2004}.\\
 Para determinar la forma de la matriz de proyección se estudia cómo se relacionan las coordenadas de \textbf{M} con las coordenads de \textbf{m}; para hallar esta relación se debe analizar cada transformación, entre los sistemas de coordenadas mencionados con anterioridad, por separado.\\
 \begin{itemize}
-\item \textbf{Proyección 3D - 2D:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas en el sistema de coordenadas de la imagen $(u_0,v_0,s_0)$:\\
+\item \textbf{Proyección 3D - 2D:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas en el sistema de coordenadas de la imagen $(x_0,y_0,s_0)$:\\
 Se desprende de la imagen \ref{fig:CalibracionCamara} y algo de geometría proyectiva la siguiente relación entre las coordenadas en cuestión y la distancia focal (f):
 \[
-\frac{f}{Z_0} = \frac{u_0}{X_0} = \frac{v_0}{Y_0}
+\frac{f}{Z_0} = \frac{x_0}{X_0} = \frac{y_0}{Y_0}
 \]
 A partir de la relación anterior:
 \[
 \left( \begin{array}{c}
-u_0 \\
-v_0
+x_0 \\
+y_0
 \end{array} \right)
 =
 \frac{f}{Z_0} 
@@ -103,8 +103,8 @@ Y_0
 Expresado en forma matricial, en coordenadas homogéneas:
 \[
 \left( \begin{array}{c}
-u_0 \\
-v_0 \\
+x_0 \\
+y_0 \\
 s_0
 \end{array} \right)
 = 
@@ -120,7 +120,7 @@ Z_0 \\
 1
 \end{array} \right)
 \]
-\item \textbf{Transformación imagen - imagen:} de las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas de la imagen $(u_0,v_0,s_0)$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas normalizadas de la imagen $(u'_0,v'_0,s'_0)$:\\
+\item \textbf{Transformación imagen - imagen:} de las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas de la imagen $(x_0,y_0,s_0)$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0,y'_0,s'_0)$:\\
 
 \begin{figure}[h!]
 \centering
@@ -130,39 +130,39 @@ Z_0 \\
 \end{figure}
 
 
-Se les suma, a las coordenadas de \textbf{m} respecto del sistema de la imagen, la posición del punto P respecto del sistema normalizado de la imgen $(u'_P,v'_P)$. Las coordenadas de \textbf{m} dejan de ser expresadas en milímetros para ser expresadas en píxeles. Aparecen los factores de conversión $d_u$ y $d_v$:
+Se les suma, a las coordenadas de \textbf{m} respecto del sistema de la imagen, la posición del punto C respecto del sistema normalizado de la imgen $(x'_C,y'_C)$. Las coordenadas de \textbf{m} dejan de ser expresadas en milímetros para ser expresadas en píxeles. Aparecen los factores de conversión $d_x$ y $d_y$:
 \[
 \begin{array}{c}
-u'_0 = d_u.u_0 + u'_P \\
-v'_0 = d_v.v_0 + v'_P
+x'_0 = d_x.x_0 + x'_C \\
+y'_0 = d_y.y_0 + y'_C
 \end{array}
 \]
 Se obtiene entonces la siguiente relación matricial, en coordenadas homogéneas:
 \[
 \left( \begin{array}{c}
-u'_0 \\
-v'_0 \\
+x'_0 \\
+y'_0 \\
 s'_0
 \end{array} \right)
 = 
 \left( \begin{array}{ccc}
-d_u & 0 & u'_P \\ 
-0 & d_v & v'_P \\
+d_x & 0 & x'_P \\ 
+0 & d_y & y'_P \\
 0 & 0 & 1
 \end{array} \right)
 \left( \begin{array}{c}
-u_0 \\ 
-v_0 \\
+x_0 \\ 
+y_0 \\
 1
 \end{array} \right)
 \]
-\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(u'_0,v'_0,s'_0)$:\\
+\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0y'_0,s'_0)$:\\
 Se obtiene combinando las dos últimas transformaciones. Nótese que como ya se aclaró, depende únicamente de parámetros propios de la construcción de la cámara:
 \[
 I = 
 \left( \begin{array}{cccc}
-d_u.f & 0 & u'_P & 0\\ 
-0 & d_v.f & v'_P & 0\\
+d_x.f & 0 & x'_C & 0\\ 
+0 & d_y.f & y'_C & 0\\
 0 & 0 & 1 & 0
 \end{array} \right)
 \]
@@ -172,13 +172,13 @@ d_u.f & 0 & u'_P & 0\\
 \[
 I = 
 \left( \begin{array}{cccc}
-d_u.f & s & u'_P & 0\\ 
-0 & d_v.f & v'_P & 0\\
+d_x.f & s & x'_C & 0\\ 
+0 & d_y.f & y'_C & 0\\
 0 & 0 & 1 & 0
 \end{array} \right)
 \]
 
-\item \textbf{Matriz de parámetros extrínsecos $(E)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(X_{m0}, Y_{m0}, Z_{m0}, T_{m0})$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$:\\
+\item \textbf{Matriz de parámetros extrínsecos $(E)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(U_0, V_0, W_0, P_0)$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$:\\
 Se obtiene de estimar la pose de la cámara respecto de los ejes del mundo y es la combinación de, primero una rotación $R$, y luego una traslación $T$. Se obtiene entonces la siguiente representación matricial:\\
 \[
 \left( \begin{array}{c}
@@ -193,10 +193,10 @@ R & T \\
 0 & 1
 \end{array} \right)
 \left( \begin{array}{c}
-X_{m0} \\ 
-Y_{m0} \\
-Z_{m0} \\
-T_{m0}
+U_0 \\ 
+V_0 \\
+W_0 \\
+P_0
 \end{array} \right)
 \]
 donde la matriz de parámetros extrínsecos desarrollada toma la forma:
@@ -209,18 +209,18 @@ r_{31} & r_{32} & r_{33} & t_{z} \\
 0 & 0 & 0 & 1
 \end{array} \right)
 \]  
-\item \textbf{Matriz de proyección $(H)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(X_{m0}, Y_{m0}, Z_{m0}, T_{m0})$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(u'_0,v'_0,s'_0)$:\\
+\item \textbf{Matriz de proyección $(H)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(U_0, V_0, W_0, P_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0,y'_0,s'_0)$:\\
 Es la proyección total y se obtiene combinando las dos transformaciones anteriores:
 \[
 \left( \begin{array}{c}
-u'_0 \\
-v'_0 \\
+x'_0 \\
+y'_0 \\
 s'_0
 \end{array} \right)
 = 
 \left( \begin{array}{cccc}
-d_u.f & 0 & u'_P & 0\\ 
-0 & d_v.f & v'_P & 0\\
+d_x.f & 0 & x'_C & 0\\ 
+0 & d_y.f & y'_C & 0\\
 0 & 0 & 1 & 0
 \end{array} \right)
 .
@@ -232,40 +232,40 @@ r_{31} & r_{32} & r_{33} & t_{z} \\
 \end{array} \right)
 .
 \left( \begin{array}{c}
-X_{m0} \\ 
-Y_{m0} \\
-Z_{m0} \\
-T_{m0}
+U_0 \\ 
+V_0 \\
+W_0 \\
+P_0
 \end{array} \right)
 \]
 \end{itemize}
 % ------------------------------------------------------ DISTORSION INTRODUCIDA POR LAS LENTES -------------------------------------------------------
 \section{Distorsión introducida por las lentes}
 \label{sec:distorsion}
-Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras no son del todo buenas, la distorsión introducida por estas se hace notar. Dado el punto \textbf{M} de coordenadas $(X_0,Y_0,Z_0)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre su proyección ideal en el plano imagen $(u_0,v_0)$ y su proyección real $(\tilde{u_0},\tilde{v_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
+Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras no son del todo buenas, la distorsión introducida por estas se hace notar. Dado el punto \textbf{M} de coordenadas $(X_0,Y_0,Z_0)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre su proyección ideal en el plano imagen $(x_0,y_0)$ y su proyección real $(\tilde{x_0},\tilde{y_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
 
 La forma de solucionar el presente problema es realizar una corrección de la distorsión, modelando a la misma de la siguiente manera:\\
 \[
 \left(
 \begin{array}{c}
-\tilde{u_0} \\
-\tilde{v_0}
+\tilde{x_0} \\
+\tilde{y_0}
 \end{array} \right)
 =
 L(r). \left( \begin{array}{c}
-u_0 \\
-v_0
+x_0 \\
+y_0
 \end{array}
 \right),
 \]
-donde $r$ es la distancia radial $\sqrt{u_0^2 + v_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles, respecto del sistema de coordenadas normalizadas de la imagen; se obtiene lo siguiente:
+donde $r$ es la distancia radial $\sqrt{x_0^2 + y_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles, respecto del sistema de coordenadas normalizadas de la imagen; se obtiene lo siguiente:
 \[
 \begin{array}{c}
-\tilde{u_0}' = u_P' + L(r)(u_0' - u_P') \\
-\tilde{v_0}' = v_P' + L(r)(v_0' - v_P') 
+\tilde{u_0}' = x_P' + L(r)(x_0' - x_C') \\
+\tilde{v_0}' = y_P' + L(r)(y_0' - y_C') 
 \end{array}
 \]
-donde $(\tilde{u_0}',\tilde{v_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(u_0',v_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(u_P',v_P')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(u_0' - u_P')^2 +(v_0' - v_P')^2 }$.\\
+donde $(\tilde{x_0}',\tilde{y_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(x_0',y_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(x_C',y_C')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(x_0' - x_C')^2 +(y_0' - y_C')^2 }$.\\
 
 La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. Una aproximación a la función arbitraria $L(r)$ puede ser una expansión de Taylor: $L(r) = 1 + k_1r + k_2r^2 + k_3r^3 + ...$. Finalmente, a la hora de calcular los parámetros intrínsecos de una cámara, también deben ser estimados sus coeficientes de distorsión radial $\{k_1,k_2,k_3,k_4,...\}$.\\
 
@@ -279,7 +279,7 @@ Como se vió algunos párrafos atrás, el proceso mediante el cual se calculan los 
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.2]{figs_camaraypose/damero.jpg}
+\includegraphics[scale=0.2]{figs_camaraypose/damero}
 \caption{Imagen de un damero, utilizada para calibrar la cámara del \textit{iPad} durante el proyecto.}
 \label{fig:damero}
 \end{figure}
@@ -294,19 +294,19 @@ donde $E$ representa a la matriz de parámetros extrínsecos e $I$ representa a la
 \[
 I =
 \left( \begin{array}{ccc}
-\alpha & s & u'_P\\ 
-0 & \beta & v'_P\\
+\alpha & s & x'_C\\ 
+0 & \beta & y'_C\\
 0 & 0 & 1
 \end{array} 
 \right)
 \]
-con $\alpha = d_u.f$ y $\beta = d_v.f$.\\ 
+con $\alpha = d_x.f$ y $\beta = d_y.f$.\\ 
 
 Se asume en este método que el sistema de coordenadas del mundo ``reposa'' sobre la imagen patrón; o lo que es lo mismo, que esta se encuentra en $Z=0$. Se obtiene entonces la siguiente simplificación:\\
 \[
 \left( \begin{array}{c}
-u'_0 \\
-v'_0 \\
+x'_0 \\
+y'_0 \\
 1
 \end{array} \right)
 = 
@@ -317,9 +317,9 @@ r_{1} & r_{2} & r_{3} & t
 \end{array} \right)
 .
 \left( \begin{array}{c}
-X_{m0} \\ 
-Y_{m0} \\
-Z_{m0} \\
+U_0 \\ 
+V_0 \\
+W_0 \\
 1
 \end{array} \right)
 =
@@ -330,12 +330,12 @@ r_{1} & r_{2}  & t
 \end{array} \right)
 .
 \left( \begin{array}{c}
-X_{m0} \\ 
-Y_{m0} \\
+U_0 \\ 
+V_0 \\
 1
 \end{array} \right)
 \]
-donde $(X_{m0}, Y_{m0}, Z_{m0}, 1 )^T$ denota las coordenadas homogéneas del punto \textbf{M} respecto de los ejes del mundo y $(u'_0,v'_0,1)^T$ representa las coordenadas homogéneas de su proyección en el plano imagen, \textbf{m}, respecto de los ejes normalizados de la imagen. Se le llamó $r_i$ a la i-ésima columna de la matriz rotación de los parámetros extrínsecos de la cámara.\\
+donde $(U_0, V_0,W_0, 1 )^T$ denota las coordenadas homogéneas del punto \textbf{M} respecto de los ejes del mundo y $(x'_0,y'_0,1)^T$ representa las coordenadas homogéneas de su proyección en el plano imagen, \textbf{m}, respecto de los ejes normalizados de la imagen. Se le llamó $r_i$ a la i-ésima columna de la matriz rotación de los parámetros extrínsecos de la cámara.\\
 
 Dada una fotografía de la imagen patrón plana (figura \ref{fig:damero}), es posible estimar una homografía que relacione a los puntos de la imagen con sus correspondientes en la fotografía. Si se toma en cuenta que dicha homografía vale $H =(h_{1}, h_{2}, h_{3}) = I.(r_{1}, r_{2}, t)$, con $h_i$ la i-ésima columna de la matriz, y que las columnas $r_1$ y $r_2$ son ortonormales entre sí, realizando algo de matemática se llega a que:
 \[
@@ -395,3 +395,238 @@ El artículo de Zhang afirma que la solución obtenida hasta el momento no es del 
 donde $\hat{m}(I, E_i, M_j)$ es la proyección del punto $M_j$ en la imagen $i$ utilizando la homografíau $H_i= I.E_i$. El resultado de dicha minimización no lineal será el resultado final. Este método requiere de valores inicales para $I$ y para los $E_i|_{i=1..n}$; que serán los obtenidos en los cálculos anteriores. \\
 
 Finalmente se realiza una estimación de la distorsión radial utilizando un modelo muy similar al visto en la sección \ref{sec:distorsion}. Cabe destacar que cuando se estimaron los parámetros intrínsecos de las cámaras utilizadas en este proyecto, la distorsión radial no se tomó en cuenta y aún así los resultados obtenidos fueron realmente muy precisos.\\
+
+\section{Problema de estimación de pose}\label{sec:Problema de estimación de pose}
+Como se mencionó en \ref{sec:Fundamentos y definiciones} la matriz de parámetros extrínsecos \textit{E} representa a la pose de la cámara. El problema de estimación de pose consiste en determinar esta matriz dadas $n$ correspondencias entre puntos $M_i$ en el mundo 3D y puntos $m_i$ en la imagen. 
+
+Existen varios algoritmos de estimación de pose, a continuación se presentan algunos. 
+
+\subsection{\textit{DLT}(\textit{D}irect \textit{L}inear \textit{Transform})}
+Este método sirve para calcular la matriz \textbf{H} en la cual están implícitos los parámetros intrínsecos y extrínsecos. Si se conocen los parámetros intrínsecos se pueden despejar la matriz \textbf{E} con la información de la pose. 
+
+Como se vió anteriormente
+
+\[
+\left( \begin{array}{c}
+x'_i \\
+y'_i \\
+s'_i
+\end{array} \right)
+= 
+\left( \begin{array}{cccc}
+\textbf{H}_{11} & \textbf{H}_{12} & \textbf{H}_{13} & \textbf{H}_{14} \\ 
+\textbf{H}_{21} & \textbf{H}_{22} & \textbf{H}_{23} & \textbf{H}_{24}\\
+\textbf{H}_{31} & \textbf{H}_{32} & \textbf{H}_{33} & \textbf{H}_{34} \\
+\textbf{H}_{41} & \textbf{H}_{42} & \textbf{H}_{43} & \textbf{H}_{44}
+\end{array} \right)
+.
+\left( \begin{array}{c}
+U_i \\ 
+V_i \\
+W_i \\
+P_i
+\end{array} \right)
+\] 
+
+Se debe notar que la matriz \textbf{H}  puede ser multiplicada por un factor distinto de cero sin alterar el resultado de la proyección, esto se debe a que se trabaja con coordenadas homogéneas. Por lo tanto lo que define la proyección no son los elementos de \textbf{H} sino la relación entre los elementos. \textbf{H} tiene 12 elementos, por lo tanto hay 11 relaciones entre los elementos, entonces \textbf{H} tiene 11 grados de libertad.
+ 
+Cada correspondencia $M_i \leftrightarrow m_i$ aporta dos ecuaciones linealmente independientes con los elementos de la matriz \textbf{H}, $\textbf{H}_{ij}$ como variables
+\begin{equation*}
+\begin{split}
+\frac{\textbf{H}_{11}X_i+\textbf{H}_{12}Y_i+\textbf{H}_{13}Z_i+H_{14}}{\textbf{H}_{31}X_i+\textbf{H}_{32}Y_i+\textbf{H}_{33}Z_i+\textbf{H}_{34}} = x_i, \\
+\\
+\frac{\textbf{H}_{21}X_i+\textbf{H}_{22}Y_i+\textbf{H}_{23}Z_i+\textbf{H}_{24}}{\textbf{H}_{31}X_i+\textbf{H}_{32}Y_i+\textbf{H}_{33}Z_i+\textbf{H}_{34}} = y_i 
+\end{split}
+\end{equation*}
+La ecuación para $s'_i$ se puede obtener como combinación lineal de las de $x'_i$ y $y' _i$, por eso no se tiene en cuenta. 
+Estas ecuaciones se puede reescribir como $\textbf{A}h=0$ donde 
+\begin{equation*}
+h = \left(
+\begin{array}{cccccccccccc}
+\textbf{H}_{11} & \textbf{H}_{12} & \textbf{H}_{13} & \textbf{H}_{14} & \textbf{H}_{21} & \textbf{H}_{22} & \textbf{H}_{23} & \textbf{H}_{24} & \textbf{H}_{31} & \textbf{H}_{32} & \textbf{H}_{33} & \textbf{H}_{34} 
+\end{array}
+\right)^T
+\end{equation*}
+y 
+\begin{equation*}
+\textbf{A} = \footnotesize
+\left(
+\begin{array}{cccccccccccc}
+X_0 & Y_0 & Z_0 & 1 & 0 & 0 & 0 & 0 & -x_0X_0 & -x_0Y_0 & -x_0Z_0 & -x_0\\
+0 & 0 & 0 & 0 & X_0 & Y_0 & Z_0 & 1 & -y_0X_0 & -y_0Y_0 & -y_0Z_0 & -y_0 \\
+X_1 & Y_1 & Z_1 & 1 & 0 & 0 & 0 & 0 & -x_1X_1 & -x_1Y_1 & -x_1Z_1 & -x_1\\
+0 & 0 & 0 & 0 & X_1 & Y_1 & Z_1 & 1 & -y_1X_1 & -y_1Y_1 & -y_1Z_1 & -y_1 \\
+\vdots & \vdots & \vdots & \vdots &\vdots & \vdots &\vdots & \vdots & \vdots & \vdots & \vdots & \vdots\\
+X_{n-1} & Y_{n-1} & Z_{n-1} & 1 & 0 & 0 & 0 & 0 & -x_{n-1}X_{n-1} & -x_{n-1}Y_{n-1} & -x_{n-1}Z_{n-1} & -x_{n-1}\\
+0 & 0 & 0 & 0 & X_{n-1} & Y_{n-1} & Z_{n-1} & 1 & -y_{n-1}X_{n-1} & -y_{n-1}Y_{n-1} & -y_{n-1}Z_{n-1} & -y_{n-1} \\
+\end{array}
+\right)
+\normalsize
+\end{equation*}
+La transformación obtenida la matriz \textbf{H} tiene 11 grados de libertad como mencionó anteriormente, por lo tanto el rango de la matriz \textbf{A} es 11. Se realiza la descomposición SVD de la matriz \textbf{A}, el vector propio del valor singular de \textbf{A} mas chico es la base del núcleo de \textbf{A}. Entonces se tiene que $h$ es este vector a menos de una constante.  Una vez que se tiene $h$ se puede armar la matriz \textbf{H}. Luego se tiene que 
+$$\textbf{E} = \textbf{I}^{-1}\textbf{H}$$
+
+\subsection{\textit{PnP} (\textit{P}erspective-\textit{n}-\textit{P}oint)}
+
+\section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
+Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}, dependiendo de la aplicación puede ser mas útil utilizar las diferentes representaciones. 
+
+\subsection{Representación matricial}
+Esta representación es la que se introdujo en \ref{sec:Matriz de proyección}. En esta matriz las filas corresponden a los versores del sistema de coordenadas de la cámara expresados en las coordenadas del mundo. Se puede expresar como
+\[
+\textbf{R} = \left(\begin{array}{ccc}
+i_u & i_v & i_w \\
+j_u & j_v & j_w  \\
+k_u & k_v & k_w 
+\end{array}\right)
+\]
+La ventaja que tiene esta representación es que el pasaje de puntos en coordenadas del mundo a coordenadas de la cámara es directo, simplemente se multiplica por la matriz \textbf{R} al punto en coordenadas del mundo y se le suma el vector de traslación. 
+
+\subsection{Ángulos de Euler}
+La matriz de rotación \textbf{R} se puede escribir como un producto de matrices que representan las rotaciones alrededor de los ejes $x$, $y$ y $z$. No hay ninguna convención establecida en cuanto al orden en que se realizan las rotaciones. Por ejemplo si se toman $\psi$, $\theta$ y $\phi$ como los ángulos de rotación en torno a $x$, $y$ y $z$ respectivamente se tiene 
+\[
+\textbf{R}=R_z(\phi)R_y(\theta)R_x(\psi)=\left(\begin{array}{ccc}
+\cos \phi & -\sin \phi & 0 \\
+\sin \phi & \cos \phi & 0 \\
+0 & 0 & 1
+\end{array}\right)  
+\left(\begin{array}{ccc}
+\cos \theta & 0 & \sin \theta \\
+0 & 1 & 0\\
+-\sin \theta & 0 & \cos \theta
+\end{array}\right)  
+\left(\begin{array}{ccc}
+1 & 0 & 0 \\
+0 & \cos \psi & -\sin \psi \\
+0 & \sin \psi & \cos \psi \\
+\end{array}\right)  
+\]
+
+Desarrollando el producto se tiene que 
+\[
+\textbf{R} = \left(\begin{array}{ccc}
+\cos \theta \cos \phi & \sin\psi\sin\theta\cos\phi - \cos\psi\cos\phi & \cos\psi\sin\theta\cos\phi + \sin\psi\sin\phi \\
+ \cos\theta\sin\phi & \sin\psi\sin\theta\sin\phi+\cos\psi\cos\phi & \cos\psi\sin\theta\sin\phi-\sin\psi\cos\phi \\
+-\sin\theta & \sin\psi\cos\theta & \cos\psi\cos\theta
+\end{array}\right)
+\]
+
+\subsubsection{Orden de rotaciones}
+Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en que orden se aplican las rotaciones. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig: diferenciaRot}.
+
+\begin{figure}[h!]\label{fig: diferenciaRot}
+\centering
+\includegraphics[scale=0.5]{figs_camaraypose/mono3}
+\caption{Se parte del mismo objeto, en la fila superior se aplica una rotación de $45^\circ$ según $x$ y luego una rotación de $45^\circ$ según $y$. En la fila de abajo se aplican las mismas rotaciones pero en orden inverso. Se puede ver que se obtienen diferentes posiciones.}
+\label{fig:mono3}
+\end{figure}
+
+
+
+\subsubsection{Cálculo de los ángulos de Euler}
+Si se tiene la matriz \textbf{R} es posible realizar la descomposición y obtener los ángulos de Euler. De $\textbf{R}_{31}$ se obtiene el valor de $\theta$
+$$ \theta = -\arcsin(\textbf{R}_{31}).$$
+Como $\sin(\theta)=\sin(\pi -\theta)$, puede haber dos posibles valores de $\theta$(si $\textbf{R}_{31}\neq \pm 1$)
+\begin{equation}\label{eq_1}
+\begin{split}
+\theta_1 &= -\arcsin(\textbf{R}_{31}) \\
+\theta_2 &= \pi - \theta_1 = \pi -+ \arcsin(\textbf{R}_{31})
+\end{split}
+\end{equation}
+
+ A partir de estos valores de $theta$ es posible encontrar dos juegos de ángulos que dan la misma matriz \textbf{R}. Para calcular $\psi$ se observa que 
+ \[
+ \frac{\textbf{R}_{32}}{\textbf{R}_{33}} = \tan\psi
+\]
+ de donde se deduce que 
+ \[
+ \psi = \arctan \left( \frac{\textbf{R}_{32}}{\textbf{R}_{33}}\right)
+ \]
+ Es importante obtener el cuadrante al que pertenece el ángulo, por esto es que se usa la función $\arctan2$ que esta disponible en $C$, recordar que la imagen de $\arctan$ es $[-\pi /2, \pi /2]$ por lo que hay 2 cuadrantes que no se consideran. Como en los términos $\textbf{R}_{32}$ y $\textbf{R}_{33}$ aparece el término $\cos\theta$ multiplicando, hay que tener en cuenta su signo para obtener el valor de $\psi$. Si $\cos(\theta)>0$, se tiene que $\psi = \arctan\left(\textbf{R}_{32} / \textbf{R}_{33}\right)$. Si $\cos(\theta)<0$, $\psi = \arctan\left(-\textbf{R}_{32} / -\textbf{R}_{33}\right)$. Para tener en cuenta esto se toma
+ \[
+ \psi = \arctan\left(\frac{\textbf{R}_{32} / \cos\theta}{\textbf{R}_{33} / \cos\theta}\right)
+ \]
+  Por lo tanto los dos posibles valores para $\psi$ son
+\begin{equation}\label{eq_2}
+\begin{split}
+ \psi_1 &= \arctan\left(\frac{\textbf{R}_{32}/\cos\theta_1}{\textbf{R}_{33}/\cos\theta_1}\right)\\
+ \psi_2 &= \arctan\left(\frac{\textbf{R}_{32}/\cos\theta_2}{\textbf{R}_{33}/\cos\theta_2}\right)
+\end{split} 
+ \end{equation}
+
+  De manera similar se puede obtener $\phi$. Se observa que
+  \[
+  \frac{\textbf{R}_{21}}{\textbf{R}_{11}} = \tan\phi
+  \]
+  por lo tanto se llega a
+\begin{equation}\label{eq_3}
+\begin{split}
+ \phi_1 &= \arctan\left(\frac{\textbf{R}_{21}/\cos\theta_1}{\textbf{R}_{11}/\cos\theta_1}\right)\\
+ \phi_2 &= \arctan\left(\frac{\textbf{R}_{21}/\cos\theta_2}{\textbf{R}_{11}/\cos\theta_2}\right)
+\end{split}
+\end{equation}
+Las ecuaciones \ref{eq_2} y \ref{eq_3} son válidas para el caso en que $\cos\theta \neq 0$
+
+En el caso en que $\cos\theta = 0$ se tiene que $\theta = \pm \pi/2$, ademas los términos $\textbf{R}_{11}$, $\textbf{R}_{21}$, $\textbf{R}_{32}$ y $\textbf{R}_{33}$ son nulos. Por lo tanto se utilizan otros elementos de la matriz de rotación para hallar los ángulos restantes. 
+En el caso en que  $\theta = \pi/2$ se tiene que 
+\begin{equation*}
+\begin{split}
+\textbf{R}_{12} &=  \sin\psi\cos\phi - \cos\psi\cos\phi = \sin\left(\psi - \phi\right) \\
+\textbf{R}_{13} &=  \cos\psi\cos\phi + \sin\psi\sin\phi = \cos\left(\psi - \phi\right) \\
+\textbf{R}_{22} &=  \sin\psi\sin\phi + \cos\psi\cos\phi = \cos\left(\psi - \phi\right) = \textbf{R}_{13}\\
+\textbf{R}_{23} &=  \cos\psi\sin\phi - \sin\psi\cos\phi = -\sin\left(\psi - \phi\right)  = -\textbf{R}_{12}
+\end{split}
+\end{equation*}
+Cualquier $\psi$ y $\phi$ que verifiquen estas ecuaciones serán soluciones válidas. Usando las ecuaciones para $\textbf{R}_{12}$ y $\textbf{R}_{13}$ se tiene que
+\begin{align*}
+\centering
+\left(\psi - \phi\right) =&  \arctan\left(\textbf{R}_{12}/\textbf{R}_{13}\right) \\
+\psi =&  \phi + \arctan\left(\textbf{R}_{12}/\textbf{R}_{13}\right) \\
+\end{align*}
+Para el caso en que $\theta = -\pi/2$ se procede de igual manera y se llega a que 
+\begin{align*}
+\centering
+\left(\psi + \phi\right) =&  \arctan\left(-\textbf{R}_{12}/-\textbf{R}_{13}\right) \\
+\psi =&  - \phi + \arctan\left(-\textbf{R}_{12}/-\textbf{R}_{13}\right) \\
+\end{align*}
+
+\subsubsection{Gimbal lock}
+La gran desventaja que presenta la representación de la rotación mediante ángulos de Euler, es el problema denominado \textit{gimbal lock}. Este problema se da cuando 2 de los ejes de rotación quedan alineados. Si hay dos ejes alineados, se pierde un grado de libertad ya que los dos ejes rotan de la misma manera. Para la composición de rotaciones que se utilizan en la aplicación el \textit{gimbal lock} se da cuando se gira $\pi/2$ según $y$. Como se vio anteriormente, en el caso en que $\theta = \pi/2$ la matriz de rotación queda
+\[
+\textbf{R} = \left(\begin{array}{ccc}
+0 & \sin\left(\psi - \phi\right)  & \cos\left(\psi - \phi\right)\\
+0 & \cos\left(\psi - \phi\right) & -\sin\left(\psi - \phi\right) \\
+-1 & 0 & 0
+\end{array}\right)
+\]
+Esto es una rotación entorno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi$
+
+Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque esta mas arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que esta por debajo de $z$ en la jerarquía. 
+
+\begin{figure}\label{fig: gimbal}
+        \centering
+        \subfigure[]{
+                \includegraphics[scale=0.44]{figs_camaraypose/gimbal1}
+				\label{fig: gimbal1}}
+        \subfigure[]{
+                \includegraphics[scale=0.44]{figs_camaraypose/gimbal90y}
+                \label{fig: gimbal90y}}
+        
+       \subfigure[]{
+                \includegraphics[scale=0.44]{figs_camaraypose/gimbal60x}
+				\label{fig: gimbal60x}}
+        \subfigure[]{
+                \includegraphics[scale=0.44]{figs_camaraypose/gimbal60z}
+                \label{fig: gimbal60z}}
+         \caption{Los ejes rojo, verde y azul, son los ejes $x$, $y$ y $z$. En \subref{fig: gimbal1} se ve la posición inicial. En \subref{fig: gimbal90y} se puede ver el eje $y$ rotado $90^\circ$. En \subref{fig: gimbal60x} se ve la rotación según $x$ de $60^\circ$. En \subref{fig: gimbal60z} se ve la rotación según $z$ de $-60^\circ$ }
+\end{figure}
+
+\subsection{Cuaternios}
+Los cuaternios son una extensión a los números reales, son generados a?adiendo las unidades imaginarias \textit{i}, \textit{j} y \textit{k}. Se cumple que $i^2 = j^2  = k^2 = -1$. Un número cuaternio $q$ se expresa como $q = a + bi + cj +dk$. También puede ser expresado como un escalar y un vector de 3 elementos $(a,\textbf{v})$. Una rotación alrededor del versor $\omega$ un ángulo $\theta$ se puede expresar como el número cuaternio unidad
+$$ q = \left(\cos\left(\frac{1}{2}\theta\right),\omega\sin\left(\frac{1}{2}\theta\right)\right)$$
+
+Para rotar un punto 3D \textbf{M}, se representa como un cuaternio $p = (0,\textbf{M})$ y el punto $p'$ rotado se calcula como 
+$$p' = q p \overline{q}.$$ 
+El producto que se utiliza es el producto de cuaternios y $\overline{q} = \left(\cos\left(\frac{1}{2}\theta\right),-\omega\sin\left(\frac{1}{2}\theta\right)\right)$ es el cuaternio conjugado de $q$.
+
+Esta representación evita el problema del \textit{gimbal lock} pero tiene como contra que tiene un mayor  costo computacional. 
