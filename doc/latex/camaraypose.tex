@@ -483,7 +483,7 @@ $$
 \item[$\bullet$]  Una vez que se calculan las distancias $l_i$, los puntos $\textbf{M}_i$ se expresan en el sistema de coordenadas de la cámara como $\textbf{M}^\textbf{C}_i$. 
 \item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo a el sistema de coordenadas de la cámara.
 \end{itemize}
-En la bibliografía se encuentran varios métodos para resolver numéricamente el problema. 
+En la bibliografía  se encuentran varios métodos para resolver numéricamente el problema. 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{figs_camaraypose/pnp}
@@ -491,7 +491,17 @@ En la bibliografía se encuentran varios métodos para resolver numéricamente el p
 \label{fig:pnp}
 \end{figure}
 
+\subsection{RANSAC(RANdom SAmple Consensus)}
+Este es un algoritmo iterativo utilizado para estimar los parámetros de un modelo matemático de un conjunto de datos que contiene \textit{outliers}, en particular se puede utilizar para el problema de estimación de pose cuando no se tienen las correspondencias entre puntos detectados y puntos del modelo. 
+A continuación se presenta el algoritmo:
+\begin{itemize}
+\item[(1)] Dado un modelo que requiere un mínimo de \textit{n} puntos para determinar sus parámetros, y un conjunto de datos \textbf{P} tal que el número de puntos en \textbf{P} es mayor que \textit{n}, se sortea un subconjunto $S_1$ de \textit{n} puntos de \textbf{P} para instanciar el modelo. Con el modelo instanciado $\textbf{M}_1$ se determina el subconjunto de decisión $S_1^*$ de puntos de \textbf{P} que están a menos de una distancia \textit{t} de $\textbf{M}_1$.
 
+\item[(2)] Si la cantidad de puntos en $S_1^*$  es mayor que un umbral \textbf{T} entonces se elige el subconjunto de decisión $S_1^*$ para computar el nuevo modelo $\textbf{M}_1^*$.
+
+\item[(3)] Si la cantidad de puntos en $S_1^*$ es menor que \textbf{T}, se sortea un nuevo subconjunto $S_2$ y se repite el proceso. Si luego de una cantidad de \textit{N} número de pruebas no se obtiene un subconjunto de decisión que cumple con el umbral \textbf{T}, se resuelve el modelo con el subconjunto de decisión mas grande obtenido, o se termina sin devolver modelo.
+\end{itemize}
+Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo a estimar y a la probabilidad de encontrar un \textit{outlier} en el conjunto de datos . 
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}, dependiendo de la aplicación puede ser mas útil utilizar las diferentes representaciones. 
@@ -537,9 +547,9 @@ Desarrollando el producto se tiene que
 \]
 
 \subsubsection{Orden de rotaciones}
-Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en que orden se aplican las rotaciones. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig: diferenciaRot}.
+Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en que orden se aplican las rotaciones. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig: mono3}.
 
-\begin{figure}[h!]\label{fig: diferenciaRot}
+\begin{figure}[h!]\label{fig: mono3}
 \centering
 \includegraphics[scale=0.5]{figs_camaraypose/mono3}
 \caption{Se parte del mismo objeto, en la fila superior se aplica una rotación de $45^\circ$ según $x$ y luego una rotación de $45^\circ$ según $y$. En la fila de abajo se aplican las mismas rotaciones pero en orden inverso. Se puede ver que se obtienen diferentes posiciones.}
