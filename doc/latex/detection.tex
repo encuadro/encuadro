@@ -1,11 +1,7 @@
 \chapter{Detección}
 \label{ch:detection}
-Hola
 
 \section{Típos de características}
-Intro y mas breves definiciones?. 
-
-Bordes, esquinas, líneas, segmentos de línea, regiones (blobs). 
 
 \section{Bordes y esquinas}
 	\subsection{Detector de bordes de Canny}
@@ -15,31 +11,58 @@ Bordes, esquinas, líneas, segmentos de línea, regiones (blobs).
 \section{Líneas y segmentos de línea}
 	\subsection{Detector de líneas de Hough}
 	\subsection{Detector de segmentos de línea: LSD}
+	\subsection{Detector de segmentos de línea: EDLines}
 
 \section{Regiones y puntos de interés}
 	\subsection{FAST}		
 	\subsection{Blobs}
 
-%\subsection{Cilindros y esferas}
-%\subsubsection{Algortimos de cilindros y esferas}
-
-\section{Detección sin primitivas markerless}
-SIFT (puntero a capitulo que tiene SIFT para reconocimiento)
+\section{Descriptores}
+SIFT (puntero a capitulo que tiene SIFT para reconocimiento o mismo acá) \\
 SURF, ETC ETC.
 
-\section{Marcadores}
+\chapter{Marcadores}
 \label{sec:marcadores}
-Marcadores que se usan.
-Limitaciones
+La inclusión de \emph{marcadores}, en inglés \emph{markers}, en la escena ayuda al problema de extracción de características y por lo tanto al problema de estimación de pose \cite{Lepetit05b}. Estos por construcción son elementos que presentan una detección estable en la imagen para el tipo de característica que se desea extraer así como medidas fácilmente utilizables para la estimación de la pose.
 
-La inclusión de \emph{marcadores}, \emph{marcas de referencia} o \emph{fiduciales}, en inglés \emph{markers}, \emph{landmarks} o \emph{fiducials}, en la escena ayuda al problema de extracción de características y por lo tanto al problema de estimación de pose \cite{Lepetit05b}. Estos por construcción son elementos que presentan una detección estable en la imagen para el tipo de característica que se desea extraer así como medidas facilmente utilizables para la estimación de la pose.
-
-Se distinguen dos tipos de \emph{fiduciales}. El primer tipo son los que se llaman puntos \emph{fiduciales} por que proveen una correspondencia de puntos entre la escena y la imagen. El segundo tipo, \emph{fiduciales planares}, se pueden obtener mediante la construcción en una geometría coplanar de una serie de \emph{puntos fiduciales} identificables como esquinas. Un único \emph{fiducial planar} puede contener por si solo todas las seis restricciones espaciales necesarias para definir el marco de coordenadas. 
+Los marcadores planos se pueden obtener mediante la construcción en una geometría coplanar de una serie de primitivas identificables como esquinas, segmentos o líneas. Un único marcador plano puede contener por si solo todas las seis restricciones espaciales necesarias para definir un marco de coordenadas asociado a su pose.
 
 Como se explica en la sección \ref{ch:camaraypose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre puntos 3D en la escena en coordenadas del mundo y puntos en la imagen.
 
+En el primer lugar se explican brevemente algunos de los sistemas de Realidad Aumentada mas populares basados en marcadores planos. En segundo lugar se propone el diseño de un marcador específico para la aplicación a este proyecto y se desarrollan las soluciones a los algoritmos de detección de dicho marcador mostrando algunos resultados parciales en el proceso. Por último se muestran algunos resultados de la detección.
+
+\section{Sistemas basados en marcadores planos}
+Existen muchos sistemas de visión basados en \emph{marcadores planos} con aplicación en Realidad Aumentada y Navegación. Algunos de ellos son ARToolKit, ARTag y ARStudio utilizados para Realidad Aumentada \ref{bib:marker_detection}. A continuación se realiza una breve descripción del funcionamiento de los mismos.
+
+Los sistemas basados en marcadores planos utilizan típicamente marcadores bitonales. Esto perimte reducir la sensibilidad a las condiciones de luz de la escena y a las configuraciones de la cámara por lo que no hay necesidad de identificar tonos de grises y la regla de decisión para cada píxel puede ser reducida, en la versión mas simple, a un umbral o \emph{threshold}. El diseño de los marcadores depende en gran medida de la aplicación. En la figura \ref{fig:Marcadores_AR} se muestran algunos marcadores planos para aplicaciones de Realidad Aumentada en donde cada uno de ellos provee suficientes puntos para permitir el cálculo de pose tridimensional y adicionalmente contienen cierta información en su interior para permitir su identificación.
+\begin{figure}[h!]
+  \centering
+  \subfigure[ARToolKit]{
+    \includegraphics[scale=0.45]{figs_detection/artoolkit.png}}
+  \subfigure[ARTag]{
+    \includegraphics[scale=0.45]{figs_detection/artag.png}}
+  \label{fig:Marcadores_AR}
+  \caption{Cuatro ejemplos de marcadores para los sistemas de Realidad Aumentada indicados. Figura tomada de \ref{bib:artag}}
+\end{figure}
+
+Es importante que los marcadores puedan ser localizados en un campo de visión amplio para permitir la correcta detección bajo la distorsión asociada a la transformación proyectiva que lleva el marcador en el mundo real al plano de imagen. Por otro lado, si los marcadores contienen información en su interior, esta no debe ser muy densa para permitir la recuperación de la misma a mayor distancia. Típicamente, esta información es solo una identificación entre marcadores de un mismo sistema por lo que la información es poca y esto no es un problema.
+
+Estos sistemas contienen ciertos puntos característicos con los que se realiza el cálculo de pose. En general su contorno es basado en un cuadrilátero y se utilizan las cuatro esquinas del contorno del marcador para realizar el cálculo.
+
+\subsection{ARToolKit}
+ARToolKit es un muy popular sistema de marcadores planos para Realidad Aumentada e Interacción Hombre Computador debido a ser de código abierto. Los marcadores bitonales consisten en un cuadrado con borde negro y un patrón en el interior.
+
+La primer etapa del proceso de reconocimiento consisten en detectar los bordes negros. Esto se realiza buscando grupos conexos de píxeles (\emph{blobs}) que están por debajo de un determinado umbral. Posteriormente se extrae el contorno de cada grupo esos grupos que están rodeados por cuatro líneas rectas son marcados como marcadores potenciales. Las cuatro esquinas de cada marcador potencial son utilizados para calcular la homografía y así remover la distorsión perspectiva. Con el marcador en una vista canónica, se procede a identificar el patrón interno muestreando en una grilla, de por lo general $16\times 16$ o $32\times 32$, los valores de gris. Con esto se construye un vector característico y se compara por correlación con una librería de vectores de característicos logrando la identificación del mismo.
+
+Este sistema tiene algunas desventajas o ``puntos débiles''. En primer lugar la detección es basada en un umbral por lo que las condiciones de iluminación pueden afectar fuertemente la efectividad de la misma. Dado que el código esta disponible este se puede modificar para realizar \emph{threshold} local o adaptivo por ejemplo. Otras desventajas están relacionadas con el proceso de identificación del marcador frente a la librería.
+
+\subsection{ARTag}
+ARTag es otro sistema de marcadores planos para Realidad Aumentada e Interacción Humano Computador. Los marcadores son también bitonales y basados en un borde negro. En contraste con el ARToolKit este sistema utiliza un enfoque basado en bordes por lo que es mas robusto a condiciones de iluminación. Los bordes son unidos en segmentos que a su vez se unen en cuadriláteros. Al igual que con ARToolKit con las esquinas se calcula la homografía y se muestrea en el interior del marcador pero con una grilla de $6\times 6$. 
+
+El sistema puede lidiar con condiciones de iluminación cambiantes, oclusiones y segmentos partidos hasta cierto punto. El proceso de identificación de los marcadores entre sí con la información en su interior es a su vez mas veloz que el de ARToolKit.
+
 \section{Marcador QR}
-El enfoque inicial elegido para la detección de \emph{puntos fiduciales} para marcadores parte del trabajo de fin de curso de Matías Tailanian para el curso \emph{Tratamiento de imágenes por computadora} de Facultad de Ingeniería, Universidad de la República\footnote{Autoposicionamiento 3D -  http://sites.google.com/site/autoposicionamiento3d/}. La elección se basa principalmente en los buenos resultados obtenidos para dicho trabajo con un enfoque relativamente simple. El trabajo desarrolla, entre otras cosas, un diseño de marcador y un sistema de detección de marcadores basado en el detector de segmentos LSD\cite{grompone10} por su buena \emph{performance} y aparente bajo costo computacional. 
+El enfoque elegido para la detección de características utilizando marcadores parte del trabajo de fin de curso de \emph{Matías Tailanián} para el curso \emph{Tratamiento de imágenes por computadora} de Facultad de Ingeniería, Universidad de la República\footnote{Autoposicionamiento 3D -  http://sites.google.com/site/autoposicionamiento3d/}. La elección se basa principalmente en los buenos resultados obtenidos para dicho trabajo con un enfoque relativamente simple. El trabajo desarrolla, entre otras cosas, un diseño de marcador y un sistema de detección de marcadores basado en el detector de segmentos LSD\cite{grompone10} por su buena \emph{performance}. 
 
 El marcador utilizado está basado en la estructura de detección incluida en los códigos \emph{QR} y se muestra en la figura \ref{fig:Marker}. Éste consiste en tres grupos idénticos de tres cuadrados concéntricos superpuestos en ``capas''. La primer capa contiene el cuadrado negro de mayor tamaño, en la segunda capa ubica el cuadrado mediano en colo blanco y en la última capa un cuadrado negro pequeño. De esta forma se logra un fuerte contraste en los lados de cada uno de los cuadrados facilitando la detección de bordes o líneas. El resultado de una detección de líneas para esta configuración produce para cada cuadrado la detección de sus lados. A diferencia de los códigos \emph{QR} la disposición espacial de los grupos de cuadrados es distinta para evitar ambigüedades en la identificación de los mismos entre sí. 
 % Estas dos características son esenciales para la extracción de los \emph{puntos fiduciales} de forma coherente, es decir, las correspondencias tienen que poder ser determinadas completamente bajo criterios razonables.
@@ -56,19 +79,19 @@ A continuación se presentan algunas definiciones de las estructuras básicas que 
 
 Los elementos mas básicos en la estructura son los \emph{segmentos} los cuales consisten en un par de puntos en la imagen, $\mathbf{p} = (p_x,p_y)$ y $\mathbf{q} = (q_x,q_y)$. Estos \emph{segmentos} forman lo que son los lados del \emph{cuadrilátero}, el próximo elemento estructural del marcador.\\
 
-Un \emph{cuadrilátero} o \emph{quadrilateral} en inglés, al que se le denomina $Ql$, está determinado por cuatro segmentos conexos y distintos entre sí. El cuadrilátero tiene dos propiedades notables; el \emph{centro} definido como el punto medio entre sus cuatro vértices y el \emph{perímetro} definido como la suma de el largo de sus cuatro lados. Los \emph{vértices} de un \emph{cuadrilátero} se determinan mediante la intersección, en sentido amplio, de dos segmentos contiguos. Es decir, si $s_1$ es contiguo a $s_2$ dadas las recta $r_1$ que pasa por los puntos $(\mathbf{p}_1$, $\mathbf{q}_1)$ del segmento $s_1$ y la recta $r_2$ que pasa por los puntos $(\mathbf{p}_2, \mathbf{q}_2)$ del segmento $s_2$, se determina el vértice correspondiente como la intersección $r_1 \cap r_2$. \\
+Un \emph{cuadrilátero} o \emph{quadrilateral} en inglés, al que se le denomina $Ql$, está determinado por cuatro segmentos conexos y distintos entre sí. El cuadrilátero tiene dos propiedades notables; el \emph{centro} definido como el punto medio entre sus cuatro vértices y el \emph{perímetro} definido como la suma de el largo de sus cuatro lados. Los \emph{vértices} de un cuadrilátero se determinan mediante la intersección, en sentido amplio, de dos segmentos contiguos. Es decir, si $s_1$ es contiguo a $s_2$ dadas las recta $r_1$ que pasa por los puntos $(\mathbf{p}_1$, $\mathbf{q}_1)$ del segmento $s_1$ y la recta $r_2$ que pasa por los puntos $(\mathbf{p}_2, \mathbf{q}_2)$ del segmento $s_2$, se determina el vértice correspondiente como la intersección $r_1 \cap r_2$. \\
 %La propiedad de conexión entre dos segmentos se relaja a la intersección de dos discos de un cierto radio en torno a los puntos de dos segmentos vecinos. \\
 
-A un \emph{conjunto de cuadriláteros} o \emph{quadrilateral set} se le denomina $QlSet$ y se construye a partir de $M$ cuadriláteros, con $M>1$. Los \emph{cuadriláteros} comparten un mismo centro pero se diferencian en un factor de escala. A partir de dichos cuadriláteros se construye un lista ordenada $(Ql[0],Ql[1],\dots,Ql[M-1])$ en donde el orden viene dado por el valor de \emph{perímetro} de cada $Ql$. Se define el \emph{centro del grupo de cuadriláteros} como el promedio de los centros de cada $Ql$ de la lista ordenada.\\
+A un \emph{conjunto de cuadriláteros} o \emph{quadrilateral set} se le denomina $QlSet$ y se construye a partir de $M$ cuadriláteros, con $M>1$. Los cuadriláteros comparten un mismo centro pero se diferencian en un factor de escala. A partir de dichos cuadriláteros se construye un lista ordenada $(Ql[0],Ql[1],\dots,Ql[M-1])$ en donde el orden viene dado por el valor de perímetro de cada $Ql$. Se define el \emph{centro del grupo de cuadriláteros}, $\mathbf{c}_i$, como el promedio de los centros de cada $Ql$ de la lista ordenada.\\
 
-Finalmente el \emph{marcador QR} está constituido por $N$ \emph{conjuntos de cuadriláteros} dispuestos en una geometría particular. Esta geometría permite la determinación de un sistema de coordenadas; un origen y dos ejes a utilizar. Se tiene una lista ordenada  $(QlSet[0],QlSet[1],\dots,QlSet[N-1])$ en donde el orden se puede determinar mediante la disposición espacial de los mismos o a partir de hipótesis razonables.\\
+Finalmente el \emph{marcador QR} está constituido por $N$ conjuntos de cuadriláteros dispuestos en una geometría particular. Esta geometría permite la determinación de un sistema de coordenadas; un origen y dos ejes a utilizar. Se tiene una lista ordenada  $(QlSet[0],QlSet[1],\dots,QlSet[N-1])$ en donde el orden se puede determinar mediante la disposición espacial de los mismos o a partir de hipótesis razonables.\\
 
-Un marcador proveerá un numero de $4\times M \times N $ vértices y por lo tanto la misma cantidad de puntos fiduciales para proveer las correspondencias  $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ al algoritmo de estimación de pose.\\
+Un marcador proveerá un numero de $4\times M \times N $ vértices y por lo tanto la misma cantidad de puntos para proveer las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ al algoritmo de estimación de pose.
 
 \subsection{Diseño}
-En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo \emph{QR} basado en \emph{cuadriláteros} y mas específicamente en tres conjuntos de tres cuadrados dispuestos en como se muestra en la figura \ref{fig:Marker}.\\
+En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo QR basado en cuadriláteros y mas específicamente en tres conjuntos de tres cuadrados dispuestos en como se muestra en la figura \ref{fig:Marker}.\\
 
-Los tres \emph{cuadriláteros} correspondientes a un mismo \emph{conjunto de cuadriláteros} tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $Ql[0]$ tiene lado $l$ mientras que $Ql[1]$ y $Ql[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $QlSet$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el ambiente del \emph{tratamiento de imágenes} para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los \emph{vértices} $v_{j_{1}}$ de cada \emph{cuadrilátero} $Ql[j]$ como, \\
+Los tres cuadriláteros correspondientes a un mismo conjunto de cuadriláteros tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $Ql[0]$ tiene lado $l$ mientras que $Ql[1]$ y $Ql[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $QlSet$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el área de Procesamiento de Imágenes para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los vértices $v_{j_{1}}$ de cada cuadrilátero $Ql[j]$ como,
 \begin{align*}
 v_{j_{0}} = (a/2,a/2) && v_{j_{2}} = (-a/2,-a/2)  \\
 v_{j_{1}} = (a/2,-a/2)&& v_{j_{3}} = (-a/2,a/2)
@@ -77,11 +100,11 @@ con $a=(j+1)\times l$. El orden aquí explicado se puede ver también junto con el
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.35]{figs_detection/QlSetDetail.eps}
-\caption{Detalle de un QlSet. A la izquierda se muestra el resultado de la detección de un $QlSet$ y el orden interno de sus \emph{cuadriláteros} y a la derecha el orden de los vértices respecto al sistema de coordenadas local.}
+\caption{Detalle de un $QlSet$. A la izquierda se muestra el resultado de la detección de un $QlSet$ y el orden interno de sus cuadriláteros y a la derecha el orden de los vértices respecto al sistema de coordenadas local.}
 \label{fig:QlSetDetail}
 \end{figure}
 
-Un detalle del marcador completo se muestra en la figura \ref{fig:MarkerDetail} en donde se define el conjunto $i$ de cuadriláteros concéntricos como el $QlSet[i]$ y se definen los respectivos centros de cada uno de ellos como $\mathbf{c}_i$. El sistema de coordenadas del \emph{marcador QR} tiene centro en el centro del $QlSet[0]$ y ejes de coordenadas idénticos al definido para cada $Ql$. Se tiene además que los ejes de coordenadas pueden ser obtenidos mediante los vectores normalizados,
+Un detalle del marcador completo se muestra en la figura \ref{fig:MarkerDetail} en donde se define el conjunto $i$ de cuadriláteros concéntricos como el $QlSet[i]$ y se definen los respectivos centros de cada uno de ellos como $\mathbf{c}_i$. El sistema de coordenadas del marcador QR tiene centro en el centro del $QlSet[0]$ y ejes de coordenadas idénticos al definido para cada $Ql$. Se tiene además que los ejes de coordenadas pueden ser obtenidos mediante los vectores normalizados,
 \begin{equation}
 \begin{split}
 \mathbf{x}  = \frac{\mathbf{c}_1 - \mathbf{c}_0}{||\mathbf{c}_1-\mathbf{c}_0||} & \quad
@@ -99,33 +122,37 @@ La disposición de los $QlSet$ es tal que la distancia indicada $d_{01}$ definida
 \end{figure}
 
 
-\subsubsection{Parámetros de diseño}
+\subsection{Parámetros de diseño}
 Provisto el diseño del marcador descrito, quedan definidos ciertos parámetros \textbf{estructurales} que fueron de tomados fijos a lo largo del proyecto pero que podrían ser cambiados para trabajos futuros asociados. Estos parámetros son:
 \begin{itemize}
-\item M: cantidad de \emph{conjuntos de cuadriláteros}.
-\item N: cantidad de \emph{cuadriláteros} por \emph{conjuntos de cuadriláteros}.
+\item M: cantidad de conjuntos de cuadriláteros.
+\item N: cantidad de cuadriláteros por conjuntos de cuadriláteros.
 \item Geometría: geometría de los cuadriláteros ($Ql$).
-\item Disposición: disposición espacial de los \emph{conjuntos de cuadriláteros} ($QlSet$).
+\item Disposición: disposición espacial de los conjuntos de cuadriláteros ($QlSet$).
 \end{itemize}
 
-El criterio de elección de $M$ y $N$ parte del diseño los códigos QR como ya fue explicado. La detección por segmentos de línea resulta una cantidad de $3\times QlSet$'s conteniendo $3 \times Ql$'s cada uno. Bajo esta elección de parámetros se tienen $36$ \emph{segmentos} y \emph{vértices}. Se tiene entonces un número de puntos característicos razonable para la estimación de pose.
+El criterio de elección de $M$ y $N$ parte del diseño los códigos QR como ya fue explicado. La detección por segmentos de línea resulta una cantidad de $3\times QlSet$'s conteniendo $3 \times Ql$'s cada uno. Bajo esta elección de parámetros se tienen $36$ segmentos y vértices. Se tiene entonces un número de puntos característicos razonable para la estimación de pose.
 
 La elección de \emph{cuadrados} como parámetro de geometría se basa en la necesidad de tener igual resolución en los dos ejes del marcador. De esta forma se asegura una distancia límite en donde, en un caso ideal enfrentado al marcador, la detección de segmentos de línea falla simultáneamente en los segmentos verticales como en los horizontales. De otra forma se tendría una dirección que limita mas que la otra desaprovechando resolución.
 
-La disposición espacial de los \emph{conjuntos de cuadriláteros} esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros como se muestra en la figura \ref{fig:MarkerDetail}.\\
+La disposición espacial de los conjuntos de cuadriláteros esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros como se muestra en la figura \ref{fig:MarkerDetail}.\\
 
 Por otro lado se tiene otro juego de parámetros \textbf{dinámicos} que concluyen con el diseño del marcador. Estos parámetros conservan la estructura intrínseca del marcador permitiendo versatilidad en la aplicación y sin la necesidad de modificación alguna de los algoritmos desarrollados. Estos son:
 \begin{itemize}
-\item $d_{ij}$: distancia entre los \emph{centros} $QlSet[j]$ con $QlSet[i]$.
-\item $l$: lado del \emph{cuadrilátero} mas pequeño ($Ql[0]$) de los $QlSet$.
+\item $d_{ij}$: distancia entre los centros $QlSet[j]$ con $QlSet[i]$.
+\item $l$: lado del cuadrilátero mas pequeño ($Ql[0]$) de los $QlSet$.
 \end{itemize}
 
 En este caso se debe cumplir siempre la condición impuesta previamente en donde $d_{01}\gg d_{02}$. De otra forma se deberán realizar ciertas hipótesis no genéricas o se deberá aumentar ligeramente la complejidad del algoritmo para la identificación del marcador.\\
 
-\subsubsection{Diseños utilizados}
+\subsection{Diseños utilizados}
 \begin{itemize}
- \item \textbf{Test}: Durante el desarrollo de los algoritmos de detección e identificación de los \emph{vértices} del \emph{marcador QR} se trabajó con determinados parámetros de diseño de dimensiones apropiadas para posibilitar el traslado y las pruebas domésticas. 
-
+ \item \textbf{Test}: Durante el desarrollo de los algoritmos de detección e identificación de los vértices del marcador QR se trabajó con determinados parámetros de diseño de dimensiones apropiadas para posibilitar el traslado y las pruebas domésticas. 
+\begin{itemize}
+ \item $l = 30 mm$
+ \item $d_{01} = 190 mm$
+ \item $d_{02} = 100 mm$
+\end{itemize}
  \item \textbf{Da Vinci}
 
  \item \textbf{Artigas}
@@ -135,10 +162,10 @@ En este caso se debe cumplir siempre la condición impuesta previamente en donde 
 \end{itemize}
 
 
-\subsection{Detección}
+\section{Detección}
 La etapa de detección del marcador se puede separar en tres grandes bloques; la detección de segmentos de línea, el filtrado de segmentos y la determinación de correspondencias (figura \ref{fig:detección_diagrama_marcador}). En esta sección se muestran algunos resultados para la detección de segmentos de línea por LSD y se desarrolla en profundidad los algoritmos desarrollados durante el proyecto para el filtrado de segmentos y determinación de correspondencias.
 
-\subsubsection{Detección de segmentos de línea}
+\subsection{Detección de segmentos de línea}
 La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el capítulo \ref{ch:lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
 
 \begin{figure}[h!]
@@ -151,7 +178,7 @@ La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD 
   \caption{Resultados del algoritmo de detección de segmentos de línea LSD.}
 \end{figure}
 
-\subsubsection{Filtrado y agrupamiento de segmentos}
+\subsection{Filtrado y agrupamiento de segmentos}
 El filtrado y agrupamiento de segmentos consiste en la búsqueda de conjuntos de cuatro segmentos conexos en la lista de segmentos de línea detectados por LSD. Los conjuntos de segmentos conexos encontrados se devuelven en una lista en el mismo formato a la de LSD pero agrupados de a cuatro. A continuación se realiza una breve descripción del algoritmo de filtrado de segmentos implementado.\\
 
 Se parte de una lista de $m$ segmentos de línea,
@@ -177,15 +204,15 @@ En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos par
   \centering
   \subfigure[Entrada: segmentos de línea detectados por LSD]{
     \includegraphics[scale=0.45]{figs_detection/lsd.png}}
-  \subfigure[Salids: segmentos de línea filtrados y agrupados]{
+  \subfigure[Salida: segmentos de línea filtrados y agrupados]{
     \includegraphics[scale=0.45]{figs_detection/lsdfilt.png}}
   \label{fig:resultado_lsdfilt}
   \caption{Resultados del algoritmo de filtrado y agrupamiento de segmentos de línea.}
 \end{figure}
 
-El algoritmo descripto es simple y provee resultados aceptables en general pero es propenso a tanto a detectar \emph{falsos positivos} como al \emph{sobre-filtrado} algunos conjuntos. 
+El algoritmo descrito es simple y provee resultados aceptables en general pero es propenso a tanto a detectar \emph{falsos positivos} como al \emph{sobre-filtrado} algunos conjuntos. 
 
-La detección de \emph{falsos positivos} se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ mas cercanos de cada segmento. Como se explicará en le sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
+La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ mas cercanos de cada segmento. Como se explicará en le sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/FilterError.eps}
@@ -193,9 +220,9 @@ La detección de \emph{falsos positivos} se puede atribuir principalmente a la co
 \label{fig:FilterError}
 \end{figure}
 
-El \emph{sobre-filtrado} de segmentos tiende a ocurrir cuando no se cumple la condición de distancia entre segmentos vecinos cuando visualmente si lo son. Se debe principalmente a que se utiliza para el filtrado un valor de $d_{th}$ fijo que resulta en buenos resultados para la aplicación pero en ciertas circunstancias produce este problema. Esta medida de distancia se podría tomar relativa al largo del los segmentos a \emph{testear} de forma de generalizar el valor pero se debería analizar un poco mas en detalle la posible implementación para que resulte en buenos resultados y no introduzca otra clase de errores.
+El sobre-filtrado de segmentos tiende a ocurrir cuando no se cumple la condición de distancia entre segmentos vecinos cuando visualmente si lo son. Se debe principalmente a que se utiliza para el filtrado un valor de $d_{th}$ fijo que resulta en buenos resultados para la aplicación pero en ciertas circunstancias produce este problema. Esta medida de distancia se podría tomar relativa al largo del los segmentos a \emph{testear} de forma de generalizar el valor pero se debería analizar un poco mas en detalle la posible implementación para que resulte en buenos resultados y no introduzca otra clase de errores.
 
-\subsubsection{Determinación de correspondencias}
+\subsection{Determinación de correspondencias}
 \label{subsec:detection_correspondencias}
 Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcado (sec.: \ref{sec:detection_estructuras}), de forma de desarrollar un algoritmo modular, escalable y simple.
 
@@ -205,7 +232,7 @@ Se toma como entrada la lista de segmentos filtrados y agrupados
 			 \mathbf{s}_0 & \mathbf{s}_1 & \dots & \mathbf{s}_{i} & \mathbf{s}_{i+1} & \mathbf{s}_{i+2} & \mathbf{s}_{i+3} & \dots & \mathbf{s}_{n-1}
 			 \end{pmatrix}^t
 \end{equation}
-en donde cada segmento se compone de un punto inicial $\mathbf{p}_{i}$ y un punto final $\mathbf{q}_{i}$, $\mathbf{s}_{i} = (\mathbf{p}_{i},\mathbf{q}_{i})$, con $n$ es múltiplo de cuatro. Si $i$ también lo es, entonces el sub-conjunto, 
+en donde cada segmento se compone de un punto inicial $\mathbf{p}_{i}$ y un punto final $\mathbf{q}_{i}$, $\mathbf{s}_{i} = (\mathbf{p}_{i},\mathbf{q}_{i})$, con $n$ múltiplo de cuatro. Si $i$ también lo es, entonces el sub-conjunto, 
 $\mathbf{S}_i = \begin{pmatrix}
 				\mathbf{s}_{i} & \mathbf{s}_{i+1} & \mathbf{s}_{i+2} & \mathbf{s}_{i+3}
 				\end{pmatrix}^t$, corresponde a un conjunto de cuatro segmentos del línea conexos.
@@ -231,7 +258,7 @@ resultando en dos posibles configuraciones de vértices. Las dos configuraciones 
 
 Posterior a la intersección se realiza un chequeo sobre el valor de las coordenadas de lo vértices. Si alguno de ellos se encuentra fuera de los límites de la imagen, el conjunto de cuatro segmentos es marcado como inválido. Este chequeo resulta en el filtado de ``falsos cuadriláteros'' corrigiendo un defecto del filtrado de segmentos, como por ejemplo un grupo de segmentos paralelos cercanos como ya se explicó. 
 
-Para cada uno de los conjuntos de vértices se construye con ellos un elemento \emph{cuadrilátero} que se almacena en una lista de cuadriláteros
+Para cada uno de los conjuntos de vértices se construye con ellos un elemento cuadrilátero que se almacena en una lista de cuadriláteros
 \begin{eqnarray*}
  QlList =  \begin{pmatrix}
             Ql[0] & Ql[1] & \dots & Ql[i] & \dots & Ql[\frac{n}{4}]
@@ -241,19 +268,19 @@ Para cada uno de los conjuntos de vértices se construye con ellos un elemento \e
 % 
 % y se intersectan en grupos de cuatro obteniendo cuatro vértices por cada grupo. Para cada grupo de vértices $v_k$ se construye un elemento cuadrilátero $\text{Ql}[k]$ que se almacena en una lista de cuadriláteros. 
 
-A partir de esa lista de cuadriláteros, se buscan grupos de tres cuadriláteros $QlSet$ que ``compartan'' un mismo centro. Para esto se recorre ordenadamente la lista en $i$ buscando para cada cuadrilátero dos cuadriláteros $j$ y $k$ que cumplan que la distancia entre sus centros  y el del $i$-ésimo cuadrilátero sea menor a cierto umbral $d_{th}$,
+A partir de esa lista de cuadriláteros, se buscan grupos de tres cuadriláteros $QlSet$ que ``compartan'' un mismo centro. Para esto se recorre ordenadamente la lista en $i$ buscando para cada cuadrilátero dos cuadriláteros $j$ y $k$ que cumplan que la distancia entre sus centros  y el del $i$-ésimo cuadrilátero sea menor a cierto umbral $c_{th}$,
 \begin{equation}
 \begin{split}
- d_{ij} = ||\mathbf{c}_i - \mathbf{c}_j||<d_{th}, & \quad  d_{ik} = ||\mathbf{c}_i - \mathbf{c}_k||<d_{th}.
+ d_{ij} = ||\mathbf{c}_i - \mathbf{c}_j||<c_{th}, & \quad  d_{ik} = ||\mathbf{c}_i - \mathbf{c}_k||<c_{th}.
 \end{split}
 \end{equation}
 Estos cuadriláteros se marcan en la lista como utilizados con ellos se forma el $l$-ésimo $QlSet$ ordenándolos según su perímetro, de menor a mayor como  
 $$QlSet[l] = \begin{pmatrix} Ql[0] & Ql[1] & Ql[2] \end{pmatrix}$$
-con $l = (0,1,2)$. Esta busqueda se realiza hasta encontrar un total de tres $QlSet$ completos de forma de obtener un marcador completo, esto es, detectando todos los cuadriláteros que lo componen. \\
+con $l = (0,1,2)$. Esta búsqueda se realiza hasta encontrar un total de tres $QlSet$ completos de forma de obtener un marcador completo, esto es, detectando todos los cuadriláteros que lo componen. \\
 
 Una vez obtenida la lista de tres $QlSet$, 
 $$QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$$
-ésta se ordena de forma que su dispoción espacial se corresponda con la del \emph{marcador QR}. Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, $\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i$. En en este punto que es importante que la condición de distancia entre los centros de los $QlSet$ se cumpla, $d_{10} \gg d_{20}$, para una simple identificación. Bajo una transformación proyectiva del marcador, es posible que esta relación se modifique e incluso que deje de valer pero imponiendo la condición ``mucho mayor'' se asegura que el algoritmo funciona correctamente para condiciones razonables. Esto es, para proyecciones o poses que se encuentran dentro de las hipótesis uso de la aplicación.
+ésta se ordena de forma que su disposición espacial se corresponda con la del marcador QR. Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, $\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i$. En en este punto que es importante que la condición de distancia entre los centros de los $QlSet$ se cumpla, $d_{10} \gg d_{20}$, para una simple identificación. Bajo una transformación proyectiva del marcador, es posible que esta relación se modifique e incluso que deje de valer pero imponiendo la condición ``mucho mayor'' se asegura que el algoritmo funciona correctamente para condiciones razonables. Esto es, para proyecciones o poses que se encuentran dentro de las hipótesis uso de la aplicación.
 
 Una vez seleccionado el vector $\mathbf{u}_i$, se tienen obtiene el juego de vectores $(\mathbf{u}_i,\mathbf{u}_{i+1},\mathbf{u}_{i+2})$ como se muestra en la figura \ref{fig:Centros}.
 \begin{figure}[h!]
@@ -273,14 +300,14 @@ Si el vector $\mathbf{b}$ tiene valor en la coordenada $z$ positivo se ordena co
  QlSet[1]\longleftarrow & QlSet[i+2]\\
  QlSet[2]\longleftarrow & QlSet[i+1]
 \end{eqnarray*}
-o de lo contratio se ordena como,
+o de lo contrario se ordena como,
 \begin{eqnarray*}
  QlSet[0]\longleftarrow & QlSet[i+1]\\
  QlSet[1]\longleftarrow & QlSet[i+2]\\
  QlSet[2]\longleftarrow & QlSet[i]
 \end{eqnarray*}
 
-Por ultimo se construye un \emph{marcador QR} que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre sus ejes y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
+Por ultimo se construye un marcador QR que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en la ecuación \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre el sistema de coordenadas local al $QlSet$ y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/VerticesProyectados.eps}
@@ -311,14 +338,14 @@ Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ ne
   \caption{Resultados del algoritmo de determinación de correspondencias.}
 \end{figure}
 
-\subsubsection{Robustificando la detección}
-El algorítmo descripto al momento requiere que dentro de la lista de segmentos filtrados se encuentren todos los segmentos que componen el marcador pero este requerimiento representa un problema importante en cuanto a el desempeño del algoritmo. En caso de que esto no se cumpla no es posible proporcionar las correspondencias necesarias para la estimación de pose y no se tendrá una pose válida para ese cuadro o \emph{frame} para la aplicación. En aplicaciones en tiempo real en donde el procesamiento de la imagen es la mayor limitante, la fluidez visual dada por el \emph{frame rate} se ve notablemente perjudicada resultando en que el sistema sea incomodo e incluso inutilizable. Es por esto que en esta sección se desarrolla la extensión del algoritmo de determinación de correspondencias para una cantidad menor de segmentos detectados y filtrados que resulta en una mejor sustancial en la cantidad de \emph{frames} en los cuales es posible determinar correspondencias y obtener así una pose válida.\\
+\subsection{Detección robusta}
+El algoritmo descripto al momento requiere que dentro de la lista de segmentos filtrados se encuentren todos los segmentos que componen el marcador pero este requerimiento representa un problema importante en cuanto a el desempeño del algoritmo. En caso de que esto no se cumpla no es posible proporcionar las correspondencias necesarias para la estimación de pose y no se tendrá una pose válida para ese cuadro o \emph{frame} para la aplicación. En aplicaciones en tiempo real en donde el procesamiento de la imagen es la mayor limitante, la fluidez visual dada por el \emph{frame rate} se ve notablemente perjudicada resultando en que el sistema sea incomodo e incluso inutilizable. Es por esto que en esta sección se desarrolla la extensión del algoritmo de determinación de correspondencias para una cantidad menor de segmentos detectados y filtrados que resulta en una mejor sustancial en la cantidad de \emph{frames} en los cuales es posible determinar correspondencias y obtener así una pose válida.\\
 
-Se busca una determinación de correspondencias mas robusta pero manteniendo las esencia del algoritmo desarrollado. Por esto se tienen dos aspectos a tomar en cuenta; la detección de $QlSet$'s se realiza basada en la búsqueda de cuadriláteros concéntricos por lo que se debe contar con un mínimo de dos cuadriláteros por $QlSet$ para permitir la diferenciación entre un conjunto de segmentos filtrados debido a que pertenecen al marcador y a otro conjunto que no pertenece pero si cumple con las condiciones, por ejemplo podría ser el marco de una obra o cualquier elemento en la escena que forme un cuadrilátero. Esto fija un límite de no menos de $24$ segmentos necesarios para el funcionamiento. El otro aspecto a tomar en cuenta se refiere a la forma en que se ordenan los $Ql$'s dentro de cada $QlSet$. Como ya se explicó el orden se basa en la medida del perímetro de los $Ql$'s ordenandolos de menor a mayor por lo que será necesario contar con, al menos, un $QlSet$ completo de forma de tener una referencia a la hora de identificar los $QlSet$'s incompletos hallados. Por lo tanto la extensión del algoritmo permite una correcta identificación de los vértices del marcador con un número mayor o igual a $28$ segmentos.\\
+Se busca una determinación de correspondencias mas robusta pero manteniendo las esencia del algoritmo desarrollado. Por esto se tienen dos aspectos a tomar en cuenta; la detección de $QlSet$'s se realiza basada en la búsqueda de cuadriláteros concéntricos por lo que se debe contar con un mínimo de dos cuadriláteros por $QlSet$ para permitir la diferenciación entre un conjunto de segmentos filtrados debido a que pertenecen al marcador y a otro conjunto que no pertenece pero si cumple con las condiciones, por ejemplo podría ser el marco de una obra o cualquier elemento en la escena que forme un cuadrilátero. Esto fija un límite de no menos de $24$ segmentos necesarios para el funcionamiento. El otro aspecto a tomar en cuenta se refiere a la forma en que se ordenan los $Ql$'s dentro de cada $QlSet$. Como ya se explicó el orden se basa en la medida del perímetro de los $Ql$'s ordenando de menor a mayor por lo que será necesario contar con, al menos, un $QlSet$ completo de forma de tener una referencia a la hora de identificar los $QlSet$'s incompletos hallados. Por lo tanto la extensión del algoritmo permite una correcta identificación de los vértices del marcador con un número mayor o igual a $28$ segmentos.\\
 
 La implementación de esta extensión del algoritmo se realizó manteniendo la estructura básica descrita anteriormente y se detalla aquí solamente los agregados realizados.
 
-Al realizar la busqueda de conjuntos de cuadriláteros concéntricos se buscan en primer lugar los $QlSet$'s completos y luego en caso de que estos no lleguen a ser tres, se intenta completar buscando $QlSet$'s incompletos o sea conjuntos de dos cuadriláteros que comparten un mismo centro. Estos se agrupan en una lista de la misma forma en que se describió anteriormente pero dejando el tercer cuadrilátero, $Ql[2]$, marcado como inválido.
+Al realizar la búsqueda de conjuntos de cuadriláteros concéntricos se buscan en primer lugar los $QlSet$'s completos y luego en caso de que estos no lleguen a ser tres, se intenta completar buscando $QlSet$'s incompletos o sea conjuntos de dos cuadriláteros que comparten un mismo centro. Estos se agrupan en una lista de la misma forma en que se describió anteriormente pero dejando el tercer cuadrilátero, $Ql[2]$, marcado como inválido.
 
 Una vez completada la lista de tres $QlSet$, con al menos uno de ellos detectado completo, se ordenan en primer lugar los $QlSet$ completos y de ellos se extrae una lista de perímetros promedio. Esta lista de perímetros promedio se utiliza para el ordenamiento de los $QlSet$ incompletos comparando con los perímetros de los $Ql[0]$ y $Ql[1]$ de cada $QlSet$. El $Ql[2]$ previamente marcado como inválido se posiciona por descarte en la posición que corresponda.
 
@@ -332,10 +359,12 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
   \subfigure[Salida: puntos vértices ordenados.]{
     \includegraphics[scale=0.45]{figs_detection/mrkr_incompleto/points.png}}
   \label{fig:resultado_inc_points}
-  \caption{Resultados del algoritmo de determinación de correspondencias robustificado para una falla en el filtrado de segmentos.}
+  \caption{Resultados del algoritmo de determinación de correspondencias robusto para una falla en el filtrado de segmentos.}
 \end{figure}
 
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
 
-\subsubsection{Resultados}
-Oh sí!
+\subsection{Resultados}
+Mas imágenes con resultados?\\
+Todo sobre la misma imagen de entrada?\\
+O toda la secuencia para distintas imágenes?\\

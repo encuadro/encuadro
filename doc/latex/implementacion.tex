@@ -1,28 +1,49 @@
 \chapter{Implementación}
-
+\label{chap: imp}
 \section{Introducción}
-En este capítulo se muestra la integración de los conocimientos adquiridos para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien era de gran interés del proyecto la exploración de distintos métodos y algoritmos parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García que se eligieron para hacer el prototipo.\\
-La aplicación consta de distintas funcionalidades que se describen en este capítulo, tales como:\\
+En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García, que se eligieron para hacer el prototipo.\\
+La aplicación consta de distintas funcionalidades tales como:\\
  \begin{itemize}
 \item[(1)] Detección QR
 \item[(2)] Navegación por listas de cuadros
-\item[(3)] Comunicación con un Servidor con la base de datos.
+\item[(3)] Comunicación con un servidor con la base de datos.
 \item[(4)] Detección SIFT para identificar el cuadro.
 \item[(5)] Diferentes realidades aumentadas según la obra.
 \end{itemize}
-En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
+En las próximas secciones se describen más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
-Para que sea más sencilla la comprensión de los bloques que componen la aplicación a continuación se muestra el \textit{Storyboard} de la aplicación que es la interfaz de usuario y que sirve para visualizar bastante cada una de las clases que intervienen y cómo es el flujo de la aplicación.\\
+En la descripción de las clases que conforman los bloques principales de la aplicación se hace referencia a conceptos de desarrollo sobre Objective-C, así como también a \textit{frameworks} y herramientas utilizadas que fueron explicadas en el capítulo \ref{chap: hwysw}. Para la comprensión del detalle de la implementación es importante conocer estos conceptos de desarrollo.\\
+Para que sea más sencilla la comprensión de los bloques que componen la aplicación, en la Figura \ref{fig: Diaglobal} se muestra un diagrama esquemático de la misma que sirve para visualizar cómo es su flujo \textit{a nivel de usuario}.\\
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.4]{figs_implementacion/Storyboard_Global.eps}
+\includegraphics[scale=1.5]{figs_implementacion/implementacion_bloques.eps}
 \caption{Diagrama global de la aplicación}
-\label{fig: implementacion_1}
+\label{fig: Diaglobal}
 \end{figure}
-A continuación se pasará a explicar algunas de las clases implementadas en la aplicación y que tienen cierta relevancia. Se mostrarán sus principales características y su rol dentro de la aplicación.
+Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de leer códigos QR desplegados en las distintas salas o secciones del museo, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: reconocimiento de obra. El reconocimiento de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}\\
+
+De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y así entonces interactuar con él. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la Figura \ref{fig: story}, se presenta el \textit{Storyboard} de la misma, que muestra la relación entre las distintas clases. Se recuerda al lector que el \textit{Storyboard} es una herramienta de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una representación gráfica de la interfaz de usuario. A su vez, a la Figura \ref{fig: story} se le agregó un número identificador en cada \textit{ViewController} para poder referencialos en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_implementacion/Storynum.png}
+\caption{\textit{Storyboard} de la aplicación}
+\label{fig: story}
+\end{figure}
+En las próximas subsecciones se explican algunas de las clases implementadas en la aplicación y que además tienen cierta relevancia. Se muestran su rol dentro de la aplicación y sus principales características.
 \subsection{NavigationViewController}
-La aplicación está embebida dentro de un \textit{UINavigationViewController}. Esto implica que cada uno de los \textit{ViewControllers} que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las Toolbars ya sea arriba como encabezado o abajo al pie.\\
-Para el caso particular de esta aplicación se optó por reimplementar esta clase ya que se buscaba tener cierto control sobre las rotaciones. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
+Esta clase se ve en la Figura \ref{fig: story}, identificada con el número 1. La aplicación está embebida dentro de un \textit{UINavigationViewController}. Esto implica que cada uno de los \textit{ViewControllers} que tiene la aplicación es gestionado por esta clase. Es quien se encarga de la presentación y del pasaje de un \textit{ViewController} a otro, creando y destruyendo instancias de cada uno. Está en esta clase la responsabilidad de manejar las jerarquías de los distintos \textit{ViewControllers} así como de mantener cierta integridad visual utilizando las \textit{Toolbars} ya sea arriba como encabezado o abajo al pie. Las \textit{Toolbars} son botones que se pueden agregar en los extremos de los \textit{ViewControllers} para realizar una funcionalidad específica.\\
+El hecho de contar con una jerarquía permite entre otras cosas, la posibilidad de hacer un cambio (en la interfaz de usuario por ejemplo), en todos los \textit{ViewControllers}, simplemente afectando a la clase \textit{NavigationViewController} y sin necesidad de cambiar cada uno de ellos por separado. Esto resulta particularmente práctico en aplicaciones con bastantes \textit{ViewControllers} y lo único que tiene que hacer el desarrollador es aclarar que ciertos atributos sean manejados por la clase encargada de la navegación dentro de la aplicación. \\
+Por otra parte, es deseable tener un criterio común para todos los \textit{ViewControllers} en la orientación de la aplicación con respecto a la orientación del dispositivo. Es decir, es posible lograr por ejemplo, que frente a rotaciones del dispositivo, la interfaz de usuario acompa\~ne la rotación y gire también, o también es posible permitir que rotaciones del dispositivo en determinado sentido se vean reflejados en una rotación de la interfaz de usuario y otras no. Para esto se definen cuatro posibles posiciones para el dispositivo con ayuda del acelerómetro: \textit{Potrait}, \textit{Upside Down}, \textit{Landscape Left} y \textit{Landscape Right}. Las mismas se pueden ver en la Figura \ref{fig: orientaciones}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_implementacion/orientaciones.png}
+\caption{Orientaciones posibles del dispositivo.}
+\label{fig: orientaciones}
+\end{figure}
+%http://developer.apple.com/library/ios/#featuredarticles/ViewControllerPGforiPhoneOS/Introduction/Introduction.html#//apple_ref/doc/uid/TP40007457-CH1-SW1
+
+Para el caso particular de esta aplicación se optó por reimplementar la clase \textit{UINavigationViewController} bajo el nombre \textit{NavigationViewController} ya que se buscaba tener cierto control sobre las rotaciones de la interfaz de usuario, por lo que se decidió afectar los métodos que estuvieran a cargo de las rotaciones de interfaz de usuario. En particular se reimplementaron los métodos \textit{supportedInterfaceOrientations} y \textit{preferredInterfaceOrientationForPresentation} de la siguiente manera
 \begin{verbatim}
 -(NSUInteger)supportedInterfaceOrientations
 {
@@ -36,34 +57,48 @@ Para el caso particular de esta aplicación se optó por reimplementar esta clase 
     return UIInterfaceOrientationLandscapeRight;
 }
 \end{verbatim}
-Esto lo que hace es fijar la orientación de la interfaz de usuario a modo \textit{LandscapeRight}. También es posible lograr esto editando el archivo \textit{Info.plist} que toda aplicación de xcode tiene y agregando el item \textit{SupportedInterfaceOrientations} y completado las opciones que se desean. Las autorotaciones es algo que tiene bastante relevancia en las aplicaciones. En particular se optó por esta forma, es decir, bloquear las autorotaciones y dejar solamente la vista en un sentido, para facilitar la reproyección de la realidad aumentada. De no haberlo hecho de esta manera, con cada rotación de la interfaz se tendrían que intercambiar los ejes de coordenadas en función del sentido de la rotación. Esto es posible de hacer ya que con cada rotación se ejecuta una serie de métodos en forma automática entre los cuales se encuentra el siguiente
+Esto lo que hace es fijar la orientación de la interfaz de usuario a modo \textit{LandscapeRight}. También hubiera sido posible lograrlo editando el archivo \textit{Info.plist} que toda aplicación de Xcode tiene, agregando el item \textit{SupportedInterfaceOrientations} y completado las opciones que se desean. Las rotaciones de interfaz de usuario son algo con bastante relevancia en las aplicaciones. En particular se optó por bloquear las rotaciones de interfaz, dejándola fija, para facilitar la reproyección de la realidad aumentada. De no haberlo hecho de esta manera, con cada rotación de la interfaz se tendrían que intercambiar los ejes de coordenadas en función del sentido de la rotación. Esto es posible de hacer ya que con cada rotación se ejecuta una serie de métodos en forma automática entre los cuales se encuentra el siguiente:
 \begin{verbatim}
-- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration;
+- (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)
+toInterfaceOrientation duration:(NSTimeInterval)duration;
 \end{verbatim}
-Dentro de dicho método sería posible hacer el ajuste de coordenadas ya que el mismo se ejecuta previo a cualquier rotación. El tema de los métodos que son ejecutados al haber un evento del tipo rotación es algo que ha sufrido cambios recientes con la actualización de software a iOS 6. De todas formas, como ya se dijo, se optó por hacer esto más sencillo, simplemente evitando que la interfaz de usuario rote junto con el dispositivo, dejándola fija.
+Dentro de dicho método sería posible hacer el ajuste de coordenadas correspondiente. La serie de métodos que son ejecutados al haber un evento del tipo rotación es algo que ha sufrido cambios recientes con la actualización de \textit{software} a iOS 6. 
 \subsection{InicioViewController}
-Este \textit{ViewController} es la pantalla de inicio  de la aplicación. En la misma hay un botón que al ser presionado comienza un audio con instrucciones y una presentación sobre cómo es el recorrido y las funcionalidades con las que cuenta la aplicación. También hay dos botones más que dan la opción de elegir la forma de recorrer el museo. El botón de recorrido automático es un \textit{segue} al \textit{ReaderSampleViewController} y el de recorrido manual un \textit{segue} al \textit{AutorTableViewController}.
+Este \textit{ViewController} es la pantalla de inicio  de la aplicación, identificado con el número 2 en la Figura \ref{fig: story}. En la misma hay un botón que al ser presionado comienza un audio con instrucciones y una presentación sobre cómo es el recorrido y las funcionalidades con las que cuenta la aplicación. También hay dos botones más que dan al usuario la opción de elegir la forma de recorrer el museo: autónoma o automática. El botón de recorrido automático instancia al \textit{ReaderSampleViewController} y el de recorrido autónomo instancia al \textit{AutorTableViewController}.
 
-\subsection{TableViewControllers}
-Para el recorrido manual, el usuario es el encargado de seleccionar el autor, luego las obras disponibles del autor seleccionado y luego se muestra un detalle de la obra seleccionada por el usuario presentando una instancia del \textit{ViewController} llamado \textit{ObraCompletaViewController}. Este recorrido que parece bastante intuitivo aparece en muchas aplicaciones de iOS en las que existe una lista de datos. Como ejemplo se ve en aplicaciones que gestionan contenido musical que está ordenado en base a autores, dentro de los mismos, sus discos y dentro de los discos sus canciones por ejemplo. Dado que es algo bastante frecuente, el hecho de navegar en listas de datos, xcode ya tiene implementada una clase llamada \textit{UITableViewController}. De esta manera lo que se hizo fue crear varias clases que heredan de \textit{UITableViewController} y manejar los contenidos de manera jerárquica. A continuación siguen dos clases que se resolvieron de esta manera.
+\subsection{UITableViewControllers}
+Para el recorrido manual, el usuario es el encargado de seleccionar el autor, luego las obras disponibles del autor seleccionado y luego se muestra un detalle de la obra seleccionada por el usuario presentando una instancia del \textit{ViewController} llamado \textit{ObraCompletaViewController}. Este recorrido que parece bastante intuitivo aparece en muchas aplicaciones de iOS en las que existen listas de datos. Un ejemplo son las aplicaciones que gestionan contenido musical que está ordenado en base a autores, dentro de los mismos, sus discos y dentro de los discos sus canciones. Como navegar en listas de datos es algo bastante frecuente, Xcode ya tiene implementada una clase llamada \textit{UITableViewController}. En la Figura \ref{fig: tablas} se puede ver un ejemplo con varios tipos de tablas que organizan la información. Como se puede ver la tabla es una forma sencilla de organizar la información en la que existe una sola columna y muchas filas, llamadas celdas. También pueden existir secciones, con un encabezado y pie de sección.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{figs_implementacion/types_of_table_views}
+\caption{Ejemplos de TableViewControllers con distintos tipos de tablas.}
+\label{fig: tablas}
+\end{figure}
+%http://developer.apple.com/library/ios/#documentation/UserExperience/Conceptual/TableView_iPhone/AboutTableViewsiPhone/AboutTableViewsiPhone.html#//apple_ref/doc/uid/TP40007451-CH1-SW1
+Volviendo a la aplicación lo que se hizo entonces fue crear varias clases que heredan de \textit{UITableViewController} y manejar los contenidos de manera jerárquica. A continuación siguen dos clases que se resolvieron de esta manera.
 	\subsubsection{AutorTableViewController}
-	Esta clase hereda de \textit{UITableViewController}. En particular tiene algunos métodos que son importantes de destacar si se quiere implementar algo parecido con una lista de datos. El siguiente método:
+	Esta clase (identificada con el número 3 en la Figura \ref{fig: story}) hereda de \textit{UITableViewController} y cumple la función de almacenar la lista de autores disponibles dentro del museo que a los efectos del prototipo como se dijo son: Figari, Blanes y Torres García. En lo que sigue se explican algunos detalles importantes que se tuvieron que comprender para poder organizar la información en tablas de datos (lo cual también aplica para la clase \textit{CuadroTableViewController} que se describe en la siguiente subsección).\\
+Uno de los métodos implementados por esta clase es el siguiente:
 	\begin{verbatim}
 	- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 	\end{verbatim}
-	por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones con las que cuenta una tabla. Para que tenga sentido y al instanciarse la clase se vea algo de contenido tiene que retornar algo distinto de \textit{0}. Otro método importante es el siguiente:
+que por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones con las que cuenta una tabla. Para que tenga sentido y al instanciarse la clase se vea algo de contenido tiene que retornar algo distinto de \textit{0}. Otro método importante es:
 	\begin{verbatim}
-	- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+	- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:
+	(NSInteger)section
 	\end{verbatim}
-	El mismo es el encargado de devolver un número con la cantidad de filas con las que cuenta la sección de la tabla. En esta implementación se devuelve la cantidad de autores.\\ Un tercer método que tiene mayor importancia es el siguiente:
+	
+	El mismo es el encargado de devolver un número con la cantidad de filas con las que cuenta la sección de la tabla. En esta implementación se devuelve la cantidad de autores.\\ Un tercer método, de mayor importancia, es el siguiente:
 	\begin{verbatim}
-	- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+	- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:
+	(NSIndexPath *)indexPath
 	\end{verbatim}
-	El mismo es el encargado de devolver una \textit{UITableViewCell} que es la que se despliega. Es en este método que se configura el formato de la celda. Para el caso de la aplicación se resolvió generar una clase que hereda de \textit{UITableViewCell} que se llama \textit{CuadroTableViewCell} y que tiene ciertas características como una imagen, autor y obra que son mostradas en la celda. En este método se asocian las características mencionadas de la celda en función del número de fila. Esta clase implementa un método \textit{prepareForSegue} que setea la variable \textit{opcionAutor} en función del autor seleccionado. Esto permite luego en la clase \textit{CuadroTableViewController} desplegar distintas listas de cuadros en función del autor seleccionado.
+	
+	El mismo es el encargado de devolver una \textit{UITableViewCell} que es la que se despliega. Es en este método que se configura el formato de la celda. Para el caso de la aplicación se resolvió generar una clase que hereda de \textit{UITableViewCell} que se llama \textit{CuadroTableViewCell} y que tiene ciertas características como una imagen, autor y obra que son mostradas en la celda. En este método se asocian las características mencionadas de la celda en función del número de fila. Esta clase implementa un método \textit{prepareForSegue} que le asigna un valor a la variable \textit{opcionAutor} en función del autor seleccionado. Esto permite luego en la clase \textit{CuadroTableViewController} desplegar distintas listas de cuadros en función del autor seleccionado.
 	\subsubsection{CuadroTableViewController}
-	Esta clase es muy similar a la clase \textit{AutorTableViewController} recién descripta difiriendo simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al ejecutrase el método \textit{viewDidLoad} se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, completando los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro. Esto se verá más adelante en la sección \ref{sec: realidad aumentada en la aplicación}. 
+	Esta clase (identificada con el número 4 en la Figura \ref{fig: story}) es muy similar a la clase \textit{AutorTableViewController} recién descripta pero que difiere simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al instanciarse la clase se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, con los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro. Esto se verá más adelante en la sección \ref{sec: realidad aumentada en la aplicación}. 
 	\subsubsection{CuadroTableViewCell}
-	Esta es una clase sencilla que hereda de la clase \textit{UITableViewCell} y simplemente tiene tres \textit{IBOutlets} como propiedades para vincularlas con una imagen, un nombre de autor y un nombre de la obra para cada celda de la tabla que se despliega.\\
+	Esta es una clase sencilla que hereda de la clase \textit{UITableViewCell} (identificada con el número 5 en la Figura \ref{fig: story}) y simplemente tiene tres  atributos asociados a nivel de interfaz de usuario: una imagen, un nombre de autor y un nombre de obra para cada celda de la tabla que se despliega.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/AutorYCuadroTable.eps}
@@ -72,47 +107,42 @@ Para el recorrido manual, el usuario es el encargado de seleccionar el autor, lu
 \end{figure}
 
 \subsection{ReaderSampleViewController}
-Este \textit{ViewController} es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto e imagen asociadas al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
+Este \textit{ViewController} (identificada con el número 6 en la Figura \ref{fig: story}) es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto y una imagen asociados al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
 
 \subsection{ImagenServerViewController}
-Este \textit{ViewController} es el encargado de la comunicación con el servidor. En el método \textit{viewDidLoad} se instancia un \textit{UIImagePickerController} encargado de implementar una captura de imagen. Una vez que se saca la foto, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de sacar otra foto y el otro botón inicia la comunicación con el servidor.\\
+Este \textit{ViewController} (identificada con el número 7 en la Figura \ref{fig: story}) es el encargado de la comunicación con el servidor. Al instanciarse la clase, también se instancia la clase \textit{UIImagePickerController}, encargada de implementar una captura de imagen. Una vez que se toma una fotografía a la obra, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de volver a tomar la fotografía y el otro botón inicia la comunicación con el servidor. Ver Figura \ref{fig: imagenServer}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/imagenServer.eps}
 \caption{Ejemplo de captura para reconocimiento SIFT}
-%\label{fig: implementacion_1}
+\label{fig: imagenServer}
 \end{figure}
-El botón encargado de la comunicación con el servidor, botón de \textit{upload}, es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se agrega la foto sacada previamente y se le agrega un string llamado \textit{room}. Este string es completado previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando la información sobre en qué sala/región del museo se encuentra (sala Figari, sala Blanes o sala Torres García). Este string lo que permite es tener un identificador para poder hacer la búsqueda de la imagen sacada (luego de procesar la imagen con el algoritmo SIFT), en una base de datos más peque?a, que contenga solamente los cuadros de esa región del museo y no todos los cuadros del museo. En caso que el usuario no haya detectado ningún QR y haya seleccionado directamente la opción de sacar una foto para comenzar la comunicación con el servidor, entonces este string estará vacío y la búsqueda de la imagen más parecida se hace en toda la base de datos. En un primer caso, claramente los tiempos son mejores (del orden de 3s en una LAN) que en el segundo (del orden de 6s en una LAN).\\
-Luego de establecida la conexión y enviada la consulta POST, el servidor responde con un string \textit{returnString}. Este string contiene el resultado del procesamiento de la imagen enviada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que toma imágenes, ejecuta comandos en terminal (en este caso el ejecutable del algoritmo SIFT) y el resultado de esa ejecución se retorna como string en el php y el mismo se envía a la aplicación. Ese string resultado es recibido por la aplicación con una nomenclatura elegida que sigue la lógica Autor-Número, por ejemplo \textit{Figari3} que se corresponde con la obra número 3 de la base de datos del autor Figari. Ese pasa a ser el identificador de la obra para ir a buscarla a la base de datos del servidor. El servidor cuenta con varias carpetas según la información:
+
+El botón encargado de la comunicación con el servidor, botón de \textit{upload}, es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se adjunta la foto tomada previamente y se le agrega una variable llamada \textit{room}. Esta variable es completada previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando información respecto de en qué sala/región del museo se encuentra el usuario (sala Figari, sala Blanes o sala Torres García). Esta variable lo que permite es tener un identificador para poder realizar la búsqueda de la imagen tomada en una base de datos más peque\~na, que contenga solamente los cuadros de la región del museo en cuestión. En caso que el usuario se haya salteado la detección QR y haya seleccionado directamente la opción de tomar una fotografía a la obra para comenzar la comunicación con el servidor, entonces la variable \textit{room} estará vacía y la búsqueda de la obra se realiza en toda la base de datos del museo. El gran valor agregado de la detecci\'on QR es la velocidad con la que el servidor devuelve informaci\'on respecto de a qu\'e obra se fotografi\'o. Para la b\'usqueda con detecci\'on QR, los tiempos son claramente mejores (del orden de 3s en una LAN), mientras que cuando el usuario se ahorra este paso, los tiempos aumentan al doble (del orden de 6s en una LAN).\\
+
+Luego de establecida la conexión y enviada la consulta POST, el servidor responde con otra variable llamada \textit{returnString}. Esta variable contiene un identificador de obra que indica qué obra fue fotografiada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que recibe la imagen y le ejecuta un algoritmo de detección de características llamado SIFT, que le retorna al PHP el identificador en cuestión. Detalles sobre el algoritmo SIFT se pueden ver más adelante en la sección \ref{sec: sift}. El archivo \textit{upload.php} entrega esta informaci\'on a la aplicaci\'on. La variable \textit{returnString} es recibida por la aplicación con cierta nomenclatura en particular, que sigue la lógica Autor-Número, por ejemplo ``Figari3'' se corresponde con la obra número 3 de la base de datos del autor Figari. Con este identificador de obra, la aplicación le pide al servidor cierta información de interés acerca de la misma, como por ejemplo el nombre completo de la obra, el nombre de su autor, una breve descripción. El servidor cuenta con varias carpetas a las que la aplicación accede remotamente:
 \begin{itemize}
-\item[(1)] autor
-\item[(2)] obra
-\item[(3)] texto
-\item[(4)] imagen
-\item[(5)] audio
+\item[(1)] \textbf{autor:} contiene el nombre del autor de cada obra. 
+\item[(2)] \textbf{obra:} contiene el nombre completo de cada obra.
+\item[(3)] \textbf{texto:} contiene una breve descripción de cada obra.
+\item[(4)] \textbf{imagen:} contiene una imagen de cada obra.
+\item[(5)] \textbf{audio:} contiene una audioguía asociada a cada obra.
 \end{itemize}
-Para una obra dada, cuyo identificador sea \textit{Figari3} por ejemplo, los archivos correspondientes, con la información son:
-\begin{itemize}
-\item[(1)] http://IPservidor/autores/Figari3.txt
-\item[(2)] http://IPservidor/obras/Figari3.txt
-\item[(3)] http://IPservidor/textos/Figari3.txt
-\item[(4)] http://IPservidor/imagenes/Figari3.jpg
-\item[(5)] http://IPservidor/audios/Figari3.mp3
-\end{itemize}
-De esta manera una vez que se obtiene el identificador se hace una consulta al servidor que pide los distintos archivos de texto, audio e imágenes. Esta información solicitada es devuelta por el servidor y alojada en variables para ser mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, en el \textit{ObraCompletaViewController}.
+
+Esta información solicitada es alojada en variables que son mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, el \textit{ObraCompletaViewController}. Ver Figura \ref{fig: obraCompleta}.
 
 \subsection{ObraCompletaViewController}
-Este \textit{ViewController} simplemente es la presentación de la obra, mostrando el cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. El primero de los botones dispara un audio donde se explican detalles de la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
+Este \textit{ViewController} (identificada con el número 8 en la Figura \ref{fig: story}) simplemente es la presentación de la obra, muestra una imagen del cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. Ver Figura \ref{fig: obraCompleta}. El primero de los botones dispara una audioguía relacionada con la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/ObraCompleta.eps}
 \caption{Pantalla con la obra completa}
-%\label{fig: implementacion_1}
+\label{fig: obraCompleta}
 \end{figure}
 
 \subsection{VistaViewController}
 \label{sec: vista}
-Este \textit{ViewController} es el encargado de mostrar la realidad aumentada. Esta clase, al ser instanciada ejecuta el siguiente método:
+Este \textit{ViewController} (identificada con el número 9 en la Figura \ref{fig: story}) es el encargado de mostrar la realidad aumentada. Esta clase, al ser instanciada ejecuta el siguiente método:
 \begin{verbatim}
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -123,61 +153,66 @@ Este \textit{ViewController} es el encargado de mostrar la realidad aumentada. E
      
 }
 \end{verbatim}
-Este método se ejecuta justo antes de mostrarse la vista del controlador, y como se ve invoca al método homónimo de la clase superior y luego instancia el método \textit{hacerRender}, método que es el encargado de mostrar efectivamente la realidad aumentada. Antes de pasar a explicar los detalles de \textit{hacerRender} se explican algunos detalles generales de las aplicaciones.\\
-Como cualquier programa, en cualquier aplicación de xcode lo que se ejecuta al comenzar es el main. En particular para \textit{xcode} en el main de la aplicación se crea una instancia de la clase que es \textit{appDelegate} de la aplicación. A su vez, al instanciar al \textit{appDelegate} se ejecuta el método \textit{applicationDidFinishLaunching}. En este método típicamente el código por defecto está vacío pero para el caso del \textit{appDelegate} que es utilizado en los ejemplos de \textit{isgl3d} se crea una instancia de una clase que hereda de \textit{UIViewController}, llamada \textit{Isgl3dViewController}. Es sobre esta última clase que se despliegan los \textit{renders}. Aclarados estos puntos se pasa ahora a explicar lo que se hace en el método \textit{hacerRender}.A continuación se muestran algunas de las partes más importantes del método:
+Este método se ejecuta justo antes de que el controlador despliegue el contenido de la pantalla, y como se ve invoca al método homónimo de la clase superior y luego al método \textit{hacerRender}, encargado de mostrar efectivamente la realidad aumentada. Antes de explicar los detalles de \textit{hacerRender} se comentan algunos detalles generales de las aplicaciones iOS.\\
+
+Como en cualquier programa, en las aplicaciones de Xcode, lo que se ejecuta al comenzar es el \textit{main}. En este tipo de aplicaciones en particular, el main crea una instancia de la clase \textit{appDelegate} (delegado de la aplicación). A su vez, al instanciarse al \textit{appDelegate} se ejecuta el método \textit{applicationDidFinishLaunching}. En este método, típicamente el código por defecto está vacío, pero cuando se trabaja con ISGL3D, este método crea un objeto que hereda de \textit{UIViewController}, llamado \textit{Isgl3dViewController}. Es sobre esta última clase que se despliegan los \textit{renders}. Aclarados estos puntos se pasa ahora a explicar lo que se hace en el método \textit{hacerRender}. A continuación se muestran algunas de las partes más importantes del método:
 \begin{verbatim}
-app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.viewController=(Isgl3dViewController*)appDelegate.viewController;
+app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication 
+sharedApplication] delegate];
+self.viewController=(Isgl3dViewController*)appDelegate.viewController;
 \end{verbatim}
 
 
-Con lo anterior lo que se hace es generar una instancia de la clase \textit{app0100AppDelegate} que es puntero al \textit{appDelegate} de la aplicación. Luego, en la segunda línea se le asigna a la propiedad de la propia clase llamada \textit{viewController} (que es de tipo \textit{Isgl3dViewController}) la propiedad de igual nombre pero del \textit{appDelegate} de la aplicación (que fue instanciada en el método \textit{applicationDidFinishLaunching}). Luego se agregan las vistas \textit{viewController.view} y \textit{viewController.videoView} con valor de transparencia \textit{alpha} nulo y se inicia una animación generando un efecto de \textit{fade out} de la imagen y \textit{fade in} del render. Este tipo de animaciones son sencillas de ejecutra y permiten agregar efectos interesantes a cualquier \textit{UIView}. 
+Con lo anterior lo que se hace es generar una instancia de la clase \textit{app0100AppDelegate} que es puntero al \textit{appDelegate} de la aplicación. Luego, en la segunda línea se le asigna a la propiedad de la propia clase llamada \textit{viewController} (que es de tipo \textit{Isgl3dViewController}) la propiedad de igual nombre pero del \textit{appDelegate} de la aplicación (que fue instanciada en el método \textit{applicationDidFinishLaunching}). Luego se agregan las \textit{views} \textit{viewController.view} y \textit{viewController.videoView} con valor de transparencia \textit{alpha} nulo y se inicia una animación generando un efecto de \textit{fade out} de la imagen y \textit{fade in} del \textit{render}. Este tipo de animaciones son sencillas de ejecutar con el \textit{framework} Core Animation y permiten agregar efectos interesantes a cualquier \textit{UIView}. 
 
 \subsection{DrawSign}
 \label{sec: drawsign}
-Esta clase hereda de \textit{UIViewController} y está pensada para que el usuario pueda dibujar al tocar la pantalla. Un ejemplo de cómo queda el dibujo se puede ver en la siguiente figura.\\
+Esta clase (identificada con el número 10 en la Figura \ref{fig: story}) hereda de \textit{UIViewController} y está pensada para que el usuario pueda dibujar al tocar la pantalla. Un ejemplo de cómo queda el dibujo se puede ver en la Figura \ref{fig: draw}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_implementacion/Draw.eps}
 \caption{Ejemplo de dibujo libre}
-%\label{fig: implementacion_1}
+\label{fig: draw}
 \end{figure}
-Se implementó haciendo una reimplementación de los siguientes tres métodos:
+Se implementó haciendo mediante una reimplementación de los siguientes tres métodos:
 \begin{verbatim}
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 \end{verbatim}
-Cada vez que una instancia de una clase que hereda de \textit{UIViewController} tiene un evento de tipo \textit{touch} sobre su vista entonces se invocan los métodos mencionados. La secuencia de invocaciones se da al comenzar el toque en la pantalla (\textit{touchesBegan}), al desplazar el dedo sin levantarlo de la pantalla (\textit{touchesMoved}) y al finalizar el \textit{gesture} levantando el dedo de la pantalla (\textit{touchesEnded}). Entonces sabiendo esto, esta clase que tiene como finalidad dibujar, lo que hace es obtener las coordenadas del punto de \textit{touch} invocando el siguiente método:
+
+Cada vez que una instancia de una clase que hereda de \textit{UIViewController} detecta un toque sobre la pantalla (evento \textit{touch}), se invocan los métodos mencionados. La secuencia de invocaciones se da al comenzar el toque en la pantalla (\textit{touchesBegan}), al desplazar el dedo sin levantarlo de la pantalla (\textit{touchesMoved}) y al finalizar el \textit{gesture} levantando el dedo de la pantalla (\textit{touchesEnded}). Se obtienen entonces las coordenadas del punto de toque sobre la pantalla invocando el siguiente método:
 \begin{verbatim}
 [touch locationInView:self.view]
 \end{verbatim}
-donde \textit{touch} es del tipo \textit{UITouch} y se corresponde con el evento. Una vez que se tienen las coordenadas del punto de contacto en la pantalla se guarda esta posición y al obtener una nueva posición en la pantalla (luego de desplazar el dedo en \textit{touchesMoved}), se dibuja una línea entre el punto actual y el anterior con el método siguiente:
+donde \textit{touch} es del tipo \textit{UITouch} y tiene propiedades que dependen del evento. Una vez que se tienen las coordenadas del punto de contacto en la pantalla se guarda esta posición y al obtener una nueva posición en la pantalla (luego de desplazar el dedo en \textit{touchesMoved}), se dibuja una línea entre el punto actual y el anterior con el método siguiente:
 \begin{verbatim}
 [image.image drawInRect:CGRectMake(0, 0, self.view.frame.size.width,
                                        self.view.frame.size.height)];
 \end{verbatim}
-De esta manera lo que se hace realmente es dibujar una línea a la vez entre el punto actual y el anterior. El método \textit{drawInRect} es un método frecuentemente utilizado cuando se quiere dibujar en forma 2D sobre \textit{UIViews} y fue utilizado extensivamente en este proyecto. Finalmente en el método \textit{touchesEnded} lo que se hace es dibujar una línea en el punto actual y sí mismo, generando un punto final al levantar el dedo de la pantalla. Otra característica interesante a mencionar de la capacidad de responder a eventos \textit{touch} es la capacidad de reconocer \textit{gestures} que pueden ser nativos o incluso creados por el propio desarrollador. Para el caso del presente proyecto no se profundizó en la generación de \textit{gestures} propios sino que se limitó a hacer uso de los existentes. Ejemplos de \textit{gestures} existentes son: \textit{touch},\textit{double touch},\textit{multi touch} entre otros. De esta manera si se quiere reconocer un \textit{double touch} por ejemplo, se puede invocar el siguiente método:
+
+El método \textit{drawInRect} sirve para dibujar en forma 2D sobre \textit{UIViews} y fue utilizado extensivamente en este proyecto. Finalmente en el método \textit{touchesEnded} lo que se hace es dibujar una línea en el punto actual y sí mismo, generando un punto final al levantar el dedo de la pantalla. Otra característica interesante a mencionar respecto de la capacidad de responder a eventos \textit{touch} es el reconocimiento de \textit{gestures} que pueden ser nativos o incluso creados por el propio desarrollador. Un \textit{gesture} es una forma característica de tocar la pantalla. Ejemplos de \textit{gestures} existentes son: \textit{touch}, \textit{double touch}, \textit{multi touch} entre otros. De esta manera si se quiere reconocer un \textit{double touch} por ejemplo, se puede invocar el siguiente método:
 \begin{verbatim}
 [touch tapCount];
 \end{verbatim}
 que devuelve la cantidad de veces que se tocó la pantalla en un intervalo corto de tiempo. Esto fue utilizado en esta clase para borrar lo dibujado y poder comenzar a dibujar nuevamente.\\
-A esta clase también se le agregó una \textit{IBAction} que genera un \textit{tweet} con el dibujo generado por el usuario. El mismo es logrado generando una instancia de la clase \textit{TWTweetComposeViewController} y agregándole un texto e imgaen con los siguientes métodos:
+
+A esta clase también se le agregó una \textit{IBAction} que genera un \textit{tweet} con el dibujo generado por el usuario. El mismo es logrado generando una instancia de la clase \textit{TWTweetComposeViewController} y agregándole un texto e imagen con los siguientes métodos:
 \begin{verbatim}
 [controller setInitialText:text];
 [controller addImage:img];
 \end{verbatim}
-donde \textit{text} y \textit{img} son el texto del \textit{tweet} y la imagen adjunta. Finalmente se presenta la vista del \textit{TWTweetComposeViewController} y una vez finalizado se vuelve a la instancia \textit{DrawSign}.
+donde \textit{text} e \textit{img} son el texto del \textit{tweet} y la imagen adjunta. Finalmente se presenta la \textit{view} del \textit{TWTweetComposeViewController} y una vez finalizado se vuelve a la instancia \textit{DrawSign}.
 \subsection{TouchVista}
-Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar solamente una de las sub-vistas. Entonces lo que se hace en esos casos es agregar a la sub-vista en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama?o que la sub-vista. De esta manera al tocar la sub-vista se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente tiene el siguiente contenido:
+Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar tan sólo una de ellas. Entonces lo que se hace en esos casos es agregar a la \textit{subview} en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama\~no. De esta manera al tocar la \textit{subview} se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente configura una bandera y configura lo siguienteo:
 \begin{verbatim}
 [super touchesBegan:touches withEvent:event];
 \end{verbatim}
-También tiene el seteo de una bandera pero eso no tiene tanta relevancia. Lo que se hace en el código anterior es invocar al método \textit{touchesBegan} de la clase superior. Para el caso en que se tiene un \textit{ViewController}, con una sub-vista del tipo \textit{TouchVista} transparente, entonces esta línea invoca directamente el método \textit{touchesBegan} del \textit{ViewController}. Dos de los \textit{ViewControllers} que utilizan esto son \textit{VistaViewController} y \textit{ObraCompletaViewController}.
 
-\subsection{Isgl3dViewController y app0100AppDelegate}
-Las clases \textit{Isgl3dViewController} y \textit{app0100AppDelegate} son clases que ya venían implementadas con \textit{Isgl3D}. En particular se tomó el proyecto \textit{Hello World} de dicho \textit{framework} y se trabajó sobre el mismo. \\
-El proyecto \textit{Hello World} es un proyecto básico que lo que hace es generar un \textit{render} sobre un fondo gris. Como lo que se buscó fue hacer realidad aumentada, entonces se trabajó para que el render estuviera por delante de la captura de la cámara. Para lograr esto en el \textit{app0100AppDelegate} se hicieron algunas modificaciones sobre las vistas. A continuación se muestra parte del código que logra esto:\\
+Lo que se hace en el código anterior es invocar al método \textit{touchesBegan} de la clase superior. Para el caso en que se tiene un \textit{ViewController}, con una \textit{subview} del tipo \textit{TouchVista} transparente, entonces esta línea invoca directamente el método \textit{touchesBegan} del \textit{ViewController}. Dos de los \textit{ViewControllers} que utilizan esto son \textit{VistaViewController} y \textit{ObraCompletaViewController}.
+
+\subsection{Realidad Aumentada en ISGL3D}
+Para realizar realidad aumentada se necesita poder hacer un \textit{render} por encima de las imágenes capturadas por la cámara del dispositivo en tiempo real. Sin embargo, cuando se crea un proyecto de ISGL3D, este permite realizar \textit{renders} pero sobre un fondo estático y gris (o cualquier otro color configurable). Resulta entonces necesario configurar el proyecto de manera de reemplzar al fondo antes mencionado por imágenes capturadas por la cámara. Para lograr esto, hubo que trabajar sobre las clases \textit{Isgl3dViewController} y \textit{app0100AppDelegate}. A continuación se muestran algunas modificaciones sobre estas dos clases\\
 \begin{verbatim}
 UIImageView* vistaImg = [[UIImageView alloc] init];
 
@@ -192,8 +227,10 @@ CGRect fullScreenRect = screen.bounds;
 [self.window sendSubviewToBack:vistaImg];
 _viewController.videoView = vistaImg;
 \end{verbatim}
-Con esto se ajusta el atributo \textit{videoView} de la propiedad \textit{viewController} que pertenece a la clase \textit{app0100AppDelegate} y es instancia de la clase \textit{Isgl3dViewController}. Este atributo es el que luego se ajusta en forma periódica con cada cuadro en la clase \textit{Isgl3dViewController}. \\
-En xCode, si se quiere simplemente hacer una filmación, sacar fotos y acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Sin embargo si se desea tener una forma de hacer esto pero llegando a más bajo nivel para poder hacer procesamiento, teniendo acceso a los píxeles de la imagen, hacer modificaciones sobre los mismos y en definitiva manipular la salida, entonces la forma más indicada es usando el conocido \textit{Framework} llamado \textit{AVFoundation}. En la clase \textit{Isgl3dViewController} en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation} que permite realizar procesamiento en tiempo real. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
+
+Con esto se ajusta el atributo \textit{videoView} de la propiedad \textit{viewController} que pertenece a la clase \textit{app0100AppDelegate} y es instancia de la clase \textit{Isgl3dViewController}. \\
+
+En Xcode, si se quiere simplemente hacer una filmación, sacar fotos o acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Si lo que se desea es acceder a los píxeles de las imágenes capturadas, para luego por procesarlos en tiempo real, entonces la forma más indicada es usando el conocido \textit{framework} \textit{AVFoundation}. En la clase \textit{Isgl3dViewController}, en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation}. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
 \begin{verbatim}
 /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];
@@ -216,55 +253,65 @@ En xCode, si se quiere simplemente hacer una filmación, sacar fotos y acceder a 
     [self.session addInput: self.videoInput];
     [self.session addOutput: self.frameOutput];
 \end{verbatim}
-Como se ve, es necesario crear una sesión de captura, un dispositivo de captura, una salida de los datos y agregarlas a la sesión. También se puede setear el tipo de captura de la cámara (tiene que ser soportado por el Hardware, sino se genera un error en este punto). \\
+
+Como se ve, es necesario crear una sesión de captura, luego un dispositivo de captura y una salida de los datos y agregarlos a la sesión. También se puede configurar el tipo de captura de la cámara (tiene que ser soportado por el \textit{hardware}, sino se genera un error en este punto). \\
 Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.\\
 \begin{verbatim}
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
     dispatch_release(processQueue);
 \end{verbatim}
+
 Con esto lo que se hace es hacer una instancia de una \textit{Queue}, que representa una cola de procesamiento. De esta manera se puede hacer que ciertas tareas se alojen en esa instancia de cola, que lógicamente es otra distinta que la cola de procesamiento principal (\textit{mainQueue}). Esto mismo es lo que se hace en la segunda línea del código anterior, diciendo que el \textit{Delegate} de los datos de salida (\textit{frameOutput}) es la propia clase y que ese \textit{Delegate} se ejecute en la \textit{Queue} que se instanció en la línea anterior. De esta manera todo lo que sea invocado por el \textit{Delegate} en forma periódica será enviado a una cola distinta de la principal, pudiendo tener entonces, una cola de procesamiento separada de la cola de interfaz de usuario. Esto es algo ampliamente utilizado y es una recomendación de la documentación de iOS, pues se basa en los conceptos de tener la mayor atención posible a la interfaz de usuario, impidiendo en lo posible dejar al usuario esperando por algún eventual procesamiento que se esté llevando a cabo.\\
-Finalmente se da comienzo a la sesión\\
+
+Finalmente se da comienzo a la sesión:\\
 \begin{verbatim}
 [self.session startRunning];
 \end{verbatim}
-Con esto comienza a invocarse una serie de métodos en forma periódica. El hecho de suceda esto es porque esta clase implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}. Este protocolo es el que permite decir que el \textit{Delegate} de \textit{frameOutput} es él mismo. Al implementar este protocolo comienza a invocarse en forma periódica (frame a frame) el siguiente método\\
+Como la clase \textit{Isgl3dViewController} implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}, una vez que comienza la sesión, se invoca cuadro a cuadro el siguiente método:\\
 \begin{verbatim}
--(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
+-(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer
+:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
 \end{verbatim}
 donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene los píxeles de la cámara en ese momento. Así entonces, se accede a los píxeles y se invoca dentro del \textit{captureOutput} periódicamente al método \textit{procesamiento}, encargado de procesar la imagen recibida por la cámara.
 \section{QR}
 \label{sec: QR}
-\subsection{QR. Una realidad}
-El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente debido al incremento significativo del uso de \textit{smart devices} el hecho de poder contar con cámara y poder de procesamiento hace que sea frecuente encontrar aplicaciones con el poder de reconocimiento de QRs. Comenzaron a utilizarse en la industria automovolística japonesa como una solución para el trazado en la línea de producción pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web o en algunos casos también como tarjetas personales. 
-\subsection{Qué son realmente los QRs?}
-Se puede decir que los QRs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QRs, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
-En la figura \ref{fig: implementacion_1} se pueden ver las distintas partes que componen un QR como ser el bloque de control compuesto por las tres esquinas que dan información de la posición, alineamiento y sincronismo, así como también información de versión, formato, corrección de errores y datos. Fuera de toda esa información que podríamos denominar encabezado haciendo analogía con los paquetes de las redes de datos se encuentra la información a almacenar propiamente dicha que conforma el cuerpo del QR.\\
+\subsection{Identificadores QR. Una realidad}
+El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión a móvil internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
+\subsection{?`Qué son realmente los QR?}
+Se puede decir que los Qs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
+
+En la Figura \ref{fig: implementacion_2} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos. Que podr´ian verse como el cuerpo del QR.\\
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.6]{figs_implementacion/qrcode_overview4.eps}
-\caption{Las distintas componentes de un QR. Fuente \cite{grompone10}.}
+\includegraphics[scale=0.4]{figs_implementacion/qrcode_overview4.eps}
+\caption{Las distintas componentes de un QR. Fuente (poner fuente).}
 \label{fig: implementacion_2}
 \end{figure}
 %fuente http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
+
 \newpage
-\subsection{Codificación y decodificación de QRs}
-Es fácil darse cuenta que la codificación resulta mucho más sencilla que la decodificación. Para la codificación es necesario comprender el protocolo, las distintas variantes y el tipo de información que se pretende almacenar. Sin embargo para la decodificación, además de tener que cumplir con lo anterior, es necesario contar con buenos sensores y ciertas condiciones de luminosidad y distancia que favorezcan a la cámara y se traduzcan en buenos resultados luego de la detección de errores. Si bien la plataforma es importante para lograr buenos resultados, dada una plataforma, existen variadas aplicaciones tanto para iOS como para Android que cuentan con performances bastante diferentes en función del algoritmo de procesamiento utilizado.\\
-Debido a que el centro del proyecto de fin de carrera no fue la codificación y decodificación de QRs y que además ya existen distintas librerías que resuelven este problema se optó por investigar las distintas variantes e incorporar la más adecuada para la aplicación.\\
-Dentro de todas las librerías que resuelven la decodificación se encuentran ZXing y ZBar como las más destacadas por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por "Zebra Crossing", es una librería open-source desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive C o JRuby entre otros.\\
-Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un SDK interesante para desarrollar fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector de QRs. Básicamente consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate} Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista de cámara. Luego el protocolo se encarga de la captura y procesamiento del QR teniendo como resultado la información que tiene el QR en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una hash table con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
+\subsection{Codificación y decodificación de c\'odigos QR}
+
+Es fácil darse cuenta que la codificación resulta mucho más sencilla que la decodificación. Para la codificación es necesario comprender el protocolo, las distintas variantes y el tipo de información que se pretende almacenar. Sin embargo, para la decodificación, además de tener que cumplir con lo anterior, es necesario contar con buenos sensores y ciertas condiciones de luminosidad y distancia que favorezcan a la cámara y se traduzcan en buenos resultados luego de la detección de errores. Si bien la plataforma es importante para lograr buenos resultados, dada una plataforma, existen variadas aplicaciones tanto para iOS como para Android que cuentan con performances bastante diferentes en función del algoritmo de procesamiento utilizado.\\
+
+Debido a que el centro del presente proyecto no fue la codificación y decodificación de QRs, y que además ya existen distintas librerías que resuelven muy bien este problema, se optó por investigar varias de ellas e incorporar la más adecuada a la aplicación.\\
+
+Entre todas las librerías que resuelven la decodificación, las llamadas ZXing y ZBar son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossin'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.\\
+
+Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector. Este consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate}. Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista previa de la cámara. Luego el protocolo se encarga de la captura y procesamiento del QR almacenando como resultado la información embebida en este en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
 %fuente http://code.google.com/p/zxing/
 \subsection{El QR en la aplicación}
-Para el caso particular de la aplicación se optó por tener un identificador QR para tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). Los mismos fueron Pedro Figari, Joaquín Torres García, Juan Manuel Blanes. De esta manera para el caso del recorrido del museo a través de la utilización con QRs es posible determinar la posición del usuario debido a imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero para el caso que el usuario sí decida escanear el QR entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos más reducida. \\
+Para el caso particular de la aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). Los mismos fueron Pedro Figari, Joaquín Torres García y Juan Manuel Blanes. De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
 
 
 
-\subsection{Arte con QRs}
-La opción de usar los QRs de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QRs tradicionales para lograr un valor estético además del funcional. A continuación se muestran algunos ejemplos de tales casos en los que claramente se ve cómo puede lograrse el mismo resultado de información con el valor agregado de originalidad.
+\subsection{Buen gusto para los QR}
+La opción de usar los QR de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QR tradicionales para lograr un valor estético además del funcional. V\'ease en la figura \ref{fig: implementacion_3} un ejemplo de cómo puede lograrse el mismo resultado pero con el valor agregado de originalidad.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_implementacion/qrArtist.eps}
-\caption{Ejemplo de un QR artista. Fuente \cite{grompone10}.}
+\caption{Ejemplo de un QR creativo. Fuente (poner fuente).}
 \label{fig: implementacion_3}
 \end{figure}
 %fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
@@ -308,7 +355,7 @@ como hacer un acction.php ....\\
 MOU SIGUE ESTO...\\
 
 \section{SIFT}
-
+\label{sec: sift}
 \section{Incorporación de la realidad aumentada a la aplicación}
 \label{sec: realidad aumentada en la aplicación}
 asdfasdfasdf\\
