@@ -401,16 +401,16 @@ Como se mencionó en \ref{sec:Fundamentos y definiciones} la matriz de parámetros
 
 Existen varios algoritmos de estimación de pose, a continuación se presentan algunos. 
 
-\subsection{\textit{DLT}(\textit{D}irect \textit{L}inear \textit{Transform})}
+\subsection{\textit{DLT}(\textit{D}irect \textit{L}inear \textit{T}ransform)}
 Este método sirve para calcular la matriz \textbf{H} en la cual están implícitos los parámetros intrínsecos y extrínsecos. Si se conocen los parámetros intrínsecos se pueden despejar la matriz \textbf{E} con la información de la pose. 
 
 Como se vió anteriormente
 
 \[
 \left( \begin{array}{c}
-x'_i \\
-y'_i \\
-s'_i
+x_i \\
+y_i \\
+s_i
 \end{array} \right)
 = 
 \left( \begin{array}{cccc}
@@ -428,17 +428,17 @@ P_i
 \end{array} \right)
 \] 
 
-Se debe notar que la matriz \textbf{H}  puede ser multiplicada por un factor distinto de cero sin alterar el resultado de la proyección, esto se debe a que se trabaja con coordenadas homogéneas. Por lo tanto lo que define la proyección no son los elementos de \textbf{H} sino la relación entre los elementos. \textbf{H} tiene 12 elementos, por lo tanto hay 11 relaciones entre los elementos, entonces \textbf{H} tiene 11 grados de libertad.
+Por comodidad se utiliza la notación de coordenadas de la imagen para expresar las coordenadas normalizadas en la imagen. Se debe notar que la matriz \textbf{H}  puede ser multiplicada por un factor distinto de cero sin alterar el resultado de la proyección, esto se debe a que se trabaja con coordenadas homogéneas. Por lo tanto lo que define la proyección no son los elementos de \textbf{H} sino la relación entre los elementos. \textbf{H} tiene 12 elementos, por lo tanto hay 11 relaciones entre los elementos, entonces \textbf{H} tiene 11 grados de libertad.
  
 Cada correspondencia $M_i \leftrightarrow m_i$ aporta dos ecuaciones linealmente independientes con los elementos de la matriz \textbf{H}, $\textbf{H}_{ij}$ como variables
 \begin{equation*}
 \begin{split}
-\frac{\textbf{H}_{11}X_i+\textbf{H}_{12}Y_i+\textbf{H}_{13}Z_i+H_{14}}{\textbf{H}_{31}X_i+\textbf{H}_{32}Y_i+\textbf{H}_{33}Z_i+\textbf{H}_{34}} = x_i, \\
+\frac{\textbf{H}_{11}X_i+\textbf{H}_{12}Y_i+\textbf{H}_{13}Z_i+\textbf{H}_{14}}{\textbf{H}_{31}X_i+\textbf{H}_{32}Y_i+\textbf{H}_{33}Z_i+\textbf{H}_{34}} = x_i, \\
 \\
 \frac{\textbf{H}_{21}X_i+\textbf{H}_{22}Y_i+\textbf{H}_{23}Z_i+\textbf{H}_{24}}{\textbf{H}_{31}X_i+\textbf{H}_{32}Y_i+\textbf{H}_{33}Z_i+\textbf{H}_{34}} = y_i 
 \end{split}
 \end{equation*}
-La ecuación para $s'_i$ se puede obtener como combinación lineal de las de $x'_i$ y $y' _i$, por eso no se tiene en cuenta. 
+La ecuación para $s_i$ se puede obtener como combinación lineal de las de $x_i$ y $y _i$, por eso no se tiene en cuenta. 
 Estas ecuaciones se puede reescribir como $\textbf{A}h=0$ donde 
 \begin{equation*}
 h = \left(
@@ -467,6 +467,31 @@ La transformación obtenida la matriz \textbf{H} tiene 11 grados de libertad como
 $$\textbf{E} = \textbf{I}^{-1}\textbf{H}$$
 
 \subsection{\textit{PnP} (\textit{P}erspective-\textit{n}-\textit{P}oint)}
+Si se cuenta con los parametros intrínsecos, se puede utilizar un enfoque que se centre en calcular solamente la pose de la cámara. Dependiendo de la cantidad de correspondencias que se tienen entre la imagen y el modelo es posible obtener un número finito de soluciones de la pose. 
+Si se tienen 1 o 2 correspondencias el problema tiene infinitas soluciones. Si se tienen 3 correspondencias(P3P) se obtienen hasta 4 posibles soluciones. Para 4 o mas correspondencias se obtiene una única solución, siempre que los puntos no estén alineados.
+La idea detrás de este algoritmo es la siguiente: 
+\begin{itemize}
+\item[$\bullet$] A partir de los puntos de la imagen $m_i$ y conociendo la distancia focal $f$ es posible calcular los versores $j_i$. 
+$$ j_i = \frac{1}{\sqrt{x_i^2 + y_i^2 + f^2}}\left(\begin{array}{c}
+x_i \\
+y_ i\\
+f
+\end{array}\right)
+$$
+\item[$\bullet$] Con estos versores es posible determinar los ángulos que forman las lineas de vista de los puntos $\textbf{M}_i$ entre sí. 
+\item[$\bullet$] Se busca estimar las distancias $l_i = \Vert\textbf{O}\textbf{M}_i\Vert$ entre el centro de la cámara y los puntos 3D $\textbf{M}_i$ a partir de las relaciones dadas por los triángulos $\textbf{O}\textbf{M}_i\textbf{M}_j$.
+\item[$\bullet$]  Una vez que se calculan las distancias $l_i$, los puntos $\textbf{M}_i$ se expresan en el sistema de coordenadas de la cámara como $\textbf{M}^\textbf{C}_i$. 
+\item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo a el sistema de coordenadas de la cámara.
+\end{itemize}
+En la bibliografía se encuentran varios métodos para resolver numéricamente el problema. 
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.55]{figs_camaraypose/pnp}
+\caption{Geometría del problema P3P. Se busca calcular la distancia entre el centro óptico $O$ y los puntos del modelo 3D}
+\label{fig:pnp}
+\end{figure}
+
+
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}, dependiendo de la aplicación puede ser mas útil utilizar las diferentes representaciones. 
