@@ -46,8 +46,8 @@ Isgl3dNode * _container;
         Isgl3dPODImporter * podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado03.pod"];
         
 		//_model = [_container createSkeletonNode];
-        _model2 = [_container createSkeletonNode];
-        _model3 = [_container createSkeletonNode];
+//        _model2 = [_container createSkeletonNode];
+//        _model3 = [_container createSkeletonNode];
         
         Isgl3dGLMesh* _artigasMesh = [podImporter meshAtIndex:0 ];
         Isgl3dGLMesh* _artigasMesh2 = [podImporter2 meshAtIndex:0 ];
@@ -85,7 +85,7 @@ Isgl3dNode * _container;
         [podImporter3 addMeshesToScene:_model3];
         
         Isgl3dNode * node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter materialWithName:@"material_0"]];
-		node.position = iv3(-90, -60, -150);
+		node.position = iv3(0, -60, -150);
         [podImporter addMeshesToScene:node];
         
         node.scaleX=1.5;
