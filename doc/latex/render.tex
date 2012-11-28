@@ -1,4 +1,4 @@
-\chapter{Herramientas de \textit{rendering}}
+\chapter{\textit{Rendering} en iOS: ISGL3D}
 \section{Introducción}
 \textit{Rendering} es un término en inglés que denota el proceso de generar una imagen 2D a partir de un modelo digital 3D o un conjunto de ellos, a los que se les llama ``escena''. Puede ser comparado con tomar una foto o filmar una escena en la vida real. Afortunadamente, existen varias herramientas de \textit{rendering}, también llamadas ``motores de juego 3D'', para plataformas móviles, en especial que funcionen sobre iOS. Algunas de ellas son Unity 3D, ISGL3D, Cocos3D, Open GL ES y ShiVa3D. A continuación serán comentadas tan sólo las consideradas durante el presente proyecto por ser populares y gratuitas.\\
 
@@ -6,8 +6,8 @@ La primera en ser tomada en cuenta fue ``Open Graphics Library Embedded Systems'
 
 En este capítulo se comentarán algunas características y conceptos de ISGL3D que fueron importantes para el proyecto;  por detalles de algunos temas en particular referirse a la referencia de la ya mencionada API en: \url{www.isgl3d.com/resources/api}.  Además se trazará una hoja de ruta para todo aquel que quiera iniciarse en el manejo de la herramienta.\\
 
-\section{ISGL3D}
-\subsection{Conceptos básicos de ISGL3D}
+
+\section{Conceptos básicos de ISGL3D}
 ISGL3D es un motor de juegos 3D para \textit{iPad}, \textit{iPhone} y \textit{iPod touch} escrito en \textit{Objective-C}, que sirve para crear escenas y \textit{renderizarlas} de forma sencilla. Es un proyecto en código abierto y gratis. En su sitio web oficial: \url{www.isgl3d.com}, se puede descargar su código, y de forma sencilla ISGL3D puede ser agregado como un complemento de \textit{Xcode}. Además se pueden encontrar tutoriales, detalles de su API y un acceso a un grupo de \textit{Google} donde la comunidad pregunta y responde dudas propias y ajenas. Una buena manera de iniciarse en manejo de la herramienta es siguiendo los tutoriales en: \url{www.isgl3d.com/resources/tutorials}; al menos este fue el camino elegido por el grupo. Los tutoriales son 6, y abarcan distintos tópicos:
 \begin{itemize}
 \item \textbf{Tutorial 0:} primer paso en el creado de una aplicación ISGL3D. Cubre algunos conceptos básicos y muestra cómo integrar la herramienta a \textit{Xcode}.
@@ -22,12 +22,12 @@ Al descargar e instalar ISGL3D, se puede ver que la herramienta incluye un proye
 
 Cuando se crea una aplicación ISGL3D, el núcleo de la misma es la llamada ``\textit{view}'' (``vista'' en Espa\~nol ). Una \textit{view} está compuesta principalmente por una escena y una cámara:
 \begin{itemize}
-\item Una \textbf{escena} (\textit{Isgl3dScene3D}) es donde los objetos o modelos 3D son agregados como nodos. Todos los nodos pueden ser tanto trasladados como rotados y pueden tener otros nodos hijos; los nodos hijos son trasladados y rotados con sus padres. Así como objetos 3D, se pueden agregar luces de distinto tipo, que generarán en la escena efectos de sombra que luego serán adecuadamente \textit{renderizados} en función de dónde se encuentre y hacia dónde este mirando la cámara.
+\item Una \textbf{escena} (\textit{Isgl3dScene3D}) es donde los objetos o modelos 3D son agregados como nodos. Todos los nodos pueden ser tanto trasladados como rotados y pueden tener otros nodos hijos; los nodos hijos son trasladados y rotados con sus padres. Así como objetos 3D, se pueden agregar luces de distinto tipo, que generarán en la escena efectos de sombra que luego serán adecuadamente \textit{renderizados} en función de dónde se encuentre y hacia dónde esté mirando la cámara.
 \item Una \textbf{cámara} que es utilizada para para ver la escena desde una posición y un ángulo en particular. La cámara se manipula como cualquier otro objeto o nodo en la escena, se puede trasladar, rotar y hasta indicar hacia dónde quiere uno que esta apunte. Es importante ajustar la cámara de manera que su arquitectura sea la que uno busca. Se pueden entonces ajustar ciertos parámetros intrínsecos a esta como por ejemplo su campo visual, su distancia focal, la altura y la anchura del plano imagen, etc.
 \end{itemize}
 Es importante entender que el llamado \textit{render} se realiza sumando la información de la escena, objetos 3D y sus hijos, luces, etc.; más la información de dónde se encuentra la cámara, sus características y hacia dónde esta apunta.\\
 
-\subsection{FOV y ejes de ISGL3D}
+\section{FOV y ejes de ISGL3D}
 Una particularidad de la cámara de ISGL3D es que el parámetro intrínseco ``distancia focal'' visto en la sección \ref{sec:Calibracion de camara}, no es directamente configurable. En cambio, el valor que sí se puede alterar es el llamado ``FOV'', acrónimo de ``Field Of View''. El \textit{field of view} de una cámara no es más que su campo visual, y se mide como la extensión angular máxima mapeable en el plano imagen, medida desde el centro óptico \textit{C}. Puede ser medido de forma horizontal o de forma vertical; sin embargo, en ISGL3D es definido verticalmente. Ver figura \ref{fig:render1}.
 
 \begin{figure}[h!]
@@ -43,16 +43,16 @@ FOV = 2.arctg\left(\frac{h}{2.f}\right)
 \]
 donde $h$ denota la altura del plano imagen y $f$ la distancia focal de la cámara.\\
 
-Otra particularidad de ISGL3D es el sistema de coordenadas que difiere del que se usa habitualmente en el área de procesamiento de imágenes. Para ISGL3D los ejes están orientados como en la Figura \ref{fig:ejes} con el origen en el centro del plano de la pantalla del dispositivo que coincide con el plano \textit{X-Y} y el eje \textit{Z} saliente de la misma.\\	
+Otra particularidad de ISGL3D es el sistema de coordenadas que difiere del que se usa en algunas herramientas de modelado, como por ejemplo Blender, en las que el plano \textit{X-Y} se corresponde con el plano horizontal. Para ISGL3D los ejes están orientados como en la Figura \ref{fig:ejes}, con el origen en el centro del plano de la pantalla del dispositivo que coincide con el plano \textit{X-Y}, y el eje \textit{Z} saliente de la misma.\\	
 \\
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.5]{figs_render/ejes.png}
+\includegraphics[scale=0.7]{figs_render/ejes.pdf}
 \caption{Sistema de coordenadas de ISGL3D.}
 \label{fig:ejes}
 \end{figure}
 
-\subsection{Primitivas de ISGL3D}
+\section{Primitivas de ISGL3D}
 ISGL3D cuenta con algunas estructuras primitivas que pueden ser usadas como modelos, o incluso combinadas de manera de formar modelos algo más complejos. Las principales estructuras primitivas de ISGL3D son:
 \begin{itemize}
 \item \textbf{Isgl3DArrow:} modelo correspondiente a una flecha. Tiene 4 parámetros configurables:
@@ -131,7 +131,7 @@ En la primera línea de código se crea el material. Dicho material es del tipo \t
 \label{fig:render3}
 \end{figure}
 
-\subsection{Importación de modelos a ISGL3D.}
+\section{Importación de modelos a ISGL3D.}
 A veces lo que se quiere no es agregar a la escena una primitiva sino un modelo previamente creado. Los modelos son realizados en herramientas de creado y animación de gráficos 3D como por ejemplo \textit{Blender}, \textit{MeshLab}, \textit{Autodesk Maya} o \textit{Autodesk 3ds Max}. Luego deben ser exportados en un formato llamado \textit{COLLADA}, acrónimo de ``COLLAborative Design Activity'', que sirve para el intercambio de contenido digital 3D entre distintas aplicaciones de modelado. Por su parte, ISGL3D permite importar modelos pero en un formato llamado ``POD''. Se usó entonces, una aplicación llamada \textit{Collada2POD} que lo que hace es convertir modelos tridimensionales en formato \textit{COLLADA} al formato POD. \textit{Collada2POD} puede ser descargada gratuitamente de la página oficial de \textit{Imagination Technologies}, su desarrollador: \url{http://www.imgtec.com}.\\
 
 Una vez que se tiene al objeto 3D en el formato requerido, este puede ser importado en ISGL3D de forma sencilla:\\
@@ -152,7 +152,7 @@ En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} q
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_render/render4}
-\caption{Modelo de José Artigas agregado dos veces en una misma escena, pero visto desde ángulos distintos.}
+\caption{Modelo de José Artigas agregado dos veces a una misma escena, pero visto desde ángulos distintos.}
 \label{fig:render4}
 \end{figure}
 
@@ -222,24 +222,34 @@ node.position = iv3(-90, -60, -150);
 [podImporter addMeshesToScene:node];
 \end{verbatim}
 \normalsize
-En las primeras 4 líneas de código se instancia en dos oportunidades la clase \textit{Isgl3dPODImporter}, y se les asigna a las instancias los modelos inanimados ``model$\_$1.pod'' y ``model$\_$2.pod'. La instrucción \textit{buildSceneObjects} crea todos los objetos de la escena del modelo POD, pero no los agrega a la escena ISGL3D. Luego se obtienen los modelos indexados de cada uno de los PODs (cada POD puede tener una escena con más de un modelo. Mediante un índice se referencia qué modelo se quiere obtener) y se almacenan en ``$\_$modelMesh'' y ``$\_$modelMesh2'' respectivamente. Se genera a continuación un nuevo modelo al que se le asignan los dos modelos anteriores, luego se programa la animación y se le da inicio mediante la instrucción \textit{startAnimation}. Finalmente, se genera un nuevo objeto o nodo ISGL3D al que se le asigna el modelo, y un material también cargado desde el archivo POD; se le asigna además una posición y se lo agrega a la escena. 
+En las primeras 4 líneas de código se instancia en dos oportunidades la clase \textit{Isgl3dPODImporter}, y se les asigna a las instancias los modelos inanimados ``model$\_$1.pod'' y ``model$\_$2.pod'. La instrucción \textit{buildSceneObjects} crea todos los objetos de la escena del modelo POD, pero no los agrega a la escena ISGL3D. Luego se obtienen los modelos indexados de cada uno de los PODs (cada POD puede tener una escena con más de un modelo, mediante un índice se referencia qué modelo se quiere obtener) y se almacenan en ``$\_$modelMesh'' y ``$\_$modelMesh2'' respectivamente. Se genera a continuación un nuevo modelo al que se le asignan los dos modelos anteriores, luego se programa la animación y se le da inicio mediante la instrucción \textit{startAnimation}. Finalmente, se genera un nuevo objeto o nodo ISGL3D al que se le asigna el modelo, y un material también cargado desde el archivo POD; se le asigna además una posición y se lo agrega a la escena. 
 \end{itemize}
 
-\subsection{Características de Luz en ISGL3D}
+\section{Luz en ISGL3D}
 %http://isgl3d.com/tutorials/3/tutorial_2_lighting_and_shading
-Un tema importante al momento de proyectar modelos 3D en una escena es la luz. La visualización de un modelo puede cambiar significativamente en función de las características de luz que tenga una escena. Básicamente existen tres tipos de luz: \textit{ambiente}, \textit{difusa} y \textit{especular}. La luz ambiente es no direccional y está presente en toda la escena. La luz difusa ya implica la reacción que tiene la luz proveniente de las distintas fuentes de luz direccionales sobre las superficies de los objetos que existen en la escena generando haces de luz en direcciones aleatorias. La luz especular modela el comportamiento de la luz reflejada sobre las distintas superficies en ciertas direcciones particulares (no aleatorias) que dependen del coeficiente de reflexión de los materiales. Cada uno de estos tres tipos de luz que modelan el mundo real, existen en ISGL3D y son representados como características configurables de los objetos de luz. A su vez existen fuentes lumínicas de distintos tipos: \textit{puntual}, \textit{direccional} y \textit{cónica}. Cada tipo tiene una función distinta de la  atenuación con respecto a la distancia. Un ejemplo de la creación de un elemento lumínico para una escena se ve en el siguiente código:
+Un tema importante al momento de proyectar modelos 3D en una escena es la luz. La visualización de un modelo puede cambiar significativamente en función de las características de luz que tenga una escena. En ISGL3D la se logra mediante la suma de tres componentes independientes: \textit{ambiente}, \textit{difusa} y \textit{especular}. La luz ambiente es no direccional y está presente en toda la escena. La luz difusa ya implica la reacción que tiene la luz proveniente de las distintas fuentes de luz direccionales sobre las superficies de los objetos que existen en la escena generando haces de luz en direcciones aleatorias. La luz especular modela el comportamiento de la luz reflejada sobre las distintas superficies en ciertas direcciones particulares (no aleatorias) que dependen del coeficiente de reflexión de los materiales. Cada uno de estos tres tipos de luz que modelan el mundo real, existen en ISGL3D y son representados como características configurables de los objetos de luz. A su vez existen fuentes lumínicas de distintos tipos: \textit{puntual}, \textit{direccional} y \textit{cónica}. Cada tipo tiene una función distinta de la  atenuación con respecto a la distancia. Un ejemplo de la creación de un elemento lumínico para una escena se ve en el siguiente código:
+
 \begin{verbatim}
-        _redLight = [Isgl3dLight lightWithHexColor:@"FF0000" diffuseColor:
-        @"FF0000" specularColor:@"FFFFFF" attenuation:0.02];
-        _redLight.renderLight = YES;
-        [self.scene addChild:_redLight];
+Isgl3dLight * _redLight = [Isgl3dLight lightWithHexColor:@"FF0000" diffuseColor:
+@"FF0000" specularColor:@"FFFFFF" attenuation:0.02];
+_redLight.renderLight = YES;
+[self.scene addChild:_redLight];
 \end{verbatim}
-donde se crea una luz de color rojo (notación hexadecimal de las componentes RGBA), del tipo especular y con la atenuación dada.
-\subsection{Método \textit{- (void) tick:(float)dt}}
-Cuando se instancia la clase encargada de generar el render (clase \textit{Helloworld}), la misma ejecuta la configuración básica de inicialización del objeto. Entre otras cosas, dentro del código de inicialización, se agrega el siguiente código:
+
+En la primera l\'inea de c\'odigo se crea una luz con una componente ambiente de color rojo, una componente difusa también de color rojo y una componente especular de color blanca. En todos los casos se usa la notación hexadecimal de las componentes RGBA. Además se escogió un valor $0,02$ de atenuaci\'on. Luego, se pide que el foco de luz s\'i sea \textit{renderizado} y finalmente, este es agregado a la escena. Por defecto, el tipo de luz utilizado es puntual.
+
+\section{Método \textit{- (void) tick:(float)dt}}
+Cuando se instancia la clase encargada de generar el render (clase \textit{HelloWorldView}), la misma ejecuta la configuración básica de inicialización del objeto. Entre otras cosas, dentro del código de inicialización, se agrega lo siguiente:
+
 \begin{verbatim}
 [self schedule:@selector(tick:)];
 \end{verbatim}
-Esto lo que hace es ``agendarse'' una invocación del método \textit{tick} en forma periódica. Dentro de dicho método es que se hace la actualización periódica de reproyección que se obtiene como resultado de la estimación de pose. Este método tiene principal importancia por tratarse de uno de los dos \textit{callbacks} que toda aplicación de realidad aumentada tiene (el otro naturalmente es la captura y procesamiento de la imagen para obtener la pose).
-\subsection{ISGL3D en la aplicación}
+
+Esto lo que hace es ``agendarse'' una invocación del método \textit{tick} en forma periódica. Dentro de dicho método es que se hace la actualización de la escena, y el en caso particular de este proyecto, es en dónde se actualiza la posición de los objetos 3D en función de la posición de la cámara respecto de los ejes del mundo. Ver capítulo \ref{chap: camypose}. Este método es de vital importancia por tratarse de uno de los dos \textit{callbacks} que toda aplicación de realidad aumentada tiene (el otro es la captura y procesamiento de la imagen para obtener la pose).
+
+\section{ISGL3D en la aplicación}
 En el capítulo \ref{chap: imp} se explican algunos detalles sobre el uso de ISGL3D dentro de la aplicación final. En particular se dan detalles constructivos sobre cómo utilizar esta herramienta para generar \textit{renders} sobre un fondo que sea la captura de la cámara y de la convivencia de los dos \textit{callbacks} de la aplicación.
+
+\section{Conclusi\'on}
+
+En el presente cap\'itulo se mencionaron algunas herramientas existentes para realizar \textit{renders} en dispositivos m\'oviles con sistema operativo iOS. Luego, se justific\'o la elecci\'on de ISGL3D para tal funci\'on y se dieron algunos conceptos introductorios a la herramienta; adem\'as se di\'o una hoja de ruta para todo aquel que le interese ampliar sus conocimientos en el \textit{framework}. Se indicaron dos formas distintas de embeber un modelo 3D en ISGL3D y se aclar\'o cu\'al fue la forma escogida por el grupo. Finalmente, se referenci\'o el cap\'itulo \ref{chap: imp}, en donde se explica cómo se usó ISGL3D en la aplicación final. 
