@@ -10,7 +10,7 @@ La aplicación consta de distintas funcionalidades tales como:\\
 \item[(4)] Detección SIFT para identificar el cuadro.
 \item[(5)] Diferentes realidades aumentadas según la obra.
 \end{itemize}
-En las próximas secciones se describen más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
+En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
 En la descripción de las clases que conforman los bloques principales de la aplicación se hace referencia a conceptos de desarrollo sobre Objective-C, así como también a \textit{frameworks} y herramientas utilizadas que fueron explicadas en el capítulo \ref{chap: hwysw}. Para la comprensión del detalle de la implementación es importante conocer estos conceptos de desarrollo.\\
 Para que sea más sencilla la comprensión de los bloques que componen la aplicación, en la Figura \ref{fig: Diaglobal} se muestra un diagrama esquemático de la misma que sirve para visualizar cómo es su flujo \textit{a nivel de usuario}.\\
@@ -96,7 +96,7 @@ que por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones 
 	
 	El mismo es el encargado de devolver una \textit{UITableViewCell} que es la que se despliega. Es en este método que se configura el formato de la celda. Para el caso de la aplicación se resolvió generar una clase que hereda de \textit{UITableViewCell} que se llama \textit{CuadroTableViewCell} y que tiene ciertas características como una imagen, autor y obra que son mostradas en la celda. En este método se asocian las características mencionadas de la celda en función del número de fila. Esta clase implementa un método \textit{prepareForSegue} que le asigna un valor a la variable \textit{opcionAutor} en función del autor seleccionado. Esto permite luego en la clase \textit{CuadroTableViewController} desplegar distintas listas de cuadros en función del autor seleccionado.
 	\subsubsection{CuadroTableViewController}
-	Esta clase (identificada con el número 4 en la Figura \ref{fig: story}) es muy similar a la clase \textit{AutorTableViewController} recién descripta pero que difiere simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al instanciarse la clase se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, con los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro. Esto se verá más adelante en la sección \ref{sec: realidad aumentada en la aplicación}. 
+	Esta clase (identificada con el número 4 en la Figura \ref{fig: story}) es muy similar a la clase \textit{AutorTableViewController} recién descripta pero que difiere simplemente en su contenido. Los conceptos utilizados y métodos implementados son básicamente los mismos pero su contenido es un listado de obras en lugar de autores. Una especificación extra es que al instanciarse la clase se completa una lista de cuadros diferente en función del autor seleccionado. Así como en la clase \textit{AutorTableViewController} en esta también se implementa el método \textit{prepareForSegue} para poder completar los datos de la instancia de la clase con la que se está conectando, con los datos de la obra seleccionada (autor, obra, imagen, descripción, audio, ARid). El ARid es un identificador de realidad aumentada que asocia una realidad aumentada a cada cuadro.  
 	\subsubsection{CuadroTableViewCell}
 	Esta es una clase sencilla que hereda de la clase \textit{UITableViewCell} (identificada con el número 5 en la Figura \ref{fig: story}) y simplemente tiene tres  atributos asociados a nivel de interfaz de usuario: una imagen, un nombre de autor y un nombre de obra para cada celda de la tabla que se despliega.\\
 \begin{figure}[h!]
@@ -107,10 +107,11 @@ que por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones 
 \end{figure}
 
 \subsection{ReaderSampleViewController}
-Este \textit{ViewController} (identificada con el número 6 en la Figura \ref{fig: story}) es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto y una imagen asociados al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
+Este \textit{ViewController} (identificado con el número 6 en la Figura \ref{fig: story}) es el encargado de hacer la lectura de los códigos QR y de invocar los métodos necesarios para realizar la búsqueda de la zona del museo en la que se encuentra el usuario. Esto es, existe un código QR asociado a cada autor (Blanes, Figari y Torres García) y en base al código QR leído se despliega un texto y una imagen asociados al mismo. El funcionamiento de la decodificación se explica un poco más en detalle en la sección \ref{sec: QR}.
 
 \subsection{ImagenServerViewController}
-Este \textit{ViewController} (identificada con el número 7 en la Figura \ref{fig: story}) es el encargado de la comunicación con el servidor. Al instanciarse la clase, también se instancia la clase \textit{UIImagePickerController}, encargada de implementar una captura de imagen. Una vez que se toma una fotografía a la obra, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de volver a tomar la fotografía y el otro botón inicia la comunicación con el servidor. Ver Figura \ref{fig: imagenServer}.\\
+\label{sec: imagenServer}
+Este \textit{ViewController} (identificado con el número 7 en la Figura \ref{fig: story}) es el encargado de la comunicación con el servidor. Al instanciarse esta clase, también se instancia la clase \textit{UIImagePickerController}, encargada de implementar una captura de imagen. Una vez que se toma una fotografía a la obra, la misma se muestra en una \textit{UIImageView} y existen dos botones: uno de ellos simplemente dispara una nueva instancia del \textit{UIImagePickerController} dando la opción de volver a tomar la fotografía y el otro botón inicia la comunicación con el servidor. Ver Figura \ref{fig: imagenServer}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/imagenServer.eps}
@@ -120,7 +121,7 @@ Este \textit{ViewController} (identificada con el número 7 en la Figura \ref{fig
 
 El botón encargado de la comunicación con el servidor, botón de \textit{upload}, es un \textit{segue} hacia el \textit{ObraCompletaViewController}. Dentro del método \textit{prepareForSegue}, encargado de preparar todo previo a la invocación de \textit{ObraCompletaViewController} se invoca el método \textit{uploadImage}. Este método genera un mensaje HTTP del tipo POST y se lo envía a la IP del servidor. En el cuerpo del mensaje se adjunta la foto tomada previamente y se le agrega una variable llamada \textit{room}. Esta variable es completada previamente en el \textit{ReaderSampleViewController} en base al QR detectado, dando información respecto de en qué sala/región del museo se encuentra el usuario (sala Figari, sala Blanes o sala Torres García). Esta variable lo que permite es tener un identificador para poder realizar la búsqueda de la imagen tomada en una base de datos más peque\~na, que contenga solamente los cuadros de la región del museo en cuestión. En caso que el usuario se haya salteado la detección QR y haya seleccionado directamente la opción de tomar una fotografía a la obra para comenzar la comunicación con el servidor, entonces la variable \textit{room} estará vacía y la búsqueda de la obra se realiza en toda la base de datos del museo. El gran valor agregado de la detecci\'on QR es la velocidad con la que el servidor devuelve informaci\'on respecto de a qu\'e obra se fotografi\'o. Para la b\'usqueda con detecci\'on QR, los tiempos son claramente mejores (del orden de 3s en una LAN), mientras que cuando el usuario se ahorra este paso, los tiempos aumentan al doble (del orden de 6s en una LAN).\\
 
-Luego de establecida la conexión y enviada la consulta POST, el servidor responde con otra variable llamada \textit{returnString}. Esta variable contiene un identificador de obra que indica qué obra fue fotografiada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que recibe la imagen y le ejecuta un algoritmo de detección de características llamado SIFT, que le retorna al PHP el identificador en cuestión. Detalles sobre el algoritmo SIFT se pueden ver más adelante en la sección \ref{sec: sift}. El archivo \textit{upload.php} entrega esta informaci\'on a la aplicaci\'on. La variable \textit{returnString} es recibida por la aplicación con cierta nomenclatura en particular, que sigue la lógica Autor-Número, por ejemplo ``Figari3'' se corresponde con la obra número 3 de la base de datos del autor Figari. Con este identificador de obra, la aplicación le pide al servidor cierta información de interés acerca de la misma, como por ejemplo el nombre completo de la obra, el nombre de su autor, una breve descripción. El servidor cuenta con varias carpetas a las que la aplicación accede remotamente:
+Luego de establecida la conexión y enviada la consulta POST, el servidor responde con otra variable llamada \textit{returnString}. Esta variable contiene un identificador de obra que indica qué obra fue fotografiada. Esto se logra mediante un archivo \textit{upload.php} en el servidor que recibe la imagen y le ejecuta un algoritmo de detección de características llamado SIFT, que le retorna al PHP el identificador en cuestión. Detalles sobre el algoritmo SIFT se pueden ver más adelante en la sección \ref{sec: sift}. El archivo \textit{upload.php} entrega esta informaci\'on a la aplicaci\'on. La variable \textit{returnString} es recibida por la aplicación con cierta nomenclatura en particular, que sigue la lógica Autor-Número, por ejemplo ``Figari3'' se corresponde con la obra número 3 de la base de datos del autor Figari. Con este identificador de obra, la aplicación le pide al servidor cierta información de interés acerca de la misma, como por ejemplo el nombre completo de la obra, el nombre de su autor y una breve descripción. El servidor cuenta con varias carpetas a las que la aplicación accede remotamente:
 \begin{itemize}
 \item[(1)] \textbf{autor:} contiene el nombre del autor de cada obra. 
 \item[(2)] \textbf{obra:} contiene el nombre completo de cada obra.
@@ -132,7 +133,7 @@ Luego de establecida la conexión y enviada la consulta POST, el servidor respond
 Esta información solicitada es alojada en variables que son mostradas (imagenes, texto) y reproducidas (audio) en el siguiente \textit{ViewController}, el \textit{ObraCompletaViewController}. Ver Figura \ref{fig: obraCompleta}.
 
 \subsection{ObraCompletaViewController}
-Este \textit{ViewController} (identificada con el número 8 en la Figura \ref{fig: story}) simplemente es la presentación de la obra, muestra una imagen del cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. Ver Figura \ref{fig: obraCompleta}. El primero de los botones dispara una audioguía relacionada con la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
+Este \textit{ViewController} (identificado con el número 8 en la Figura \ref{fig: story}) simplemente es la presentación de la obra en la que se muestra una imagen del cuadro, título, autor, descripción y distintas opciones para interactuar con el mismo. Tiene dos botones y una animación que funciona como botón. Ver Figura \ref{fig: obraCompleta}. El primero de los botones dispara una audioguía relacionada con la obra que el usuario está contemplando. El otro botón conecta con el \textit{VistaViewController}, encargado de mostrar la realidad aumentada, explicado en la sección \ref{sec: vista}. La animación que aparece funciona como \textit{segue} hacia otro \textit{ViewController}, llamado \textit{DrawSign} que se explica más adelante en la sección \ref{sec: drawsign}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/ObraCompleta.eps}
@@ -142,7 +143,7 @@ Este \textit{ViewController} (identificada con el número 8 en la Figura \ref{fig
 
 \subsection{VistaViewController}
 \label{sec: vista}
-Este \textit{ViewController} (identificada con el número 9 en la Figura \ref{fig: story}) es el encargado de mostrar la realidad aumentada. Esta clase, al ser instanciada ejecuta el siguiente método:
+Este \textit{ViewController} (identificado con el número 9 en la Figura \ref{fig: story}) es el encargado de mostrar la realidad aumentada. Esta clase, al ser instanciada ejecuta el siguiente método:
 \begin{verbatim}
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -153,9 +154,9 @@ Este \textit{ViewController} (identificada con el número 9 en la Figura \ref{fig
      
 }
 \end{verbatim}
-Este método se ejecuta justo antes de que el controlador despliegue el contenido de la pantalla, y como se ve invoca al método homónimo de la clase superior y luego al método \textit{hacerRender}, encargado de mostrar efectivamente la realidad aumentada. Antes de explicar los detalles de \textit{hacerRender} se comentan algunos detalles generales de las aplicaciones iOS.\\
+Este método se ejecuta justo antes de que el controlador despliegue el contenido de la pantalla, y como se ve, invoca al método homónimo de la clase superior y luego al método \textit{hacerRender}, encargado de mostrar efectivamente la realidad aumentada. Antes de explicar los detalles de \textit{hacerRender} se comentan algunos detalles generales de las aplicaciones iOS.\\
 
-Como en cualquier programa, en las aplicaciones de Xcode, lo que se ejecuta al comenzar es el \textit{main}. En este tipo de aplicaciones en particular, el main crea una instancia de la clase \textit{appDelegate} (delegado de la aplicación). A su vez, al instanciarse al \textit{appDelegate} se ejecuta el método \textit{applicationDidFinishLaunching}. En este método, típicamente el código por defecto está vacío, pero cuando se trabaja con ISGL3D, este método crea un objeto que hereda de \textit{UIViewController}, llamado \textit{Isgl3dViewController}. Es sobre esta última clase que se despliegan los \textit{renders}. Aclarados estos puntos se pasa ahora a explicar lo que se hace en el método \textit{hacerRender}. A continuación se muestran algunas de las partes más importantes del método:
+Como en cualquier programa, en las aplicaciones de Xcode, lo que se ejecuta al comenzar es el \textit{main}. En este tipo de aplicaciones en particular, el main crea una instancia de la clase \textit{appDelegate} (delegado de la aplicación). A su vez, al instanciarse al \textit{appDelegate} se ejecuta el método \textit{applicationDidFinishLaunching}. En este método, típicamente el código por defecto está vacío, pero cuando se trabaja con ISGL3D, este método crea un objeto de la clase \textit{Isgl3dViewController} que hereda de \textit{UIViewController}. Es sobre la instancia de \textit{Isgl3dViewController} que se despliegan los \textit{renders}. Aclarados estos puntos se pasa ahora a explicar lo que se hace en el método \textit{hacerRender}. A continuación se muestran algunas de las partes más importantes del método:
 \begin{verbatim}
 app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication 
 sharedApplication] delegate];
@@ -163,7 +164,7 @@ self.viewController=(Isgl3dViewController*)appDelegate.viewController;
 \end{verbatim}
 
 
-Con lo anterior lo que se hace es generar una instancia de la clase \textit{app0100AppDelegate} que es puntero al \textit{appDelegate} de la aplicación. Luego, en la segunda línea se le asigna a la propiedad de la propia clase llamada \textit{viewController} (que es de tipo \textit{Isgl3dViewController}) la propiedad de igual nombre pero del \textit{appDelegate} de la aplicación (que fue instanciada en el método \textit{applicationDidFinishLaunching}). Luego se agregan las \textit{views} \textit{viewController.view} y \textit{viewController.videoView} con valor de transparencia \textit{alpha} nulo y se inicia una animación generando un efecto de \textit{fade out} de la imagen y \textit{fade in} del \textit{render}. Este tipo de animaciones son sencillas de ejecutar con el \textit{framework} Core Animation y permiten agregar efectos interesantes a cualquier \textit{UIView}. 
+Con lo anterior lo que se hace es generar una instancia de la clase \textit{app0100AppDelegate} que es puntero al \textit{appDelegate} de la aplicación. Luego, en la segunda línea se le asigna a la propiedad de la clase \textit{VistaViewController} llamada \textit{viewController} (que es de tipo \textit{Isgl3dViewController}) la propiedad de igual nombre pero del \textit{appDelegate} de la aplicación (que fue instanciada en el método \textit{applicationDidFinishLaunching}). Luego se agregan las \textit{views} \textit{viewController.view} y \textit{viewController.videoView} con valor de transparencia \textit{alpha} nulo y se inicia una animación generando un efecto de \textit{fade out} de la imagen y \textit{fade in} del \textit{render}. Este tipo de animaciones son sencillas de ejecutar con el \textit{framework} Core Animation y permiten agregar efectos interesantes a cualquier \textit{UIView}. 
 
 \subsection{DrawSign}
 \label{sec: drawsign}
@@ -174,14 +175,14 @@ Esta clase (identificada con el número 10 en la Figura \ref{fig: story}) hereda 
 \caption{Ejemplo de dibujo libre}
 \label{fig: draw}
 \end{figure}
-Se implementó haciendo mediante una reimplementación de los siguientes tres métodos:
+Se implementó haciendo una reimplementación de los siguientes tres métodos:
 \begin{verbatim}
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event;
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event;
 \end{verbatim}
 
-Cada vez que una instancia de una clase que hereda de \textit{UIViewController} detecta un toque sobre la pantalla (evento \textit{touch}), se invocan los métodos mencionados. La secuencia de invocaciones se da al comenzar el toque en la pantalla (\textit{touchesBegan}), al desplazar el dedo sin levantarlo de la pantalla (\textit{touchesMoved}) y al finalizar el \textit{gesture} levantando el dedo de la pantalla (\textit{touchesEnded}). Se obtienen entonces las coordenadas del punto de toque sobre la pantalla invocando el siguiente método:
+Cada vez que una instancia de una clase que hereda de \textit{UIViewController} detecta un toque sobre la pantalla (evento \textit{touch}), se invocan los métodos mencionados. La secuencia de invocaciones se da al comenzar el toque en la pantalla (\textit{touchesBegan}), al desplazar el dedo sin levantarlo de la pantalla (\textit{touchesMoved}) y al finalizar el \textit{gesture} levantando el dedo de la pantalla (\textit{touchesEnded}). Un \textit{gesture} es una forma característica de tocar la pantalla. Ejemplos de \textit{gestures} existentes son: \textit{touch}, \textit{double touch}, \textit{multi touch} entre otros. Se obtienen entonces las coordenadas del punto de toque sobre la pantalla invocando el siguiente método:
 \begin{verbatim}
 [touch locationInView:self.view]
 \end{verbatim}
@@ -191,7 +192,7 @@ donde \textit{touch} es del tipo \textit{UITouch} y tiene propiedades que depend
                                        self.view.frame.size.height)];
 \end{verbatim}
 
-El método \textit{drawInRect} sirve para dibujar en forma 2D sobre \textit{UIViews} y fue utilizado extensivamente en este proyecto. Finalmente en el método \textit{touchesEnded} lo que se hace es dibujar una línea en el punto actual y sí mismo, generando un punto final al levantar el dedo de la pantalla. Otra característica interesante a mencionar respecto de la capacidad de responder a eventos \textit{touch} es el reconocimiento de \textit{gestures} que pueden ser nativos o incluso creados por el propio desarrollador. Un \textit{gesture} es una forma característica de tocar la pantalla. Ejemplos de \textit{gestures} existentes son: \textit{touch}, \textit{double touch}, \textit{multi touch} entre otros. De esta manera si se quiere reconocer un \textit{double touch} por ejemplo, se puede invocar el siguiente método:
+El método \textit{drawInRect} sirve para dibujar en forma 2D sobre \textit{UIViews} y fue utilizado extensivamente en este proyecto. Finalmente en el método \textit{touchesEnded} lo que se hace es dibujar una línea en el punto actual y sí mismo, generando un punto final al levantar el dedo de la pantalla. Otra característica interesante a mencionar respecto de la capacidad de responder a eventos \textit{touch} es el reconocimiento de \textit{gestures} que pueden ser nativos o incluso creados por el propio desarrollador. De esta manera si se quiere reconocer un \textit{double touch} por ejemplo, se puede invocar el siguiente método:
 \begin{verbatim}
 [touch tapCount];
 \end{verbatim}
@@ -204,7 +205,7 @@ A esta clase también se le agregó una \textit{IBAction} que genera un \textit{tw
 \end{verbatim}
 donde \textit{text} e \textit{img} son el texto del \textit{tweet} y la imagen adjunta. Finalmente se presenta la \textit{view} del \textit{TWTweetComposeViewController} y una vez finalizado se vuelve a la instancia \textit{DrawSign}.
 \subsection{TouchVista}
-Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar tan sólo una de ellas. Entonces lo que se hace en esos casos es agregar a la \textit{subview} en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama\~no. De esta manera al tocar la \textit{subview} se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente configura una bandera y configura lo siguienteo:
+Esta clase hereda de la clase \textit{UIView} y se creó para poder manejar eventos \textit{touch} en \textit{ViewControllers} que tienen varias \textit{subviews} y que interesa que se dispare un evento al tocar tan sólo una de ellas en determinada área de la pantalla. Entonces lo que se hace en esos casos es agregar a la \textit{subview} en cuestión una instancia de \textit{TouchVista} en forma transparente por encima y del mismo tama\~no. De esta manera al tocar la \textit{subview} se toca en realidad la instancia de \textit{TouchVista} y se invoca el método  \textit{touchesBegan}. Este método simplemente configura una bandera y configura lo siguiente:
 \begin{verbatim}
 [super touchesBegan:touches withEvent:event];
 \end{verbatim}
@@ -230,7 +231,7 @@ _viewController.videoView = vistaImg;
 
 Con esto se ajusta el atributo \textit{videoView} de la propiedad \textit{viewController} que pertenece a la clase \textit{app0100AppDelegate} y es instancia de la clase \textit{Isgl3dViewController}. \\
 
-En Xcode, si se quiere simplemente hacer una filmación, sacar fotos o acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Si lo que se desea es acceder a los píxeles de las imágenes capturadas, para luego por procesarlos en tiempo real, entonces la forma más indicada es usando el conocido \textit{framework} \textit{AVFoundation}. En la clase \textit{Isgl3dViewController}, en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation}. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
+Como fue mencionado en el capítulo \ref{chap: hwysw}, en Xcode, si se quiere simplemente hacer una filmación, sacar fotos o acceder a la galería de las fotos, se utiliza generalmente instancias de la clase \textit{UIImagePickerController}. Esta última clase se instancia en la aplicación en otras clases, como ser \textit{ImagenServerViewController}. Si lo que se desea es acceder a los píxeles de las imágenes capturadas, para luego poder procesarlos en tiempo real, entonces la forma más indicada es usando el conocido \textit{framework} \textit{AVFoundation}. En la clase \textit{Isgl3dViewController}, en el método \textit{viewDidLoad} está toda la configuración necesaria para la utilización de \textit{AVFoundation}. A continuación se muestra el código con sus comentarios sobre esta configuración.\\
 \begin{verbatim}
 /*Creamos y seteamos la captureSession*/
     self.session = [[AVCaptureSession alloc] init];
@@ -263,7 +264,6 @@ Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la
 \end{verbatim}
 
 Con esto lo que se hace es hacer una instancia de una \textit{Queue}, que representa una cola de procesamiento. De esta manera se puede hacer que ciertas tareas se alojen en esa instancia de cola, que lógicamente es otra distinta que la cola de procesamiento principal (\textit{mainQueue}). Esto mismo es lo que se hace en la segunda línea del código anterior, diciendo que el \textit{Delegate} de los datos de salida (\textit{frameOutput}) es la propia clase y que ese \textit{Delegate} se ejecute en la \textit{Queue} que se instanció en la línea anterior. De esta manera todo lo que sea invocado por el \textit{Delegate} en forma periódica será enviado a una cola distinta de la principal, pudiendo tener entonces, una cola de procesamiento separada de la cola de interfaz de usuario. Esto es algo ampliamente utilizado y es una recomendación de la documentación de iOS, pues se basa en los conceptos de tener la mayor atención posible a la interfaz de usuario, impidiendo en lo posible dejar al usuario esperando por algún eventual procesamiento que se esté llevando a cabo.\\
-
 Finalmente se da comienzo a la sesión:\\
 \begin{verbatim}
 [self.session startRunning];
@@ -277,11 +277,11 @@ donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene lo
 \section{QR}
 \label{sec: QR}
 \subsection{Identificadores QR. Una realidad}
-El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión a móvil internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
+El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión móvil a internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
 \subsection{?`Qué son realmente los QR?}
-Se puede decir que los Qs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
+Se puede decir que los QRs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
 
-En la Figura \ref{fig: implementacion_2} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos. Que podr´ian verse como el cuerpo del QR.\\
+En la Figura \ref{fig: implementacion_2} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos propiamente dicho, que podrían verse como el cuerpo del paquete.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/qrcode_overview4.eps}
@@ -299,10 +299,10 @@ Debido a que el centro del presente proyecto no fue la codificación y decodifica
 
 Entre todas las librerías que resuelven la decodificación, las llamadas ZXing y ZBar son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossin'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.\\
 
-Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector. Este consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate}. Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista previa de la cámara. Luego el protocolo se encarga de la captura y procesamiento del QR almacenando como resultado la información embebida en este en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
+Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector y finalmente se optó por utilizar esta librería para los fines de la aplicación. El lector del código de ejemplo consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate}. Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista previa de la cámara. Luego el protocolo se encarga de la captura y procesamiento del QR almacenando como resultado la información embebida en este en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
 %fuente http://code.google.com/p/zxing/
 \subsection{El QR en la aplicación}
-Para el caso particular de la aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). Los mismos fueron Pedro Figari, Joaquín Torres García y Juan Manuel Blanes. De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
+Para el caso particular de la aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor como se explicó en la sección \ref{fig: imagenServer}. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
 
 
 
@@ -315,48 +315,175 @@ La opción de usar los QR de una manera distinta ha comenzado a ser notoria en lo
 \label{fig: implementacion_3}
 \end{figure}
 %fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
+
+
 \section{Servidor}
-Si bien el desarrollo de la aplicación es un prototipo de una aplicación comercial y para tal caso no se manejan muchas imágenes y otros datos y registros, para lograr escalabilidad se hace imprescindible contar con un servior. Se pensó con el fin de almacenar toda aquella información relevante en cuanto a registro de obras (imagen, título y autor), descripciones de obras, audioguías, videos, modelos y animaciones para las realidades aumentadas asociadas y cualquier tipo de información que el museo quiera agregar y que por un tema de practicidad no se quiera almacenar dentro de la aplicación. En definitiva, almacenar toda esa información dentro de la aplicación quizá sea rentable para pocas obras, pero lo puede hacer inmanejable para un buen número de obras. Se pensó entonces en la instalación de un servidor que esté ubicado dentro del museo con el cual se tenga una conexión a través de una LAN de (54Mbps). Se aclara este punto pues, en caso de querer hacer un servidor remoto que tenga que ser accedido a través de internet, entonces baja notoriamente su performance, aunque funciona perfectamente.\\
+Si bien el desarrollo de la aplicación busca lograr un prototipo y no una aplicación comercial, por lo que la cantidad de imágenes y datos en general es peque\~na y por lo tanto puede ser almacenada dentro de la aplicación; por prolijidad y escalabilidad resulta imprescindible contar con un servidor, que guarde la toda la información necesaria y a la vez realice algo de procesamiento, siempre y cuando este no deba hacerse en tiempo real. Se decidió entonces, almacenar toda aquella información relevante en cuanto a registro de obras (imágenes, títulos, autores y descripciones), audioguías, videos, modelos, animaciones utilizadas para la realidad aumentada; en un servidor que hubo que implementar. El servidor debe estar hubicado dentro del museo y se debe poder interactuar con el por medio de la LAN ($54$ Mbps). Si bien es cierto que el servidor podría perfectamente ser remoto, con acceso por medio de internet, su desempe\~no temporal bajaría notoriamente.
+
 \subsection{Creando el servidor}
-Para la creación del servidor se buscó primeramente la alternativa de hacerlo sobre una máquina con sistema operativo con núcleo Linux, distribución Ubuntu. Luego también se buscó la posibilidad de tener el servidor corriendo sobre una plataforma Unix iOS. Para el segundo caso resultó incluso más sencilla que la primera dado que ya viene pensado por el sistema operativo el hecho de que funcione como servidor. A continuación se explica los pasos que se siguieron para implementar servidores en uno y otro sistema operativo.
-\subsubsection{Servidor iOS}
-redactar pasos...
+Para la creación del servidor se buscó primeramente la alternativa de hacerlo sobre una máquina con sistema operativo con núcleo Linux, distribución Ubuntu, ya que se creyó sería más sencillo. Luego de realizada esta tarea, se estudió la posibilidad de tener el servidor corriendo sobre una plataforma Mac OS X y de manera sorpresiva, en este segundo caso, el objetivo se logró de forma mucho más sencilla. A continuación se explica paso por paso como se implementaron los servidores en uno y otro sistema operativo.
+
 \subsubsection{Servidor LAMP}
-Se denota servidor LAMP por las siglas de Linux (Sistema Operativo), Apache (Servidor Web), MySQL (Gestor de base de datos), PHP/Perl/Python (lenguaje de programación).\\
-Se instaló entonces el servidor Web Apache, que tiene dentro de sus principales ventajas el hecho de ser multiplataforma, gratis y de código abierto. Para eso desde terminal se debe hacer lo siguiente:
+Se le llama LAMP a la combinación de todas las herramientas necesarias para lograr un servidor web: Linux (Sistema Operativo), Apache (Servidor Web), MySQL (Gestor de base de datos) y PHP/Perl/Python (lenguaje de programación). Se comenzó entonces por instalar un servidor web Apache, que tiene como principales ventajas el hecho de ser multiplataforma, gratis y de código abierto. La descarga y la instalación son inmediatas, se abre un terminar y se escribe:
 \begin{verbatim}
 sudo apt-get install apache2
 \end{verbatim}
-Con este comando se descarga el paquete \textit{apache2} y se instala. Una vez finalizada la instalación de este paquete ya se cuenta con un servidor y se puede verificar ingresando desde la máquina donde se instaló el servidor abriendo el navegador e ingresando a \textit{http://localhost} o equivalentemente a \textit{http://127.0.0.1} y de esta manera aparece la página por defecto cuyo contenido está dado por el archivo \textit{/var/www/index.html}.\\
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.3]{figs_implementacion/Itworks.eps}
-\caption{Impresión de pantalla al ingresar a http://localhost.}
-\label{fig: implementacion_4}
-\end{figure}
-Luego de tener instalado el Apache se procede a instalar el php de la siguiente manera
+Una vez finalizada la instalación de este paquete ya se cuenta con el servidor y mediante los siguientes comandos, uno puede dar inicio y fin al mismo:
+\begin{verbatim}
+sudo /etc/init.d/apache2 start
+sudo /etc/init.d/apache2 stop
+\end{verbatim}
+Luego de tener instalado Apache, se procede a instalar php:
 \begin{verbatim}
 sudo apt-get install php5
 \end{verbatim}
 %fuente http://www.guia-ubuntu.org/index.php?title=Servidor_web
-Para el caso particular de los intereses del servidor creado no fue necesario instalar MySQL. Entonces con esto, luego de reiniciar el servidor apache ya se tiene un servidor con intérpetre php instalado. A partir de este momento todo se reduce a comprender bien el lenguaje php y poder realizar peque?os módulos de programación que puedan tomar entradas, procesarlas y arrojar una salida. 
+Para este proyecto en particular, no fue necesario instalar MySQL.
 
-\subsection{Lenguaje php y principales scripts}
-Como fue dicho en la sección anterior para los intereses el servidor creado, lo fundamental es el hecho de poder recibir archivos o identificadores de los mismos, poder realizar un procesamiento en el servidor y devolver a la máquina cliente un archivo, mensaje o similar. Para esto se pasa a explicar algunos conceptos básicos de php. \\
-El análogo a un Hello World en php es así:
-\begin{verbatim}
-<?php 
-echo"Hola Mundo"; 
-?>
-\end{verbatim}
-Esto se guarda en un archivo que con extensión .php en la ruta por defecto donde se alojan los php /var/www/holamundo.php. De esta manera al ingresar a la dirección \textit{http://localhost/holamundo.php} se ve el print del texto.\\
-como leer un input y hacer algo (ejemplo suma.php)\\
-como hacer un acction.php ....\\
-MOU SIGUE ESTO...\\
+\subsubsection{Servidor en Mac OS X}
+A diferencia de otros sistemas operativos, Mac OS X cuenta por defecto con Apache y Php, no así con MySQL. Para tener un servidor entonces, sólo resta activarlos y si además se quiere contar con MySQL, es necesario instalarlo. La activación del servidor es un proceso muy simple, del cual existe bastante material disponible en internet.\\
 
+Una vez instalado el servidor en cualquiera de ambos sistemas operativos, se puede corroborar su correcto funcionamiento abriendo cualquier navegador web y digitando la dirección IP de la máquina en la que se instaló el servidor (si se esta en ella misma, se puede digital la dirección del bucle local). Se deberá ver la página que por defecto muestra el servidor, la de la figura \ref{fig: implementacion_4}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_implementacion/Itworks.eps}
+\caption{Página por defecto del servidor Apache.}
+\label{fig: implementacion_4}
+\end{figure}
+
+\subsubsection{Aspectos a mejorar del Servidor}
+Como se mencionó el servidor se implementó sin MySQL y tampoco con ningún otro gestor de base de datos, lo que hace que cualquier modificación sobre la información de los cuadros, ya sea en cuanto a imágenes, descripciones, audioguías o cualquier información que se quiera modificar dentro del servidor hace que quien administre el mismo tenga la necesidad de comprender en cierta medida cómo está implementado y tener cierto dominio técnico. Para el caso de aplicar esto en un museo y pensando que quienes administren la información de los cuadros sea gente encargada del museo no especializada en aspectos de software es deseable que la interfaz de gestión del servidor tenga un entorno más amigable. Esto es algo que se podría mejorar para un futuro en caso de querer continuar trabajando con el presente proyecto para darle más completitud y usabilidad.
+
+%--------------------------------------------------------------------------------------------------- |SIFT| -------------------------------------------------------------------------------------
 \section{SIFT}
 \label{sec: sift}
-\section{Incorporación de la realidad aumentada a la aplicación}
-\label{sec: realidad aumentada en la aplicación}
-asdfasdfasdf\\
 
+El algoritmo SIFT, acr\'onimo de ``Scale Invariant Feature Transform'',  es un algoritmo de visi\'on artificial \cite{Lowe:2004}, \cite{Lowe:1999}, que se encarga de extraer caracter\'isticas distintivas de las im\'agenes en escala de grises. Mediante estas, es posible luego reconocer dicha imagen dentro de una base de datos o incluso dentro de otra imagen mayor con otra cantidad de elementos en desorden. Estas caracter\'isticas son invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades. El algoritmo consta b\'asicamente mediante 4 pasos que se explicar\'an brevemente en secciones subsiguientes.\\ 
+
+SIFT fue utilizado en el presente proyecto para el reconocimiento de las obras contempladas por los usuarios, cuando estos deciden realizar el recorrido interactivo del museo de forma autom\'atica. El algoritmo corre en el servidor y el c\'odigo utilizado es una adaptaci\'on propia de la implementaci\'on en C que esta en la librer\'ia VL-Feat. VL-Feat es una librer\'ia gratis y en c\'odigo abierto que implementa algoritmos populares de visi\'on artificial que puede ser descargada de su p\'agina web oficial \cite{vlfeat12}. \\
+
+% ------------------------------------------------------------------------------------------------------------------------------------------
+\subsection{Detecci\'on de extremos en el espacio-escala}
+Se busca encontrar dentro del \textit{scale-space} (espacio-escala) de la imagen puntos caracter\'isticos; invariantes a la traslaci\'on, el escalado y la rotaci\'on de la misma. Adem\'as esos puntos deben ser m\'inimamente afectados por el ruido y peque\~nas distorsiones. Ser\'an los puntos extremos (m\'aximos o m\'inimos) obtenidos de las diferencias Gaussianas aplicadas al \textit{scale-space} de la imagen. El \textit{scale-space} de una imagen se define como una familia de im\'agenes $L(x,y,\sigma)$ que se obtienen de convolucionar un n\'ucleo Gaussiano variable en su desviaci\'on est\'andar $G(x,y,\sigma)$ con una imagen de entrada $I(x,y)$:
+\[
+L(x,y,\sigma) =  G(x,y,\sigma) * I(x,y)
+\]
+donde $*$ denota la convoluci\'on en $x$ e $y$, y adem\'as:
+\[
+G(x,y,\sigma) = \frac{1}{2\pi{\sigma}^2}{\rm e}^{-\frac{x^2 + y^2}{2\sigma^2}} 
+\]
+
+Una imagen diferencia de Gaussianas, $D(x,y,\sigma)$, se define entonoces de la siguiente manera:\\
+\[
+D(x,y,\sigma) = L(x,y,k\sigma) - L(x,y,\sigma) 
+\]
+con $k$ un factor multiplicativo constante.\\
+
+Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ de diferencias Gaussianas con la desviaci\'on est\'andar variando de manera creciante a lo largo de una octava (hasta obtener un $\sigma' = 2\sigma$). Para obtener $s$ intervalos enteros dentro de dicha octava el valor de $k$ en cada diferencia Gaussiana debe ser de $2^{\frac{1}{s}}$. Una vez calculadas las diferencias Gaussianas a lo largo de la octava, la imagen se submuestrea tomando 1 de cada 2 p\'ixeles en filas y columnas y se procede de la misma manera. La cantidad de octavas involucradas en el c\'alculo asi como la cantidad de diferencias Gaussianas calculadas por octava son un par\'ametro a determinar. En la figura \ref{fig:SIFT_1} se puede ver lo anterior explicado gr\'aficamente.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/SIFT_1.png}
+\caption{Para cada octava, la imagen original es convolucionada repetidamente con Gaussianas de desviaci\'on est\'andar variable para producir el \textit{scale-space} de la izquierda. Imagenes adyacentes del \textit{space-scale} son restadas paa lograr la diferencia de Gaussianas de la derecha. Despu\'es de cada octava, la imagen borrosa es submuestreada por un factor de dos y el proceso se repite. Figura tomada de \cite{Lowe:2004}.}
+\label{fig:SIFT_1}
+\end{figure}
+
+Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transicion entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver figura \ref{fig:SIFT_2}. \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/SIFT_2.png}
+\caption{M\'aximos y m\'inimos de las im\'agenes diferencia de Gaussianas son obtenidos comparando cada p\'ixeles con sus vecinos en la misma escala, y en las escalas adyacentes. Figura tomada de \cite{Lowe:2004}.}
+\label{fig:SIFT_2}
+\end{figure}
+% -------------------------------------------------------------------------------------------------------------------------------------------
+
+\subsection{Localizaci\'on exacta de puntos clave}
+La b\'usqueda de extremos en las diferencias de Gaussianas produce m\'ultilpes candidatos entre los que se encuentran puntos con poco contraste;  los cuales no son estables a cambios de iluminaci\'on y al ruido. Para quitarlos se procede de la siguente manera.\\
+
+Primero se realiza una expansi\'on de Taylor de grado 2 entorno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
+\begin{equation}
+D(\chi) = D + \frac{\partial D^T}{\partial \chi} \chi + \frac{1}{2}{\chi}^T\frac{\partial^2D}{\partial {\chi}^2} \chi
+\label{eq:1}
+\end{equation}
+donde $D$ y sus derivadas son evaluadas siempre en el punto en cuesti\'on y $\chi = (x,y,\sigma)^T$ es la posici\'on relativa al mismo. Derivando la aproximaci\'on anterior e igual\'andola a cero se obtiene:\\
+\begin{equation}
+\bar{\chi} = -\frac{\partial ^2D^{-1}}{\partial {\chi^2}}\frac{\partial D}{\partial \chi}
+\label{eq:2}
+\end{equation}
+Reemplazando (\ref{eq:2}) en (\ref{eq:1}) se obtiene el valor del m\'aximo local:\\
+\[
+D(\bar{\chi}) = D + \frac{1}{2}\frac{\partial D^T}{\partial \chi} \bar{\chi}
+\]
+Finalmente, si $\left| D(\bar{\chi}) \right|< 0.03$ el punto es eliminado de la lista de puntos clave; suponiendo que D toma valores entre 0 y 1.\\
+
+Adem\'as de quitar aquellos puntos con poco contraste, hay que quitar a los puntos candidatos que pertenecen a una l\'inea y no a una esquina. Para ello, sea $H$ la matriz Hessiana de $D(x,y,\sigma)$ evaluada en un punto extremo de las diferencias de Gaussianas determinado $(x_0,y_0,\sigma_0)$, se estar\'a en presencia de un borde (l\'inea) si sus valores propios $\alpha$ y $\beta$ son uno grande y el otro peque\~no. La anterior es equivalente a trabajar con los siguientes resultados:\\
+\[
+Traza(H) = \frac{\partial^2 D}{\partial x^2} + \frac{\partial^2 D}{\partial y^2} = \alpha +\beta
+\]
+\[
+Det(H) = \frac{\partial^2 D}{\partial x^2} \times \frac{\partial^2 D}{\partial y^2} - \left(\frac{\partial^2 D}{\partial x. \partial y} \right)^2= \alpha . \beta
+\]
+Sea la $\alpha = r.\beta$, la condici\'on se reduce a:\\
+\[
+\frac{Traza(H)^2}{Det(H)} < \frac{(r+1)^2}{r}
+\]
+Luego de varios experimentos, se propone un umbral de $r=10$. V\'ease que conforme aumenta la relaci\'on $r$ entre ambos valores propios tambi\'en lo hace la relaci\'on entre el cuadrado de la traza de la matriz Hessiana y su determinante.\\
+
+% -------------------------------------------------------------------------------------------------------------------------------------------
+\subsection{Asignaci\'on de orientaci\'on}
+Mediante la asignaci\'on de una orientaci\'on a cada punto de la imagen basada en caracter\'isticas locales de la misma, los puntos clave pueden ser descriptos relativos a estas orientaciones y de esta manera lograr caracter\'isticas invariantes a las rotaciones. Para cada punto clave obtenido $D (x_0,y_0,\sigma_0)$ , se busca su imagen borrosa correspondiente en el espacio escala $L (x,y,\sigma_0)$ y se determina el m\'odulo de su gradiente $m(x,y)$ y la fase del mismo $\theta (x,y)$ utilizando diferencias entre p\'ixeles:\\
+\[
+\begin{array}{c}
+m(x,y) = \sqrt{ (\Delta L_x)^2 + (\Delta L_y)^2} \\ 
+m(x,y) = \sqrt{[L(x+1,y) - L(x-1,y)]^2 + [L(x,y+1) - L(x,y-1)]^2}
+\end{array}
+\]
+\[
+\begin{array}{c}
+\theta(x,y) = tan^{-1}\left( \frac{\Delta L_y}{\Delta L_x}\right) \\ 
+\theta(x,y) = tan^{-1}\left( \frac{L(x,y+1) - L(x,y-1)}{L(x+1,y) - L(x-1,y)}\right) 
+\end{array}
+\]
+
+Para determinar de una forma fiel la orientaci\'on de cada punto clave, \'esta es determinada tomando en cuenta las direcciones de todos los puntos de la imagen dentro de cierto entorno al mismo. Se genera entonces un histograma de direcciones con valores que var\'ian de a 10 grados, ponderado por el m\'odulo del gradiente y una ventana Gaussiana circular centrada en el punto clave, de desviaci\'on est\'andar igual a 1.5 veces el valor del nivel del en cuesti\'on. Cada m\'aximo en el histograma corresponde a la direcci\'on dominante en el gradiente local y ser\'a la asignada al punto clave. Si existen en el histograma otros m\'aximos secundarios de valor mayor o igual al $80\%$ del m\'aximo principal, estos ser\'an utilizados para generar nuevos puntos clave con esa direcci\'on. S\'olo al $15\%$ de los puntos clave se les asigna m\'as de una direcci\'on.\\
+% -------------------------------------------------------------------------------------------------------------------------------------------
+\subsection{Descriptor de puntos clave}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_implementacion/SIFT_3.png}
+\caption{Izq.: la ventana Gaussiana pondera los valores de m\'odulo y fase en la vecindad de los puntos de inter\'es. Der.: los histogramas con 8 direcciones posibles realizados para cada subregi\'on. Figura tomada de \cite{Lowe:2004}.}
+\label{fig:SIFT_3}
+\end{figure}
+
+Hasta el momento, se le ha asignado a cada punto clave una escala, una locaci\'on y una orientaci\'on. El siguiente paso es determinar para cada punto clave un descriptor relativamente invariante a cambios de iluminaci\'on y afinidades, basado en el entorno del mismo.\\
+
+Una vez determinadas la magnitud y fase del gradiente entorno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcci\'ones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.\\
+
+En la figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\
+
+
+\subsection{Resumen}
+
+Se tiene entonces, para cada obra en cuesti\'on, una lista de 128 descriptores invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades; almacenada en el servidor. Cuando el usuario se encuentra frente a una obra determinada, este le toma una fotograf\'ia y esta es subida al servidor, en donde es procesada con SIFT y luego sus descriptores son comparados contra todos los descriptores de la base de datos, o al menos los correspondientes a la regi\'on del museo en donde el usuario se encuentra. La obra con m\'as descriptores en com\'un con la imagen en cuesti\'on ser\'a la que el usuario contempla.\\
+
+
+
+% ------------------------------------------------------------------------------------- |COMENTARIOS SOBRE LA IMPLEMENTACIÓN| ---------------------------------------------------------------------------
+\section{Comentarios finales sobre la implementación}
+Hasta el momento se mencionaron una cantidad de herramientas más que interesantes, que reunidas logran un recorrido interactivo para uno o más museos. Sin embargo, no se expusieron cuáles son las aplicaciones puntuales de realidad aumentada que se dijo se iba a hacer sobre las obras. Por otra parte, aunque dejando afuera aspectos estéticos y artísticos, en el capítulo \ref{chap: casoUso} se mostró como se resolvieron los aspectos técnicos necesarios para llevar a cabo una aplicación final real de realidad aumentada. Así entonces el generar un \textit{render} de un perro junto a un sillón (caso de uso ``modelos''), que claramente puede llegar a ser de muy poco interés para un museo, resuelve el mismo problema que si se quisiera generar un \textit{render} con el modelo de José Artigas; y el capturar un toque con un modelo de un cubo y así entonces actuar en consecuencia (caso de uso ``interactivo''), resuelve el mismo problema que animar al modelo de José Artigas si este es tocado. Lo que se tiene en este caso (y efectivamente se logró), es una escultura digital e interactiva de Artigas, que sólo puede visualizarse a través de un \textit{iPad}. Ver figura \ref{fig:artigases}.\\ 
+
+\begin{figure}[h!]
+\centering
+$
+\begin{array}{cc}
+\includegraphics[scale=0.2]{figs_implementacion/artigas_1.png} & \includegraphics[scale=0.2]{figs_implementacion/artigas_2.png} \\
+\includegraphics[scale=0.2]{figs_implementacion/artigas_3.png} & \includegraphics[scale=0.2]{figs_implementacion/artigas_4.png}
+\end{array}
+$
+\caption{Escultura digital e interactiva de Artigas vista desde ángulos distintos y en posiciones distintas.}
+\label{fig:artigases}
+\end{figure}
+
+
+Lo mismo sucede con el caso de uso ``video'', que proyecta un video sobre el marcador, que puede facilmente adaptarse para proyectar un video de interés sobre una obra, parte de ella o incluso un mapa con información del museo o cualquier otra cosa; logrando de esta manera una audioguía interactiva, donde el usuario puede, mientras se le habla de la obra, ver fotos y videos realacionados a la misma. A la fecha se están buscando aplicar, dentro de lo posible, los desafíos técnicos resueltos en cada uno de los casos de uso mencionados en el capítulo \ref{chap: casoUso} a diferentes implementaciones que puedan llegar a resultar atractivas para uno o varios museos. Las opciones son muchísimas y se cree que este proyecto deja una puerta abierta a seguir explorando ideas innovadoras.\\
