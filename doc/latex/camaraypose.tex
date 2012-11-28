@@ -1,5 +1,5 @@
 \chapter{Modelo de cámara y estimación de pose monocular}
-
+\label{chap: camypose}
 % !TEX encoding = IsoLatin
 
 %Definición de realidad aumentada, ejemplos. Breve mención de las cosas que se usan, modelo cámara pinhole, calibración, extracción de características(LSD,ORT), marcador utilizado.
@@ -13,11 +13,11 @@ Se le llama ``estimación de pose'' al proceso mediente el cual se calcula en qué
 
 Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
 
-En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle un en particular, el método de Zhang. 
+En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle en particular, el método de Zhang. 
 
-También se presentan los algoritmos mas utilizados para el problema de estimación de pose, entre ellos el DLT(Direct Linear Transform), P\textit{n}P(Perspective \textit{n} Point) y RANSAC(RANdom SAmple Consensus).
+También se presentan los algoritmos más utilizados para el problema de estimación de pose, entre ellos el DLT(Direct Linear Transform), P\textit{n}P(Perspective \textit{n} Point) y RANSAC(RANdom SAmple Consensus).
 
-Finalmente se presentan las diferentes manera que hay para representar los ángulos de la pose y los problemas que se presentan cuando se trabaja con estas representaciones. 
+Finalmente se presentan las diferentes maneras que hay para representar los ángulos de la pose y los problemas que se presentan cuando se trabaja con estas representaciones. 
 %\begin{figure}[h]
 %\centering
 %\includegraphics[scale=1.5]{../imagenes/EstPose/EstPose_1.eps}
@@ -33,7 +33,7 @@ Finalmente se presentan las diferentes manera que hay para representar los ángul
 
 \subsection{Fundamentos y definiciones}
 \label{sec:Fundamentos y definiciones}
-Este modelo consiste en un centro óptico O, en donde convergen todos los rayos de la proyección y un plano imagen en el cual la imagen es proyectada. Se define \textit{distancia focal} ($f$) como la distancia entre el centro óptico O y el cruce del eje óptico por el plano imagen (punto C). Ver Figura \ref{fig:CalibracionCamara}.  
+Este modelo consiste en un centro óptico O, en donde convergen todos los rayos de la proyección y un plano imagen en el cual la imagen es proyectada. Se define \textit{distancia focal} ($f$) como la distancia entre el centro óptico O y la intersección del eje óptico con el plano imagen (punto C). Ver Figura \ref{fig:CalibracionCamara}.  
 
 \begin{figure}[h!]
 \centering
@@ -42,14 +42,14 @@ Este modelo consiste en un centro óptico O, en donde convergen todos los rayos d
 \label{fig:CalibracionCamara}
 \end{figure}
 
-Para modelar el proceso de proyección (proceso en el que se asocia al punto \textbf{M} del mundo, un punto \textbf{m} en la imagen), es necesario referirse a varias transformaciones y varios ejes de coordenadas.
+Se llama proceso de pryección al proceso en el que se asocia al punto \textbf{M} del mundo, un punto \textbf{m} en la imagen. Para modelar el mismo es necesario referirse a varias transformaciones y varios ejes de coordenadas.
 \begin{itemize}
 \item \textit{Coordenadas del mundo}: son las coordenadas que describen la posición 3D del punto \textbf{M} respecto de los ejes del mundo $(u,v,w)$. La elección de los ejes del mundo es arbitraria.
 \item \textit{Coordenadas de la cámara}: son las coordenadas que describen la posición del punto \textbf{M} respecto de los ejes de la cámara $(X,Y,Z)$. $i$, $j$ y $k$ son los versores de este eje de coordenadas.
 \item \textit{Coordenadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m} respecto del centro del plano imagen, C. Los ejes de este sistema de coordenadas son $(x,y)$.
 \item \textit{Coordenadas normalizadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del eje de coordenadas $(x',y')$ situado en la esquina superior izquierda del plano imagen.
 \end{itemize}
-La transformación que lleva al punto \textbf{M}, expresado respecto de los ejes del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(X, Y, Z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(x',y')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Al conjunto de valores que definen esta transformación, se le llama ``{parámetros intrínsecos'' de la cámara. La segunda, es la transformación que lleva de expresar a un punto respecto de los ejes del mundo $(u,v,w)$, a los ejes de la cámara $(X ,Y, Z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado ``parámetros extrínsecos'' de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
+La transformación que lleva al punto \textbf{M}, expresado respecto de los ejes del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(X, Y, Z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(x',y')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Al conjunto de valores que definen esta transformación, se le llama ``{parámetros intrínsecos'' de la cámara. La segunda, es la transformación que lleva de expresar un punto respecto de los ejes del mundo $(u,v,w)$, a ser expresado según los ejes de la cámara $(X ,Y, Z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado ``parámetros extrínsecos'' de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
 De lo anterior se concluye rápidamente que si se le llama $H$ a la matriz proyección total, tal que:
 \[
 m = H.M,
@@ -69,7 +69,7 @@ donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsec
 \item \textbf{Parámetros intrínsecos:} parámetros propios de la cámara. Dependen de su geometría interna y de su óptica.
 \begin{itemize}
 \item \underline{Punto principal (C = [$x'_C,y'_C$]):} es el punto intersección entre el eje óptico y el plano imagen. Las coordenadas de este punto vienen dadas en píxeles y son expresadas respecto del sistema normalizado de la imagen.
-\item \underline{Factores de conversión píxel-milímetros ($d_x,d_y$):} indican el número de píxeles por milímetro que utiliza la cámara en las direcciones $x$ y $y$ respectivamente.
+\item \underline{Factores de conversión píxel-milímetros ($d_x,d_y$):} indican el número de píxeles por milímetro que utiliza la cámara en las direcciones $x$ e $y$ respectivamente.
 \item \underline{Distancia focal (f):} distancia entre el centro óptico (\textbf{O}) y el punto principal (\textbf{C}). Su unidad es el milímetro.
 \item \underline{Factor de proporción (s):} indica la proporción entre las dimensiones horizontal y vertical de un píxel.   
 \end{itemize}
@@ -79,7 +79,7 @@ donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsec
 \subsection{Matriz de proyección}
 \label{sec:Matriz de proyección}
 
-En la sección anterior se vió que es posible hallar una ``matriz de proyección'' H que dependa tanto de los parámetros intrínsecos de la cámara como se sus parámetros extrínsecos:
+En la sección anterior se vio que es posible hallar una ``matriz de proyección'' H que dependa tanto de los parámetros intrínsecos de la cámara como de sus parámetros extrínsecos:
 \[
 m = H.M
 \] 
@@ -87,7 +87,7 @@ donde \textbf{M} y \textbf{m} son los puntos ya definidos y vienen expresados en
 Para determinar la forma de la matriz de proyección se estudia cómo se relacionan las coordenadas de \textbf{M} con las coordenads de \textbf{m}; para hallar esta relación se debe analizar cada transformación, entre los sistemas de coordenadas mencionados con anterioridad, por separado.\\
 \begin{itemize}
 \item \textbf{Proyección 3D - 2D:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas en el sistema de coordenadas de la imagen $(x_0,y_0,s_0)$:\\
-Se desprende de la imagen \ref{fig:CalibracionCamara} y algo de geometría proyectiva la siguiente relación entre las coordenadas en cuestión y la distancia focal (f):
+Se desprende de la imagen \ref{fig:CalibracionCamara} y algo de trigonometría la siguiente relación entre las coordenadas en cuestión y la distancia focal (f):
 \[
 \frac{f}{Z_0} = \frac{x_0}{X_0} = \frac{y_0}{Y_0}
 \]
@@ -150,8 +150,8 @@ s'_0
 \end{array} \right)
 = 
 \left( \begin{array}{ccc}
-d_x & 0 & x'_P \\ 
-0 & d_y & y'_P \\
+d_x & 0 & x'_C \\ 
+0 & d_y & y'_C \\
 0 & 0 & 1
 \end{array} \right)
 \left( \begin{array}{c}
@@ -160,7 +160,7 @@ y_0 \\
 1
 \end{array} \right)
 \]
-\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0y'_0,s'_0)$:\\
+\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,1)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0y'_0,s'_0)$:\\
 Se obtiene combinando las dos últimas transformaciones. Nótese que como ya se aclaró, depende únicamente de parámetros propios de la construcción de la cámara:
 \[
 I = 
@@ -183,7 +183,7 @@ d_x.f & s & x'_C & 0\\
 \]
 
 \item \textbf{Matriz de parámetros extrínsecos $(E)$:}  de las coordenadas homogéneas del punto \textbf{M} expresadas respecto del sistema de coordenadas del mundo $(U_0, V_0, W_0, P_0)$, a las coordenadas homogéneas de él mismo pero expresadas respecto del sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$:\\
-Se obtiene de estimar la pose de la cámara respecto de los ejes del mundo y es la combinación de, primero una rotación $R$, y luego una traslación $T$. Se obtiene entonces la siguiente representación matricial:\\
+Se obtiene de estimar la pose de la cámara respecto de los ejes del mundo y es la combinación de, primero una rotación $R_{3x3}$, y luego una traslación $T_{3x1}$. Se obtiene entonces la siguiente representación matricial:\\
 \[
 \left( \begin{array}{c}
 X_0 \\
@@ -265,8 +265,8 @@ y_0
 donde $r$ es la distancia radial $\sqrt{x_0^2 + y_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles, respecto del sistema de coordenadas normalizadas de la imagen; se obtiene lo siguiente:
 \[
 \begin{array}{c}
-\tilde{u_0}' = x_P' + L(r)(x_0' - x_C') \\
-\tilde{v_0}' = y_P' + L(r)(y_0' - y_C') 
+\tilde{u_0}' = x_C' + L(r)(x_0' - x_C') \\
+\tilde{v_0}' = y_C' + L(r)(y_0' - y_C') 
 \end{array}
 \]
 donde $(\tilde{x_0}',\tilde{y_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(x_0',y_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(x_C',y_C')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(x_0' - x_C')^2 +(y_0' - y_C')^2 }$.\\
@@ -279,7 +279,7 @@ La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. U
 \section{Métodos para la calibración de cámara}
 \label{sec:Metodos de calibracion}
 
-Como se vió algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara; sin embargo, los tres algoritmos, basados en modelos planos, más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dió resultados muy buenos. Por eso, se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.\\
+Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara; sin embargo, los tres algoritmos, basados en modelos planos, más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso, se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.\\
 
 \begin{figure}[h!]
 \centering
@@ -390,7 +390,7 @@ v_{12}^T \\
 \]
 Utilizando $n$ fotografías distintas de la imagen patrón, y por lo tanto $n$ homografías distintas se obtiene una matriz V de tama\~no $2.n\times 6$. Es sabido que si $n\geq 3$, el sistema matricial anterior tendrá una solución $b$ única, que varía según cierto factor de escala. Sin embargo, si $n=2$, es posible imponer la condición $s=0$ y así también calcular al vector $b$ de forma única, sin mayores problemas.\\
 
-Una vez estimado $b$ es posible recontruír la matriz de parámetros intrínsecos I, para luego utilizando I y las homografías H obtener los parámetros extrínsecos de la cámara para cada fotografía utilizada para la calibración.\\ 
+Una vez estimado $b$ es posible recontruir la matriz de parámetros intrínsecos I, para luego utilizando I y las homografías H obtener los parámetros extrínsecos de la cámara para cada fotografía utilizada para la calibración.\\ 
 
 El artículo de Zhang afirma que la solución obtenida hasta el momento no es del todo buena, pues se obtuvo minimizando una distancia algebraica y eso no tiene mucho sentido. Lo que se hace entonces es, utilizando las $n$ fotografías tomadas para la calibración y los $k$ puntos seleccionados en cada una de ellas, minimizar la siguiente ecuación:
 \[
@@ -408,7 +408,7 @@ Existen varios algoritmos de estimación de pose, a continuación se presentan alg
 \subsection{\textit{DLT}(\textit{D}irect \textit{L}inear \textit{T}ransform)}
 Este método sirve para calcular la matriz \textbf{H} en la cual están implícitos los parámetros intrínsecos y extrínsecos. Si se conocen los parámetros intrínsecos se pueden despejar la matriz \textbf{E} con la información de la pose. 
 
-Como se vió anteriormente
+Como se vio anteriormente
 
 \[
 \left( \begin{array}{c}
@@ -432,7 +432,7 @@ P_i
 \end{array} \right)
 \] 
 
-Por comodidad se utiliza la notación de coordenadas de la imagen para expresar las coordenadas normalizadas en la imagen. Se debe notar que la matriz \textbf{H}  puede ser multiplicada por un factor distinto de cero sin alterar el resultado de la proyección, esto se debe a que se trabaja con coordenadas homogéneas. Por lo tanto lo que define la proyección no son los elementos de \textbf{H} sino la relación entre los elementos. \textbf{H} tiene 12 elementos, por lo tanto hay 11 relaciones entre los elementos, entonces \textbf{H} tiene 11 grados de libertad.
+Por comodidad a partir de ahora cuando se refiera a puntos 2D $(x_i,y_i)$ serán expresados siempre desde el eje de coordenadas normalizadas de la imagen. Se debe notar que la matriz \textbf{H}  puede ser multiplicada por un factor distinto de cero sin alterar el resultado de la proyección, esto se debe a que se trabaja con coordenadas homogéneas. Por lo tanto lo que define la proyección no son los elementos de \textbf{H} sino la relación entre todos los elementos (excepto el de factor de escala) y el elemento que da el factor de escala. Así entonces \textbf{H} tiene 12 elementos pero solamente 11 grados de libertad.
  
 Cada correspondencia $M_i \leftrightarrow m_i$ aporta dos ecuaciones linealmente independientes con los elementos de la matriz \textbf{H}, $\textbf{H}_{ij}$ como variables
 \begin{equation*}
@@ -443,7 +443,7 @@ Cada correspondencia $M_i \leftrightarrow m_i$ aporta dos ecuaciones linealmente
 \end{split}
 \end{equation*}
 La ecuación para $s_i$ se puede obtener como combinación lineal de las de $x_i$ y $y _i$, por eso no se tiene en cuenta. 
-Estas ecuaciones se puede reescribir como $\textbf{A}h=0$ donde 
+Estas ecuaciones se pueden reescribir como $\textbf{A}h=0$ donde 
 \begin{equation*}
 h = \left(
 \begin{array}{cccccccccccc}
@@ -467,12 +467,12 @@ X_{n-1} & Y_{n-1} & Z_{n-1} & 1 & 0 & 0 & 0 & 0 & -x_{n-1}X_{n-1} & -x_{n-1}Y_{n
 \right)
 \normalsize
 \end{equation*}
-La transformación obtenida la matriz \textbf{H} tiene 11 grados de libertad como mencionó anteriormente, por lo tanto el rango de la matriz \textbf{A} es 11. Se realiza la descomposición SVD de la matriz \textbf{A}, el vector propio del valor singular de \textbf{A} mas chico es la base del núcleo de \textbf{A}. Entonces se tiene que $h$ es este vector a menos de una constante.  Una vez que se tiene $h$ se puede armar la matriz \textbf{H}. Luego se tiene que 
+La transformación obtenida la matriz \textbf{H} tiene 11 grados de libertad como mencionó anteriormente, por lo tanto el rango de la matriz \textbf{A} es 11. Se realiza la descomposición SVD de la matriz \textbf{A}, el vector propio del valor singular de \textbf{A} con valor menor es la base del núcleo de \textbf{A}. Entonces se tiene que $h$ es este vector a menos de una constante.  Una vez que se tiene $h$ se puede armar la matriz \textbf{H}. Luego se tiene que 
 $$\textbf{E} = \textbf{I}^{-1}\textbf{H}$$
 
 \subsection{\textit{PnP} (\textit{P}erspective-\textit{n}-\textit{P}oint)}
-Si se cuenta con los parametros intrínsecos, se puede utilizar un enfoque que se centre en calcular solamente la pose de la cámara. Dependiendo de la cantidad de correspondencias que se tienen entre la imagen y el modelo es posible obtener un número finito de soluciones de la pose. 
-Si se tienen 1 o 2 correspondencias el problema tiene infinitas soluciones. Si se tienen 3 correspondencias(P3P) se obtienen hasta 4 posibles soluciones. Para 4 o mas correspondencias se obtiene una única solución, siempre que los puntos no estén alineados.
+Si se cuenta con los parámetros intrínsecos, se puede utilizar un enfoque que se centre en calcular solamente la pose de la cámara. Dependiendo de la cantidad de correspondencias que se tienen entre la imagen y el modelo es posible obtener un número finito de soluciones de la pose. 
+Si se tienen 1 o 2 correspondencias el problema tiene infinitas soluciones. Si se tienen 3 correspondencias(P3P) se obtienen hasta 4 posibles soluciones. Para 4 o más correspondencias se obtiene una única solución, siempre que los puntos no estén alineados.
 La idea detrás de este algoritmo es la siguiente: 
 \begin{itemize}
 \item[$\bullet$] A partir de los puntos de la imagen $m_i$ y conociendo la distancia focal $f$ es posible calcular los versores $j_i$. 
@@ -487,7 +487,7 @@ $$
 \item[$\bullet$]  Una vez que se calculan las distancias $l_i$, los puntos $\textbf{M}_i$ se expresan en el sistema de coordenadas de la cámara como $\textbf{M}^\textbf{C}_i$. 
 \item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo a el sistema de coordenadas de la cámara.
 \end{itemize}
-En la bibliografía \citep{Fischler} y \citep{Haralick} se encuentran varios métodos para resolver numéricamente el problema. 
+En la bibliografía \cite{Fischler} y \cite{Haralick} se encuentran varios métodos para resolver numéricamente el problema. 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{figs_camaraypose/pnp}
@@ -495,8 +495,10 @@ En la bibliografía \citep{Fischler} y \citep{Haralick} se encuentran varios méto
 \label{fig:pnp}
 \end{figure}
 
-\subsection{RANSAC(RANdom SAmple Consensus)}\cite{Fischler}
-Este es un algoritmo iterativo utilizado para estimar los parámetros de un modelo matemático de un conjunto de datos que contiene \textit{outliers}, en particular se puede utilizar para el problema de estimación de pose cuando no se tienen las correspondencias entre puntos detectados y puntos del modelo. 
+
+\subsection{RANSAC(RANdom SAmple Consensus)}
+Este es un algoritmo iterativo utilizado para estimar los parámetros de un modelo matemático de un conjunto de datos que contiene \textit{outliers} (datos fuera del modelo). En particular se puede utilizar para el problema de estimación de pose cuando no se tienen las correspondencias entre puntos detectados y puntos del modelo. 
+
 A continuación se presenta el algoritmo:
 \begin{itemize}
 \item[(1)] Dado un modelo que requiere un mínimo de \textit{n} puntos para determinar sus parámetros, y un conjunto de datos \textbf{P} tal que el número de puntos en \textbf{P} es mayor que \textit{n}, se sortea un subconjunto $S_1$ de \textit{n} puntos de \textbf{P} para instanciar el modelo. Con el modelo instanciado $\textbf{M}_1$ se determina el subconjunto de decisión $S_1^*$ de puntos de \textbf{P} que están a menos de una distancia \textit{t} de $\textbf{M}_1$.
@@ -507,18 +509,15 @@ A continuación se presenta el algoritmo:
 \end{itemize}
 Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo a estimar y a la probabilidad de encontrar un \textit{outlier} en el conjunto de datos . 
 
-\subsection{POSIT}
-Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener mas de cuatro correspondencias entre punto del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentado este fue el que se decidió utilizar, el desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
-Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una version que trabaja resuelve el caso en que todos los puntos del modelo estén en un mismo plano. Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con lineas.
 
-La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{ch: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no esta presentada en la bibliografía y dió buenos resultados.  
-Otro argumento a favor es que se contaba con la implemetaciones de algunas variantes. 
-De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas solo se contó con el artículo\cite{SoftLine}.  
+ \subsection{POSIT}
+Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
+Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
 
-
+La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{ch: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
-Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}, dependiendo de la aplicación puede ser mas útil utilizar las diferentes representaciones. 
+Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
 
 \subsection{Representación matricial}
 Esta representación es la que se introdujo en \ref{sec:Matriz de proyección}. En esta matriz las filas corresponden a los versores del sistema de coordenadas de la cámara expresados en las coordenadas del mundo. Se puede expresar como
@@ -561,7 +560,7 @@ Desarrollando el producto se tiene que
 \]
 
 \subsubsection{Orden de rotaciones}
-Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en que orden se aplican las rotaciones. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig: mono3}.
+Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en qué orden se aplican las rotaciones, pues no es una transformación conmutativa. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig: mono3}.
 
 \begin{figure}[h!]\label{fig: mono3}
 \centering
@@ -579,7 +578,7 @@ Como $\sin(\theta)=\sin(\pi -\theta)$, puede haber dos posibles valores de $\the
 \begin{equation}\label{eq_1}
 \begin{split}
 \theta_1 &= -\arcsin(\textbf{R}_{31}) \\
-\theta_2 &= \pi - \theta_1 = \pi -+ \arcsin(\textbf{R}_{31})
+\theta_2 &= \pi - \theta_1 = \pi + \arcsin(\textbf{R}_{31})
 \end{split}
 \end{equation}
 
@@ -650,7 +649,7 @@ La gran desventaja que presenta la representación de la rotación mediante ángulo
 \]
 Esto es una rotación entorno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi$
 
-Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque esta mas arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que esta por debajo de $z$ en la jerarquía. 
+Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y por otra parte también se hace otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final, partiendo de los ejes alineados para una y otra rotacioón del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque está más arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que está por debajo de $z$ en la jerarquía. 
 
 \begin{figure}\label{fig: gimbal}
         \centering
@@ -667,11 +666,11 @@ Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rot
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_camaraypose/gimbal60z}
                 \label{fig: gimbal60z}}
-         \caption{Los ejes rojo, verde y azul, son los ejes $x$, $y$ y $z$. En \subref{fig: gimbal1} se ve la posición inicial. En \subref{fig: gimbal90y} se puede ver el eje $y$ rotado $90^\circ$. En \subref{fig: gimbal60x} se ve la rotación según $x$ de $60^\circ$. En \subref{fig: gimbal60z} se ve la rotación según $z$ de $-60^\circ$ }
+         \caption{Los ejes rojo, verde y azul, son los ejes $x$, $y$ y $z$. En \subref{fig: gimbal1} se ve la posición inicial. En \subref{fig: gimbal90y} se puede ver el eje $y$ rotado $90^\circ$. En \subref{fig: gimbal60x} se ve la rotación según $x$ de $60^\circ$ respecto a la posición de \subref{fig: gimbal90y}. En \subref{fig: gimbal60z} se ve la rotación según $z$ de $-60^\circ$ respecto a la posición de \subref{fig: gimbal90y}.}
 \end{figure}
 
 \subsection{Cuaternios}
-Los cuaternios son una extensión a los números reales, son generados a?adiendo las unidades imaginarias \textit{i}, \textit{j} y \textit{k}. Se cumple que $i^2 = j^2  = k^2 = -1$. Un número cuaternio $q$ se expresa como $q = a + bi + cj +dk$. También puede ser expresado como un escalar y un vector de 3 elementos $(a,\textbf{v})$. Una rotación alrededor del versor $\omega$ un ángulo $\theta$ se puede expresar como el número cuaternio unidad
+Los cuaternios son una extensión a los números reales, son generados a\~nadiendo las unidades imaginarias \textit{i}, \textit{j} y \textit{k}. Se cumple que $i^2 = j^2  = k^2 = -1$. Un número cuaternio $q$ se expresa como $q = a + bi + cj +dk$. También puede ser expresado como un escalar y un vector de 3 elementos $(a,\textbf{v})$. Una rotación alrededor del versor $\omega$ un ángulo $\theta$ se puede expresar como el número cuaternio unidad
 $$ q = \left(\cos\left(\frac{1}{2}\theta\right),\omega\sin\left(\frac{1}{2}\theta\right)\right)$$
 
 Para rotar un punto 3D \textbf{M}, se representa como un cuaternio $p = (0,\textbf{M})$ y el punto $p'$ rotado se calcula como 
