@@ -1,6 +1,42 @@
 \chapter{Filtrado de Kalman para estimación de pose}
 
+
 \section{Kalman clásico}
+
+Sea $\mathbf{x}_k$ un vector de estados de dimensión $p$ que evoluciona de acuerdo a la ecuación
+\begin{equation}
+ \mathbf{x}_{k+1}=\mathbf{F}_k\mathbf{x}_k + \mathbf{w}_k
+\end{equation}
+donde $\mathbf{F}_k$ es la matriz de transición de estados de dimensiones $p \times p$ y $\mathbf{w}_k$ es un vector de tamaño $p$ de procesos de ruido que se modela como $\mathbf{w}_k\sim \mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ en donde $\mathbf{Q}_k)$ es la matriz de covarianza de tamaño $p\times p$ \cite{Hayes}.
+
+Adicionalmente se tiene el vector de observaciones $\mathbf{y}_k$ formado como 
+\begin{equation}
+ \mathbf{y}_k=\mathbf{H}_k\mathbf{x}_k + \mathbf{v}_k
+\end{equation}
+donde $\mathbf{y}_k$ es de largo $q$, $\mathbf{H}_k$ es de tamaño $q\times q$ y $\mathbf{v}_k$ es un vector de ruido que se modela como $\mathbf{v}_k\sim \mathcal{N}(\mathbf{0},\mathbf{R}_k)$ siendo $\mathbf{R}_k$ la matriz de covarianza de tamaño $q\times q$.
+
+Se tiene entonces un proceso representado por un modelo en variables de estado como
+\begin{equation*}
+	\begin{cases}
+	\mathbf{x}_{k+1}=\mathbf{F}_k\mathbf{x}_k + \mathbf{w}_k\\
+	\mathbf{y}_k=\mathbf{H}_k\mathbf{x}_k + \mathbf{v}_k
+	\end{cases}
+\end{equation*}
+
+El estado del filtro se representa por dos variables, la estimación del estado \emph{a posteriori} en el instante $k$, $\hat{\mathbf{x}}_{k|k}$, y la matriz de covarianza del error \emph{a posteriori}, $\mathbf{P}_{k|k}$.
+
+El filtrado parte de una condición inicial $\hat{\mathbf{x}}_{0|0}$ y $\mathbf{P}_{0|0}$. El proceso de filtrado se realiza iterativamente en dos etapas, una de predicción y una de actualización:
+\begin{itemize}
+\item \textbf{Predicción}
+\[ \hat{\mathbf{x}}_{k|k-1} = \mathbf{F}_{k}\hat{\mathbf{x}}_{k-1|k-1} \]
+\[ \mathbf{P}_{k|k-1} =  \mathbf{F}_{k} \mathbf{P}_{k-1|k-1} \mathbf{F}_{k}^{\text{T}} + \mathbf{Q}_{k}  \]
+\item \textbf{Actualización}
+\begin{eqnarray}
+	\mathbf{K}_k = &&   \mathbf{P}_{k|k-1}\mathbf{H}_k^\text{T}[\mathbf{H}_k \mathbf{P}_{k|k-1} \mathbf{H}_k^\text{T} + \mathbf{R}_k]^{-1} \nonumber\\
+\hat{\mathbf{x}}_{k|k} = &&   \hat{\mathbf{x}}_{k|k-1} + \mathbf{K}_k[\mathbf{y}_k - \mathbf{H}_k\hat{\mathbf{x}}_{k|k-1}] \nonumber\\
+	\mathbf{P}_{k|k} = &&   (\mathbf{I} - \mathbf{K}_k \mathbf{H}_k) \mathbf{P}_{k|k-1} \nonumber
+\end{eqnarray}
+\end{itemize}
 
 \section{Kalman con sensores}
 
