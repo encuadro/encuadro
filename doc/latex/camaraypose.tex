@@ -9,11 +9,15 @@
 \section{Introducción}
 % ------------------------------------------------------ INTRODUCCION: DEFINICION DE ESTIMACION DE POSE -------------------------------------------------------
 
-Se le llama ``estimación de pose'' al proceso mediente el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama ``ejes del mundo''. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.  Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.\\
+Se le llama ``estimación de pose'' al proceso mediente el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama ``ejes del mundo''. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.  Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.
 
-Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.\\
+Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
 
-En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle un en particular, el método de Zhang. \textbf{JUANI ACÁ TENES QUE PONER VOS QUÉ MÁS VA A TENER ESTE CAPÍTULO.} 
+En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle un en particular, el método de Zhang. 
+
+También se presentan los algoritmos mas utilizados para el problema de estimación de pose, entre ellos el DLT(Direct Linear Transform), P\textit{n}P(Perspective \textit{n} Point) y RANSAC(RANdom SAmple Consensus).
+
+Finalmente se presentan las diferentes manera que hay para representar los ángulos de la pose y los problemas que se presentan cuando se trabaja con estas representaciones. 
 %\begin{figure}[h]
 %\centering
 %\includegraphics[scale=1.5]{../imagenes/EstPose/EstPose_1.eps}
@@ -40,12 +44,12 @@ Este modelo consiste en un centro óptico O, en donde convergen todos los rayos d
 
 Para modelar el proceso de proyección (proceso en el que se asocia al punto \textbf{M} del mundo, un punto \textbf{m} en la imagen), es necesario referirse a varias transformaciones y varios ejes de coordenadas.
 \begin{itemize}
-\item \textit{Coordenadas del mundo}: son las coordenadas que describen la posición 3D del punto \textbf{M} respecto de los ejes del mundo $(x,y,z)$. La elección de los ejes del mundo es arbitraria.
-\item \textit{Coordenadas de la cámara}: son las coordenadas que describen la posición del punto \textbf{M} respecto de los ejes de la cámara $(u,v,w)$.
+\item \textit{Coordenadas del mundo}: son las coordenadas que describen la posición 3D del punto \textbf{M} respecto de los ejes del mundo $(u,v,w)$. La elección de los ejes del mundo es arbitraria.
+\item \textit{Coordenadas de la cámara}: son las coordenadas que describen la posición del punto \textbf{M} respecto de los ejes de la cámara $(X,Y,Z)$. $i$, $j$ y $k$ son los versores de este eje de coordenadas.
 \item \textit{Coordenadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m} respecto del centro del plano imagen, C. Los ejes de este sistema de coordenadas son $(x,y)$.
 \item \textit{Coordenadas normalizadas de la imagen}: son las coordenadas que describen la posición del punto 2D, \textbf{m}, respecto del eje de coordenadas $(x',y')$ situado en la esquina superior izquierda del plano imagen.
 \end{itemize}
-La transformación que lleva al punto \textbf{M}, expresado respecto de los ejes del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(x,y,z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(x',y')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Al conjunto de valores que definen esta transformación, se le llama ``{parámetros intrínsecos'' de la cámara. La segunda, es la transformación que lleva de expresar a un punto respecto de los ejes del mundo $(u,v,w)$, a los ejes de la cámara $(x,y,z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado ``parámetros extrínsecos'' de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
+La transformación que lleva al punto \textbf{M}, expresado respecto de los ejes del mundo, al punto \textbf{m}, expresado respecto del sistema de coordenadas normalizadas de la imagen, se puede ver como la composición de dos transformaciones menores. La primera, es la que realiza la proyección que transforma a un punto definido respecto del sistema de coordenadas de la cámara $(X, Y, Z)$ en otro punto sobre el plano imagen expresado respecto del sistema de coordenadas normalizadas de la imagen $(x',y')$. Véase que una vez calculada esta transformación, es una constante característica de cada cámara. Al conjunto de valores que definen esta transformación, se le llama ``{parámetros intrínsecos'' de la cámara. La segunda, es la transformación que lleva de expresar a un punto respecto de los ejes del mundo $(u,v,w)$, a los ejes de la cámara $(X ,Y, Z)$. Esta última transformación varía conforme se mueve la cámara (respecto de los ejes del mundo) y el conjunto de valores que la definen es denominado ``parámetros extrínsecos'' de la cámara. Del cálculo de estos parámetros es que se obtiene la estimación de la pose de la cámara.\\
 De lo anterior se concluye rápidamente que si se le llama $H$ a la matriz proyección total, tal que:
 \[
 m = H.M,
@@ -60,13 +64,13 @@ donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsec
 \item \textbf{Parámetros extrínsecos:} pose de la cámara.
 \begin{itemize}
 \item \underline{Traslación:} ubicación del centro óptico de la cámara respecto de los ejes del mundo.
-\item \underline{Rotación:} rotación del sistema de coordenadas de la cámara $(x,y,z)$, respecto de los ejes del mundo.
+\item \underline{Rotación:} rotación del sistema de coordenadas de la cámara $(X ,Y, Z)$, respecto de los ejes del mundo.
 \end{itemize}
 \item \textbf{Parámetros intrínsecos:} parámetros propios de la cámara. Dependen de su geometría interna y de su óptica.
 \begin{itemize}
 \item \underline{Punto principal (C = [$x'_C,y'_C$]):} es el punto intersección entre el eje óptico y el plano imagen. Las coordenadas de este punto vienen dadas en píxeles y son expresadas respecto del sistema normalizado de la imagen.
 \item \underline{Factores de conversión píxel-milímetros ($d_x,d_y$):} indican el número de píxeles por milímetro que utiliza la cámara en las direcciones $x$ y $y$ respectivamente.
-\item \underline{Distancia focal (f):} distancia entre el centro óptico (\textbf{O}) y el punto principa (\textbf{C}). Su unidad es el milímetro.
+\item \underline{Distancia focal (f):} distancia entre el centro óptico (\textbf{O}) y el punto principal (\textbf{C}). Su unidad es el milímetro.
 \item \underline{Factor de proporción (s):} indica la proporción entre las dimensiones horizontal y vertical de un píxel.   
 \end{itemize}
 \end{itemize}
@@ -130,7 +134,7 @@ Z_0 \\
 \end{figure}
 
 
-Se les suma, a las coordenadas de \textbf{m} respecto del sistema de la imagen, la posición del punto C respecto del sistema normalizado de la imgen $(x'_C,y'_C)$. Las coordenadas de \textbf{m} dejan de ser expresadas en milímetros para ser expresadas en píxeles. Aparecen los factores de conversión $d_x$ y $d_y$:
+Se les suma, a las coordenadas de \textbf{m} respecto del sistema de la imagen, la posición del punto C respecto del sistema normalizado de la imagen $(x'_C,y'_C)$. Las coordenadas de \textbf{m} dejan de ser expresadas en milímetros para ser expresadas en píxeles. Aparecen los factores de conversión $d_x$ y $d_y$:
 \[
 \begin{array}{c}
 x'_0 = d_x.x_0 + x'_C \\
