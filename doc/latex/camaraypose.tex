@@ -279,7 +279,7 @@ La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. U
 \section{Métodos para la calibración de cámara}
 \label{sec:Metodos de calibracion}
 
-Como se vió algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara; sin embargo, los tres algoritmos, basados en modelos planos, más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso, se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.\\
+Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara; sin embargo, los tres algoritmos, basados en modelos planos, más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso, se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.\\
 
 \begin{figure}[h!]
 \centering
@@ -408,7 +408,7 @@ Existen varios algoritmos de estimación de pose, a continuación se presentan alg
 \subsection{\textit{DLT}(\textit{D}irect \textit{L}inear \textit{T}ransform)}
 Este método sirve para calcular la matriz \textbf{H} en la cual están implícitos los parámetros intrínsecos y extrínsecos. Si se conocen los parámetros intrínsecos se pueden despejar la matriz \textbf{E} con la información de la pose. 
 
-Como se vió anteriormente
+Como se vio anteriormente
 
 \[
 \left( \begin{array}{c}
@@ -487,7 +487,7 @@ $$
 \item[$\bullet$]  Una vez que se calculan las distancias $l_i$, los puntos $\textbf{M}_i$ se expresan en el sistema de coordenadas de la cámara como $\textbf{M}^\textbf{C}_i$. 
 \item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo a el sistema de coordenadas de la cámara.
 \end{itemize}
-En la bibliografía \citep{Fischler} y \citep{Haralick} se encuentran varios métodos para resolver numéricamente el problema. 
+En la bibliografía \cite{Fischler} y \cite{Haralick} se encuentran varios métodos para resolver numéricamente el problema. 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{figs_camaraypose/pnp}
@@ -495,13 +495,10 @@ En la bibliografía \citep{Fischler} y \citep{Haralick} se encuentran varios méto
 \label{fig:pnp}
 \end{figure}
 
-<<<<<<< HEAD
+
 \subsection{RANSAC(RANdom SAmple Consensus)}
 Este es un algoritmo iterativo utilizado para estimar los parámetros de un modelo matemático de un conjunto de datos que contiene \textit{outliers} (datos fuera del modelo). En particular se puede utilizar para el problema de estimación de pose cuando no se tienen las correspondencias entre puntos detectados y puntos del modelo. 
-=======
-\subsection{RANSAC(RANdom SAmple Consensus)}\cite{Fischler}
-Este es un algoritmo iterativo utilizado para estimar los parámetros de un modelo matemático de un conjunto de datos que contiene \textit{outliers}, en particular se puede utilizar para el problema de estimación de pose cuando no se tienen las correspondencias entre puntos detectados y puntos del modelo. 
->>>>>>> 0a78b9e709c8cdf0fbcc239e07a2a1109e3b50ce
+
 A continuación se presenta el algoritmo:
 \begin{itemize}
 \item[(1)] Dado un modelo que requiere un mínimo de \textit{n} puntos para determinar sus parámetros, y un conjunto de datos \textbf{P} tal que el número de puntos en \textbf{P} es mayor que \textit{n}, se sortea un subconjunto $S_1$ de \textit{n} puntos de \textbf{P} para instanciar el modelo. Con el modelo instanciado $\textbf{M}_1$ se determina el subconjunto de decisión $S_1^*$ de puntos de \textbf{P} que están a menos de una distancia \textit{t} de $\textbf{M}_1$.
@@ -512,23 +509,12 @@ A continuación se presenta el algoritmo:
 \end{itemize}
 Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo a estimar y a la probabilidad de encontrar un \textit{outlier} en el conjunto de datos . 
 
-<<<<<<< HEAD
+
  \subsection{POSIT}
 Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
 Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
 
 La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{ch: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
-=======
-\subsection{POSIT}
-Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener mas de cuatro correspondencias entre punto del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentado este fue el que se decidió utilizar, el desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
-Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una version que trabaja resuelve el caso en que todos los puntos del modelo estén en un mismo plano. Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con lineas.
-
-La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{ch: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no esta presentada en la bibliografía y dió buenos resultados.  
-Otro argumento a favor es que se contaba con la implemetaciones de algunas variantes. 
-De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas solo se contó con el artículo\cite{SoftLine}.  
-
-
->>>>>>> 0a78b9e709c8cdf0fbcc239e07a2a1109e3b50ce
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
