@@ -487,7 +487,7 @@ $$
 \item[$\bullet$]  Una vez que se calculan las distancias $l_i$, los puntos $\textbf{M}_i$ se expresan en el sistema de coordenadas de la cámara como $\textbf{M}^\textbf{C}_i$. 
 \item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo a el sistema de coordenadas de la cámara.
 \end{itemize}
-En la bibliografía  se encuentran varios métodos para resolver numéricamente el problema. 
+En la bibliografía \citep{Fischler} y \citep{Haralick} se encuentran varios métodos para resolver numéricamente el problema. 
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{figs_camaraypose/pnp}
@@ -495,7 +495,7 @@ En la bibliografía  se encuentran varios métodos para resolver numéricamente el 
 \label{fig:pnp}
 \end{figure}
 
-\subsection{RANSAC(RANdom SAmple Consensus)}
+\subsection{RANSAC(RANdom SAmple Consensus)}\cite{Fischler}
 Este es un algoritmo iterativo utilizado para estimar los parámetros de un modelo matemático de un conjunto de datos que contiene \textit{outliers}, en particular se puede utilizar para el problema de estimación de pose cuando no se tienen las correspondencias entre puntos detectados y puntos del modelo. 
 A continuación se presenta el algoritmo:
 \begin{itemize}
@@ -506,6 +506,16 @@ A continuación se presenta el algoritmo:
 \item[(3)] Si la cantidad de puntos en $S_1^*$ es menor que \textbf{T}, se sortea un nuevo subconjunto $S_2$ y se repite el proceso. Si luego de una cantidad de \textit{N} número de pruebas no se obtiene un subconjunto de decisión que cumple con el umbral \textbf{T}, se resuelve el modelo con el subconjunto de decisión mas grande obtenido, o se termina sin devolver modelo.
 \end{itemize}
 Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo a estimar y a la probabilidad de encontrar un \textit{outlier} en el conjunto de datos . 
+
+\subsection{POSIT}
+Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener mas de cuatro correspondencias entre punto del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentado este fue el que se decidió utilizar, el desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
+Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una version que trabaja resuelve el caso en que todos los puntos del modelo estén en un mismo plano. Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con lineas.
+
+La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{ch: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no esta presentada en la bibliografía y dió buenos resultados.  
+Otro argumento a favor es que se contaba con la implemetaciones de algunas variantes. 
+De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas solo se contó con el artículo\cite{SoftLine}.  
+
+
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}, dependiendo de la aplicación puede ser mas útil utilizar las diferentes representaciones. 
