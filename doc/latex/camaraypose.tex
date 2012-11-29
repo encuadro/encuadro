@@ -398,7 +398,83 @@ El artículo de Zhang afirma que la solución obtenida hasta el momento no es del 
 \]
 donde $\hat{m}(I, E_i, M_j)$ es la proyección del punto $M_j$ en la imagen $i$ utilizando la homografíau $H_i= I.E_i$. El resultado de dicha minimización no lineal será el resultado final. Este método requiere de valores inicales para $I$ y para los $E_i|_{i=1..n}$; que serán los obtenidos en los cálculos anteriores. \\
 
-Finalmente se realiza una estimación de la distorsión radial utilizando un modelo muy similar al visto en la sección \ref{sec:distorsion}. Cabe destacar que cuando se estimaron los parámetros intrínsecos de las cámaras utilizadas en este proyecto, la distorsión radial no se tomó en cuenta y aún así los resultados obtenidos fueron realmente muy precisos.\\
+Finalmente se realiza una estimación de la distorsión radial utilizando un modelo muy similar al visto en la sección \ref{sec:distorsion}. 
+
+\section{Calibiración de cámaras utilizadas}
+A lo largo del proyecto se utilizaron diferentes dispositivos, se utilizó un \textit{iPad 2}, un \textit{iPhone 4} y un \textit{iPod Touch $4^{ta}$ generación}. Todas las cámaras fueron calibradas con el método de Zhang. La distorsión radial no se tomó en cuenta para ningún  caso, aún así los resultados obtenidos buenos. 
+Se recuerda que la matriz de parámetros intrínsecos se expresa como 
+\[
+I = \left(\begin{array}{ccc}
+d_x\cdot f & s & x'_C \\
+0 & d_y\cdot f & y'_C \\
+0 & 0 & 1
+\end{array}\right) 
+\]
+A continuación se muestran las calibraciones, todos los valores están expresados en píxeles.
+\subsection{Calibración \textit{iPod Touch $4^{ta}$ generación}}
+Se realizaron dos calibraciones, la primera calibración que se realizó fue para imágenes de $640\times480$, la matriz obtenida fue:
+
+\[
+I  = 
+\left(\begin{array}{ccc}
+746.36170 & 0 &	292.80331\\
+0 & 745.43429 & 217.56288\\
+0 & 0 & 1	
+\end{array}\right)
+\]
+
+La segunda calibración fue para imágenes de $960\times720$. Se obtuvo la siguiente matriz:
+
+\[
+I  = 
+\left(\begin{array}{ccc}
+1154.46114 & 0 &	473.51550\\
+0 & 1152.02675 & 418.95929\\
+0 & 0 & 1	
+\end{array}\right)
+\]
+
+\subsection{Calibración \textit{iPhone 4}} 
+Se realizaron dos calibraciones, la primera calibración fue para imágenes de $640\times480$, se obtuvieron los siguientes parámetros intrínsecos: 
+\[
+I  = 
+\left(\begin{array}{ccc}
+621.54488 & 0 &	345.63801\\
+0 & 617.33033 & 235.04564\\
+0 & 0 & 1	
+\end{array}\right)
+\]
+
+La segunda calibración fue para imágenes de $352\times288$, la matriz obtenida fue:
+\[
+I  = 
+\left(\begin{array}{ccc}
+355.72881 & 0 &	222.56769\\
+0 & 348.80501 & 139.91097\\
+0 & 0 & 1	
+\end{array}\right)
+\]
+ 
+\subsection{Calibración \textit{iPad 2}} 
+Los parámetros intrínsecos obtenidos para imágenes de $960\times720$ son:
+\[
+I = 
+\left(\begin{array}{ccc}
+1178.28066  & 0 & 410.22957 \\
+0 & 1161.50785 & 331.82398 \\
+0 & 0 & 1
+\end{array}\right)  
+\]
+
+Para la aplicación se utilizaron imágenes de $480\times360$ que se obtuvieron de la funcionalidad de \textit{preview} del AVFoundation.  Si bien el dispositivo permite hacer \textit{preview} en este tama\~no, no es posible tomar fotos o capturar fotos. De las calibraciones anteriores se vio que entre imágenes tomadas con la misma cámara de diferentes tama\~no los parámetros intrínsecos varían según la variación del tama\~no. Por lo tanto la calibración para imágenes de $480\times360$ se tomó como los valores obtenidos para imágenes de $960\times720$ divido por dos. 
+\[
+I  = 
+\left(\begin{array}{ccc}
+589.141 & 0 &	205.115\\
+0 & 580.754 & 165.912\\
+0 & 0 & 1	
+\end{array}\right)
+\]
 
 \section{Problema de estimación de pose}\label{sec:Problema de estimación de pose}
 Como se mencionó en \ref{sec:Fundamentos y definiciones} la matriz de parámetros extrínsecos \textit{E} representa a la pose de la cámara. El problema de estimación de pose consiste en determinar esta matriz dadas $n$ correspondencias entre puntos $M_i$ en el mundo 3D y puntos $m_i$ en la imagen. 
