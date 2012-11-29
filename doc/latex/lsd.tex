@@ -9,20 +9,22 @@ Se genera en primer lugar, un campo de orientaciones asociadas a cada uno de los
 \item[(2)] Búsqueda del segmento que mejor aproxime cada  \textit{line-support region}: aproximación de las regiones por rectángulos.
 \item[(3)] Validación o no de cada segmento detectado en el punto anterior. 
 \end{itemize}
-Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman \cite{burns86}, y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel \cite{desolneux00}. 
+Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman \cite{burns86}, y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel \cite{desolneux00}. \\
+
+En el presente capítulo se estudiará a fondo el algoritmo y se presentarán y justificarán algunos cambios que hubo que hacerle a la imlpementación del mismo con la que se contaba, versión 1.6 descargada de \cite{IpolSift12}, para mejorar su desempe\~no en el tiempo real.\\
 
 \section{\textit{Line-support regions}}
-El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual orientación, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``región creciente''; cada región comienza por un píxel y cierto ángulo asociado, que en este caso coincide con el de este primer píxel. Luego, se testean sus ocho vecinos y los que cuenten con un ángulo similar al de la región son incluídos en la misma. En cada iteración el ángulo asociado a la región es calculado como el promedio de las orientaciones de cada píxel dentro de la \textit{line-support region}; la iteración termina cuando ya no se pueden agregar más píxeles a esta.\\
+El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual orientación, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``\textit{region growing}''; cada región comienza por un píxel y cierto ángulo asociado, que en este caso coincide con el de este primer píxel. Luego, se testean sus ocho vecinos y los que cuenten con un ángulo similar al de la región son incluídos en la misma. En cada iteración el ángulo asociado a la región es calculado como el promedio de las orientaciones de cada píxel dentro de la \textit{line-support region}; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.\\
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_lsd/lsd_1.eps}
-\caption{Proceso de crecimiento de una región. El ángulo asociado cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Fuente \cite{grompone10}.}
+\caption{Proceso de crecimiento de una región. El ángulo asociado cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Tomada de \cite{grompone10}.}
 \label{fig: lsd_1}
 \end{figure}
 
 Los píxels agregados a una región son marcados de manera que no vuelvan a ser testeados. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. \\
-Existen algunos casos puntuales en los que el proceso de búsqueda de \textit{line-support regions} puede arrojar errores. Por ejemplo, cuando se tienen dos segmentos que se juntan y que son colineales a no ser por la tolerancia $\tau$ descripta anteriormente, se detectarán ambos segmentos como uno solo; ver figura \ref{fig: lsd_2}. Este potencial problema es heredado del algoritmo de Burns, Hanson y Riseman.
+Existen algunos casos puntuales en los que el proceso de búsqueda de \textit{line-support regions} puede arrojar errores. Por ejemplo, cuando se tienen dos segmentos que se juntan y que son colineales a no ser por la tolerancia $\tau$ descripta anteriormente, se detectarán ambos segmentos como uno solo; ver Figura \ref{fig: lsd_2}. Este potencial problema es heredado del algoritmo de Burns, Hanson y Riseman.
 
 \begin{figure}[h!]
 \centering
@@ -31,7 +33,7 @@ Existen algunos casos puntuales en los que el proceso de búsqueda de \textit{lin
 \label{fig: lsd_2}
 \end{figure}
 
-Sin embargo, LSD plantea un método para ahorraste este tipo de problemas. Durante el proceso de crecimiento de las regiones, también se realiza la aproximación rectangular a dicha región (paso (2) de los tres definidos anteriormente); y si menos cierto porcentaje umbral de los píxeles  dentro del rectángulo corresponden a la \textit{line-support region}, lo que se tiene no es un segmento. Se detiene entonces el crecimiento de la región.
+Sin embargo, LSD plantea un método para solucionar este tipo de problemas. Durante el proceso de crecimiento de las regiones, también se realiza la aproximación rectangular a dicha región (paso (2) de los tres definidos anteriormente); y si menos de cierto porcentaje umbral de los píxeles dentro del rectángulo corresponden a la \textit{line-support region}, lo que se tiene no es un segmento. Se detiene entonces el crecimiento de la región.
 
 \section{Aproximación de las regiones por rectángulos}
 
@@ -42,10 +44,12 @@ Sin embargo, LSD plantea un método para ahorraste este tipo de problemas. Durant
 \label{fig: lsd_3}
 \end{figure}
 
-Cada \textit{line-support region} debe ser asociada a un segmento. Cada segmento será determinado por su centro, su dirección, su anchura y su longitud. A diferencia de lo que pudiése dictar la intuición, la dirección asociada al segmento no se corresponde con la asociada a la región (el promedio de las direcciones de cada uno de los píxeles). Sin embargo, se elige el centro del segmento como el centro de masa de la región y su dirección como el eje de inercia principal de la misma; la magnitud del gradiente asociado a cada píxel hace las veces de masa. La idea detrás de este método es que los píxeles con un gradiente mayor en módulo, se corresponden mejor con la percepción de un borde. La anchura y la longitud del segmento son elegidos de manera de cubir el $99\%$ de la masa de la región.
+Cada \textit{line-support region} debe ser asociada a un segmento. Cada segmento será determinado por su centro, su dirección, su anchura y su longitud. A diferencia de lo que pudiese resultar intuitivo, la dirección asociada al segmento no se corresponde con la asociada a la región (el promedio de las direcciones de cada uno de los píxeles). Sin embargo, se elige el centro del segmento como el centro de masa de la región y su dirección como el eje de inercia principal de la misma; la magnitud del gradiente asociado a cada píxel hace las veces de masa. La idea detrás de este método es que los píxeles con un gradiente mayor en módulo, tienen una mayor probabilidad de corresponder a un borde. La anchura y la longitud del segmento son elegidos de manera de cubir el $99\%$ de la masa de la región.
 
 \section{Validación de segmentos}
-La validación de los segmentos previamente detectados se plantea como un método de test de hipótesis. Se utiliza un modelo \textit{a contrario}: dada una imagen de ruido blanco y Gaussiano, se sabe que cualquier tipo de estructura detectada sobre la misma será casual. En rigor, se sabe que para cualquier imagen de este tipo, su \textit{level-line orientation field} toma, para cada píxel, valores independientes y uniformemente distribuídos entre $[0,2\pi]$. Dado entonces un segmento en la imagen analizada, se estudia la probabilidad de que dicha detección se dé en la imagen de ruido, y si \'esta es lo suficientemente baja, el segmento se considerará válido, de lo contrario se considerará que se esta bajo la hipótesis $H_0$: un conjunto aleatorio de píxeles que casualmente se alinearon de manera de detectar un segmento.\\
+La validación de los segmentos previamente detectados se plantea como un método de test de hipótesis. Se utiliza un modelo \textit{a contrario}. El término \textit{a contrario} viene del latín y significa ``al revés'' o ``de forma opuesta''. En procesamiento de imágenes, el principio para la detección \textit{a contrario} define, en primer lugar, un modelo llamado ``\textit{a priori}'' para el caso genérico en el que no haya nada que detectar. Entonces la detección de un evento en particular sólo se dará cuando la cantidad de ocurrencias de dicho evento en el modelo \textit{a priori} sea lo suficientemente baja. Nótese la aparición de cierto valor umbral a ajustar.\\
+
+Para el caso de LSD, dada una imagen de ruido blanco y Gaussiano, se sabe que cualquier tipo de estructura detectada sobre la misma será casual. En rigor, se sabe que para cualquier imagen de este tipo, su \textit{level-line orientation field} toma, para cada píxel, valores independientes y uniformemente distribuídos entre $[0,2\pi]$. Dado entonces un segmento en la imagen analizada, se estudia la probabilidad de que dicha detección se dé en la imagen de ruido, y si \'esta es lo suficientemente baja, el segmento se considerará válido, de lo contrario se considerará que se esta bajo la hipótesis $H_0$: un conjunto aleatorio de píxeles que casualmente se alinearon de manera de detectar un segmento.\\
 Para estudiar la probabilidad de ocurrencia de una cierta detección en la imagen de ruido, se deben tomar en cuenta todos los rectángulos potenciales dentro de la misma. Dada una imagen $N\times N$, habrán $N^4$ orientaciones posibles para los segmentos, $N^2$ puntos de inicio y $N^2$ puntos de fin. Si se consideran $N$ posibles valores para la anchura de los rectángulos, se obtienen $N^5$ posibles segmentos. Por su parte, dado cierto rectángulo $r$, detectado en la imagen $x$, se denota $k(r,x)$ a la cantidad de píxeles alineados dentro del mismo. Se define además un valor llamado \textit{Number of False Alarms} (NFA) que está fuertemente relacionado con la probabilidad de detectar al rectángulo en cuestión en la imagen de ruido $X$:
 \[
 NFA(r,x) = N^5. P_{H_0}[k(r,X) \geq k(r,x) ]
@@ -55,7 +59,7 @@ véase que el valor se logra al multiplicar la probabilidad de que un segmento de
 NFA(r) \leq \epsilon
 \] 
 donde empíricamente $\epsilon=1$ para todos los casos.\\
-Si se toma en cuenta que cada píxel de la imagen ruidosa toma un valor independiente de los demás, se concluye que también lo harán su gradiente y su \textit{level-line orientation field}. De esta menera, dada una orientación aleatoria cualquiera, la probabilidad de que uno de los píxeles de la imagen cuente con dicha orientación, a menos de la ya mencionada tolerancia $\tau$, será:
+Si se toma en cuenta que cada píxel de la imagen ruidosa toma un valor independiente de los demás, se concluye que también lo harán su gradiente y su \textit{level-line orientation field}. De esta manera, dada una orientación aleatoria cualquiera, la probabilidad de que uno de los píxeles de la imagen cuente con dicha orientación, a menos de la ya mencionada tolerancia $\tau$, será:
 \[
 p = \frac{\tau}{\pi}
 \]
@@ -77,12 +81,12 @@ Lo que se hace es probar distintos valores para la anchura del segmento y para s
 Otro m\'etodo para el refinamiento de los candidatos es la disminución de la tolerancia $\tau$. Si los puntos dentro del rectángulo efectivamente corresponden a un segmento, aunque la tolerancia disminuya, se computará prácticamente misma cantidad de segmentos alineados; y con una probabilidad menor de ocurrencia ($\frac{\tau}{\pi}$), el valor NFA obtenido será menor. Los nuevos valores testeados de tolerancia son: $\frac{\tau}{2}$, $\frac{\tau}{4}$,$\frac{\tau}{8}$,$\frac{\tau}{16}$ y $\frac{\tau}{32}$. El nuevo valor NFA asociado al segmento será el menor de todos los calculados.\\  
 
 \section{Optimización del algoritmo para tiempo real}
-Que un algoritmo de procesamiento de imágenes digitales sea temporalmente lineal significa que su tiempo de ejecución crece linealmente con el tama\~no de la imagen en cuestión. Se sabe que estos algorimos son ideales para el procesamiento en tiempo real. Si bien, como se aclaró algunos párrafos atrás, LSD es temporalmente lineal, este no fue pensado para ser ejecutado en tiempo real. Así entonces, para poder aumentar la tasa de cuadros por segundo total de la aplicación, hubo que realizar algunos cambios mínimos en el código, simpre buscando que estos no sean sustantivos, con el objetivo de alterar lo menos posible el desempe\~no del algoritmo. Se trabajó sobre ciertos bloques en particular.\\
+Que un algoritmo de procesamiento de imágenes digitales sea temporalmente lineal significa que su tiempo de ejecución crece linealmente con el tama\~no de la imagen en cuestión. Estos algoritmos son los mejores para el procesamiento de imágenes en tiempo real. Si bien, como se explicó con anterioridad, los autores de LSD afirman que este es temporalmente lineal; la implementación con la que se cuenta no fue pensada para ser ejecutada en tiempo real. Así entonces, para poder aumentar la tasa de cuadros por segundo total de la aplicación, hubo que realizar algunos cambios mínimos en el código, simpre buscando que estos alteren lo menos posible el desempe\~no del algoritmo. Se trabajó sobre ciertos bloques en particular.\\
 
 \subsection{Filtro Gaussiano}
-Antes de procesar la imagen con el algoritmo tal y como se vió en secciones anteriores, la misma es filtrada con un filtro Gaussiano. Se busca en primer lugar, disminuír el tama\~no de la imagen de entrada con el objetivo de disminuír el volumen de información procesada. Además, al difuminar la imagen, se conservan únicamente los bordes más pronunciados. Para este proyecto en particular, se escogió la escala del submuestreo fija en $0,5$, un poco más adelante en la corriente sección se explicará por qué.\\
+Antes de procesar la imagen con el algoritmo tal y como se vió en secciones anteriores, la misma es filtrada con un filtro Gaussiano. Se busca en primer lugar, disminuir el tama\~no de la imagen de entrada con el objetivo de disminuir el volumen de información procesada. Además, al difuminar la imagen, se conservan únicamente los bordes más pronunciados. Para este proyecto en particular, se escogió la escala del submuestreo fija en $0,5$, un poco más adelante en la corriente sección se explicará por qué.\\
 
-El filtrado de la imgen se hace en dos pasos, primero a lo ancho y luego a lo largo. Se utiliza el núceo Gaussiano normalizado de la figura \ref{fig: lsd_4}.\\
+Como la función Gaussiana 2D es separable, el filtrado de la imagen se hace en dos pasos, primero a lo ancho y luego a lo largo. Se utiliza el núceo Gaussiano de una dimensión normalizado de la Figura \ref{fig: lsd_4}.\\
 
 \begin{figure}[h!]
 \centering
@@ -91,7 +95,7 @@ El filtrado de la imgen se hace en dos pasos, primero a lo ancho y luego a lo la
 \label{fig: lsd_4}
 \end{figure}
 
-De esta manera, se crea una imagen auxiliar vacía y escalada en $x$ pero no en $y$, y se recorre asignándole a cada píxel en $x$ su valor correspondiente, obtenido del promedio del píxel $\frac{x}{escala}$ en la imagen original y sus vecinos, todos ponderados por el núcleo Gaussiano centrado en $\frac{x}{escala}$. Luego se crea otra imagen, pero esta vez escalada tanto en $x$ como en $y$, y se recorre asignándole a cada píxel en $y$ su valor correspondiente, obtenido del promedio del píxel $\frac{y}{escala}$ en la imagen auxiliar y sus vecinos, todos ponderados por el núcleo Gaussiano centrado en  $\frac{y}{escala}$. En la figura \ref{fig: lsd_5} se muestra la relación entre las imágenes.\\
+De esta manera, se crea una imagen auxiliar vacía y escalada en $x$ pero no en $y$, y se recorre asignándole a cada píxel en $x$ su valor correspondiente, obtenido del promedio del píxel $\frac{x}{escala}$ en la imagen original y sus vecinos, todos ponderados por el núcleo Gaussiano centrado en $\frac{x}{escala}$. Luego se crea otra imagen, pero esta vez escalada tanto en $x$ como en $y$, y se recorre asignándole a cada píxel en $y$ su valor correspondiente, obtenido del promedio del píxel $\frac{y}{escala}$ en la imagen auxiliar y sus vecinos, todos ponderados por el núcleo Gaussiano centrado en  $\frac{y}{escala}$. En la Figura \ref{fig: lsd_5} se muestra la relación entre las imágenes.\\
 
 \begin{figure}[h!]
 \centering
@@ -102,9 +106,9 @@ De esta manera, se crea una imagen auxiliar vacía y escalada en $x$ pero no en $
 
 Véase que cuando en el submuestreo $\frac{1}{escala}$ no es un entero, el centro del núcleo Gaussiano no siempre debe caer justo sobre un píxel en particular en la imagen original, sino que debe hacerlo entre dos de ellos. Lo que se hace entonces es mover $\pm 0,5$ píxeles al centro del núcleo en cada asignación de los píxeles en las imágenes escaladas; de manera de que la ponderación en el promediado de los píxeles de la imagen original (y luego la auxiliar) sea la debida. Aunque esta operación le agrega precisión al algoritmo, también le agrega un gran costo computacional, ya que lo que se hace es crear un nuevo núcleo Gaussiano en cada caso. En particular, para una imagen escalada de $240\times 180$ píxeles (dimensiones efectivamente utilizadas en este proyecto), debido al filtrado en dos pasos, el núcleo Gaussiano se crea y se destruye $86400 + 43 200 = 129600$ veces.\\ 
 
-Se decidió redondear la escala de submuestreo en $0,5$, ya que los valores utlizados empíricamente hasta el momento rondaban este valor, y se concluyó que para dicha escala, el núcleo Gaussiano debía permanecer constante, siempre centrado en su sexta muestra (ver figura \ref{fig: lsd_4}); por lo que se lo quitó de la iteración y actualmente se crea una sola vez al ingresar la imagen al filtro. Es importante destacar que esta optimización es transparente para el algoritmo si y sólo si $\frac{1}{escala}=n$, donde $n$ es un entero.\\
+Se decidió redondear la escala de submuestreo en $0,5$, ya que los valores utlizados empíricamente hasta el momento rondaban este valor, y se concluyó que para dicha escala, el núcleo Gaussiano debía permanecer constante, siempre centrado en su sexta muestra (ver Figura \ref{fig: lsd_4}); por lo que se lo quitó de la iteración y actualmente se crea una sola vez al ingresar la imagen al filtro. Es importante destacar que esta optimización es transparente para el algoritmo si y sólo si $\frac{1}{escala}=n$, donde $n$ es un entero.\\
 
-Otro cambio que se le realizó al filtrado Gaussiano fue la supresión de las condiciones de borde. Cuando se filtra cualquier imagen con un filtro con memoria, algo importante a tener en cuenta son las condiciones de borde, ya que para el procesamiento de los extremos de la imagen, estos filtros requieren de píxeles que están fuera de sus límites. Algunas de las soluciones a este problema son periodizar la imagen, simetrizarla o hasta asumir el valor 0 para los píxeles que estén fuera de esta. La opción escogida por LSD es la simetrización. Demás está decir que este proceso requeire de cierto costo computacional extra, por lo que se lo decidió suprimir. Actualmente, la imagen escalada no es computada en sus píxeles terminales; estos son 3 al inicio de cada línea o columna y 2 al final de cada una de ellas, irrelevantes en el tama\~no total de la imagen. Ver figura \ref{fig: lsd_67}.\\
+Otro cambio que se le realizó al filtrado Gaussiano fue la supresión de las condiciones de borde. Cuando se filtra cualquier imagen con un filtro con memoria, algo importante a tener en cuenta son las condiciones de borde, ya que para el procesamiento de los extremos de la imagen, estos filtros requieren de píxeles que están fuera de sus límites. Algunas de las soluciones a este problema son periodizar la imagen, simetrizarla o hasta asumir el valor 0 para los píxeles que estén fuera de esta. La opción escogida por LSD es la simetrización. Demás está decir que este proceso requeire de cierto costo computacional extra, por lo que se lo decidió suprimir. Este costo computacional extra se debe a que el algoritmo encargado del filtrado debe estar en cada bucle preguntándose si es necesario contar con el valor de algún píxel fuera de los límites de la imagen, y en ese caso asignarle a dicho píxel el valor de su correspondiente simétrico, con eje de simetría el borde de la imagen más próximo. Actualmente, la imagen escalada no es computada en sus píxeles terminales; estos son 3 al inicio de cada línea o columna y 2 al final de cada una de ellas, irrelevantes en el tama\~no total de la imagen y también, por ser un filtro FIR (``Finite Impulse Response''), en el resultado del filtrado en general. Ver Figura \ref{fig: lsd_67}.\\
 
 \begin{figure}[h!]
 \centering
@@ -116,16 +120,16 @@ Otro cambio que se le realizó al filtrado Gaussiano fue la supresión de las cond
 
 \subsection{\textit{Level-line angles}}
 
-La función \textit{ll\_angles} es quien calcula el gradiente de la imagen previamente filtrada para luego obtener el llamado \textit{level-line orientation field}, en donde más tarde se hallarán los candidatos a segmentos. Lo que se hizo en esta función fué limitar el cálculo del grandiente a los píxeles donde la imagen escalada haya sido efectivamente computada. De esta manera se ahorra procesamiento innecesario, además de no detectarse las líneas negras en el contorno de la imagen (figura \ref{fig: lsd_67}), que de no ser así se detectarían. 
+La función \textit{ll\_angles} es quien calcula el gradiente de la imagen previamente filtrada para luego obtener el llamado \textit{level-line orientation field}, en donde más tarde se hallarán los candidatos a segmentos. Lo que se hizo en esta función fué limitar el cálculo del grandiente a los píxeles donde la imagen escalada haya sido efectivamente computada. De esta manera se ahorra procesamiento innecesario, además de no detectarse las líneas negras en el contorno de la imagen (Figura \ref{fig: lsd_67}), que de no ser así se detectarían. 
 
 \subsection{Refinamiento y mejora de los candidatos}
 Se vió en la explicación del algoritmo el problema de que si hubiesen dos o más segmentos que formen entre ellos ángulos menores o iguales al valor umbral $\tau$, estos serían detectados como uno único, heredado del algoritmo de Burns, Hanson y Riseman; y se explicó cómo, mediante un refinamiento de los segmentos, LSD soluciona este problema. Se vió además que luego de la validación o no de los segmentos previamente detectados, se realiza una mejora de los mismos para intentar que los no validados a causa de una mala estimación rectangular, sí puedan serlo. \\
 
-Como en este proyecto en particular se trabaja con marcadores formados por cuadrados concentricos, de bordes bien marcados y que forman ángulos rectos entre sí, el refinamiento y la mejora de los candidatos no es algo que afecte la detección de los mismos; y por consiguiente se suprimieron ambos bloques. Como era de esperarse, dichas supresiones no significaron un cambio considerable en el algoritmo desde el punto de vista del desempe\~o ni del tiempo de ejecución cuando tan sólo se enfoca al marcador. Sin embargo, si las imágenes capturadas cuentan con muchos segmentos (imágenes naturales genéricas), se ve que la detección de los mismos es menos precisa que la del algoritmo original, pero que los tiempos de procesamiento son notablemente inferioes.\\ 
+Como en este proyecto en particular se trabaja con marcadores formados por cuadrados concentricos, de bordes bien marcados y que forman ángulos rectos entre sí, el refinamiento y la mejora de los candidatos no es algo que afecte la detección de los mismos; y por consiguiente se suprimieron ambos bloques. Como era de esperarse, dichas supresiones no significaron un cambio considerable en el algoritmo desde el punto de vista del desempe\~o ni del tiempo de ejecución cuando tan sólo se enfoca al marcador. Sin embargo, si las imágenes capturadas cuentan con muchos segmentos (imágenes naturales genéricas), se ve que la detección de los mismos es menos precisa que la del algoritmo original, pero que los tiempos de procesamiento son notablemente inferiores.\\ 
 
- \subsection{Algorirmo en precisión simple}
+ \subsection{Algoritmo en precisión simple}
 
-Originalmente, LSD fue implementado en precisión doble o \textit{double} (64 bits por valor). Sin embargo, el \textit{ipad 2} (dispositivo para el cual se optimizó el algoritmo), cuenta con un procesador \textit{ ARM Cortex-A9}, cuyo bus de datos es de 32 bits. Se decidió entonces probar cambiar al algoritmo a precisión simple o \textit{float} (32 bits por valor) y los resultados fueron realmente buenos. No sólo el algoritmo bajó su tiempo de ejecución, sino que además no existen cambios notorios en el desempe\~no del mismo.
+Originalmente, LSD fue implementado en precisión doble o \textit{double} (en general 64 bits por valor). Sin embargo, el \textit{ipad 2} (dispositivo para el cual se optimizó el algoritmo), cuenta con un procesador \textit{ ARM Cortex-A9}, cuyo bus de datos es de 32 bits. Se decidió entonces probar cambiar al algoritmo a precisión simple o \textit{float} (32 bits por valor) y los resultados fueron realmente buenos. No sólo el algoritmo bajó su tiempo de ejecución, sino que además no existen cambios notorios en el desempe\~no del mismo.
 
 \newpage
 \subsection{Resultados}
@@ -137,7 +141,7 @@ Originalmente, LSD fue implementado en precisión doble o \textit{double} (64 bit
 \caption{Imagen sint\'etica del marcador trasladado y rotado.}
 \label{fig: lsd_8}
 \end{figure}
-Se analizaron los tiempos promedio para la ejecución del filtro Gaussiano original y del optimizado, ambos con precisión doble y simple. Las imagen de prueba fue la de la figura \ref{fig: lsd_8}; sépase que por cómo es el algoritmo, el contenido de la imagen en independiente del tiempo de procesamiento en cualquiera de los casos. Los valores relevantes del experimento se muestran en las tablas \ref{tab:gaussian_double} y \ref{tab:gaussian_float}:
+Se analizaron los tiempos promedio para la ejecución del filtro Gaussiano original y del optimizado, ambos con precisión doble y simple. La imagen de prueba fue la de la Figura \ref{fig: lsd_8}; sépase que por cómo es el algoritmo, el contenido de la imagen es independiente del tiempo de procesamiento en cualquiera de los casos, por lo que basta con una única imagen de prueba para sacar conslusiones respecto del desempe\~no del mismo. Los valores relevantes del experimento se muestran en las tablas \ref{tab:gaussian_double} y \ref{tab:gaussian_float}:
 \begin{itemize}
 \item \textbf{Precisión doble (\textit{double})}
 
@@ -151,9 +155,10 @@ Se analizaron los tiempos promedio para la ejecución del filtro Gaussiano origin
 Segmentos detectados						& $36$							& $36$ \\ \hline
 Tiempo medio de procesamiento		& \textbf{36ms}			& \textbf{29ms} \\ \hline
 \end{tabular} 
-\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano optimizado y el original. Ambos comprecisión doble.}
+\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano optimizado y el original. Ambos con precisión doble.}
 \label{tab:gaussian_double}
 \end{table}
+
 
 \item \textbf{Precisión simple (\textit{float})}
 
@@ -167,7 +172,7 @@ Tiempo medio de procesamiento		& \textbf{36ms}			& \textbf{29ms} \\ \hline
  Segmentos detectados					& $36$							& $36$ \\ \hline
  Tiempo medio de procesamiento	& \textbf{28ms}				& \textbf{20ms} \\ \hline
 \end{tabular} 
-\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano optimizado y el original. Ambos comprecisión simple.}
+\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano optimizado y el original. Ambos con precisión simple.}
 \label{tab:gaussian_float}
 \end{table}
 
@@ -175,12 +180,12 @@ Tiempo medio de procesamiento		& \textbf{36ms}			& \textbf{29ms} \\ \hline
 \subsubsection{\textit{Line Segment Detection}}
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.4]{figs_lsd/lsd_9.eps}
+\includegraphics[scale=0.5]{figs_lsd/lsd_9.eps}
 \caption{Imagen \textit{zebras.png}.}
 \label{fig: lsd_9}
 \end{figure}
 
-Se analizaron los tiempos conjuntos para la ejecucici\'on de LSD m\'as el filtro Gaussiano, los originales y los optimizados, ambos con precisi\'on doble y simple. Se probaron ambos bloques juntos ya que el algoritmo original est\'a implementado con \'estos integrados. Las im\'agenes de prueba fueron la del marcador sint\'etico (figura \ref{fig: lsd_8}) y \textit{zebras.png} mostrada en la figura \ref{fig: lsd_9}. Los valores relevantes de los experimentos se muestran en las tablas \ref{tab:lsd_double1}, \ref{tab:lsd_double2}, \ref{tab:lsd_float1} y \ref{tab:lsd_float2}.
+Se analizaron los tiempos conjuntos para la ejecucici\'on de LSD m\'as el filtro Gaussiano, los originales y los optimizados, ambos con precisi\'on doble y simple. Se probaron ambos bloques juntos ya que el algoritmo original est\'a implementado con \'estos integrados. Las im\'agenes de prueba fueron la del marcador sint\'etico (Figura \ref{fig: lsd_8}) y \textit{zebras.png} mostrada en la Figura \ref{fig: lsd_9}. Los valores relevantes de los experimentos se muestran en las tablas \ref{tab:lsd_double1}, \ref{tab:lsd_double2}, \ref{tab:lsd_float1} y \ref{tab:lsd_float2}.
 \begin{itemize}
 \item \textbf{Precisión doble (\textit{double})}
 
@@ -188,14 +193,14 @@ Se analizaron los tiempos conjuntos para la ejecucici\'on de LSD m\'as el filtro
 \centering
 \begin{tabular}{|c|c|c|} \hline
  														& Algoritmo original 	& Algoritmo optimizado \\ \hline
- Imagen urilizada								& marcador sint\'etico	& marcador sint\'etico \\ \hline
+ Imagen utilizada								& marcador sint\'etico	& marcador sint\'etico \\ \hline
  Tama\~no de imagen	de entrada	& $480\times 360$		&	$480\times 360$	\\ \hline
  Escala												&	$0,5$						&	 	$0,5$				\\ \hline
  Tama\~no de imagen de salida		& $240 \times 180$	& $240 \times 180$ \\ \hline
   Segmentos detectados					& $36$						& $36$ \\ \hline
 Tiempo medio de procesamiento		& \textbf{55,4ms}		& \textbf{48ms} \\ \hline
 \end{tabular} 
-\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_8}. En todos los casos con comprecisión doble.}
+\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_8}. En todos los casos con precisión doble.}
 \label{tab:lsd_double1}
 \end{table}
 
@@ -203,30 +208,31 @@ Tiempo medio de procesamiento		& \textbf{55,4ms}		& \textbf{48ms} \\ \hline
 \centering
 \begin{tabular}{|c|c|c|} \hline
  														& Algoritmo original	&	Algoritmo optimizado \\ \hline
-Imagen urilizada								& \textit{zebras.png}	& \textit{zebras.png} \\ \hline
+Imagen utilizada								& \textit{zebras.png}	& \textit{zebras.png} \\ \hline
 Tama\~no de imagen	de entrada	& $480\times 360$		&	$480\times 360$	\\ \hline
 Escala												&	$0,5$						&	 	$0,5$				\\ \hline
 Tama\~no de imagen de salida		& $240 \times 180$	& $240 \times 180$ \\ \hline
 Segmentos detectados						& $251$						& $179$ \\ \hline
 Tiempo medio de procesamiento		& \textbf{179,7ms}		& \textbf{94,4ms} \\ \hline
 \end{tabular} 
-\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_9}. En todos los casos con comprecisión doble.}
+\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_9}. En todos los casos con precisión doble.}
 \label{tab:lsd_double2}
 \end{table}
 
+\newpage
 \item \textbf{Precisión simple (\textit{float})}
 \begin{table}[h!]
 \centering
 \begin{tabular}{|c|c|c|} \hline
  														& Algoritmo original	& Algoritmo optimizado \\ \hline
-Imagen urilizada								&  marcador sint\'etico &  marcador sint\'etico	\\ \hline
+Imagen utilizada								&  marcador sint\'etico &  marcador sint\'etico	\\ \hline
 Tama\~no de imagen	de entrada	& $480\times 360$		&	$480\times 360$	\\ \hline
 Escala												&	$0,5$						&	 	$0,5$				\\ \hline
 Tama\~no de imagen de salida		& $240 \times 180$	& $240 \times 180$ \\ \hline
 Segmentos detectados						& $36$						& $36$ \\ \hline
 Tiempo medio de procesamiento		& \textbf{47,8ms}		& \textbf{38,8ms} \\ \hline
 \end{tabular} 
-\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_8}. En todos los casos con comprecisión simple.}
+\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_8}. En todos los casos con precisión simple.}
 \label{tab:lsd_float1}
 \end{table}
 
@@ -235,22 +241,53 @@ Tiempo medio de procesamiento		& \textbf{47,8ms}		& \textbf{38,8ms} \\ \hline
 \centering
 \begin{tabular}{|c|c|c|} \hline
  														& Algoritmo original 	& Algoritmo optimizado \\ \hline
-Imagen urilizada								&  \textit{zebras.png} 	&  \textit{zebras.png} \\ \hline
+Imagen utilizada								&  \textit{zebras.png} 	&  \textit{zebras.png} \\ \hline
 Tama\~no de imagen	de entrada	& $480\times 360$		&	$480\times 360$	\\ \hline
 Escala												&	$0,5$						&	 	$0,5$				\\ \hline
 Tama\~no de imagen de salida		& $240 \times 180$	& $240 \times 180$ \\ \hline
 Segmentos detectados						& $252$						& $182$ \\ \hline 
 Tiempo medio de procesamiento		& \textbf{189,8ms}		& \textbf{90,8ms} \\ \hline
 \end{tabular} 
-\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_9}. En todos los casos con comprecisión simple.}
+\caption{Comparación entre los tiempos de ejecución del filtro Gaussiano más LSD optimizados y los originales, para la imagen \ref{fig: lsd_9}. En todos los casos con precisión simple.}
 \label{tab:lsd_float2}
 \end{table}
-
 \end{itemize}
 
-%\begin{itemize}
-%\item Gaussian sampler por separado. Original contra optimizado. Se puede ver todo, con la imagen de prueba que se muestra, en gaussian\_sampler.
-%\item Lsd con cada una de las optimizaciones: float, ll\_angles, refinamiento.
-%\item Tiempos totales gaussian\_sampler + LSD originales contra gaussian\_sampler + LSD optimizados.
-%\item Todos con 2 imagenes de muestra: la del marcador, otra con muchos segmentos.
-%\end{itemize}
+\section{Conslusión}
+En el presente capítulo se vió en detalle LSD, un algoritmo de detección de segmentos en imágenes que puede ser considerado el estado del arte en su rubro. Luego se afirmó que, si bien sus autores sostienen que el algoritmo es temporalmente lineal, lo que haría viable su uso en tiempo real; la implementación disponible del mismo, realizada por los propios autores, no está optimizada para tal caso y por eso hubo que hacerle algunos prque\~nos cambios al código. Dichos cambios lograron mejoras importantes en cuanto al tiempo de procesamiento, manteniendo prácticamente invariado su desempe\~no.\\
+
+Los resultados expuestos en las Tablas \ref{tab:gaussian_double} y \ref{tab:gaussian_float} pueden interpretarse como que la decisión de cambiar la precisión de la implementación del algoritmo de \textit{double} a \textit{float} fue una idea acertada. Por su parte, la lectura de las Tablas \ref{tab:lsd_double1}, \ref{tab:lsd_double2}, \ref{tab:lsd_float1} y \ref{tab:lsd_float2} sugiere que las mejoras en los tiempos de LSD optimizado para el tiempo real, respecto del original, son del órden de:
+
+$$
+\begin{array}{cc}
+\textbf{30\% para imágenes con pocos segmentos;} \\
+\textbf{50\% para imágenes naturales genéricas, con muchos segmentos.}
+\end{array}
+$$
+Cabe aclarar sin embargo, que si bien los resultados cualitativos\footnote{Se entiende por resultados cualitativos a la ejecución de LSD en tiempo real en el \textit{iPad}. Imposibles de ilustrar en el presente texto.} sugieren resultados similares, los resultados cuantitativos fueron logrados con tan sólo las dos imágenes presentadas anteriormente.\\
+
+
+Finalmente, en las Figuras \ref{fig: lsd_10} y \ref{fig: lsd_11} se muestan los resultados luego de haber procesado a las Figuras \ref{fig: lsd_8} y \ref{fig: lsd_9} con LSD, primero con la implementación original y luego con la optimizada. Se puede ver, en primer lugar, la gran diferencia que existe entre la cantidad de segmentos detectados en una y otra imagen. Además, se concluye que el desempe\~no de ambas implementaciones es muy similar para el caso de la imagen \textit{zebras.png} e idéntico para el caso del marcador.\\
+
+\begin{figure}[h!]
+\centering
+$
+\begin{array}{cc}
+\includegraphics[scale=0.3]{figs_lsd/marcador_lsd_original.png} & \includegraphics[scale=0.3]{figs_lsd/marcador_lsd_optimizado.png}
+\end{array}
+$
+\caption{Resultado de procesar a la Figura \ref{fig: lsd_8} con LSD. Izq.: Implementación original. Der.: Implementación optimizada.}
+\label{fig: lsd_10}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering
+$
+\begin{array}{cc}
+\includegraphics[scale=0.3]{figs_lsd/zebras_lsd_original.png} & \includegraphics[scale=0.3]{figs_lsd/zebras_lsd_optimizado.png}
+\end{array}
+$
+\caption{Resultado de procesar a la Figura \ref{fig: lsd_9} con LSD. Izq.: Implementación original. Der.: Implementación optimizada.}
+\label{fig: lsd_11}
+\end{figure}
