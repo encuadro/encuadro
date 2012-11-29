@@ -4,7 +4,14 @@
 En este capítulo se describen los distintos casos de uso que se implementaron con el fin de aplicar los algoritmos desarrollados en los capítulos anteriores. Se buscó generar distintos casos de uso que funcionaran como muestra de las funcionalidades que son posibles de realizar mediante la resolución de los algoritmos mencionados.
 \section{Caso de Uso 01}
 \subsection{Comentarios sobre el caso de uso}
-En este caso de uso implementa la parte interactiva de la aplicación. Cuando inicia la aplicación se ve un cubo sobre uno de los marcadores, cuando se presiona sobre el cubo, este se anima y se reproduce un audio. Luego el cubo pasa a estar sobre otro marcador. Esta funcionalidad es fundamental para implementar la audioguía interactiva, podría pensarse una aplicación en la que se presione sobre determinada parte de un cuadro y se reproduzca un audio con información referente a esa zona del cuadro. 
+En este caso de uso implementa la parte interactiva de la aplicación. Cuando inicia la aplicación se ve un cubo sobre uno de los marcadores, cuando se presiona sobre el cubo, este se anima y se reproduce un audio. Luego el cubo pasa a estar sobre otro marcador. Esta funcionalidad es fundamental para implementar la audioguía interactiva, podría pensarse una aplicación en la que se presione sobre determinada parte de un cuadro y se reproduzca un audio con información referente a esa zona. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.35]{figs_casosuso/CasoUso1ini}
+\caption{Pantalla inicial de caso de uso 1, en esta pantalla se explica como funciona la interfaz de usuario }
+\label{fig:CasoUso1ini}
+\end{figure}
 
 Esta aplicación también se utilizo con fines de \textit{debugging}. Se tienen las siguientes funcionalidades:
 \begin{itemize}
@@ -17,7 +24,17 @@ Esta aplicación también se utilizo con fines de \textit{debugging}. Se tienen la
 \item[$\bullet$] Se puede elegir si se usa o no la fusión de sensores. 
 \end{itemize} 
 
-ACA FALTARIA PONER ALGUNA IMAGEN DE LA UI Y DE COMO AYUDA AL DEBUGEAR, POR EJEMPLO PONER IMAGEN DE LSD Y DEL FILTRO DE SEGMENTOS ETC. 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.35]{figs_casosuso/CasoUso1}
+\caption{Captura de pantalla del caso de uso 1, se puede ver el cubo apoyado sobre el marcador y los diferentes controles que ayudan al \textit{debugging}}
+\label{fig:CasoUso1}
+\end{figure}
+
+En la Figura \ref{fig:CasoUso1ini} se puede ver como es la interfaz de usuario de esta aplicación y en la Figura \ref{fig:CasoUso1} una captura de pantalla. Esta aplicación fue fundamental para evaluar el desempe\~no de los algoritmos utilizados. Gracias a estas funcionalidades se pudo definir el ambiente bajo el cual la aplicación funciona, se fue variando la distancia al marcador y se ajustó el umbral para el filtro de segmentos. 
+Se pudo ajustar los parámetros del filtro de Kalman y se pudo comparar el desempe\~no de la estimación de pose utilizando solamente información de la cámara con el resultado obtenido de la fusión de sensores. 
+Se pudo evaluar también el desempe\~n de la versión optimizada de LSD. 
+Si bien todas estas pruebas y ajustes si hicieron previamente en una computadora con imágenes de prueba, fue necesario contar con una aplicación en la que se pudiera ver sobre el dispositivo el comportamiento en tiempo real.  
 \subsection{Detalles constructivos}
 Explicar clase dibujar, touch event y reproducir audio. 
 \section{Caso de Uso 02}
