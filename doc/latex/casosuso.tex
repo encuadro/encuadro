@@ -1,43 +1,52 @@
 \chapter{Casos de Uso}
 \label{chap: casoUso}
 \section{Introducción}
-En este capítulo se describen los distintos casos de uso que se implementaron con el fin de aplicar los algoritmos desarrollados en los capítulos anteriores. Se buscó generar distintos casos de uso que funcionaran como muestra de las funcionalidades que son posibles de realizar mediante la resolución de los algoritmos mencionados.
-\section{Caso de Uso 01}
+En este capítulo se presentan los distintos casos de uso que se implementaron con el fin de integrar los algoritmos comentados en capítulos anteriores en peque\~nas aplicaciones que funcionen \textit{de punta a punta}. Se buscó resolver individualmente los diferentes desafíos técnicos que una aplicación real de realidad aumentada para museos puede llegar a tener. Estas últimas no serán más que una combinación guionada de cada uno de estos casos de uso.\\
+
+A lo cargo del capítulo se verán entonces los tres casos de uso implementados: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. El último caso de uso muestra cómo es posible importar modelos a ISGL3D de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con las primitivas del \textit{framework}, por detalles ver capítulo \ref{chap: render}.
+
+\section{Caso de uso ``interactividad''}
+\label{sec: casoUso1}
 \subsection{Comentarios sobre el caso de uso}
-En este caso de uso implementa la parte interactiva de la aplicación. Cuando inicia la aplicación se ve un cubo sobre uno de los marcadores, cuando se presiona sobre el cubo, este se anima y se reproduce un audio. Luego el cubo pasa a estar sobre otro marcador. Esta funcionalidad es fundamental para implementar la audioguía interactiva, podría pensarse una aplicación en la que se presione sobre determinada parte de un cuadro y se reproduzca un audio con información referente a esa zona. 
+En este caso de uso se implementa la parte interactiva de la aplicación. Al enfocar el marcador, se puede ver un cubo sobre el QlSet de la esquina superior izquierda. Ver Figura \ref{fig:CasoUso1}. Si el cubo es tocado a través de la pantalla del dispositivo, este se anima y se reproduce un audio que indica la posición del cubo en el instante de ser presionado. Inmediatamente después, es desplazado hacia el QlSet de la esquina superior derecha. Nuevamente, si el cubo es tocado a través de la pantalla del dispositivo, este se anima y se reproduce un audio que indica la posición del cubo en el instante de ser presionado. Inmediatamente después, este se desplaza hacia el QlSet restante. Lo anterior sucederá de forma cíclica, cada vez que se presione sobre el mpdelo.\\ 
+
+Esta funcionalidad es fundamental si lo que se quiere implementar es por ejemplo una audioguía interactiva. Podría pensarse una aplicación en la que el cubo anterior se reemplace por flechas 3D, y que estas sean ubicadas conjuntamente en distintas partes de una obra. Entones, al seleccionar cada una de las flechas, se podría reproducir un audio con información referente a esa zona o punto en particular.\\ 
+
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.35]{figs_casosuso/CasoUso1ini}
-\caption{Pantalla inicial de caso de uso 1, en esta pantalla se explica como funciona la interfaz de usuario }
-\label{fig:CasoUso1ini}
-\end{figure}
-
-Esta aplicación también se utilizo con fines de \textit{debugging}. Se tienen las siguientes funcionalidades:
-\begin{itemize}
-\item[$\bullet$] Se puede ver dibujada sobre la imagen la salida del LSD.
-\item[$\bullet$] Se puede ver dibujada sobre la imagen la salida del filtro de segmentos y correspondencias.
-\item[$\bullet$] Se puede variar el umbral utilizado para el filtro de segmentos. 
-\item[$\bullet$] Se pueden ver los puntos del modelo reproyectados según la pose obtenida.
-\item[$\bullet$] Se puede prender o apagar Kalman.
-\item[$\bullet$] Se puede aumentar o disminuir el ruido de medición del filtro de Kalman.
-\item[$\bullet$] Se puede elegir si se usa o no la fusión de sensores. 
-\end{itemize} 
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.35]{figs_casosuso/CasoUso1}
-\caption{Captura de pantalla del caso de uso 1, se puede ver el cubo apoyado sobre el marcador y los diferentes controles que ayudan al \textit{debugging}}
+\includegraphics[scale=0.3]{figs_casosuso/CasoUso1}
+\caption{Captura de pantalla del caso de uso ``interactividad'', se puede ver el cubo apoyado sobre el QlSet de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.}
 \label{fig:CasoUso1}
 \end{figure}
 
-En la Figura \ref{fig:CasoUso1ini} se puede ver como es la interfaz de usuario de esta aplicación y en la Figura \ref{fig:CasoUso1} una captura de pantalla. Esta aplicación fue fundamental para evaluar el desempe\~no de los algoritmos utilizados. Gracias a estas funcionalidades se pudo definir el ambiente bajo el cual la aplicación funciona, se fue variando la distancia al marcador y se ajustó el umbral para el filtro de segmentos. 
-Se pudo ajustar los parámetros del filtro de Kalman y se pudo comparar el desempe\~no de la estimación de pose utilizando solamente información de la cámara con el resultado obtenido de la fusión de sensores. 
-Se pudo evaluar también el desempe\~n de la versión optimizada de LSD. 
-Si bien todas estas pruebas y ajustes si hicieron previamente en una computadora con imágenes de prueba, fue necesario contar con una aplicación en la que se pudiera ver sobre el dispositivo el comportamiento en tiempo real.  
+Esta aplicación también se utilizó con fines de \textit{debugging} o depuración de la integración de cada uno de los bloques. Se le agregaron las siguientes funcionalidades:
+\begin{itemize}
+\item[$\bullet$] La posibilidad de ver dibujados sobre la imagen los segmentos detectados por LSD. En sus versiones original y opimizada.
+\item[$\bullet$] La posibilidad de ver dibujados sobre la imagen los segmentos filtrados pertenecientes al marcador. Así como también las esquinas detectadas de cada uno de los cuadriláteros que lo forman.
+\item[$\bullet$] La posibilidad de variar el umbral utilizado para el filtrado de segmentos. 
+\item[$\bullet$] La posibilidad de ver las esquinas de cada uno de los cuadriláteros que forman al marcador reproyectadas según la pose del dispositivo obtenida.
+\item[$\bullet$] La posibilidad de prender o apagar el filto de Kalman.
+\item[$\bullet$] La posibilidad de aumentar o disminuir el ruido de medición del filtro de Kalman.
+\item[$\bullet$] La posibilidad de elegir si usar o no la fusión de la estimación de pose con los sensores. 
+\end{itemize} 
+
+%\begin{figure}[h!]
+%\centering
+%\includegraphics[scale=0.35]{figs_casosuso/CasoUso1ini}
+%\caption{Pantalla inicial de caso de uso 1, en esta pantalla se explica como funciona la interfaz de usuario }
+%\label{fig:CasoUso1ini}
+%\end{figure}
+
+
+
+En la Figura \ref{fig:CasoUso1} también se puede ver cómo es la interfaz de usuario de este caso de uso, en donde se puede elegir entre todas las funcionalidades anteriores. El mismo fue fundamental para evaluar el desempe\~no de los algoritmos utilizados funcionando en tiempo real. Gracias a estas funcionalidades se pudieron definir las condiciones para las cuales el conjunto de todos los bloques funciona mejor. Se fue variando la distancia al marcador y se ajustó el umbral para el filtro de segmentos. Además, se pudieron ajustar los parámetros del filtro de Kalman y se pudo comparar el desempe\~no de la estimación de pose utilizando solamente información de la cámara con el resultado obtenido de la fusión de sensores. Fue en este caso de uso que se evaluó cualitativamente el desempe\~no de la versión optimizada de LSD, respecto del de la versión original. \\
+
+Si bien todas estas pruebas y ajustes si hicieron previamente en una computadora y con imágenes de prueba, fue necesario contar con una aplicación en la que se pudiera ver sobre el dispositivo al conjunto de los algoritmos funcionando en tiempo real.  
 \subsection{Detalles constructivos}
 Explicar clase dibujar, touch event y reproducir audio. 
-\section{Caso de Uso 02}
+
+\section{Caso de uso ``video''}
 \subsection{Comentarios sobre el caso de uso}
 Este caso de uso básicamente busca desplegar un video en una superfice dada del mundo real. Esto puede ser de gran interés como complemento de contenido para un cuadro o cualquier obra si se piensa en aplicarlo para museos. Es posible por ejemplo, generar un video que sea reproducido dentro de los marcos del propio cuadro, en un extremo o en una superficie cualquiera que resulte interesante desde el punto de vista artístico. A continuación se explican brevemente algunos detalles para lograr la implementación de este caso de uso.
 \\
@@ -215,9 +224,6 @@ j_3
 \end{array} \right)
 \]
 Así entonces, lo que se hace para resolver la homografía es cuadro a cuadro tener detectados los puntos en los que se quiere presentar la vista del video que se corresponden con cuatro puntos detectados por el filtro y tener las correspondencias con el marcador real, se posiciona la vista en la posición de referencia y se le aplica la homografía hallada que vincula la posición referencia con los puntos detectados.
-\section{Caso de Uso 03}
-\subsection{Comentarios sobre el caso de uso}
-\subsection{Detalles constructivos}
-\section{Caso de Uso 04}
+\section{Caso de uso ``modelos''}
 \subsection{Comentarios sobre el caso de uso}
 \subsection{Detalles constructivos}
