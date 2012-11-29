@@ -1,4 +1,4 @@
-\chapter{POSIT: \textit{POS} with \textit{IT}erations}
+\chapter{POSIT: \textit{POS} with \textit{IT}erations}\label{ch: posit}
 
 \section{Introducción}
 En este capítulo se explica el algoritmo utilizado para el cálculo de la pose a partir de una imagen capturada por la cámara. Como lo dice el nombre de algoritmo se utiliza una técnica llamada \textit{POS} (\textit{P}ose from \textit{O}rtography and \textit{S}caling), esta técnica consiste en aproximar la pose de la cámara a partir de la proyección \textit{SOP}(\textit{S}caled \textit{O}rtographic \textit{Projection}). Se comienza explicando la versión clásica de POSIT, en la cual se presentan las técnicas utilizadas dentro del algoritmo, entre ellas se explica en que consiste la proyección SOP. Luego se presenta el problema de trabajar con marcadores planos y se explica como se modifica el algoritmo para este caso. 
@@ -269,16 +269,18 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 \caption{\subref{fig: posit_4}:Caso en el que solo una pose de las dos iniciales es coherente, también en las siguientes iteraciones solo una de las dos poses es posible, se tiene un única solución. \subref{fig: posit_5}: Caso en el que en cada paso hay dos posibilidades, se opta por la mejor pose(++ mejor pose, + peor pose) en cada rama. Tomado de: \cite{CoplanarPosit}.}
 \end{figure}
 
+\begin{comment}
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.405]{figs_posit/posit_6}
 \label{fig: posit_6}
 \caption{Diagrama de flujo del algoritmo para puntos coplanares, \textit{E} es el error de reproyección, la condición $Z_i>0$ verifica que los puntos reproyectados están por delante del plano imagen. Tomado de: \cite{CoplanarPosit}.}
 \end{figure}
+\end{comment}
 
 
 \section{SoftPOSIT}\label{sec:SoftPosit}
-Hasta aquí se vió el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vió en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{David02softposit}. Este algoritmo recibe como entrada los puntos del modelo 3D y una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT.
+Hasta aquí se vió el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vió en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D y una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT.
 
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. Además la pose se calcula minimizando una función que mide la distancia entre la proyección SOP y los puntos estimados en cada iteración.
@@ -458,7 +460,7 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_8b}
-\label{fig: posit_8}
+\label{fig:posit_8}
 \caption{Posiciones que se utilizaron para las imágenes de prueba.}
 \end{figure}
 \begin{table}[ht]
@@ -483,7 +485,7 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_9b}
-\label{fig: posit_9}
+\label{fig:posit_9}
 \caption{Posiciones que se utilizaron para las imágenes sintéticas}
 \end{figure}
 \begin{table}[htbp]
@@ -504,35 +506,35 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 \caption{Error de proyección en imágenes sintéticas}
 \label{posit_tabla2}
 \end{table}
-Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig: posit_8} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
+Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_8} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
  
 A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de la imágenes para un mismo caso. En las tablas hay valores que no pudieron ser calculados debido a que el filtro de segmentos no pudo detectar todos los segmentos. Estos comportamientos fueron discutidos en \ref{ch:detection}. En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de modern POSIT. 
 
-Para otro grupo de imágenes sintéticas se comparó la pose original con la pose obtenida luego de aplicar el procesamiento, se relevó el desempe\~no de los algoritmos para rotaciones segun los tres ejes. En general se vió que la implementación de  POSIT moderno dio mejores resultados. 
-En la Figura \ref{fig: posit_16} se pueden algunos de los resultados obtenidos de la comparación de desempe\~no de los dos algoritmos implementados. En la columna de la izquierda se muestran los resultados de POSIT moderno y en la de la derecha los resultados para POSIT clásico. 
-\begin{figure}\label{fig: posit_16}
+Para otro grupo de imágenes sintéticas se comparó la pose original con la pose obtenida luego de aplicar el procesamiento, se relevó el desempe\~no de los algoritmos para rotaciones según los tres ejes. En general se vió que la implementación de  POSIT moderno dio mejores resultados. 
+En la Figura \ref{fig:posit_16} se pueden algunos de los resultados obtenidos de la comparación de desempe\~no de los dos algoritmos implementados. En la columna de la izquierda se muestran los resultados de POSIT moderno y en la de la derecha los resultados para POSIT clásico. 
+\begin{figure}\label{fig:posit_16}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale3}
-				\label{fig: posit_10}}
+				\label{fig:posit_10}}
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_posit/poses_composit_scale3}
-                \label{fig: posit_11}}
+                \label{fig:posit_11}}
         
        \subfigure[]{
                 \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale4}
-				\label{fig: posit_12}}
+				\label{fig:posit_12}}
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_posit/poses_composit_scale4}
-                \label{fig: posit_13}}
+                \label{fig:posit_13}}
         
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale5}
-				\label{fig: posit_14}}
+				\label{fig:posit_14}}
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_posit/poses_composit_scale5}
-                \label{fig: posit_15}}
-         \caption{Rotación según eje \textit{x} para Modern POSIT \subref{fig: posit_10} y para Classic POSIT \subref{fig: posit_11}, rotación según eje \textit{y} para Modern POSIT \subref{fig: posit_12} y para Classic POSIT \subref{fig: posit_13} y rotación según eje \textit{z} para Modern POSIT \subref{fig: posit_14} y para Classic POSIT \subref{fig: posit_15}}
+                \label{fig:posit_15}}
+         \caption{Rotación según eje \textit{x} para Modern POSIT \subref{fig:posit_10} y para Classic POSIT \subref{fig:posit_11}, rotación según eje \textit{y} para Modern POSIT \subref{fig:posit_12} y para Classic POSIT \subref{fig:posit_13} y rotación según eje \textit{z} para Modern POSIT \subref{fig:posit_14} y para Classic POSIT \subref{fig:posit_15}}
 \end{figure}
 
 

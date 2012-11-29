@@ -1,19 +1,25 @@
 \chapter{Filtrado de Kalman para estimación de pose}
 
+\section{Introducción}
+Luego de obtener la pose de la cámara para un cuadro, se procedió a evaluar el desmpe\~no de la aplicación en tiempo real. Una de las cosas que se notó fue que había un ruido en la estimación. Por ejemplo con el dispositivo quieto se puede ver que la  pose varía. Si bien numéricamente no es mucha la variación, perceptivamente se nota. Es por esto que se decidió implementar un filtro de Kalman para suavizar la estimación.   
 
-\section{Kalman clásico}
+Otra razón por la cual se usó el filtro de Kalman fue para realizar fusión de sensores. El dispositivo cuenta con sensores inerciales y es posible obtener la variación en la orientación entre dos cuadros. Esta información se fusionó con la información obtenida de la pose mediante un filtro de Kalman.  
 
-Sea $\mathbf{x}_k$ un vector de estados de dimensión $p$ que evoluciona de acuerdo a la ecuación
+En este capítulo se presenta el filtro de Kalman de forma genérica para luego explicar las implementaciones particulares del caso de Kalman para suavizado y Kalman para fusión de sensores.
+
+\section{Filtro de Kalman}
+
+Sea $\mathbf{x}_k$ un vector de estados de dimensión $n$ que evoluciona de acuerdo a la ecuación
 \begin{equation}
  \mathbf{x}_{k+1}=\mathbf{F}_k\mathbf{x}_k + \mathbf{w}_k
 \end{equation}
-donde $\mathbf{F}_k$ es la matriz de transición de estados de dimensiones $p \times p$ y $\mathbf{w}_k$ es un vector de tamaño $p$ de procesos de ruido que se modela como $\mathbf{w}_k\sim \mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ en donde $\mathbf{Q}_k)$ es la matriz de covarianza de tamaño $p\times p$ \cite{Hayes}.
+donde $\mathbf{F}_k$ es la matriz de transición de estados de dimensiones $n \times n$ y $\mathbf{w}_k$ es el vector de ruido del proceso, es de tama\~no $n$ y se modela como $\mathbf{w}_k\sim \mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ en donde $\mathbf{Q}_k$ es la matriz de covarianza de tama\~no $n\times n$ \cite{Hayes}. Este ruido sirve para ajustar la confianza que se le tiene al modelo utilizado. Si el modelo utilizado es bueno el ruido de proceso $\mathbf{w}_k$ es chico.
 
 Adicionalmente se tiene el vector de observaciones $\mathbf{y}_k$ formado como 
 \begin{equation}
  \mathbf{y}_k=\mathbf{H}_k\mathbf{x}_k + \mathbf{v}_k
 \end{equation}
-donde $\mathbf{y}_k$ es de largo $q$, $\mathbf{H}_k$ es de tamaño $q\times q$ y $\mathbf{v}_k$ es un vector de ruido que se modela como $\mathbf{v}_k\sim \mathcal{N}(\mathbf{0},\mathbf{R}_k)$ siendo $\mathbf{R}_k$ la matriz de covarianza de tamaño $q\times q$.
+donde $\mathbf{y}_k$ es de largo $m$. $\mathbf{H}_k$ es la matriz de medición, relaciona las observaciones con los estados del proceso, es de tama\~no $m\times m$. $\mathbf{v}_k$ es el vector de ruido en la medición, es de tama\~no $m$ y se modela como $\mathbf{v}_k\sim \mathcal{N}(\mathbf{0},\mathbf{R}_k)$ siendo $\mathbf{R}_k$ la matriz de covarianza de tama\~no $m\times m$.
 
 Se tiene entonces un proceso representado por un modelo en variables de estado como
 \begin{equation*}
@@ -23,7 +29,7 @@ Se tiene entonces un proceso representado por un modelo en variables de estado c
 	\end{cases}
 \end{equation*}
 
-El estado del filtro se representa por dos variables, la estimación del estado \emph{a posteriori} en el instante $k$, $\hat{\mathbf{x}}_{k|k}$, y la matriz de covarianza del error \emph{a posteriori}, $\mathbf{P}_{k|k}$.
+El estado del filtro se representa por dos variables, la estimación del estado \emph{a posteriori} en el instante $k$, $\hat{\mathbf{x}}_{k|k}$, y la matriz de covarianza del error de estimación \emph{a posteriori}, $\mathbf{P}_{k|k}$.
 
 El filtrado parte de una condición inicial $\hat{\mathbf{x}}_{0|0}$ y $\mathbf{P}_{0|0}$. El proceso de filtrado se realiza iterativamente en dos etapas, una de predicción y una de actualización:
 \begin{itemize}
@@ -38,6 +44,33 @@ El filtrado parte de una condición inicial $\hat{\mathbf{x}}_{0|0}$ y $\mathbf{P
 \end{eqnarray}
 \end{itemize}
 
+Hay que hablar de cuales son las posibilidades de kalman aca, suvizado o predictivo. Hablar de que eficiente computacionealmente pq toda la info del pasado esta guardada en el estado anterior y solo necesita un estado. 
+
+\section{Kalman para suavizado}
+
+La información que se obtiene de la etapa de estimación de pose son la orientación de la cámara expresada en ángulos de Euler y la traslación. Se busca suavizar el efecto del ruido introducido al estimar la rotación, este ruido es el que mas influye en la calidad de la realidad aumentada. Los estados son por lo tanto los tres ángulos de Euler, $\psi$, $\theta$ y $\phi$.  
+
+Para implementar el filtro de Kalman es necesario contar con un modelo físico que modele el la evolución de los estados. Como el dispositivo es controlado por una persona, no se puede asumir nada en cuanto al movimiento que va a realizar esta persona. 
+Por lo tanto se toma un modelo de posición constante y se asume que los movimientos que se realizan son peque?os. La matriz de evolución de estados \textbf{F} se toma como la matriz identidad. 
+
+La matriz de covarianza del ruido de proceso $\mathbf{Q}_k$ se toma como una matriz diagonal ya que por como se definió el modelo se deduce que el ruido del proceso para cada estado son independientes.
+
+En este caso las observaciones que se tienen coinciden con los tres estados por lo tanto la matriz de medición \textbf{H} se toma como la matriz identidad. 
+
+La matriz de covarianza del ruido de medición se calculó se obtuvo a través de varias mediciones con imágenes sintéticas. Se le  aplico el proceso a varias imágenes y se comparó la orientación obtenida contra la real. A partir de estos datos se computó la matriz \textbf{R}. Se tiene que
+
+\[
+\textbf{R} = \left(\begin{array}{ccc}
+4.96249572803608 & 4.31450588099769 & -0.0459669868120827 \\
+4.31450588099769 & 7.02354899298729 & 0.0748919339531972 \\
+-0.0459669868120827 & -0.0748919339531972 & 0.00106230567668207
+\end{array} \right)
+\]
+
+Con estos parámetros se implementó el filtro de Kalman para suavizado. 
+
 \section{Kalman con sensores}
 
 \section{Kalman robusto}
+
+\section{Resultados}
