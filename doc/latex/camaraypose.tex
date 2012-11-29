@@ -400,7 +400,7 @@ donde $\hat{m}(I, E_i, M_j)$ es la proyección del punto $M_j$ en la imagen $i$ u
 
 Finalmente se realiza una estimación de la distorsión radial utilizando un modelo muy similar al visto en la sección \ref{sec:distorsion}. 
 
-\section{Calibiración de cámaras utilizadas}
+\section{Calibración de cámaras utilizadas}
 A lo largo del proyecto se utilizaron diferentes dispositivos, se utilizó un \textit{iPad 2}, un \textit{iPhone 4} y un \textit{iPod Touch $4^{ta}$ generación}. Todas las cámaras fueron calibradas con el método de Zhang. La distorsión radial no se tomó en cuenta para ningún  caso, aún así los resultados obtenidos buenos. 
 Se recuerda que la matriz de parámetros intrínsecos se expresa como 
 \[
@@ -456,17 +456,7 @@ I  =
 \]
  
 \subsection{Calibración \textit{iPad 2}} 
-Los parámetros intrínsecos obtenidos para imágenes de $960\times720$ son:
-\[
-I = 
-\left(\begin{array}{ccc}
-1178.28066  & 0 & 410.22957 \\
-0 & 1161.50785 & 331.82398 \\
-0 & 0 & 1
-\end{array}\right)  
-\]
-
-Para la aplicación se utilizaron imágenes de $480\times360$ que se obtuvieron de la funcionalidad de \textit{preview} del AVFoundation.  Si bien el dispositivo permite hacer \textit{preview} en este tama\~no, no es posible tomar fotos o capturar fotos. De las calibraciones anteriores se vio que entre imágenes tomadas con la misma cámara de diferentes tama\~no los parámetros intrínsecos varían según la variación del tama\~no. Por lo tanto la calibración para imágenes de $480\times360$ se tomó como los valores obtenidos para imágenes de $960\times720$ divido por dos. 
+Los parámetros intrínsecos obtenidos para imágenes de $480\times360$ son:
 \[
 I  = 
 \left(\begin{array}{ccc}
