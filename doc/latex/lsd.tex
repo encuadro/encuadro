@@ -19,17 +19,18 @@ El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_lsd/lsd_1.eps}
-\caption{Proceso de crecimiento de una región. El ángulo asociado cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Tomada de \cite{grompone10}.}
+\caption{Proceso de crecimiento de una región. El ángulo asociado cada píxel de la imagen está representado por los peque\~nos segmentos y los píxeles coloreados representan la formación de la región. Tomada de \cite{GJMR12}.}
 \label{fig: lsd_1}
 \end{figure}
 
 Los píxels agregados a una región son marcados de manera que no vuelvan a ser testeados. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. \\
+
 Existen algunos casos puntuales en los que el proceso de búsqueda de \textit{line-support regions} puede arrojar errores. Por ejemplo, cuando se tienen dos segmentos que se juntan y que son colineales a no ser por la tolerancia $\tau$ descripta anteriormente, se detectarán ambos segmentos como uno solo; ver Figura \ref{fig: lsd_2}. Este potencial problema es heredado del algoritmo de Burns, Hanson y Riseman.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.25]{figs_lsd/lsd_2.eps}
-\caption{Potencial problema heredado del algoritmo de Burns, Hanson y Riseman. Izq.: Imagen original. Ctro.: Segmento detectado. Der.: Segmentos que deberían haberse detectado. Fuente \cite{grompone10}.}
+\caption{Potencial problema heredado del algoritmo de Burns, Hanson y Riseman. Izq.: Imagen original. Ctro.: Segmento detectado. Der.: Segmentos que deberían haberse detectado. Tomada de \cite{GJMR12}.}
 \label{fig: lsd_2}
 \end{figure}
 
@@ -40,7 +41,7 @@ Sin embargo, LSD plantea un método para solucionar este tipo de problemas. Duran
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_lsd/lsd_3.eps}
-\caption{Búsqueda del segmento que mejor aproxime cada \textit{line-support region}: aproximación de una región por un rectángulo. Izq.: Imagen original. Ctro.: Una de las regiones computadas. Der.: Aproximación rectangular que cubre el $99\%$ de la masa de la región. Fuente \cite{grompone10}.}
+\caption{Búsqueda del segmento que mejor aproxime cada \textit{line-support region}: aproximación de una región por un rectángulo. Izq.: Imagen original. Ctro.: Una de las regiones computadas. Der.: Aproximación rectangular que cubre el $99\%$ de la masa de la región. Tomada de \cite{GJMR12}.}
 \label{fig: lsd_3}
 \end{figure}
 
@@ -50,6 +51,7 @@ Cada \textit{line-support region} debe ser asociada a un segmento. Cada segmento
 La validación de los segmentos previamente detectados se plantea como un método de test de hipótesis. Se utiliza un modelo \textit{a contrario}. El término \textit{a contrario} viene del latín y significa ``al revés'' o ``de forma opuesta''. En procesamiento de imágenes, el principio para la detección \textit{a contrario} define, en primer lugar, un modelo llamado ``\textit{a priori}'' para el caso genérico en el que no haya nada que detectar. Entonces la detección de un evento en particular sólo se dará cuando la cantidad de ocurrencias de dicho evento en el modelo \textit{a priori} sea lo suficientemente baja. Nótese la aparición de cierto valor umbral a ajustar.\\
 
 Para el caso de LSD, dada una imagen de ruido blanco y Gaussiano, se sabe que cualquier tipo de estructura detectada sobre la misma será casual. En rigor, se sabe que para cualquier imagen de este tipo, su \textit{level-line orientation field} toma, para cada píxel, valores independientes y uniformemente distribuídos entre $[0,2\pi]$. Dado entonces un segmento en la imagen analizada, se estudia la probabilidad de que dicha detección se dé en la imagen de ruido, y si \'esta es lo suficientemente baja, el segmento se considerará válido, de lo contrario se considerará que se esta bajo la hipótesis $H_0$: un conjunto aleatorio de píxeles que casualmente se alinearon de manera de detectar un segmento.\\
+
 Para estudiar la probabilidad de ocurrencia de una cierta detección en la imagen de ruido, se deben tomar en cuenta todos los rectángulos potenciales dentro de la misma. Dada una imagen $N\times N$, habrán $N^4$ orientaciones posibles para los segmentos, $N^2$ puntos de inicio y $N^2$ puntos de fin. Si se consideran $N$ posibles valores para la anchura de los rectángulos, se obtienen $N^5$ posibles segmentos. Por su parte, dado cierto rectángulo $r$, detectado en la imagen $x$, se denota $k(r,x)$ a la cantidad de píxeles alineados dentro del mismo. Se define además un valor llamado \textit{Number of False Alarms} (NFA) que está fuertemente relacionado con la probabilidad de detectar al rectángulo en cuestión en la imagen de ruido $X$:
 \[
 NFA(r,x) = N^5. P_{H_0}[k(r,X) \geq k(r,x) ]
@@ -59,6 +61,7 @@ véase que el valor se logra al multiplicar la probabilidad de que un segmento de
 NFA(r) \leq \epsilon
 \] 
 donde empíricamente $\epsilon=1$ para todos los casos.\\
+
 Si se toma en cuenta que cada píxel de la imagen ruidosa toma un valor independiente de los demás, se concluye que también lo harán su gradiente y su \textit{level-line orientation field}. De esta manera, dada una orientación aleatoria cualquiera, la probabilidad de que uno de los píxeles de la imagen cuente con dicha orientación, a menos de la ya mencionada tolerancia $\tau$, será:
 \[
 p = \frac{\tau}{\pi}
@@ -131,7 +134,6 @@ Como en este proyecto en particular se trabaja con marcadores formados por cuadr
 
 Originalmente, LSD fue implementado en precisión doble o \textit{double} (en general 64 bits por valor). Sin embargo, el \textit{ipad 2} (dispositivo para el cual se optimizó el algoritmo), cuenta con un procesador \textit{ ARM Cortex-A9}, cuyo bus de datos es de 32 bits. Se decidió entonces probar cambiar al algoritmo a precisión simple o \textit{float} (32 bits por valor) y los resultados fueron realmente buenos. No sólo el algoritmo bajó su tiempo de ejecución, sino que además no existen cambios notorios en el desempe\~no del mismo.
 
-\newpage
 \subsection{Resultados}
 
 \subsubsection{Filtro Gaussiano}
@@ -264,7 +266,7 @@ $$
 \textbf{50\% para imágenes naturales genéricas, con muchos segmentos.}
 \end{array}
 $$
-Cabe aclarar sin embargo, que si bien los resultados cualitativos\footnote{Se entiende por resultados cualitativos a la ejecución de LSD en tiempo real en el \textit{iPad}. Imposibles de ilustrar en el presente texto.} sugieren resultados similares, los resultados cuantitativos fueron logrados con tan sólo las dos imágenes presentadas anteriormente.\\
+Cabe aclarar sin embargo, que si bien los resultados cualitativos\footnote{Se entiende por resultados cualitativos a la ejecución de LSD en tiempo real en el \textit{iPad}, imposibles de ilustrar en el presente texto. Ver Sección \ref{sec: casoUso1}.} sugieren resultados similares, los resultados cuantitativos fueron logrados con tan sólo las dos imágenes presentadas anteriormente.\\
 
 
 Finalmente, en las Figuras \ref{fig: lsd_10} y \ref{fig: lsd_11} se muestan los resultados luego de haber procesado a las Figuras \ref{fig: lsd_8} y \ref{fig: lsd_9} con LSD, primero con la implementación original y luego con la optimizada. Se puede ver, en primer lugar, la gran diferencia que existe entre la cantidad de segmentos detectados en una y otra imagen. Además, se concluye que el desempe\~no de ambas implementaciones es muy similar para el caso de la imagen \textit{zebras.png} e idéntico para el caso del marcador.\\
