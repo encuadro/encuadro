@@ -15,28 +15,98 @@ Ventajas del Lenguaje C para procesamiento de imágenes
 Al trabajar con Apple se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres tipos de dispositivos en los que se pueden desarrollar: iPhone, iPad y iPod Touch. Para cada variante de plataforma existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de lo dispositivos al mercado y se describen resumidamente las principales características.
 \subsection{iPhone, iPad, iPod Touch}
 Sin dudas el iPhone fue uno de los saltos más grandes en el mundo tecnológico en los últimos a\~nos. Logró llenar el hueco que los PDAs de la década de los 90 no habían sabido completar y comenzó a desplazar al invento que revolucionó el mercado de los contenidos de música, el iPod. Gracias a su pantalla táctil capacitiva de alta sensibilidad logró reunir todas las funcionalidades agregando solamente un gran botón y algunos extra para controlar volumen o desbloquar el dispositivo. \\
-La primera generación del iPhone fue lanzada por Apple en Junio de 2007 en Estados Unidos, luego de una gran inversión de la operadora ATT que exigía exclusividad de venta dentro de dicho país durante los siguientes cuatro a\~nos. La misma soportaba tecnología GSM cuatribanda y se lanzó en dos variantes de 4GB y 8GB de ROM. El segundo modelo lanzó como novedad el soporte de tecnología 3G cuatribanda y GPS asistido. Luego le siguieron el iPhone 3GS, 4, 4S y el 5, siendo este último, la sexta y última generación disponible al momento de la redacción de este trabajo.\\
-\\
-HACER TABLA COMPARANDO\\
-\\
+La primera generación del iPhone fue lanzada por Apple en Junio de 2007 en Estados Unidos, luego de una gran inversión de la operadora AT\&T que exigía exclusividad de venta dentro de dicho país durante los siguientes cuatro a\~nos. La misma soportaba tecnología GSM cuatribanda y se lanzó en dos variantes de 4GB y 8GB de ROM. El segundo modelo lanzó como novedad el soporte de tecnología 3G cuatribanda y GPS asistido. Luego le siguieron el iPhone 3GS, 4, 4S y el 5, siendo este último, la sexta y última generación disponible al momento de la redacción de este trabajo.\\
+
 %http://ipod.about.com/od/ipadcomparisons/a/ipad-iphone-3gs-ipod-touch.htm
 %http://www.apple.com/ipod-touch/specs.html
 %http://www.apple.com/iphone/specs.html
 %http://www.apple.com/ipod-touch/fourth-generation-specs.html
 %http://www.apple.com/ipad/compare/
+
 %http://en.wikipedia.org/wiki/List_of_iOS_devices
 %http://en.wikipedia.org/wiki/IPod_Touch
 %http://en.wikipedia.org/wiki/IPhone
 %http://en.wikipedia.org/wiki/IPad
-Por su parte tanto el iPad como el iPod Touch también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los efectos del presente proyecto.
-\\
-\\
-\\
-Las dimensiones del iPhone 5 son de 58.6 x 123.8 x 7.6 millimetres, resolución de pantalla de 640 x 1136, tiene una velocidad de reloj en la CPU de 1200MHz, RAM de 1GB y la ROM varía según la variante (16GB, 30GB o 64GB).
 
- 
+%SUPPORT
+%http://support.apple.com/kb/SP587
+%http://support.apple.com/kb/SP643
+%http://support.apple.com/kb/SP594
+%http://support.apple.com/kb/SP622
+
+%PLATFORM NOTES
+%http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/OpenGLESPlatforms/OpenGLESPlatforms.html
+
+%BENCHMARK GPU
+%http://www.anandtech.com/show/4216/apple-ipad-2-gpu-performance-explored-powervr-sgx543mp2-benchmarked
+
+%COMPARE
+%http://www.gsmarena.com/compare.php3
+
+%GPU SGX
+%http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/OpenGLESPlatforms/OpenGLESPlatforms.html
+Por su parte tanto el iPad como el iPod Touch también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los 
+efectos del presente proyecto.
+
+\tiny
+\begin{table}[htbp]
+\caption{Comparativa de algunas plataformas Apple}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+& \textbf{iPhone 4} & \textbf{iPhone 4s} & \textbf{iPod Touch 4G} & \textbf{iPad 2} \\ \hline
+
+\textbf{ROM} & \scriptsize 8, 16 o 32 GB & \scriptsize 16, 32 o 64 GB & \scriptsize 8, 32 o 64 GB & \scriptsize  16, 32 o 64 GB \\ \hline
+
+\textbf{RAM} & \scriptsize 512 MB  & \scriptsize 512 MB & \scriptsize 256 MB & \scriptsize 512 MB \\ \hline
+
+\textbf{SoC} & \scriptsize Apple A4 & \scriptsize Apple A5 & \scriptsize Apple A4 & \scriptsize Apple A5 \\ \hline
+
+\textbf{CPU} & \scriptsize 1 GHz, ARM Cortex-A8 & \scriptsize 1 GHz,  dual-core ARM Cortex-A9 & \scriptsize 800 MHz, ARM Cortex-A8 & \scriptsize 1 GHz  dual-core ARM Cortex-A9   \\ \hline
+
+\textbf{GPU} & \scriptsize PowerVR SGX535 GPU & \scriptsize PowerVR SGX543MP2 & \scriptsize PowerVR SGX535 GPU & \scriptsize PowerVR SGX543MP2 \\ 
+		    & \scriptsize  & \scriptsize  (2-core) GPU & \scriptsize  & \scriptsize  (2-core) GPU \\ \hline
+
+\textbf{CÁMARA} & \scriptsize Foto: 5.0 MP & \scriptsize Foto: 8.0 MP & \scriptsize Foto: 0.7 MP & \scriptsize Foto: 0.7 MP \\ 
+				    	& \scriptsize  Video: 720p HD (30 fps) & \scriptsize  Video: 1080p HD (30 fps) & \scriptsize Video: 720p HD (30 fps) & \scriptsize Video: 720p HD (30 fps) \\ \hline
+
+\textbf{PANTALLA} & \scriptsize Diagonal: 3.5'' & \scriptsize Diagonal: 3.5'' & \scriptsize Diagonal: 3.5'' & \scriptsize Diagonal: 9.7'' \\ 
+				  & \scriptsize Pixels: 960x640 & \scriptsize Pixels: 960x640 & \scriptsize Pixels: 960x640 & \scriptsize Pixels: 1024x768 \\ 
+				  & \scriptsize Densidad de Pixels: 326 ppi  & \scriptsize  Densidad de Pixels: 326 ppi  & \scriptsize Densidad de Pixels: 326 ppi  & \scriptsize  Densidad de Pixels: 123 ppi \\ 
+				  & \scriptsize Multitáctil & \scriptsize Multitáctil & \scriptsize Multitáctil & \scriptsize Multitáctil \\ \hline
+
+
+\textbf{SENSORES} & \scriptsize Girsóscopo de 3 ejes & \scriptsize Girsóscopo de 3 ejes & \scriptsize Girsóscopo de 3 ejes & \scriptsize Girsóscopo de 3 ejes \\
+& \scriptsize Acelerómetro  & \scriptsize Acelerómetro & \scriptsize Acelerómetro & \scriptsize Acelerómetro\\
+& \scriptsize Sensor de luz ambiente & \scriptsize Sensor de luz ambiente & \scriptsize  Sensor de luz ambiente & \scriptsize  Sensor de luz \\ 
+& \scriptsize Sensor de proximidad & \scriptsize Sensor de proximidad &  & \\ \hline
+\end{tabular}
+\label{compHWiOS}
+\end{table}
+\normalsize
+\textbf{SoC}
+Una de las características comparadas es el \textbf{SoC} que significa \textit{System on Chip} por sus siglas en inglés.\\
+explicar contraposici[on de system in package\\
+\\
+Apple A4, A5, A6 \\
+\textbf{GPU}\\
+SGX\\
+Por qué motivos se eligieron esos dispositivos a comparar\\
+tile based deferred rendering (TBDR)
+
+
+\begin{figure}[h!]
+\centering
+$
+\begin{array}{cc}
+\includegraphics[scale=0.3]{figs_hwysw/applea4.png} & \includegraphics[scale=0.3]{figs_hwysw/applea5.png} \\
+\end{array}
+$
+\caption{SoC.}
+\label{fig: soc}
+\end{figure}
 
 \section{Software de Apple Inc.}
+
 \subsection{Sistemas Operativos}
 Para poder desarrollar aplicaciones sobre dispositivos móviles de la firma Apple Inc. es necesario contar con computadoras que corran el sistema operativo \textbf{Mac OS X}. Esto puede ser llevado a cabo, ya sea adquiriendo plataformas de desarrollo de la mencionada firma o creando máquinas virtuales que corran dicho sistema operativo. Para la segunda opción (la más económica pero con ciertas dificultades de performance), es necesario que la computadora cuente con virtualización de hardware. Se comenzó trabajando de esta manera hasta el momento de adquirir plataformas de desarrollo que contaran con Mac OS X en forma nativa.\\
 Mac OS X refiere a la versión número 10 (en números romanos) de una serie de sistemas operativos que comenzaron a desarrollarse en la década de los 80 (Mac OS 1 data del a?o 1984). En los últimos 28 a?os se han ido sucediendo nuevas versiones que han ido mejorando características en la estructura de datos con la incorporación de la jerarquía de archivos en Mac OS 3 por ejemplo, en la búsqueda de archivos, con la simultaneidad de tareas, multiplicidad de usuarios o incluso con el énfasis en la interfaz de usuario por mencionar algunas características importantes en la evolución de esta familia de sistemas operativos. Dentro de Mac OS X existen distintas versiones, siendo la más actual la Versión 10.8: Mountain Lion lanzada durante 2012.\\
