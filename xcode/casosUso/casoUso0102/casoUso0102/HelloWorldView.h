@@ -13,14 +13,14 @@
 #import "claseDibujar.h"
 
 bool fin;
-@interface videoView : UIImageView <AVAudioPlayerDelegate> {
+@interface videoView : UIImageView {
 }
 //@property(nonatomic,retain) Isgl3dViewController* viewController;
 @end
 
 
 @class Isgl3dDemoCameraController;
-@interface HelloWorldView : Isgl3dBasic3DView {
+@interface HelloWorldView : Isgl3dBasic3DView <AVAudioPlayerDelegate>{
     
 @private
 	// The rendered text

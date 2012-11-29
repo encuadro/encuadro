@@ -137,48 +137,48 @@ double* luminancia;
     
     
     
-    if (cgvista.dealloc==0)
-    {
-        [cgvista removeFromSuperview];
-        cgvista.dealloc=1;
-    }
-    /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if ([self.isgl3DView getDibujar])
-    {
-        
-        /*Reproyectamos los puntos*/
-        
-        //        for (int i=0;i<NumberOfPoints;i++)
-        //            
-        //        {
-        //          
-        //            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
-        //            VEC_SUM(reproyectados[i],aux,Tras);
-        //        
-        //        }
-        
-        // Para terminar bien esto hay que calibrar bien la camara del ipad.
-        
-        /*Reproyectamos los puntos*/
-        
-        cgvista.cantidadSegmentos = listFiltradaSize;
-        cgvista.cantidadEsquinas = listFiltradaSize;
-        
-        cgvista.segmentos = listFiltrada;
-        cgvista.esquinas = imagePoints;
-        
-        [self.videoView addSubview:cgvista];
-        
-        
-        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
-        
-        cgvista.bounds=CGRectMake(0, 0, wSize, hSize);
-        
-        [cgvista setNeedsDisplay];
-        
-        cgvista.dealloc=0;
-        
-    }
+//    if (cgvista.dealloc==0)
+//    {
+//        [cgvista removeFromSuperview];
+//        cgvista.dealloc=1;
+//    }
+//    /*-------------------------------| Clase dibujar | ----------------------------------*/
+//    if ([self.isgl3DView getDibujar])
+//    {
+//        
+//        /*Reproyectamos los puntos*/
+//        
+//        //        for (int i=0;i<NumberOfPoints;i++)
+//        //            
+//        //        {
+//        //          
+//        //            MAT_DOT_VEC_3X3(aux, rotacion, object[i]);
+//        //            VEC_SUM(reproyectados[i],aux,Tras);
+//        //        
+//        //        }
+//        
+//        // Para terminar bien esto hay que calibrar bien la camara del ipad.
+//        
+//        /*Reproyectamos los puntos*/
+//        
+//        cgvista.cantidadSegmentos = listFiltradaSize;
+//        cgvista.cantidadEsquinas = listFiltradaSize;
+//        
+//        cgvista.segmentos = listFiltrada;
+//        cgvista.esquinas = imagePoints;
+//        
+//        [self.videoView addSubview:cgvista];
+//        
+//        
+//        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+//        
+//        cgvista.bounds=CGRectMake(0, 0, wSize, hSize);
+//        
+//        [cgvista setNeedsDisplay];
+//        
+//        cgvista.dealloc=0;
+//        
+//    }
     /*-------------------------------| Clase dibujar | ----------------------------------*/
     
 }
