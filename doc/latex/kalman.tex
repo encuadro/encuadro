@@ -44,7 +44,6 @@ El filtrado parte de una condición inicial $\hat{\mathbf{x}}_{0|0}$ y $\mathbf{P
 \end{eqnarray}
 \end{itemize}
 
-Hay que hablar de cuales son las posibilidades de kalman aca, suvizado o predictivo. Hablar de que eficiente computacionealmente pq toda la info del pasado esta guardada en el estado anterior y solo necesita un estado. 
 
 \section{Kalman para suavizado}
 
@@ -61,16 +60,49 @@ La matriz de covarianza del ruido de medición se calculó se obtuvo a través de v
 
 \[
 \textbf{R} = \left(\begin{array}{ccc}
-4.96249572803608 & 4.31450588099769 & -0.0459669868120827 \\
-4.31450588099769 & 7.02354899298729 & 0.0748919339531972 \\
--0.0459669868120827 & -0.0748919339531972 & 0.00106230567668207
+4.962496 & 4.314506 & -0.045967 \\
+4.314506 & 7.023549 & 0.074892 \\
+-0.045967 & -0.074892 & 0.001062
 \end{array} \right)
 \]
 
 Con estos parámetros se implementó el filtro de Kalman para suavizado. 
 
 \section{Kalman con sensores}
+Para hacer la fusión de sensores se tomaron los mismos estados, la misma matriz de evolución de estados y el mismo error de proceso. Como observaciones se tienen los ángulos de Euler calculados por POSIT $\left(\psi_C,\theta_C,\phi_C\right)$ y los ángulos de Euler a la salida de los sensores inerciales  $\left(\psi_S,\theta_S,\phi_S\right)$. La ecuación de observaciones de Kalman queda
 
-\section{Kalman robusto}
+\[
+\left(\begin{array}{c}
+\psi_C\\
+\theta_C\\
+\phi_C\\
+\psi_S\\
+\theta_S\\
+\phi_S
+\end{array}\right) =
+\left(\begin{array}{ccc}
+1 & 0 & 0 \\
+0 &1 & 0 \\
+0 & 0 & 1 \\
+1 & 0 & 0 \\
+0 &1 & 0 \\
+0 & 0 & 1 \\
+\end{array}\right)
+\left(\begin{array}{c}
+\psi\\
+\theta\\
+\phi\\
+\end{array}\right)+
+\left(\begin{array}{cccccc}
+4.962496 & 4.314506 & -0.045967 & 0 & 0 & 0 \\
+4.314506 & 7.023549 & 0.074892 & 0 & 0 & 0  \\
+-0.045967 & -0.074892 & 0.001062 & 0 & 0 & 0 \\
+0 & 0 & 0 & 1 & 0 & 0\\ 
+0 & 0 & 0 & 0 & 1 & 0\\ 
+0 & 0 & 0 & 0 & 0 & 1\\ 
+\end{array} \right)
+\]  
+La matriz de error de medición es una matriz de bloques diagonal compuesta por la matriz de covarianza del error de medición de POSIT y por la matriz de covarianza del error de medición de los sensores. Es razonable tomar la matriz covarianza como diagonal ya que esto implica que el error de medición de  POSIT es independiente de el de los sensores. Para los sensores no se contó con ninguna estadistica que permitiera calcular la matriz de covarianza, esto es un aspecto a mejorar.  
+%\section{Kalman robusto}
 
 \section{Resultados}

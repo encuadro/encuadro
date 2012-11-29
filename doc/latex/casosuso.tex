@@ -4,7 +4,22 @@
 En este capítulo se describen los distintos casos de uso que se implementaron con el fin de aplicar los algoritmos desarrollados en los capítulos anteriores. Se buscó generar distintos casos de uso que funcionaran como muestra de las funcionalidades que son posibles de realizar mediante la resolución de los algoritmos mencionados.
 \section{Caso de Uso 01}
 \subsection{Comentarios sobre el caso de uso}
+En este caso de uso implementa la parte interactiva de la aplicación. Cuando inicia la aplicación se ve un cubo sobre uno de los marcadores, cuando se presiona sobre el cubo, este se anima y se reproduce un audio. Luego el cubo pasa a estar sobre otro marcador. Esta funcionalidad es fundamental para implementar la audioguía interactiva, podría pensarse una aplicación en la que se presione sobre determinada parte de un cuadro y se reproduzca un audio con información referente a esa zona del cuadro. 
+
+Esta aplicación también se utilizo con fines de \textit{debugging}. Se tienen las siguientes funcionalidades:
+\begin{itemize}
+\item[$\bullet$] Se puede ver dibujada sobre la imagen la salida del LSD.
+\item[$\bullet$] Se puede ver dibujada sobre la imagen la salida del filtro de segmentos y correspondencias.
+\item[$\bullet$] Se puede variar el umbral utilizado para el filtro de segmentos. 
+\item[$\bullet$] Se pueden ver los puntos del modelo reproyectados según la pose obtenida.
+\item[$\bullet$] Se puede prender o apagar Kalman.
+\item[$\bullet$] Se puede aumentar o disminuir el ruido de medición del filtro de Kalman.
+\item[$\bullet$] Se puede elegir si se usa o no la fusión de sensores. 
+\end{itemize} 
+
+ACA FALTARIA PONER ALGUNA IMAGEN DE LA UI Y DE COMO AYUDA AL DEBUGEAR, POR EJEMPLO PONER IMAGEN DE LSD Y DEL FILTRO DE SEGMENTOS ETC. 
 \subsection{Detalles constructivos}
+Explicar clase dibujar, touch event y reproducir audio. 
 \section{Caso de Uso 02}
 \subsection{Comentarios sobre el caso de uso}
 Este caso de uso básicamente busca desplegar un video en una superfice dada del mundo real. Esto puede ser de gran interés como complemento de contenido para un cuadro o cualquier obra si se piensa en aplicarlo para museos. Es posible por ejemplo, generar un video que sea reproducido dentro de los marcos del propio cuadro, en un extremo o en una superficie cualquiera que resulte interesante desde el punto de vista artístico. A continuación se explican brevemente algunos detalles para lograr la implementación de este caso de uso.
