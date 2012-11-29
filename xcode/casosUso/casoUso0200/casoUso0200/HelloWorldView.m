@@ -116,10 +116,10 @@ bool dibujar;
         //        _redondel1 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
         //        _redondel2 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
         //        _redondel3 = [self.scene createNodeWithMesh:sphereMesh andMaterial:material];
-        
-        _cubito1.position = iv3(0,0,-1000);
-        _cubito2.position = iv3(0,0,-1000);
-        _cubito3.position = iv3(0,0,-1000);
+//        
+//        _cubito1.position = iv3(0,0,-1000);
+//        _cubito2.position = iv3(0,0,-1000);
+//        _cubito3.position = iv3(0,0,-1000);
         
         //        _redondel1.position =  iv3(0,0,-1000);
         //        _redondel2.position =  iv3(0,0,-1000);
@@ -209,44 +209,44 @@ bool dibujar;
         //        VEC_SUM(punto3D4,a,self.traslacion);
         
         
-        if (punto3D1[0] < INFINITY)
-        {
-            
-            _cubito1.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
-            _cubito2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
-            _cubito3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
-            
-            //            _redondel1.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
-            //            _redondel2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
-            //            _redondel3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
-            
-            
-            _cubito1.rotationX = 0;
-            _cubito1.rotationY = 0;
-            _cubito1.rotationZ = 0;
-            
-            _cubito2.rotationX = 0;
-            _cubito2.rotationY = 0;
-            _cubito2.rotationZ = 0;
-            
-            _cubito3.rotationX = 0;
-            _cubito3.rotationY = 0;
-            _cubito3.rotationZ = 0;
-            
-            
-            [self.cubito1 roll:-angles.z];
-            [self.cubito1 yaw:-angles.y];
-            [self.cubito1 pitch:angles.x];
-            
-            [self.cubito2 roll:-angles.z];
-            [self.cubito2 yaw:-angles.y];
-            [self.cubito2 pitch:angles.x];
-            
-            [self.cubito3 roll:-angles.z];
-            [self.cubito3 yaw:-angles.y];
-            [self.cubito3 pitch:angles.x];
-            
-        }
+//        if (punto3D1[0] < INFINITY)
+//        {
+//            
+//            _cubito1.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
+//            _cubito2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
+//            _cubito3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
+//            
+//            //            _redondel1.position = iv3(punto3D1[0], -punto3D1[1], -punto3D1[2]);
+//            //            _redondel2.position = iv3(punto3D2[0], -punto3D2[1], -punto3D2[2]);
+//            //            _redondel3.position = iv3(punto3D3[0], -punto3D3[1], -punto3D3[2]);
+//            
+//            
+//            _cubito1.rotationX = 0;
+//            _cubito1.rotationY = 0;
+//            _cubito1.rotationZ = 0;
+//            
+//            _cubito2.rotationX = 0;
+//            _cubito2.rotationY = 0;
+//            _cubito2.rotationZ = 0;
+//            
+//            _cubito3.rotationX = 0;
+//            _cubito3.rotationY = 0;
+//            _cubito3.rotationZ = 0;
+//            
+//            
+//            [self.cubito1 roll:-angles.z];
+//            [self.cubito1 yaw:-angles.y];
+//            [self.cubito1 pitch:angles.x];
+//            
+//            [self.cubito2 roll:-angles.z];
+//            [self.cubito2 yaw:-angles.y];
+//            [self.cubito2 pitch:angles.x];
+//            
+//            [self.cubito3 roll:-angles.z];
+//            [self.cubito3 yaw:-angles.y];
+//            [self.cubito3 pitch:angles.x];
+//            
+//        }
     }
     
 } 

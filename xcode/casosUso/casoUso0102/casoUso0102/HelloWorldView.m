@@ -282,8 +282,8 @@ bool corners, segments, reproyected;
     }
     
     NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
-    NSError *error;
-    self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    //NSError *error;
+    self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
     self.audioPlayer.numberOfLoops=0;
     self.audioPlayer.delegate = self;
     [self.audioPlayer play];

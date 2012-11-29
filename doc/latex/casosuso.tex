@@ -16,7 +16,7 @@ Esta funcionalidad es fundamental si lo que se quiere implementar es por ejemplo
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_casosuso/CasoUso1}
-\caption{Captura de pantalla del caso de uso ``interactividad'', se puede ver el cubo apoyado sobre el QlSet de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.}
+\caption{Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el QlSet de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.}
 \label{fig:CasoUso1}
 \end{figure}
 
@@ -44,13 +44,87 @@ En la Figura \ref{fig:CasoUso1} también se puede ver cómo es la interfaz de usua
 
 Si bien todas estas pruebas y ajustes si hicieron previamente en una computadora y con imágenes de prueba, fue necesario contar con una aplicación en la que se pudiera ver sobre el dispositivo al conjunto de los algoritmos funcionando en tiempo real.  
 \subsection{Detalles constructivos}
-Explicar clase dibujar, touch event y reproducir audio. 
+\subsubsection{Objetos ISGL3D interactivos}
+
+La manera de agregar interactividad a un nodo ISGL3D es bastante sencilla. En primer lugar, debe configurarse su propiedad \textit{interactive} de forma positiva y luego se le debe ejecutar el método \textit{addEvent3DListener}:
+\footnotesize
+\begin{verbatim}
+Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial 
+materialWithTextureFile:@"red_checker.png" shininess:0.9 
+precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+ 
+Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+        
+Isgl3dNode * _cubito = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+
+_cubito.interactive =YES;
+
+[_cubito1 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+\end{verbatim}
+\normalsize
+En el código anterior, primero se crea un nodo llamado ``$\_$cubito'' con la primitiva de un cubo y cierto material. Luego, se indica que sí se quiere que dicho nodo tenga interactividad y finalmente se lo configura para que cuando ``$\_$cubito'' reciba eventos del tipo \textit{TOUCH$\_$EVENT}, o lo que es lo mismo, cuando se lo toque; se ejecute el método \textit{objectTouched}, definido en la misma clase que esta escrito el código (\textit{self}).\\
+
+En este caso de uso lo que se hizo en \textit{objectTouched} no fue más que cambiar la posición del cubo en la escena y reproducir un audio dependiente de la posición del mismo.\\
+
+\subsubsection{Reproducción de audio en Objective-C}
+
+Para reproducir audios en Objective-C primero la clase en la que se quiere reproducir el audio debe importar el \textit{framework AVFoundation} y luego debe implementar el protocolo \textit{AVAudioPlayerProtocol}. El código que se debe escribir es el sigiuente:
+\footnotesize
+\begin{verbatim}
+NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", 
+         [[NSBundle mainBundle] resourcePath],audio.mp3]];
+
+AVAudioPlayer * audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:nil];
+
+audioPlayer.numberOfLoops=0;
+   
+audioPlayer.delegate = self;
+
+[audioPlayer play];
+
+\end{verbatim}
+\normalsize
+En la primera línea se genera un \textit{url} que indica cuál es el audio a reproducir y luego se le asigna a una instancia de la clase \textit{AVAudioPlayer}. Se dice que no se quiere reproducir el audio en bucle, se asigna a la clase en la que se esta escribiendo el código como la delegada de \textit{audioPlayer}, una instancia de \textit{AVAudioPlayer,} y finalmente se le da inicio al audio. Luego de reproducido el audio, se ejecuta autamáticamente el método de firma:
+\footnotesize
+\begin{verbatim}
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag;
+\end{verbatim}
+\normalsize
+En este código es en donde se indica que la próxima vez que se presione sobre el cubo, se querrá reproducir un audio distinto.\\
+
+\subsubsection{Dibujar en ISGL3D}
+
+Lo que se hizo fue crear una clase nueva, del tipo \textit{UIVIew}, a la que se la llamó ``claseDibujar''. Esta fue agregada como \textit{subView} de la \textit{view} en donde se muestra el video por detrás de lo que dibuja ISGL3D. Dicha clase se configuró para que fuera transparente y del mismo tama\~no que la pantalla del \textit{iPad}. \textit{claseDibujar} cuenta con una cantidad de propiedades a las que se les asignan los diferentes puntos o segmentos que se quieren dibujar; son del tipo ``puntero a entero'' y ``puntero a \textit{float}'' respectivamente. Luego, un método llamado \textit{drawRect} es el que se encarga de dibujar cada uno de los puntos y segmentos. Los puntos se dibujan con las siguientes líneas de código:
+\footnotesize
+\begin{verbatim}
+CGContextRef context = UIGraphicsGetCurrentContext();
+
+CGContextStrokeRect(context, CGRectMake(punto_X, punto_Y, 4, 4));
+\end{verbatim}
+\normalsize
+En la primera línea de código se crea un contexto. Un contexto contiene ciertos parámetros y toda la información especifica del dispositivo, requerida para poder dibujar. En la segunda línea se dibuja cada punto como un rectángulo centrado en el punto en cuestión y con 4 píxeles de ancho y largo. Los segmentos se dibujan con las siguientes líneas de código:
+\footnotesize
+\begin{verbatim}
+CGContextRef context = UIGraphicsGetCurrentContext();
+
+CGContextStrokeLineSegments(context, puntos, 2);
+\end{verbatim}
+\normalsize
+En la primera línea de código se crea un contexto (este paso puede saltearse si ya fue creado anteriormente), y en la segunda se dibuja la línea. La variable ``puntos'' es un arreglo de dos variables del tipo \textit{CGPoint}, cada una de ellas tiene dos valores en precisión simple correspondientes a las coordenadas de un punto. Además, se le configura al segmento una anchura de 2 píxeles. \\
+
+Finalmente, es bueno aclarar que \textit{claseDibujar} se instancia y se destruye cuadro a cuadro; el método \textit{drawRect} se invoca cada vez que se instancia la clase.\\
 
 \section{Caso de uso ``video''}
 \subsection{Comentarios sobre el caso de uso}
-Este caso de uso básicamente busca desplegar un video en una superfice dada del mundo real. Esto puede ser de gran interés como complemento de contenido para un cuadro o cualquier obra si se piensa en aplicarlo para museos. Es posible por ejemplo, generar un video que sea reproducido dentro de los marcos del propio cuadro, en un extremo o en una superficie cualquiera que resulte interesante desde el punto de vista artístico. A continuación se explican brevemente algunos detalles para lograr la implementación de este caso de uso.
-\\
-PONER FOTO MOSTRANDO EL CASO DE USO CON VIDEO PROYECTADO.\\
+Este caso de uso proyecta un video sobre el QlSet de la esquina superior izquierda del marcador de manera consistente con la pose del dispositivo. Ver Figura \ref{fig:CasoUso2}. La aplicación de esta solución técnica es directa. Tan sólo ajustando un par de parámetros el video podría ser proyectado dentro del marco de un cuadro, sobre uno de sus extremos, sobre una pared blanca o incluso sobre un mapa. Esto puede ser de gran interés para un museo, por ejemplo como complemento a una audioguía. A continuación se explican brevemente algunos detalles técnicos que fue necesario solucionar para lograr implementar este caso de uso.\\
+	
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{figs_casosuso/CasoUso2}
+\caption{Captura de pantalla del caso de uso ``video''. Se puede ver al video proyectado sobre el QlSet de la esquina superior izquierda}
+\label{fig:CasoUso2}
+\end{figure}
+
 \subsection{Detalles constructivos}
 Para lograr lo propuesto para este caso de uso se implementó un proyecto que proyecta el video en uno de los cuadrados del marcador. De esta manera, de toda la lógica de estimación de pose, solamente se hace uso de la detección y filtrado. En particular no se hace uso de los resultados del posit. Teniendo entonces detectados los cuatro puntos en los que se quiere reproducir el video parecería que el problema está resuelto. Sin embargo, xcode no permite posicionar en forma directa una vista de video en cualquier conjunto de cuatro puntos. \\
 Si simplemente se quiere reproducir un video, y no se quiere procesar el contenido, lo más cómodo para hacerlo es utilizar la clase \textit{MPMoviePlayerController} que hereda de \textit{NSObject}. Una alternativa similar es haciendo uso de la clase \textit{MPMoviePlayerViewController} que hereda de \textit{UIViewController} y tiene como única propiedad una del tipo \textit{MPMoviePlayerController}. \\
