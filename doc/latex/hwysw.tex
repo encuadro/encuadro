@@ -12,8 +12,9 @@ Ventajas del Lenguaje C para procesamiento de imágenes
 \subsubsection{ITK e ImageMagik}
 
 \section{Dispositivos móviles Apple}
-Al trabajar con Apple se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres tipos de dispositivos en los que se pueden desarrollar: iPhone, iPad y iPod Touch. Para cada variante de plataforma existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de lo dispositivos al mercado y se describen resumidamente las principales características.
+Al trabajar con Apple se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres familias de dispositivos en los que se puede desarrollar: iPhone, iPad y iPod Touch. Para cada variante de plataforma existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de los dispositivos al mercado y se describen resumidamente las principales características.
 \subsection{iPhone, iPad, iPod Touch}
+\subsubsection{Comparación de plataformas.}
 Sin dudas el iPhone fue uno de los saltos más grandes en el mundo tecnológico en los últimos a\~nos. Logró llenar el hueco que los PDAs de la década de los 90 no habían sabido completar y comenzó a desplazar al invento que revolucionó el mercado de los contenidos de música, el iPod. Gracias a su pantalla táctil capacitiva de alta sensibilidad logró reunir todas las funcionalidades agregando solamente un gran botón y algunos extra para controlar volumen o desbloquar el dispositivo. \\
 La primera generación del iPhone fue lanzada por Apple en Junio de 2007 en Estados Unidos, luego de una gran inversión de la operadora AT\&T que exigía exclusividad de venta dentro de dicho país durante los siguientes cuatro a\~nos. La misma soportaba tecnología GSM cuatribanda y se lanzó en dos variantes de 4GB y 8GB de ROM. El segundo modelo lanzó como novedad el soporte de tecnología 3G cuatribanda y GPS asistido. Luego le siguieron el iPhone 3GS, 4, 4S y el 5, siendo este último, la sexta y última generación disponible al momento de la redacción de este trabajo.\\
 
@@ -80,19 +81,20 @@ efectos del presente proyecto.
 & \scriptsize Sensor de luz ambiente & \scriptsize Sensor de luz ambiente & \scriptsize  Sensor de luz ambiente & \scriptsize  Sensor de luz \\ 
 & \scriptsize Sensor de proximidad & \scriptsize Sensor de proximidad &  & \\ \hline
 \end{tabular}
-\label{compHWiOS}
+\label{tab: compHWiOS}
 \end{table}
 \normalsize
-\textbf{SoC}
-Una de las características comparadas es el \textbf{SoC} que significa \textit{System on Chip} por sus siglas en inglés.\\
-explicar contraposici[on de system in package\\
-\\
-Apple A4, A5, A6 \\
-\textbf{GPU}\\
-SGX\\
-Por qué motivos se eligieron esos dispositivos a comparar\\
-tile based deferred rendering (TBDR)
+%http://www.edaboard.com/thread75452.html
 
+%Microcontroller and System-on-a-chip
+%Seminar on Embedded Systems Architecture
+%Peter Thoman (peter.thoman@uibk.ac.at)
+%University of Innsbruck 2009-12-03
+\subsubsection{Algunas características a detallar.}
+Hay algunos comentarios respecto de la Tabla \ref{tab: compHWiOS} que es bueno destacar. Primeramente, es importante decir que se eligieron esos cuatro dispositivos pues pareció de interés conocer al menos una plataforma de cada familia y dentro de las mismas se eligieron las que fueron utilizadas para desarrollar.\\
+Uno de los puntos a evaluar es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. \textit{System on Chip} es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria.  \\
+%http://www.arm.com/products/processors/cortex-a/index.php
+En la Figura \ref{fig: soc} se ilustran los dos tipos de \textit{SoC} de los dispositivos de la Tabla \ref{tab: compHWiOS}: Apple A4 y Apple A5. Algunos dispositivos que no figuran en la tabla como el \textit{iPhone 5} o el \textit{iPad 4} usan \textit{SoCs} más recientes como el Apple A6 o Apple A6x respectivamente. La familia de \textit{SoCs} Apple Ax, es la que la mencionada firma utiliza en todas sus plataformas, inclusive en el \textit{Apple TV} y es manufacturada por Samsung. Estos \textit{SoCs} se caracterizan por utilizar CPUs de arquitectura ARM, en su mayoría ARMv7 y GPUs de PowerVR de la línea SGX. \\
 
 \begin{figure}[h!]
 \centering
@@ -101,9 +103,14 @@ $
 \includegraphics[scale=0.3]{figs_hwysw/applea4.png} & \includegraphics[scale=0.3]{figs_hwysw/applea5.png} \\
 \end{array}
 $
-\caption{SoC.}
+\caption{\textit{System on Chip}: SoC.}
 \label{fig: soc}
 \end{figure}
+
+La arquitectura ARM incorpora algunas características de la arquitectura RISC (\textit{Reduced Instruction Set Computer}) como el hecho que las operaciones sean llevadas a cabo sobre un conjunto de registros a tales efectos y no sobre la memoria directamente. Otra característica que tiene de RISC es que tiene un modo simple de direccionamiento donde las direcciones son también guardadas sobre registros destinados a tales efectos. La mayoría de los procesadores están hechos con un ancho de palabra de 32-bit salvo el reciente ARMv8 que incorpora la posibilidad de utilizar ambos anchos de palabra: 32-bit o 64-bit. Otra característica a destacar sobre estos procesadores es que es posible programar sobre ellos utilizando lenguaje C/C++. Por más información sobre esta arquitectura referirse a la web de la empresa \url{http://www.arm.com}.\\
+Por su parte las GPU utilizadas en los \textit{SoCs} de la serie Apple Ax, son GPUs de PowerVR, una división de la firma Imagination Technologies (\url{http://www.imgtec.com/}) que desarrolla hardware y software para \textit{rendering} 2D y 3D, procesamiento de imágenes y codificación. La función que tiene la GPU es asignar a cada pixel de la pantalla su color para cada cuadro. En particular, estas GPU implementan un concepto innovador de \textit{renderizado} que mejora notoriamente la performance de los gráficos: \textit{Tile-Bassed Deferred Rendering} (TBDR). Este concepto aprovecha la independencia de áreas alejadas de la pantalla y de la correlación de píxeles cercanos y divide la pantalla en \textit{tiles} o baldozas. A cada \textit{tile} se le asocia un procesamiento paralelo y con esto se mejora notablemente la performance respecto al método tradicional: Immediate mode renderers (IMRs), que procesa la pantalla completa. Las imágenes \textit{renderizadas} están hechas por triángulos (polígonos), por lo que uno de los indicadores fundamentales para evaluar la performance de una GPU es la cantidad de triángulos (polígonos) que es capaz de procesar por segundo. En (referencia benchmark: http://www.anandtech.com/show/4216/apple-ipad-2-gpu-performance-explored-powervr-sgx543mp2-benchmarked) se puede ver un análsis interesante que compara entre otros, a los dos tipos de GPU que se presentaron en la Tabla \ref{tab: compHWiOS}: SGX535 y SGX543MP2. En dicho análisis se muestra por ejemplo que en el mejor de los casos la GPU SGX535 fue capaz de procesar 8.69 millones de triángulos por segundo frente a los 29 millones procesados por la GPU SGX543MP2.\\
+%http://www.imgtec.com/powervr/powervr-graphics-technology.asp
+
 
 \section{Software de Apple Inc.}
 
