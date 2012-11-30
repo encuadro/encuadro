@@ -1,0 +1,164 @@
+\chapter{Navegación e Identificación}
+\label{chap: navident}
+\section{Introducción}
+Introducción
+
+\section{Navegación}
+\subsection{Distintos métodos de Navegación.}
+Como se comentó en el Capítulo \ref{chap: alcance}, se estudiaron distintas alternativas para la navegación o localización en el interior del museo. Dentro de las más importantes se encuentra la Navegación con \textit{access points}, la navegación con GPS y la navegación con códigos QR. A continuación se expresan algunos detalles de las mismas. 
+
+\subsection{Navegación con \textit{access points}}
+\label{sec:Navegación con access points}
+Al igual que la localización mediante la tecnología GPS, la localización interior con estándares IEEE 802.11 (WiFi), se obtiene mediante el procesamiento de se\~nales RF. La idea es, una vez conocida la posición de los transmisores WiFi (\textit{Access Points}) presentes en una sala, se miden las distintas se\~nales recibidas por un dispositivo móvil (provinientes de cada uno de los APs). De esta manera, se logra ubicar al móvil dentro de la sala. Es posible utilizar diferentes medidas, como por ejemplo, la potencia de las se\~nales recibidas,  el tiempo de propagación de cada una de ellas o incluso sus ángulos de incidencia.\\
+Debido de su gran complejidad, esta alternativa se descartó casi inmediatamente, ya que al idea no es centrar el proyecto en la navegación de interiores, sino usarla simplemente como una herramienta para la completitud de la aplicación final.
+
+\subsection{Navegación con GPS}
+\label{sec:Navegación con GPS}
+La tecnología GPS (\textit{Global Positioning System}), es altamente usada como sistema asesor para vehículos y sistemas de información geográfica. Algunas bibliografías afirman que su precisión supera los 3m en el $95\%$ de los casos \cite{avellone10}. Sin embargo, resulta imposible utilizar esta tecnología en lugares cerrados o muy edificados. Se decidió entonces que esta no era la herramienta indicada para el problema en cuestión. 
+
+\subsection{Navegación con códigos QR}
+\label{sec:Navegación con códigos QR}
+\subsubsection{?`Cómo incorporarlos a la navegación?}
+La navegación con códigos QR quizá es bastante sencilla de implementar. Simplemente se tiene que tener un código QR ubicado en forma estratégica en cada zona con la que se quiere asociar y el usuario puede recorrer el museo libremente e ir decodificando los códigos en la medida que los ve.
+
+\subsubsection{Identificadores QR: una realidad cotidiana.}
+El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión móvil a internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
+\subsubsection{?`Qué son los QR?}
+Los QRs son una extensión de los códigos de barras, creados por la compa\~nía japonesa \textit{Denso Wave} en 1994 \cite{furht11}. Incorporan una segunda dimensión lo cual es una gran ventaja ya que pueden almacenar mucho más información, la cual puede ser accedida a gran velocidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
+
+En la Figura \ref{fig: qroverview} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos propiamente dicho, que podrían verse como el cuerpo del paquete.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_navident/qrcode_overview4.png}
+\caption{Las distintas componentes de un QR. Fuente (poner fuente).}
+\label{fig: qroverview}
+\end{figure}
+%fuente http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
+
+
+\subsubsection{Codificación y decodificación de c\'odigos QR.}
+
+Es fácil darse cuenta que la codificación resulta mucho más sencilla que la decodificación. Para la codificación es necesario comprender el protocolo, las distintas variantes y el tipo de información que se pretende almacenar. Sin embargo, para la decodificación, además de tener que cumplir con lo anterior, es necesario contar con buenos sensores y ciertas condiciones de luminosidad y distancia que favorezcan a la cámara y se traduzcan en buenos resultados luego de la detección de errores. Si bien la plataforma es importante para lograr buenos resultados, dada una plataforma, existen variadas aplicaciones tanto para iOS como para Android que cuentan con performances bastante diferentes en función del algoritmo de procesamiento utilizado.\\
+
+Debido a que el centro del presente proyecto no fue la codificación y decodificación de QRs, y que además ya existen distintas librerías que resuelven muy bien este problema, se optó por investigar varias de ellas e incorporar la más adecuada a la aplicación.\\
+
+Entre todas las librerías que resuelven la decodificación, las llamadas ZXing y ZBar son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossin'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.\\
+
+Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector y finalmente se optó por utilizar esta librería para los fines de la aplicación. El lector del código de ejemplo consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate}. Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista previa de la cámara. Luego el protocolo se encarga de la captura y procesamiento del QR almacenando como resultado la información embebida en este en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
+%fuente http://code.google.com/p/zxing/
+
+
+\subsubsection{Expresiones artísticas con QRs.}
+La opción de usar los QR de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QR tradicionales para lograr un valor estético además del funcional. V\'ease en la figura \ref{fig: qrArt} un ejemplo de cómo puede lograrse el mismo resultado pero con el valor agregado de originalidad.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_navident/qrArtist.png}
+\caption{Ejemplo de un QR creativo. Fuente (poner fuente).}
+\label{fig: qrArt}
+\end{figure}
+%fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
+
+\section{Técnicas de identificación}
+Técnicas de identificación
+\subsection{SIFT}
+\label{sec: sift}
+El algoritmo SIFT, acr\'onimo de ``Scale Invariant Feature Transform'',  es un algoritmo de visi\'on artificial \cite{Lowe:2004}, \cite{Lowe:1999}, que se encarga de extraer caracter\'isticas distintivas de las im\'agenes en escala de grises. Mediante estas, es posible luego reconocer dicha imagen dentro de una base de datos o incluso dentro de otra imagen mayor con otra cantidad de elementos en desorden. Estas caracter\'isticas son invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades. El algoritmo consta b\'asicamente de cuatro pasos que se explicar\'an brevemente en secciones subsiguientes.\\ 
+
+\subsubsection{Detecci\'on de extremos en el espacio-escala.}
+Se busca encontrar dentro del \textit{scale-space} (espacio-escala) de la imagen puntos caracter\'isticos; invariantes a la traslaci\'on, el escalado y la rotaci\'on de la misma. Adem\'as esos puntos deben ser m\'inimamente afectados por el ruido y peque\~nas distorsiones. Ser\'an los puntos extremos (m\'aximos o m\'inimos) obtenidos de las diferencias Gaussianas aplicadas al \textit{scale-space} de la imagen. El \textit{scale-space} de una imagen se define como una familia de im\'agenes $L(x,y,\sigma)$ que se obtienen de convolucionar un n\'ucleo Gaussiano variable en su desviaci\'on est\'andar $G(x,y,\sigma)$ con una imagen de entrada $I(x,y)$:
+\[
+L(x,y,\sigma) =  G(x,y,\sigma) * I(x,y)
+\]
+donde $*$ denota la convoluci\'on en $x$ e $y$, y adem\'as:
+\[
+G(x,y,\sigma) = \frac{1}{2\pi{\sigma}^2}{\rm e}^{-\frac{x^2 + y^2}{2\sigma^2}} 
+\]
+
+Una imagen diferencia de Gaussianas, $D(x,y,\sigma)$, se define entonoces de la siguiente manera:\\
+\[
+D(x,y,\sigma) = L(x,y,k\sigma) - L(x,y,\sigma) 
+\]
+con $k$ un factor multiplicativo constante.\\
+
+Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ de diferencias Gaussianas con la desviaci\'on est\'andar variando de manera creciente a lo largo de una octava (hasta obtener un $\sigma' = 2\sigma$). Para obtener $s$ intervalos enteros dentro de dicha octava el valor de $k$ en cada diferencia Gaussiana debe ser de $2^{\frac{1}{s}}$. Una vez calculadas las diferencias Gaussianas a lo largo de la octava, la imagen se submuestrea tomando 1 de cada 2 p\'ixeles en filas y columnas y se procede de la misma manera. La cantidad de octavas involucradas en el c\'alculo así como la cantidad de diferencias Gaussianas calculadas por octava son un par\'ametro a determinar. En la figura \ref{fig:SIFT_1} se puede ver lo anterior explicado gr\'aficamente.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_navident/SIFT_1.png}
+\caption{Para cada octava, la imagen original es convolucionada repetidamente con Gaussianas de desviaci\'on est\'andar variable para producir el \textit{scale-space} de la izquierda. Imágenes adyacentes del \textit{space-scale} son restadas para lograr la diferencia de Gaussianas de la derecha. Despu\'es de cada octava, la imagen borrosa es submuestreada por un factor de dos y el proceso se repite. Figura tomada de \cite{Lowe:2004}.}
+\label{fig:SIFT_1}
+\end{figure}
+
+Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transicion entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver figura \ref{fig:SIFT_2}. \\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_navident/SIFT_2.png}
+\caption{M\'aximos y m\'inimos de las im\'agenes diferencia de Gaussianas son obtenidos comparando cada p\'ixeles con sus vecinos en la misma escala, y en las escalas adyacentes. Figura tomada de \cite{Lowe:2004}.}
+\label{fig:SIFT_2}
+\end{figure}
+% -------------------------------------------------------------------------------------------------------------------------------------------
+
+\subsubsection{Localizaci\'on exacta de puntos clave.}
+La b\'usqueda de extremos en las diferencias de Gaussianas produce m\'ultilpes candidatos entre los que se encuentran puntos con poco contraste;  los cuales no son estables a cambios de iluminaci\'on y al ruido. Para quitarlos se procede de la siguente manera.\\
+
+Primero se realiza una expansi\'on de Taylor de grado 2 entorno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
+\begin{equation}
+D(\chi) = D + \frac{\partial D^T}{\partial \chi} \chi + \frac{1}{2}{\chi}^T\frac{\partial^2D}{\partial {\chi}^2} \chi
+\label{eq:1}
+\end{equation}
+donde $D$ y sus derivadas son evaluadas siempre en el punto en cuesti\'on y $\chi = (x,y,\sigma)^T$ es la posici\'on relativa al mismo. Derivando la aproximaci\'on anterior e igual\'andola a cero se obtiene:\\
+\begin{equation}
+\bar{\chi} = -\frac{\partial ^2D^{-1}}{\partial {\chi^2}}\frac{\partial D}{\partial \chi}
+\label{eq:2}
+\end{equation}
+Reemplazando (\ref{eq:2}) en (\ref{eq:1}) se obtiene el valor del m\'aximo local:\\
+\[
+D(\bar{\chi}) = D + \frac{1}{2}\frac{\partial D^T}{\partial \chi} \bar{\chi}
+\]
+Finalmente, si $\left| D(\bar{\chi}) \right|< 0.03$ el punto es eliminado de la lista de puntos clave; suponiendo que D toma valores entre 0 y 1.\\
+
+Adem\'as de quitar aquellos puntos con poco contraste, hay que quitar a los puntos candidatos que pertenecen a una l\'inea y no a una esquina. Para ello, sea $H$ la matriz Hessiana de $D(x,y,\sigma)$ evaluada en un punto extremo de las diferencias de Gaussianas determinado $(x_0,y_0,\sigma_0)$, se estar\'a en presencia de un borde (l\'inea) si sus valores propios $\alpha$ y $\beta$ son uno grande y el otro peque\~no. Lo anterior es equivalente a trabajar con los siguientes resultados:\\
+\[
+Traza(H) = \frac{\partial^2 D}{\partial x^2} + \frac{\partial^2 D}{\partial y^2} = \alpha +\beta
+\]
+\[
+Det(H) = \frac{\partial^2 D}{\partial x^2} \times \frac{\partial^2 D}{\partial y^2} - \left(\frac{\partial^2 D}{\partial x. \partial y} \right)^2= \alpha . \beta
+\]
+Sea la $\alpha = r.\beta$, la condici\'on se reduce a:\\
+\[
+\frac{Traza(H)^2}{Det(H)} < \frac{(r+1)^2}{r}
+\]
+Luego de varios experimentos, se propone un umbral de $r=10$. V\'ease que conforme aumenta la relaci\'on $r$ entre ambos valores propios tambi\'en lo hace la relaci\'on entre el cuadrado de la traza de la matriz Hessiana y su determinante.\\
+
+% -------------------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Asignaci\'on de orientaci\'on.}
+Mediante la asignaci\'on de una orientaci\'on a cada punto de la imagen basada en caracter\'isticas locales de la misma, los puntos clave pueden ser descriptos relativos a estas orientaciones y de esta manera lograr caracter\'isticas invariantes a las rotaciones. Para cada punto clave obtenido $D (x_0,y_0,\sigma_0)$ , se busca su imagen borrosa correspondiente en el espacio escala $L (x,y,\sigma_0)$ y se determina el m\'odulo de su gradiente $m(x,y)$ y la fase del mismo $\theta (x,y)$ utilizando diferencias entre p\'ixeles:\\
+\[
+\begin{array}{c}
+m(x,y) = \sqrt{ (\Delta L_x)^2 + (\Delta L_y)^2} \\ 
+m(x,y) = \sqrt{[L(x+1,y) - L(x-1,y)]^2 + [L(x,y+1) - L(x,y-1)]^2}
+\end{array}
+\]
+\[
+\begin{array}{c}
+\theta(x,y) = tan^{-1}\left( \frac{\Delta L_y}{\Delta L_x}\right) \\ 
+\theta(x,y) = tan^{-1}\left( \frac{L(x,y+1) - L(x,y-1)}{L(x+1,y) - L(x-1,y)}\right) 
+\end{array}
+\]
+
+Para determinar de una forma fiel la orientaci\'on de cada punto clave, \'esta es determinada tomando en cuenta las direcciones de todos los puntos de la imagen dentro de cierto entorno al mismo. Se genera entonces un histograma de direcciones con valores que var\'ian de a 10 grados, ponderado por el m\'odulo del gradiente y una ventana Gaussiana circular centrada en el punto clave, de desviaci\'on est\'andar igual a 1.5 veces el valor del nivel del en cuesti\'on. Cada m\'aximo en el histograma corresponde a la direcci\'on dominante en el gradiente local y ser\'a la asignada al punto clave. Si existen en el histograma otros m\'aximos secundarios de valor mayor o igual al $80\%$ del m\'aximo principal, estos ser\'an utilizados para generar nuevos puntos clave con esa direcci\'on. S\'olo al $15\%$ de los puntos clave se les asigna m\'as de una direcci\'on.\\
+% -------------------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Descriptor de puntos clave.}
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.4]{figs_navident/SIFT_3.png}
+\caption{Izq.: La ventana Gaussiana pondera los valores de m\'odulo y fase en la vecindad de los puntos de inter\'es. Der.: los histogramas con 8 direcciones posibles realizados para cada subregi\'on. Figura tomada de \cite{Lowe:2004}.}
+\label{fig:SIFT_3}
+\end{figure}
+
+Hasta el momento, se le ha asignado a cada punto clave una escala, una locaci\'on y una orientaci\'on. El siguiente paso es determinar para cada punto clave un descriptor relativamente invariante a cambios de iluminaci\'on y afinidades, basado en el entorno del mismo.\\
+
+Una vez determinadas la magnitud y fase del gradiente entorno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcciones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.\\
+
+En la figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\

@@ -1,0 +1,45 @@
+\chapter{Alcance del proyecto.}
+\label{chap: alcance}
+\section{Introducción}
+Introducción
+
+\section{Características generales del proyecto}
+Desarrollo de software sobre plataformas móviles\\
+Comprensión de una plataforma de desarrollo\\
+Procesamiento de imágenes en tiempo real\\
+Implementación del sotware para generar contenido interactivo\\
+
+
+\section{Explicación global de la aplicación}
+La motivación inicial del presente proyecto fue la de desarrollar una aplicación integral que tuviera res grandes componentes:\\
+\begin{itemize}
+\item Navegación
+\item Identificación de obras
+\item Realidad aumentada
+\end{itemize}
+idea inicial de:\\
+
+
+\subsection{Navegación}
+Se estudiaron distintas alternativas para la navegación o localización en el interior del museo. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se podría ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación.
+
+\subsection{Identificación de obras}
+Motivación de identificar las obras para el usuario.
+
+\subsection{Realidad Aumentada}
+
+\subsubsection{Definición}
+\label{sec:DefiniciónAR}
+Es posible definir la realidad aumentada (AR del inglés \textit{Augmented Reality}) como una vista directa o indirecta en tiempo real, de algún elemento o escena física del mundo real, a la que se le agrega información de manera virtual o digital mediante el uso de herramientas computacionales \cite{furht11}. Cuando se genera una escena por medio de la realidad aumentada, conviven en ella elementos reales con elementos virtuales que buscan verse tan reales como se pueda. Es basicamente un juego de percepciones.\\
+La realidad aumentada es un área que se encuentra en pleno desarrollo y todo el tiempo aparecen ideas novedosas y muy interesantes, lo que la hace por demás apasionante.
+
+\subsubsection{Cómo es el camino hacia la realidad aumentada.}
+\label{sec:FundamentoAR}
+(REVISAR ESTE FUNDAMENTO Y AGREGAR IMAGEN DE 1ER HITO)\\
+El proceso mediante el cual se logra la realidad aumenada puede dividirse básicamente en dos grandes partes. La primera es el seguimiento de la cámara. Esto es el lograr ubicar la cámara perfectamente (rotación y traslación), respecto de un eje de coordenadas arbitrario asignado al mundo real. Este seguimiento puede lograrse mediante el reconocimiento de características de las imágenes tomadas por la cámara o incluso mediante la detección de bordes o esquinas de algún marcador en particular correctamente modelado respecto del \textit{eje del mundo} previamente mencionado. Tener un correcto modelo de los objetos del mundo respecto de este eje resulta una cuestión realmente importante para poder luego recostruír la imagen con la infrmación agregada digitalmente. \\
+Una vez conocida la posición del la cámara en el mundo, resta agregar la información a la imagen. Esto es posible ya que al tener un correcto modelo del mundo respecto de su eje de coordenadas, es posible ubicar (en el modelo teórico) un objeto digital y resolviendo un sencillo sistema de ecuaciones se obtiene su posición en la imagen cuadro a cuadro.\\
+El proceso mediante el cual se genera una imagen 2D a partir de un modelo 3D se denomina Renderización y se analizará con algo más de detalle en secciones subsiguientes. También se analizarán más a fondo el concepto del modelado 3D y el de modelado de la cámara en cuestión, ya que no todas las cámaras se comportan de igual manera desde que su construcción no es idéntica a la construcción de ninguna otra cámara (aunque bajo ciertas hipótesis, se deberá suponer que cierto conjunto de cámaras cuenta con características similares). Para realizar entonces la transformación desde el mundo 2D al mundo 3D y viceversa, resulta de vital importancia contar con un modelo detallado y preciso de la cámara utilizada.\\
+
+
+\section{Explicación del documento}
+Explicar cada uno de los cap´itulos asociados a cada una de las partes necesarias para lograr la realidad aumentada.
