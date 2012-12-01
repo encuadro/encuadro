@@ -1,14 +1,14 @@
 \chapter{Implementación}
 \label{chap: imp}
 \section{Introducción}
-En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García, que se eligieron para hacer el prototipo.\\
-La aplicación consta de distintas funcionalidades tales como:\\
+En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García, que se eligieron para hacer el prototipo. Se siguió la línea que se planteó desde un inicio que fue la de tener tres partes fundamentales: Navegación, Identificación y Realidad Aumentada. Para eso se incorporaron a la aplicación las siguientes funcionalidades:
  \begin{itemize}
-\item[(1)] Detección QR
-\item[(2)] Navegación por listas de cuadros
-\item[(3)] Comunicación con un servidor con la base de datos.
-\item[(4)] Detección SIFT para identificar el cuadro.
-\item[(5)] Diferentes realidades aumentadas según la obra.
+\item Navegación por detección de QRs.
+\item Identificación de obras mediante SIFT.
+\item Comunicación con un servidor.
+\item Navegación por listas de cuadros.
+\item Interactividad con modelos.
+\item Utilización de redes sociales.
 \end{itemize}
 En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
@@ -20,7 +20,7 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \caption{Diagrama global de la aplicación}
 \label{fig: Diaglobal}
 \end{figure}
-Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de leer códigos QR desplegados en las distintas salas o secciones del museo, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: reconocimiento de obra. El reconocimiento de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}\\
+Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de navegar por el museo leyendo códigos QR desplegados en las distintas salas o secciones, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: identificación de la de obra. La identificación de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}\\
 
 De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y así entonces interactuar con él. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la Figura \ref{fig: story}, se presenta el \textit{Storyboard} de la misma, que muestra la relación entre las distintas clases. Se recuerda al lector que el \textit{Storyboard} es una herramienta de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una representación gráfica de la interfaz de usuario. A su vez, a la Figura \ref{fig: story} se le agregó un número identificador en cada \textit{ViewController} para poder referencialos en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
 \begin{figure}[h!]
@@ -221,7 +221,8 @@ UIImageView* vistaImg = [[UIImageView alloc] init];
 UIScreen *screen = [UIScreen mainScreen];
 CGRect fullScreenRect = screen.bounds;   
 
-[vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+[vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, 
+fullScreenRect.size.height/2)];
 [vistaImg setBounds:fullScreenRect];
     
 [self.window addSubview:vistaImg];
@@ -241,12 +242,15 @@ Como fue mencionado en el capítulo \ref{chap: hwysw}, en Xcode, si se quiere sim
     self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
     /*Creamos al videoInput*/
-    self.videoInput  = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:nil];
+    self.videoInput  = [AVCaptureDeviceInput deviceInputWithDevice:
+    self.videoDevice error:nil];
     
     /*Creamos y seteamos al frameOutpt*/
     self.frameOutput = [[AVCaptureVideoDataOutput alloc] init];
     
-    self.frameOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id) kCVPixelBufferPixelFormatTypeKey];
+    self.frameOutput.videoSettings = [NSDictionary dictionaryWithObject:
+    [NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)
+     kCVPixelBufferPixelFormatTypeKey];
     
     /*Ahora conectamos todos los objetos*/
     /*Primero le agregamos a la sesion el videoInput y el videoOutput*/
@@ -256,7 +260,7 @@ Como fue mencionado en el capítulo \ref{chap: hwysw}, en Xcode, si se quiere sim
 \end{verbatim}
 
 Como se ve, es necesario crear una sesión de captura, luego un dispositivo de captura y una salida de los datos y agregarlos a la sesión. También se puede configurar el tipo de captura de la cámara (tiene que ser soportado por el \textit{hardware}, sino se genera un error en este punto). \\
-Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.\\
+Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.
 \begin{verbatim}
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
@@ -268,17 +272,15 @@ Finalmente se da comienzo a la sesión:\\
 \begin{verbatim}
 [self.session startRunning];
 \end{verbatim}
-Como la clase \textit{Isgl3dViewController} implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}, una vez que comienza la sesión, se invoca cuadro a cuadro el siguiente método:\\
+Como la clase \textit{Isgl3dViewController} implementa el protocolo 			textit{AVCaptureVideoDataOutputSampleBufferDelegate}, una vez que comienza la sesión, se invoca cuadro a cuadro el siguiente método:\\
 \begin{verbatim}
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer
 :(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
 \end{verbatim}
 donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene los píxeles de la cámara en ese momento. Así entonces, se accede a los píxeles y se invoca dentro del \textit{captureOutput} periódicamente al método \textit{procesamiento}, encargado de procesar la imagen recibida por la cámara.
-\section{QR}
+\section{El QR en la aplicación}
 \label{sec: QR}
-
-\subsection{El QR en la aplicación}
-Para el caso particular de la aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor como se explicó en la sección \ref{fig: imagenServer}. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
+Para el prototipo de aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor como se explicó en la sección \ref{fig: imagenServer}. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
 
 
 
@@ -313,7 +315,7 @@ Una vez instalado el servidor en cualquiera de ambos sistemas operativos, se pue
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.3]{figs_implementacion/Itworks.eps}
+\includegraphics[scale=0.3]{figs_implementacion/Itworks2.png}
 \caption{Página por defecto del servidor Apache.}
 \label{fig: implementacion_4}
 \end{figure}
