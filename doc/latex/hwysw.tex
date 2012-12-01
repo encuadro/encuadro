@@ -1,7 +1,7 @@
 \chapter{Hardware y Software}
 \label{chap: hwysw}
 \section{Introducción}
-Introducción
+En el presente capítulo se introducen algunos conceptos básicos para el desarrollo sobre plataformas móviles. En particular se describe el hardware que fue utilizado, el lenguaje de programación y el entorno de desarrollo que permitieron incorporar procesamiento sobre los dispositivos. En lo que respecta al hardware esto es todo lo que se comenta sobre el mismo y a nivel de software simplemente se introducen algunos conceptos básicos y se comenta brevemente la función de algunas librerías que fueron utilizadas. No forman parte de este capítulo detalles sobre la implementación de estas librerías en aplicaciones reales, sino simplemente un marco teórico de desarrollo.
 \section{Software de procesamiento de imágenes}
 Software de procesamiento de imágenes
 \subsection{Lenguaje C}
@@ -12,7 +12,7 @@ Ventajas del Lenguaje C para procesamiento de imágenes
 \subsubsection{ITK e ImageMagik}
 
 \section{Elección de plataforma}
-La elección de la plataforma para desarrollar fue una de las primeras desiciones que se tuvo que hacer más allá del proceso natural inicial de investigación del proyecto. Esto es debido a que existen muchos factores que se ven afectados en función de la plataforma que se eligiera que van desde aprendizaje de lenguaje, entorno de desarrollo hasta la adquisición de plataformas y/o máquinas para desarrollar. Así entonces las dos grandes posibilidades que se tenían al comienzo y que determinaban estos factores era la elección de trabajar en plataformas que tuvieran los sistemas operativos Android o iOS (en ningún momento se consideró desarrollar sobre plataformas con Symbian dado que está en proceso de desaparición). Uno de los aspectos desfavorables que se veía sobre Android era la multiplicidad de plataformas existentes, de distintas características de procesamiento, cámara y sensores entre otras cosas con respecto a las plataformas que utilizan iOS. Por otra parte luego de un proceso de investigación se vio que el conjunto de herramientas existentes y el estado de maduración del desarrollo de aplicaciones para iOS hacían de este sistema operativo, un camino más seguro para comenzar en un área que era desconocida. Es sabido que Android es un sistema operativo que viene en pleno crecimiento y que a nivel masivo es una buena alternativa desarrollar en él, pero para los fines de investigación y de desarrollo de sotware que tenía el presente proyecto se vio que era mejor desarrollar sobre iOS y plataformas Apple.\\
+La elección de la plataforma para desarrollar fue una de las primeras desiciones que se tuvo que tomar más allá del proceso natural inicial de investigación del proyecto. Esto es debido a que existen muchos factores que se ven afectados en función de la plataforma que van desde el aprendizaje del lenguaje de programación y del entorno de desarrollo hasta la adquisición de plataformas y/o máquinas para desarrollar. Así entonces las dos grandes posibilidades que se tenían al comienzo y que determinaban estos factores eran plataformas que tuvieran los sistemas operativos Android o iOS (en ningún momento se consideró desarrollar sobre plataformas con Symbian dado que está en proceso de desaparición). Uno de los aspectos desfavorables que se veía de trabajar sobre Android era la multiplicidad de plataformas existentes, de distintas características de procesamiento, cámara y sensores entre otras cosas con respecto a las plataformas que utilizan iOS. Por otra parte luego de un proceso de investigación se vio que el conjunto de herramientas existentes y el estado de maduración del desarrollo de aplicaciones para iOS hacían de este sistema operativo, un camino más seguro para comenzar en un área que era desconocida. Es sabido que Android es un sistema operativo que viene en pleno crecimiento y que a nivel masivo es una buena alternativa desarrollar en él, pero para los fines de investigación y de desarrollo de sotware que tenía el presente proyecto se vio que era mejor desarrollar sobre iOS y plataformas Apple.\\
 
 Al trabajar con Apple entonces se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres familias de dispositivos en los que se puede desarrollar: iPhone, iPad y iPod Touch. Para cada variante de plataforma existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de los dispositivos al mercado y se describen resumidamente las principales características.
 \subsection{iPhone, iPad, iPod Touch}
@@ -102,7 +102,7 @@ En la Figura \ref{fig: soc} se ilustran los dos tipos de \textit{SoC} de los dis
 \centering
 $
 \begin{array}{cc}
-\includegraphics[scale=0.3]{figs_hwysw/applea4.png} & \includegraphics[scale=0.3]{figs_hwysw/applea5.png} \\
+\includegraphics[scale=0.33]{figs_hwysw/applea4.png} & \includegraphics[scale=0.3]{figs_hwysw/applea5.png} \\
 \end{array}
 $
 \caption{\textit{System on Chip}: SoC.}
@@ -227,18 +227,29 @@ Para poder hacer uso del \textit{Instruments}, es necesario correr la aplicación
 \caption{Distintas opciones de \textit{Instruments}.}
 \label{fig: instru}
 \end{figure}
-Luego de elegir el tipo de datos a ser recolectados según lo que se busque analizar, se despliega una ventana como se ve en la Figura \ref{fig: instru2}. Allí es necesario registrar durante varios segundos los datos mientras se corre la aplicación y luego de terminado el registro, \textit{Instruments} dedica un tiempo a analizar los datos recolectados. En el detalle inferior, se desglozan los procesos que corre la aplicación en forma de árbol. Cuando se desea medir tiempos por ejemplo, esto resulta muy útil porque entre otras cosas se puede analizar qué porcentaje del tiempo de la aplicación es consumido por un método en particular. Esto es posible simplemente buscando dentro del árbol mencionado, al método y leyendo el valor asignado de tiempo. Para el caso de análisis de memoria también es posible identificar fácilmente en qué parte del código se está dando algún problema de reserva de memoria no liberada.
+
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.6]{figs_hwysw/instruments_tracing.png}
 \caption{Trazado y análisis de datos recogidos.}
 \label{fig: instru2}
 \end{figure}
+
+Luego de elegir el tipo de datos a ser recolectados según lo que se busque analizar, se despliega una ventana como se ve en la Figura \ref{fig: instru2}. Allí es necesario registrar durante varios segundos los datos mientras se corre la aplicación y luego de terminado el registro, \textit{Instruments} dedica un tiempo a analizar los datos recolectados. En el detalle inferior, se desglozan los procesos que corre la aplicación en forma de árbol. Cuando se desea medir tiempos por ejemplo, esto resulta muy útil porque entre otras cosas se puede analizar qué porcentaje del tiempo de la aplicación es consumido por un método en particular. Esto es posible simplemente buscando dentro del árbol mencionado, al método y leyendo el valor asignado de tiempo. Para el caso de análisis de memoria también es posible identificar fácilmente en qué parte del código se está dando algún problema de reserva de memoria no liberada.
+
 En el presente proyecto se hizo uso principalmente del \textbf{Time Profiler} que permite analizar tiempos y del \textbf{Memory Leak} que permite hacer un análisis de la reserva de memoria no liberada. Con los mismos fue posible optimizar tiempos en determinados métodos del procesamiento, así como también eliminar problemas de memoria no liberada que desencadenaban en la interrupción abrupta de la aplicación luego de llegado un cierto nivel de reserva. Esta interrupción abrupta es una forma de proteger la memoria del dispositivo y evitar que se vea afectada cierta memoria útil a otros efectos. El resto de las herramientas de \textit{Instruments} fueron probadas pero no utilizadas en detalle para resolver problemas particulares.
 
 \section{Herramientas}
-Herramientas
+Además de las herramientas mencionadas propias del entorno de desarrollo fueron utilizadas algunas herramientas más generales de desarrollo de software en lo que respecta al control de versiones de código. A continuación se describen brevemente ciertos detalles de las mismas.
 \subsection{GIT}
+GIT es un software para gestionar código que fue desarrollado por Linus Trovals y permite tener un control de versiones. Se basa en la idea de desarrollo colaborativo en el que existen diversas fuentes que aportan al código. Así entonces lo que se hace es generar un repositorio remoto donde se aloja todo el código y generar un clon o copia local donde es posible realizar modificaciones y actualizar ese repositorio remoto. El repositorio tiene una estructura de archivos y mediante distintos comandos en terminal es posible hacer las actualizaciones. Otro aspecto a considerar es que es posible que existan distintas líneas de desarrollo simultáneas que pueden ser independientes o no. Es posible entonces crear, borrar o \textit{converger} (\textit{merge}) distintas líneas de desarrollo. Existen numerosas empresas que hacen uso de esta herramienta en su desarrollo como Facebook, Tweeter o RedHat entre otros. Más información sobre este software se puede encontrar en \url{http://git-scm.com/}.
 \subsection{GoogleCode}
-\subsection{Github}
+GoogleCode es un sitio que ofrece Google para \textit{hosting} de proyectos, foros de discusión sobre temas de desarrollo y una API para quienes desarrollan sobre recursos de Google. Una de las características principales es que es \textit{open-source} y que ofrece la opción de utilizar distintos software para la gestión de código como Subversion, Mercurial y Git. También ofrece otras funcionalidades como una página \textit{wiki} y la posibilidad de vincular directamente el código con esta página. 
 
+\subsection{Github}
+Github es otro sitio que ofrece \textit{hosting} para proyectos \textit{open-source}. Cuenta con muchas herramientas de gran utilidad y se ha vuelto uno de los sitios más populares. También utiliza el software Git y entre otras cosas permite navegar dentro de la estructura de archivos \textit{online}, ofrece un historial para cada archivo, permite identificar qué colaborador realizó determinados cambios e incluso realizar modificaciones de archivos \textit{online}, sin necesidad de hacer actualizaciones desde terminal.\\
+Para el presente proyecto comenzó utilizándose GoogleCode pero luego se decidió migrar todo el respositorio a Github por contar con mayores facilidades de gestión.
+
+\section{Conclusión}
+En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se conoce el poder de procesamiento de los \textit{SoCs} que componen estas plataformas que integran CPU ARMv7 en varias versiones y GPU SGX con distintas capacidades. Se vio un análisis comparativo entre las tres familias de dispositivos y dentro de las mismas en detalle los modelos de plataformas que fueron utilizados. \\
+Se explicaron algunas características generales de los sistemas operativos iOS y Mac OS X, así como también del lenguaje de programación Objective-C, superconjunto de C y que es el utilizado para desarrollar en los dispositivos mencionados. Se analizaron en detalle los distintos \textit{frameworks} dentro de iOS según los distintos niveles de abstracción que aplican según el uso que el desarrollador esté buscando para su aplicación. También se vieron algunas herramientas que provee el entorno de desarrollo Xcode y otras herramientas que son comunes a cualquier proyecto de desarrollo de software como la utilización del software Git para el control de versiones.
