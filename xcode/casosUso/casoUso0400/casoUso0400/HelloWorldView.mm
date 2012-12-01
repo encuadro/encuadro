@@ -112,45 +112,46 @@ bool corners, segments, reproyected;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado02.pod"];
-        //Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"sofa.pod"];
+        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihua.pod"];
         
         
       
         _model = [_container createSkeletonNode];
 		_model2 = [_container createNode];
         
-        _model.scaleX=5;
-        _model.scaleY=5;
-        _model.scaleZ=5;
-        _model.rotationX = 90;
+        _model.scaleX=15;
+        _model.scaleY=15;
+        _model.scaleZ=15;
+      //  _model.rotationX = 90;
         
-        _model2.scaleX=5;
-        _model2.scaleY=5;
-        _model2.scaleZ=5;
+        _model2.scaleX=3;
+        _model2.scaleY=3;
+        _model2.scaleZ=3;
         _model2.rotationY = 90;
+        _model2.rotationZ = 90;
         
         [podImporter printPODInfo];
         
         
 		[podImporter addMeshesToScene:_model];
-        //[podImporter2 addMeshesToScene:_model2];;
+        [podImporter2 addMeshesToScene:_model2];;
 		
 //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
 //		[_animationController start];
         
-        _model.position = iv3(0, 0, 0);
-        _model2.position = iv3(190,-100,0);
+        _model.position = iv3(190, -50, 0);
+        _model2.position = iv3(0,-50,0);
 
         Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
 		[self.scene addChild:light];
         light.position = iv3(-2, 2, -10);
 
         //light.renderLight = YES;
-//        
-//        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
-//		[self.scene addChild:light2];
-//        light2.position = iv3(2, 2, -10);
+        
+        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
+		[self.scene addChild:light2];
+        light2.position = iv3(2, 2, -10);
         
         //light2.renderLight = YES;
         

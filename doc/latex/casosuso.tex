@@ -5,6 +5,8 @@ En este capítulo se presentan los distintos casos de uso que se implementaron co
 
 A lo cargo del capítulo se verán entonces los tres casos de uso implementados: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. El último caso de uso muestra cómo es posible importar modelos a ISGL3D de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con las primitivas del \textit{framework}, por detalles ver capítulo \ref{chap: render}.
 
+% -------------------------------- |Caso de uso INTERACTIVIDAD| ------------------------------------
+
 \section{Caso de uso ``interactividad''}
 \label{sec: casoUso1}
 \subsection{Comentarios sobre el caso de uso}
@@ -114,6 +116,8 @@ En la primera línea de código se crea un contexto (este paso puede saltearse si 
 
 Finalmente, es bueno aclarar que \textit{claseDibujar} se instancia y se destruye cuadro a cuadro; el método \textit{drawRect} se invoca cada vez que se instancia la clase.\\
 
+% -------------------------------- |Caso de uso VIDEO | ------------------------------------
+
 \section{Caso de uso ``video''}
 \subsection{Comentarios sobre el caso de uso}
 Este caso de uso proyecta un video sobre el QlSet de la esquina superior izquierda del marcador de manera consistente con la pose del dispositivo. Ver Figura \ref{fig:CasoUso2}. La aplicación de esta solución técnica es directa. Tan sólo ajustando un par de parámetros el video podría ser proyectado dentro del marco de un cuadro, sobre uno de sus extremos, sobre una pared blanca o incluso sobre un mapa. Esto puede ser de gran interés para un museo, por ejemplo como complemento a una audioguía. A continuación se explican brevemente algunos detalles técnicos que fue necesario solucionar para lograr implementar este caso de uso.\\
@@ -126,17 +130,20 @@ Este caso de uso proyecta un video sobre el QlSet de la esquina superior izquier
 \end{figure}
 
 \subsection{Detalles constructivos}
-Para lograr lo propuesto para este caso de uso se implementó un proyecto que proyecta el video en uno de los cuadrados del marcador. De esta manera, de toda la lógica de estimación de pose, solamente se hace uso de la detección y filtrado. En particular no se hace uso de los resultados del posit. Teniendo entonces detectados los cuatro puntos en los que se quiere reproducir el video parecería que el problema está resuelto. Sin embargo, xcode no permite posicionar en forma directa una vista de video en cualquier conjunto de cuatro puntos. \\
-Si simplemente se quiere reproducir un video, y no se quiere procesar el contenido, lo más cómodo para hacerlo es utilizar la clase \textit{MPMoviePlayerController} que hereda de \textit{NSObject}. Una alternativa similar es haciendo uso de la clase \textit{MPMoviePlayerViewController} que hereda de \textit{UIViewController} y tiene como única propiedad una del tipo \textit{MPMoviePlayerController}. \\
-\textit{MPMoviePlayerController} tiene un atributo \textit{view} del tipo \textit{UIView} que es la vista y es este atributo el que se quiere posicionar en los cuatro puntos detectados por el filtro. Un atributo del tipo \textit{UIView} tiene un atributo \textit{frame} que es del tipo \textit{CGRect}
+El desafío técnico es, dados 4 puntos dinámicos cualesquiera sobre la pantalla, poder repdocucir un video cuyas esquinas se ajusten a esos 4 puntos. Por lo tanto, en la implementación del presente caso de uso, de toda la lógica de estimación de pose, solamente se hace uso de los bloques de detección, filtrado y determinación de correspondencias. En particular, no se utiliza el algoritmo POSIT visto en el Capítulo \ref{ch: posit}.  Teniendo entonces detectados los límites dentro de los que se quiere reproducir el video, parecería que el problema está resuelto, pues sólo basta con ubicar al video dentro de los mismos. Sin embargo, \textit{Xcode} no permite posicionar en forma directa una \textit{view} (que será la que embeba al video) tomando como límites cuatro puntos cualesquiera.\\
+
+Si simplemente se quiere reproducir un video, y no se quiere procesar su contenido, la solución más simple es utilizar la clase \textit{MPMoviePlayerController} que hereda de \textit{NSObject}. Una alternativa similar es hacer uso de la clase \textit{MPMoviePlayerViewController} que hereda de \textit{UIViewController} y tiene como única propiedad una del tipo \textit{MPMoviePlayerController}. \textit{MPMoviePlayerController} tiene como atributo una \textit{view}, del tipo \textit{UIView}, y son las esquinas de este atributo a las que se las quiere posicionar sobre 4 de los 36 puntos detectados por el filtro. La clase \textit{UIView} tiene un atributo \textit{frame} que es del tipo \textit{CGRect}:
 \begin{verbatim}
 theMovie.view.frame = CGRectMake(0, 0, 60, 60);
 \end{verbatim}
-En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, se tiene el inconveniente de que en principio cualquier video parecería que solamente puede ser reproducido sobre rectángulos y no en cualquier polígono de cuatro puntos por ejemplo. Sin embargo algo que sí se puede hacer a las instancias de la clase \textit{UIView} es una transformación afin o incluso, de manera más genérica, una homografía. 
+En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, parecería que los videos solamente pueden ser reproducidos sobre rectángulos y no sobre cualquier cuadrilátero genérico. Sin embargo algo que sí se les puede hacer a las instancias de la clase \textit{UIView} es una transformación afín o incluso, de forma más genérica, una homografía. \\
+
 \subsection{\textit{CGAffineTransform} y \textit{CATransform3D}}
-La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que es del tipo \textit{CGAffineTransform}. Las primeras letras de esta clase  (\textit{CG}) refieren a la API \textbf{Core Graphics} utilizada ampliamente como herramienta para resolver \textit{rendering} y cualquier tipo de transformación en 2D.\\
-La clase \textit{UIView} también tiene una propiedad llamada \textit{layer} que es del tipo \textit{CALayer} y que permite realizar transformaciones del tipo	 \textit{CATransform3D}. Las primeras letras de estas dos clases  (\textit{CA}) refieren a la API \textbf{Core Animation} que es utilizada para generar animaciones y transformaciones sobre objetos 3D solamente indicando un punto inicial y final para el objeto (también es posible agregar efectos para la transición). En definitiva para resolver el problema del caso de uso existen a priori dos alternativas posibles: \textit{CGAffineTransform} y \textit{CATransform3D}.\\
-Se pueden generar fácilmente instancias transformaciones afines invocando la siguiente función:
+La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que es del tipo \textit{CGAffineTransform}. Las primeras letras de esta clase  (\textit{CG}) refieren a la API \textit{\textbf{Core Graphics} }utilizada ampliamente como herramienta para resolver problemaz de \textit{rendering} y cualquier tipo de transformación en 2D.\\
+
+La clase \textit{UIView} además tiene una propiedad llamada \textit{layer} que es del tipo \textit{CALayer} y que permite realizar transformaciones del tipo	 \textit{CATransform3D}. Las primeras letras de estas dos clases  (\textit{CA}) refieren a la API \textit{\textbf{Core Animation}} que es utilizada para generar animaciones y transformaciones sobre objetos 3D solamente indicando un punto inicial y final para el objeto (también es posible agregar efectos para la transición). En definitiva, para resolver el problema del caso de uso existen \textit{a priori} dos alternativas posibles: \textit{CGAffineTransform} y \textit{CATransform3D}.\\
+
+Se pueden generar fácilmente instancias de transformaciones afines invocando la siguiente función:
 \begin{verbatim}
 CGAffineTransform CGAffineTransformMake (
    CGFloat a,
@@ -147,7 +154,7 @@ CGAffineTransform CGAffineTransformMake (
    CGFloat ty
 );
 \end{verbatim}
-que toma 6 \textit{CGFloats} y crea una \textit{CGAffineTransform}, donde cada uno de los valores anteriores se corresponde con los elementos de una matriz transformación afín de la siguiente manera:
+que toma 6 \textit{CGFloats} (números reales en coma flotante y precisión simple), y crea una \textit{CGAffineTransform}, donde cada uno de los valores anteriores se corresponde con los elementos de una matriz transformación afín de la siguiente manera:
 \[
 \left( \begin{array}{ccc}
 a & b & 0 \\ 
@@ -155,11 +162,9 @@ c & d & 0 \\
 t_{x} & t_{y} & 1 
 \end{array} \right)
 \]
-Así entonces, de los 9 valores de la matriz, 2 de ellos son nulos por tratarse de una transformación afín y otro de ellos es unitario como valor de escala. Resolviendo el sistema como se muestra en la sección \ref{sec: resHomo} y obteniendo los restantes 6 valores, se le puede asignar transformaciones a la propiedad \textit{transform} y realizar la trasnformación deseada. Este método tuvo como inconveniente el hecho de que .....
-\\
-EXPLICAR POR QUE NO FUNCIONÓ
-\\
-Por su parte también es sencillo generar instancias de transformaciones 3D debido a que existe el tipo de dato definido para generar la matriz \textit{CATransform3D} como:
+Así entonces, de los 9 valores de la matriz, 2 de ellos son nulos por tratarse de una transformación afín y otro de ellos es un factor de valor constante 1. Resolviendo el sistema como se muestra en la sección \ref{sec: resHomo} y obteniendo los restantes 6 valores, se le puede asignar transformaciones a la propiedad \textit{transform} y realizar la trasnformación deseada. Sin embargo, una transformación afín preserva colinealidad y realaciones entre distancias; lo que realmente se necesita es una transformación proyectiva. Se decidió entonces estudiar la posibilidad de utilizar una \textit{CATransform3D}.\\
+
+Una \textit{CATransform3D} se define de la siguiente manera:
 \begin{verbatim}
 struct CATransform3D
 {
@@ -168,9 +173,9 @@ CGFloat m21, m22, m23, m24;
 CGFloat m31, m32, m33, m34;
 CGFloat m41, m42, m43, m44;
 };
-typedef struct CATransform3D CATransform3D;
+typedef struct CATransform3D;
 \end{verbatim}
-donde $m_{ij}$ corresponde al elemento de la matriz ubicado en la fila $i$ columna $j$. Así entonces también es posible, conociendo los valores de la homografía, completar los elementos de esta matriz 4x4 y asignársela a la propiedad \textit{layer} de la \textit{UIView}. Esta opción de generar una transformación 3D permite incluir transformaciones más generales que una homografía o una transformación afín. Si lo que se busca es que esta matriz represente una homografía (2D), es necesario entonces que la coordenada z sea nula, es decir
+donde $m_{ij}$ corresponde al elemento de la matriz ubicado en la fila $i$ y la columna $j$. Así entonces, conociendo los valores que debe tomar la homografía, también es posible completar los elementos de esta matriz $4\times 4$ y asignarle la transformación a la propiedad \textit{layer} de cualquier objeto del tipo \textit{UIView}. Demás esta decir que una transformación 3D es algo bastante más genérico que una transformación proyectiva; pero si se anulan algunas entradas de la matriz, es posible lograr el tipo de transformación que se busca. En particular, la coordenada \textit{z} debe ser nula:
 \[
 \left( \begin{array}{cccc}
 m_{11} & m_{12} &    0   & m_{14}\\ 
@@ -179,11 +184,11 @@ m_{21} & m_{22} &    0   & m_{24}\\
 m_{41} & m_{42} &    0   & m_{44}
 \end{array} \right)
 \]
-donde a su vez $m_{44}$ se asume de valor unitario por ser un factor de escala. De la misma manera que para la transformación afín, resolviendo la homografía como se ve en la sección \ref{sec: resHomo} se obtienen los 8 valores restantes de la matriz y es posible asignarle una homografía a un objeto \textit{UIView} para resolver el problema presente.
+donde también en este caso se asume el valor unitario para $m_{44}$ por ser tan sólo un factor de escala. Al igual que para la transformación afín, resolviendo la homografía como se ve en la sección \ref{sec: resHomo} se obtienen los 8 valores restantes de la matriz.
 
 \subsection{Resolución de Homografía}
 \label{sec: resHomo}
-A continuación se hace el desarrollo de la resolución del sistema de ecuaciones que se tuvo que resolver para hallar los parámetros de la homografía que transforma una imagen de referencia en la imagen que se tiene en cada momento como resultado de la captura de la cámara. Se asume entonces que se conocen los puntos de referencia y los puntos de referencia transformados (los detectados luego del filtrado de segmentos) y lo que se quiere averiguar es la matriz $h$ que logra dicha transformación. Esta homografía 2D-2D se puede expresar en forma matricial, en coordenadas homogéneas de la siguiente manera:
+A continuación se plantea la resolución del sistema de ecuaciones que, dados 4 punto correspondientes entre 2 planos, halla los parámetros de la homografía que los relaciona. Esta transformación proyectiva se puede expresar en forma matricial, en coordenadas homogéneas, de la siguiente manera:
 \[
 \left( \begin{array}{ccc}
 h_{11} & h_{12} & h_{13} \\ 
@@ -202,8 +207,7 @@ j \\
 k
 \end{array} \right)
 \]
-donde la matriz $h_{3x3}$  representa la transformación homográfica, el vector $(x,y,z)^t$  representa los puntos de referencia a ser transformados y el vector $(i,j,k)^t$  respresenta los puntos detectados cuadro a cuadro como las esquinas del marcador.\\
-Asumiendo un valor unitario para las coordenadas $z$ y $k$ la resolución del sistema se simplifica mucho y no se pierde generalidad. Imponiendo esto entonces, el sistema anterior se puede expresar de la siguiente forma:
+donde la matriz $h_{3x3}$  representa la transformación homográfica, el vector $(x,y,z)^t$  representa los puntos de referencia y el vector $(i,j,k)^t$  respresenta los puntos transformados. Asumiendo un valor unitario para las coordenadas $z$ y $k$ la resolución del sistema se simplifica mucho y no se pierde generalidad. Imponiendo esto entonces, el sistema anterior se puede expresar de la siguiente forma:
 \begin{equation}\label{eq_1}
 xh_{11} + yh_{12} + h_{13} = i
 \end{equation}
@@ -259,7 +263,7 @@ h_{33}
 0
 \end{array} \right)
 \]
-Teniendo entonces 4 parejas de puntos referencia y puntos transformados y asumiendo $h_{33}$ de valor unitario se tiene entonces 8 ecuaciones y 8 incógnitas, lo que lo vuelve un sistema compatible determinado que se puede expresar de la siguiente manera:
+Teniendo entonces 4 parejas de puntos referencia y puntos transformados, y asumiendo $h_{33}$ de valor unitario, se logran 8 ecuaciones con 8 incógnitas. Se tiene ahora un sistema compatible determinado, que puede ser expresado de la siguiente manera:\\
 \[
 \left( \begin{array}{cccccccc}
 x_0 & y_0 & 1 &  0  &  0  & 0 & -i_0x_0 & -i_0y_0 \\ 
@@ -297,7 +301,30 @@ i_3 \\
 j_3
 \end{array} \right)
 \]
-Así entonces, lo que se hace para resolver la homografía es cuadro a cuadro tener detectados los puntos en los que se quiere presentar la vista del video que se corresponden con cuatro puntos detectados por el filtro y tener las correspondencias con el marcador real, se posiciona la vista en la posición de referencia y se le aplica la homografía hallada que vincula la posición referencia con los puntos detectados.
+
+Finalmente, si los puntos de referencia se definen como 4 puntos del modelo del marcador (en el caso particular de la imagen \ref{fig:CasoUso2}, se usan los puntos 4, 5, 6 y 7 del QlSet de la esquina superior izquierda del marcador), y los transformados son sus correspondientes filtrados e identificados cuadro a cuadro en las imágenes capturadas por el dispositivo; es posible transformar en cada instante a la \textit{view} que contiene al video de manera de que se mantenga siempre en dentro de los límites que uno quiere.\\ 
+%%
+%%Así entonces, lo que se hace para resolver la homografía es cuadro a cuadro tener detectados los puntos en los que se quiere presentar la vista del video que se corresponden con cuatro puntos detectados por el filtro y tener las correspondencias con el marcador real, se posiciona la vista en la posición de referencia y se le aplica la homografía hallada que vincula la posición referencia con los puntos detectados.
 \section{Caso de uso ``modelos''}
 \subsection{Comentarios sobre el caso de uso}
+
+El presente caso de uso no hace más que importar modelos en ISGL3D de manera de agregarle valor a la realidad aumentada. La aplicación de este caso de uso es casi cualquier ejemplo de realidad aumentada en la que se espere contar con una escena con más que tan sólo primitivas agregadas de forma individual o conjunta. Es importante entonces, contar con una peque\~na aplicación piloto para de forma controlada importar los modelos a la escena, ajustar sus tama\~nos, definir sus posiciones, probar diferentes configuraciones para las luces de la misma y hasta intentar animarlos; para así entonces a la hora de implementar una aplicación final, contar con las herramientas suficientes para que los modelos se vean de la mejor manera posible.\\
+
+También resulta importante contar con una instancia de prueba para buscar y descargrar distintos modelos 3D de internet; incluso puede ser un buen ejercicio probar editarlos, rotarlos o escalarlos en algún \textit{software} de cración y animado de modelos. Finalmente, habrá que llevar a cabo todos los pasos necesarios para darle al modelo el formato POD, necesario para ser importado en ISGL3D.\\
+
+En la figura \ref{fig:CasoUso3} se pueden dos imágenes de los modelos 3D pertenecientes a un perro chihuahue\~no y dos sillones, uno de 2 plazas y otro de 3, vistas desde dos ángulos distintos. Todos descansan sobre el marcador.
+\begin{figure}[h!]
+\centering
+$$
+\begin{array}{cc}
+\includegraphics[scale=0.2]{figs_casosuso/CasoUso3_1.png} & \includegraphics[scale=0.2]{figs_casosuso/CasoUso3_2.png}
+\end{array}
+$$
+\caption{2 capturas de pantalla del caso de uso ``modelos'', desde dos ángulos disintos. Se pueden ver los modelos 3D pertenecientes a un perro chihuahue\~no y a dos sillones, uno de 2 plazas y otro de 3.}
+\label{fig:CasoUso3}
+\end{figure}
+
 \subsection{Detalles constructivos}
+Los detalles constructivos de este caso de uso pueden consultarse en el Capítulo \ref{chap: render}.
+
+\section{Conclusión}
