@@ -1,40 +1,62 @@
-\chapter{Alcance del proyecto.}
+\chapter{Alcance del proyecto}
 \label{chap: alcance}
 \section{Introducción}
 Introducción
 
-\section{Características generales del proyecto}
-Desarrollo de software sobre plataformas móviles\\
-Comprensión de una plataforma de desarrollo\\
-Procesamiento de imágenes en tiempo real\\
-Implementación del sotware para generar contenido interactivo\\
+\section{Objetivos del proyecto}
 
+El presente proyecto de fin de carrera contaba con varios objetivos en conjunto. Por un lado, se querían investigar distintos algoritmos de procesamiento de imágenes con el fin de implementarlos y estudiar su desempe\~no sobre ciertas plataformas móviles; para lo cual también se debían estudiar dichas plataformas. Por otro lado, más adelante en el proyecto, se esperaba utilizar lo investigado para lograr una aplicación de realidad aumentada completa, funcionando sobre un dispositivo móvil y en tiempo real. Finalmente se le quería dar, a la aplicación de realidad aumentada, un marco dentro de un \textit{recorrido interactivo en realidad aumentada} para museos.\\
+
+Los objetivos anteriores pueden resumirse en las tres partes fundamentales del proyecto, que se expresan a continuación:
+
+\begin{itemize}
+\item[1.] \textbf{Investigación:} comprensión de la arquitectura de las plataformas móviles y de sus plataformas de desarrollo, con el objetivo de embeber los distintos algoritmos y desarrollar para estas \textit{software} en general. Estudio de las diferentes maneras para lograr la realidad aumentada, elección de los algoritmos a utilizar, su comprensión y en algunos casos su implementación total o parcial. Aprendizaje de herramientas en general.
+\item[2.] \textbf{Implementación}: integración de los distintos bloques para lograr la realidad aumentada. Implementación de bloques lógicos accesorios. Validación de los algoritmos utilizados y desarrollados.
+\item[3.] \textbf{Aplicación}: implementación de una aplicación total en la que el usuario ingrese al museo, se ubique dentro de él, se dirija a un cuadro, reciba información respecto del mismo y finalmente disfrute de la realidad aumentada sobre la obra.
+\end{itemize}
+
+Cada una de ellas se jerarquizó en función de la importancia que se que cree tiene para el proyecto, así como también el tiempo que se le esperaba dedicar:\\
+
+$$
+\begin{array}{|c|c|} \hline
+\textbf{Frente de trabajo}			& \textbf{Porcentaje} \\ \hline
+\textbf{Investigación}		&	50\% \\ \hline
+\textbf{Implementación}	& 30\% \\ \hline
+\textbf{Aplicación}			& 20\%  \\ \hline
+\end{array}
+$$
+
+Es importante aclarar que en ocaciones el límite entre los tres frentes de trabajo es difuso.
 
 \section{Explicación global de la aplicación}
-La motivación inicial del presente proyecto fue la de desarrollar una aplicación integral que tuviera res grandes componentes:\\
+Si bien se dijo que la creación de la aplicación integral, correspondiente a un recorrido en realidad aumentada para muesos, corresponde tan sólo a un quinto del alcance total del proyecto; la visualización de la aplicación total es quizá la forma más sencilla de comprender el proyecto en su conjuto.\\
+
+Esta se desglosa en tres grandes bloques:
+
 \begin{itemize}
-\item Navegación
-\item Identificación de obras
-\item Realidad aumentada
+\item \textbf{Navegación}
+\item \textbf{Identificación de obras}
+\item \textbf{Realidad aumentada}
 \end{itemize}
-idea inicial de:\\
+que tratados individualmente en Secciones subsiguientes.
 
 
 \subsection{Navegación}
-Se estudiaron distintas alternativas para la navegación o localización en el interior del museo. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se podría ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación.
+La navegación es la ubicación del usuario dentro del museo, útil tanto para usuario como para la aplicación, ya que sabiendo en que región del museo este se encuenta, se simplifica un poco la identificación de la obra. Se estudiaron distintas alternativas para la navegación. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se puede ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación. Esta discusión técnica se ve más en detalle en el Capítulo \ref{chap: navident}.\\
 
 \subsection{Identificación de obras}
-Motivación de identificar las obras para el usuario.
+Por identificación de obras se entiende al proceso mediante el cual la aplicación detecta frente a qué obra se encuentra el usuario para así entonces brindarle información de la misma, una audioguía y si fuera el caso la posibilidad de desplegar realidad aumentada sobre ella. La forma en la que se implementó este bloque fue mediante un algoritmo de detección de características de imágenes llamado SIFT. Este algoritmo genera descriptores que sirevn como identificadores de las imágenes y se verá en profundidad en el Capítulo \ref{chap: navident}.\\
 
 \subsection{Realidad Aumentada}
 
-\subsubsection{Definición}
-\label{sec:DefiniciónAR}
-Es posible definir la realidad aumentada (AR del inglés \textit{Augmented Reality}) como una vista directa o indirecta en tiempo real, de algún elemento o escena física del mundo real, a la que se le agrega información de manera virtual o digital mediante el uso de herramientas computacionales \cite{furht11}. Cuando se genera una escena por medio de la realidad aumentada, conviven en ella elementos reales con elementos virtuales que buscan verse tan reales como se pueda. Es basicamente un juego de percepciones.\\
-La realidad aumentada es un área que se encuentra en pleno desarrollo y todo el tiempo aparecen ideas novedosas y muy interesantes, lo que la hace por demás apasionante.
+El proceso mediante el cual se logra la realidad aumentada puede verse en el siguiente diagrama de bloques:
 
-\subsubsection{Cómo es el camino hacia la realidad aumentada.}
-\label{sec:FundamentoAR}
+\begin{figure}
+\centetring
+\includegraphics[scale=0.5]{figs_alcance/}
+\end{figure}
+\caption{}
+\label{fig: }
 (REVISAR ESTE FUNDAMENTO Y AGREGAR IMAGEN DE 1ER HITO)\\
 El proceso mediante el cual se logra la realidad aumenada puede dividirse básicamente en dos grandes partes. La primera es el seguimiento de la cámara. Esto es el lograr ubicar la cámara perfectamente (rotación y traslación), respecto de un eje de coordenadas arbitrario asignado al mundo real. Este seguimiento puede lograrse mediante el reconocimiento de características de las imágenes tomadas por la cámara o incluso mediante la detección de bordes o esquinas de algún marcador en particular correctamente modelado respecto del \textit{eje del mundo} previamente mencionado. Tener un correcto modelo de los objetos del mundo respecto de este eje resulta una cuestión realmente importante para poder luego recostruír la imagen con la infrmación agregada digitalmente. \\
 Una vez conocida la posición del la cámara en el mundo, resta agregar la información a la imagen. Esto es posible ya que al tener un correcto modelo del mundo respecto de su eje de coordenadas, es posible ubicar (en el modelo teórico) un objeto digital y resolviendo un sencillo sistema de ecuaciones se obtiene su posición en la imagen cuadro a cuadro.\\
