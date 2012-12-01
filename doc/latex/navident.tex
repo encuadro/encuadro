@@ -1,20 +1,22 @@
 \chapter{Navegación e Identificación}
 \label{chap: navident}
 \section{Introducción}
-Introducción
+Como se dijo en el Capítulo \ref{chap: alcance} las tres partes del recorrido son \textit{Navegación, Identificación} y \textit{Realidad aumentada}. En este capítulo se presentan las alternativas investigadas y finalmente implementadas para poder lograr un grado de completitud en la aplicación. Para el caso de las alternativas implementadas se aporta mayor detalle sobre la resolución. 
 
 \section{Navegación}
 \subsection{Distintos métodos de Navegación.}
-Como se comentó en el Capítulo \ref{chap: alcance}, se estudiaron distintas alternativas para la navegación o localización en el interior del museo. Dentro de las más importantes se encuentra la Navegación con \textit{access points}, la navegación con GPS y la navegación con códigos QR. A continuación se expresan algunos detalles de las mismas. 
-
-\subsection{Navegación con \textit{access points}}
-\label{sec:Navegación con access points}
-Al igual que la localización mediante la tecnología GPS, la localización interior con estándares IEEE 802.11 (WiFi), se obtiene mediante el procesamiento de se\~nales RF. La idea es, una vez conocida la posición de los transmisores WiFi (\textit{Access Points}) presentes en una sala, se miden las distintas se\~nales recibidas por un dispositivo móvil (provinientes de cada uno de los APs). De esta manera, se logra ubicar al móvil dentro de la sala. Es posible utilizar diferentes medidas, como por ejemplo, la potencia de las se\~nales recibidas,  el tiempo de propagación de cada una de ellas o incluso sus ángulos de incidencia.\\
-Debido de su gran complejidad, esta alternativa se descartó casi inmediatamente, ya que al idea no es centrar el proyecto en la navegación de interiores, sino usarla simplemente como una herramienta para la completitud de la aplicación final.
+Como se comentó en el Capítulo \ref{chap: alcance}, se estudiaron distintas alternativas para la navegación o localización en el interior del museo. Dentro de las más importantes se encuentra la navegación con \textit{access points}, la navegación con GPS y la navegación con códigos QR. A continuación se explican algunos detalles de las mismas. 
 
 \subsection{Navegación con GPS}
 \label{sec:Navegación con GPS}
-La tecnología GPS (\textit{Global Positioning System}), es altamente usada como sistema asesor para vehículos y sistemas de información geográfica. Algunas bibliografías afirman que su precisión supera los 3m en el $95\%$ de los casos \cite{avellone10}. Sin embargo, resulta imposible utilizar esta tecnología en lugares cerrados o muy edificados. Se decidió entonces que esta no era la herramienta indicada para el problema en cuestión. 
+La tecnología GPS (\textit{Global Positioning System}) es altamente usada como sistema asesor para vehículos y sistemas de información geográfica y basa su funcionamiento en el procesamiento de se\~nales RF. Algunas bibliografías afirman que su precisión supera los 3m en el $95\%$ de los casos \cite{avellone10}. La clave de este sistema de posicionamiento radica en que las se\~nales de RF son ondas electromagénicas y viajan a la velocidad de la luz. Entonces mediante el uso de tres satélites o más y osciladores que permitan medir tiempos con muy buena precisión, es posible estimar la posición de la que son recibidas las se\~nales de RF. Sin embargo, resulta imposible utilizar esta tecnología en lugares cerrados o muy edificados. Se decidió entonces que esta no era la herramienta indicada para el problema en cuestión. 
+
+
+\subsection{Navegación con \textit{access points}}
+\label{sec:Navegación con access points}
+Existen otros sistemas de localización que están comenzando a utilizarse para ambientes cerrados y que utilizan algunas ideas del sistema GPS. A estos sistemas se los conococe como \textit{Indoor Positioning System} o IPS y existen distintas variantes ya sea procesando se\~nales RF, ondas sonoras o luz. La localización interior con estándares IEEE 802.11 (WiFi), se obtiene mediante el procesamiento de se\~nales RF y la idea es, una vez conocida la posición de los transmisores WiFi (\textit{Access Points}) presentes en una sala, se miden las distintas se\~nales recibidas por un dispositivo móvil (provenientes de cada uno de los APs). De esta manera, se logra ubicar al móvil dentro de la sala. Es posible utilizar diferentes medidas, como por ejemplo, la potencia de las se\~nales recibidas,  el tiempo de propagación de cada una de ellas o incluso sus ángulos de incidencia.\\
+Debido a su gran complejidad, esta alternativa se descartó, ya que la idea no era centrar el proyecto en la navegación de interiores, sino usarla simplemente como una herramienta para la completitud de la aplicación final.
+
 
 \subsection{Navegación con códigos QR}
 \label{sec:Navegación con códigos QR}
@@ -24,7 +26,7 @@ La navegación con códigos QR quizá es bastante sencilla de implementar. Simpleme
 \subsubsection{Identificadores QR: una realidad cotidiana.}
 El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión móvil a internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
 \subsubsection{?`Qué son los QR?}
-Los QRs son una extensión de los códigos de barras, creados por la compa\~nía japonesa \textit{Denso Wave} en 1994 \cite{furht11}. Incorporan una segunda dimensión lo cual es una gran ventaja ya que pueden almacenar mucho más información, la cual puede ser accedida a gran velocidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
+Los QRs son una extensión de los códigos de barras, creados por la compa\~nía japonesa \textit{Denso Wave} en 1994 \cite{furht11}. Incorporan una segunda dimensión lo cual es una gran ventaja ya que pueden almacenar mucho más información y que puede ser accedida a gran velocidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
 
 En la Figura \ref{fig: qroverview} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos propiamente dicho, que podrían verse como el cuerpo del paquete.\\
 \begin{figure}[h!]
@@ -53,14 +55,20 @@ La opción de usar los QR de una manera distinta ha comenzado a ser notoria en lo
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.2]{figs_navident/qrArtist.png}
-\caption{Ejemplo de un QR creativo. Fuente (poner fuente).}
+$
+\begin{array}{cc}
+\includegraphics[scale=0.2]{figs_navident/qrArtist.png} & \includegraphics[scale=0.18]{figs_navident/qrArtist2.png} \\
+\includegraphics[scale=0.3]{figs_navident/qrArtist3.png} & \includegraphics[scale=0.2]{figs_navident/qrArtist5.png}
+\end{array}
+$
+\caption{Ejemplo de un QRs creativos. Fuente: \url{http://www.qrcartist.com/}.}
 \label{fig: qrArt}
 \end{figure}
-%fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
+%fuente http://www.qrcartist.com/
 
 \section{Técnicas de identificación}
-Técnicas de identificación
+Existen múltiples técnicas de identificación basadas en la extracción de características. En el capítulo \ref{ch:detection} se analizan variados algoritmos de extracción de características que tienen como fin la estimación de pose. En esta sección se presenta y desarrolla el algoritmo SIFT, que se basa en la extracción de características y permite generar descriptores que sirven como identificadores de una imagen. Por su parte este algoritmo también puede ser utilizado para la estimación de pose pero en el presente proyecto no se profundizó en este aspecto por lo que se desarrollará el enfoque de identificación.
+
 \subsection{SIFT}
 \label{sec: sift}
 El algoritmo SIFT, acr\'onimo de ``Scale Invariant Feature Transform'',  es un algoritmo de visi\'on artificial \cite{Lowe:2004}, \cite{Lowe:1999}, que se encarga de extraer caracter\'isticas distintivas de las im\'agenes en escala de grises. Mediante estas, es posible luego reconocer dicha imagen dentro de una base de datos o incluso dentro de otra imagen mayor con otra cantidad de elementos en desorden. Estas caracter\'isticas son invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades. El algoritmo consta b\'asicamente de cuatro pasos que se explicar\'an brevemente en secciones subsiguientes.\\ 
@@ -162,3 +170,6 @@ Hasta el momento, se le ha asignado a cada punto clave una escala, una locaci\'o
 Una vez determinadas la magnitud y fase del gradiente entorno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcciones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.\\
 
 En la figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\
+\section{Conclusión}
+La alternativa de utilizar códigos QR para identificar regiones del museo es una alternativa simple y que aprovecha la creciente popularidad de los mismos. Es una solución muy funcional que permite fácil y rápidamente al usuario ubicarse dentro del museo. Existe una gran variedad de librerías que permiten resolver este problema en distintos lenguajes. En particular ZBar provee de herramientas interesantes y sencillas de incorporar a aplicaciones.\\
+Por su parte el algoritmo SIFT es un algoritmo muy rápido que resuelve el problema de la identificación de manera muy efectiva. Existe a su vez bastante documentación sobre el mismo así como código disponible en C lo que hace también de este algoritmo algo fácil de incorporar a una aplicación.
