@@ -171,7 +171,7 @@ Una vez que se calcularon \textbf{i}, \textbf{j}, \textbf{k} y \textbf{T} se cal
 
 Como se mencionó anteriormente, el algoritmo POSIT no funciona en el caso en que los puntos del modelo pertenecen a un mismo plano. Como los marcadores utilizados son planos, se buscó una versión de POSIT que resuelve el problema de la estimación de pose para este caso. El algoritmo fue escrito por DeMenthon et al. en \cite{CoplanarPosit}.
 
-Para entender cual es el problema de trabajar con puntos coplanares se explica la situación desde un punto de vista geométrico. Como se vió anteriormente, $$ M_0M_i\cdot\textbf{I}=x^{'}_i-x_0.$$ Esto quiere decir que si se toma que la base de \textbf{I} en \textbf{$M_0$} , la punta del vector $\textbf{I}$ se proyecta sobre el vector $M_0M_i$ en un punto ${H_x}_i$, entonces todas las posibles puntas del vector \textbf{I} se encuentran en el plano perpendicular a $M_0M_i$ que pasa por el punto ${H_x}_i$. Si se tuvieran 4 puntos no coplanares $M_0$, $M_1$, $M_2$ y $M_3$, el vector \textbf{I} quedaría determinado. La base de \textbf{I} estaría en $M_0$ y la punta estaría en la intersección de los planos perpendiculares a $M_0M_1$, $M_0M_2$ y $M_0M_3$ por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$ respectivamente. Para este caso el sistema definido en \ref{eq_11} es de rango 3. 
+Para entender cual es el problema de trabajar con puntos coplanares se explica la situación desde un punto de vista geométrico. Como se vio anteriormente, $$ M_0M_i\cdot\textbf{I}=x^{'}_i-x_0.$$ Esto quiere decir que si se toma que la base de \textbf{I} en \textbf{$M_0$} , la punta del vector $\textbf{I}$ se proyecta sobre el vector $M_0M_i$ en un punto ${H_x}_i$, entonces todas las posibles puntas del vector \textbf{I} se encuentran en el plano perpendicular a $M_0M_i$ que pasa por el punto ${H_x}_i$. Si se tuvieran 4 puntos no coplanares $M_0$, $M_1$, $M_2$ y $M_3$, el vector \textbf{I} quedaría determinado. La base de \textbf{I} estaría en $M_0$ y la punta estaría en la intersección de los planos perpendiculares a $M_0M_1$, $M_0M_2$ y $M_0M_3$ por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$ respectivamente. Para este caso el sistema definido en \ref{eq_11} es de rango 3. 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_posit/posit_2.eps}
@@ -280,7 +280,7 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 
 
 \section{SoftPOSIT}\label{sec:SoftPosit}
-Hasta aquí se vió el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vió en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D y una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT.
+Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D y una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT.
 
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. Además la pose se calcula minimizando una función que mide la distancia entre la proyección SOP y los puntos estimados en cada iteración.
@@ -312,7 +312,7 @@ El sistema a resolver queda
 sX_0 & sY_0 \end{array} \right] = \left[ \begin{array}{cc}
 x^{'} & y^{'} \end{array} \right] 
 \end{equation}
-donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver, utilizando mínimos cuadrados, como se vió en la sección \ref{sec:classicPosit4}.%%Se calcula la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vió en \ref{eq_13}. Finalmente el vector de traslación se obtiene como.
+donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver, utilizando mínimos cuadrados, como se vio en la sección \ref{sec:classicPosit4}.%%Se calcula la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vió en \ref{eq_13}. Finalmente el vector de traslación se obtiene como.
 %\begin{align}\label{eq_26}
 %X_0 &= \frac{(sX_0)}{s}& Y_0 &= \frac{(sY_0)}{s}& Z_0 &= \frac{f}{s} 
 %\end{align} 
@@ -322,7 +322,7 @@ Sin embargo se propone un método que busca minimizar la distancia al cuadrado en
 \centering
 \includegraphics[scale=1.5]{figs_posit/posit_7}
 \label{fig: posit_7}
-\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{eq_24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{eq_24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{David02softposit}.}
+\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{eq_24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{eq_24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{Daniel03simultaneouspose}.}
 \end{figure}
 
 En el término de la derecha de la Ecuación\ref{eq_24} se tiene la proyección SOP de $M_i$, $p_i$. Las coordenadas de este punto son
@@ -433,7 +433,7 @@ Durante la investigación de este algoritmo se desarrollaron versiones de POSIT m
 \section{POSIT moderno para puntos coplanares}
 La implementación que se usó en la aplicación es el POSIT moderno adaptado para trabajar con puntos coplanares. Inicialmente se quiso desarrollar una versión de SoftPOSIT que trabajara con puntos coplanares, para ello previamente se desarrolló POSIT moderno coplanar a modo de prueba. 
 
-Como se vió en la sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{eq_11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
+Como se vio en la sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{eq_11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
 
 Se definen los puntos $M_0M_i^*$ como los puntos $M_0M_i$ sin la coordenada \textit{z}, ya que la coordenada \textit{z} es función de \textit{x} e \textit{y}. A su vez se definen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ como los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ sin la componente según el eje \textit{w} en el sistema de coordenadas del modelo. Teniendo esto en cuenta se tiene 
 \begin{equation*}
@@ -447,22 +447,95 @@ Los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se calculan de
 \textbf{Q}_2^* = \left(\sum_{i=1}^M m^{'}_i M_0M_i^{*T} M_0M_i^*\right)^{-1}\left(\sum_{j=1}^N \sum_{i=1}^M m_{ji} \left(1+ \epsilon_i\right)y_j M_0M_i^* \right)
 \end{equation*}
 En este caso el término $L = \sum_{i=1}^M m^{'}_i M_0M_i^{*T} M_0M_i^* $ es una matriz $3\times 3$.
-Una vez que se tienen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se procede como se vió en la sección \ref{sec:classicPosit5}
+Una vez que se tienen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se procede como se vio en la sección \ref{sec:classicPosit5}
 
-Esta implementación de POSIT para puntos coplanares dió mejores resultados que la versión obtenida de \cite{DeMenthonCoplanarCode}. Es una variante de POSIT coplanar que no se encuentra en la bibliografía, permite obtener la pose minimizando una función de costo a diferencia de POSIT clásico que usa mínimos cuadrados. 
+Esta implementación de POSIT para puntos coplanares dio mejores resultados que la versión obtenida de \cite{DeMenthonCoplanarCode}. Es una variante de POSIT coplanar que no se encuentra en la bibliografía, permite obtener la pose minimizando una función de costo a diferencia de POSIT clásico que usa mínimos cuadrados. 
 
 Además desde el punto de vista de programación se mejoró en la interfaz respecto a la versión clásica. En la versión clásica se tiene varios archivos con las diferentes funciones que se necesitan, puede llegar a ser difícil entender por completo la arquitectura del algoritmo y el código esta comentado en francés. En cambio en la versión implementada para este proyecto se busco tener un solo archivo con todas las funciones y mejorar la arquitectura respecto a la versión anterior. 
 
 \section{Resultados}
 Se realizó un comparación entre la implementación en C de POSIT clásico para puntos coplanares, obtenida de \cite{DeMenthonCoplanarCode} , y una versión desarrollada para esta aplicación de POSIT moderno para puntos coplanares. 
 
-Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sintéticas. Para ambos grupos de imágenes se midió el error de proyección obtenido entre los puntos del modelo y los puntos detectados. Para las imágenes sintéticas, como se cuenta con la información de la pose, se midió el error obtenido en cada ángulo y en la traslación.
+En una primera instancia se utilizaron imágenes sintéticas para las cuales se cuenta con la información de la pose. Con estas poses se proyectaron los puntos del modelo sobre las imágenes y se aplicó el algoritmo para los puntos del modelo y sus proyecciones. Se buscó evaluar los algoritmos de manera aislada y no como parte del proceso completo. Este análisis ayudó a elegir el algoritmo a utilizar. 
+
+Luego se utilizaron imágenes reales capturadas con el $iPad 2$ e imágenes sintéticas y se les aplico todo el proceso. Para estas imágenes se calculó el error de reproyección entre los puntos a la entrada de POSIT y los puntos reproyectados por la pose obtenida. 
+
+\subsection{Error en pose}
+En esta sección se analiza el error de estimación obtenido de las diferentes implementaciones. Se trabajó únicamente con imágenes sintéticas, para cada pose estimada se la compara con la pose utilizada para generar la imagen. Se definen dos tipos de errores. El \textit{error de orientación} es la diferencia entre los ángulos de la pose real y la pose estimada. El \textit{error de posición} es la diferencia entre la posición del centro del objeto calculado y el real. 
+
+Se estudia cual es el rango de funcionamiento de los algoritmos, es decir para que orientaciones y posiciones el algoritmo estima la pose correctamente.
+
+\subsubsection{Error de orientación}
+En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para un conjunto de 180 imágenes sintéticas, se tomaron 3 grupos de 60 fotos en las cuales solo se giró en torno a un solo eje.  
+
 \begin{figure}[ht]
 \centering
+        \includegraphics[scale=0.6]{figs_posit/histAngulosPosit2}
+        \label{fig:posit_8}
+         \caption{Histograma de los errores obtenidos en la orientación. En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala de las gráficas es logarítmica.}
+\end{figure}
+
+
+Se puede ver que los dos algoritmos se comportan de manera similar, en la mayoría de los casos se obtiene un error de estimación menos a $2^\circ$. Los casos en los que el error es mayor a  $2^\circ$ se corresponden con posiciones de la cámara en las que el plano imagen es paralelo al plano del marcador. Este comportamiento se puede ver en la Figura \ref{fig:posit_9}. Si los ángulos de rotación en torno a $x$ o a $y$ están en un intervalo de $(-10^\circ,+10^\circ)$ la proyección SOP del marcador varía muy poco. Esto lleva a que el algoritmo termine eligiendo una pose que no es la correcta, o puede llevar a que el algoritmo no converja. 
+
+\begin{figure}[ht]
+\label{fig:posit_9}
+        \centering
+        \subfigure[]{
+                \includegraphics[scale=0.5]{figs_posit/barrido}
+				\label{fig:posit_10}}
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/zoom}
+                \label{fig:posit_11}}
+                
+         \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver mas de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
+\end{figure}
+En la Figura \ref{fig:posit_11} se puede ver que el algoritmo no presenta problemas para posiciones de la cámara que corresponden a imágenes del marcador muy deformadas por la perspectiva, ángulos cercanos a $90^\circ$. Este límite está dado por el filtro de correspondencias visto en \ref{ch: marcadores}.
+
+
+\subsubsection{Error de posición}
+En la Figura \ref{fig:posit_12} se muestran los errores de posición para los diferentes ejes, en general la estimación de la posición es buena, en la mayoría de los casos el error es menor al $1\% $ . Se vio que para las distancias al marcador a las que se trabaja el algoritmo no presenta problema, en este caso la limitante esta dada por el filtro de correspondencias presentado en \ref{ch: marcadores}. 
+
+\begin{figure}[ht]
+\centering
+        \includegraphics[scale=0.6]{figs_posit/histTrasPosit2}
+        \label{fig:posit_12}
+         \caption{Histograma de los errores obtenidos en traslación En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala en el de las gráficas es logarítmica.}
+\end{figure}
+
+\subsubsection{Comportamiento global}
+A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumo un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
+\begin{figure}[H]
+\label{fig:posit_13}
+        \centering
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/recorridaCopl}
+				\label{fig:posit_14}}
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/recorridaComp}
+                \label{fig:posit_15}}
+                
+         \caption{Trayectoria en la que se ve que el error es mayor cuando el marcador es visto de frente. Cuando se empieza a rotar el error de orientación es chico. En la Figura \subref{fig:posit_14} se puede ver el comportamiento de POSIT coplanar moderno y en la Figura \subref{fig:posit_15} se puede ver el comportamiento para POSIT coplanar clásico.}
+ \end{figure}
+
+El primer movimiento simula la cámara acercándose al marcador. En este movimiento se puede ver como ambos algoritmos fallan en la estimación de la pose. La versión moderna comete menos error. El segundo movimiento se tiene a la cámara en una posición fija y va cambiando su orientación. Se puede apreciar que para este caso el error cometido en orientación es muy peque?o. 
+
+Si bien el comportamiento de los dos algoritmos resultó similar, la versión de POSIT coplanar moderno dio resultados levemente mejores que la versión clásica. Ademas en la practica se comportó mejor por lo que esta versión es la que se utiliza en la aplicación final. 
+
+\section{Error de reproyección}
+
+Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sintéticas. Para ambos grupos de imágenes se midió el error de proyección obtenido entre los puntos del modelo y los puntos detectados. 
+
+Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_16} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
+
+\begin{figure}[H]
+\centering
 \includegraphics[scale=0.2]{figs_posit/posit_8b}
-\label{fig:posit_8}
+\label{fig:posit_16}
 \caption{Posiciones que se utilizaron para las imágenes de prueba.}
 \end{figure}
+
+
 \begin{table}[ht]
 \centering
 \begin{tabular}{|l||r|r|r|r|}
@@ -482,10 +555,15 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 \label{posit_tabla1}
 \end{table} 
  
-\begin{figure}[ht]
+
+
+ 
+A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de la imágenes para un mismo caso. Esto sirve para evaluar el comportamiento de los algoritmos ya que los puntos a la entrada son los mismos para las dos variantes. En las tablas hay valores que no pudieron ser calculados debido a que el filtro de segmentos no pudo detectar todos los segmentos. Estos comportamientos fueron discutidos en \ref{ch:detection}. En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de POSIT coplanar moderno. 
+
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_9b}
-\label{fig:posit_9}
+\label{fig:posit_17}
 \caption{Posiciones que se utilizaron para las imágenes sintéticas}
 \end{figure}
 \begin{table}[htbp]
@@ -506,36 +584,33 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 \caption{Error de proyección en imágenes sintéticas}
 \label{posit_tabla2}
 \end{table}
-Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_8} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
- 
-A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de la imágenes para un mismo caso. En las tablas hay valores que no pudieron ser calculados debido a que el filtro de segmentos no pudo detectar todos los segmentos. Estos comportamientos fueron discutidos en \ref{ch:detection}. En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de modern POSIT. 
 
-Para otro grupo de imágenes sintéticas se comparó la pose original con la pose obtenida luego de aplicar el procesamiento, se relevó el desempe\~no de los algoritmos para rotaciones según los tres ejes. En general se vió que la implementación de  POSIT moderno dio mejores resultados. 
-En la Figura \ref{fig:posit_16} se pueden algunos de los resultados obtenidos de la comparación de desempe\~no de los dos algoritmos implementados. En la columna de la izquierda se muestran los resultados de POSIT moderno y en la de la derecha los resultados para POSIT clásico. 
-\begin{figure}\label{fig:posit_16}
-        \centering
-        \subfigure[]{
-                \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale3}
-				\label{fig:posit_10}}
-        \subfigure[]{
-                \includegraphics[scale=0.44]{figs_posit/poses_composit_scale3}
-                \label{fig:posit_11}}
-        
-       \subfigure[]{
-                \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale4}
-				\label{fig:posit_12}}
-        \subfigure[]{
-                \includegraphics[scale=0.44]{figs_posit/poses_composit_scale4}
-                \label{fig:posit_13}}
-        
-        \subfigure[]{
-                \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale5}
-				\label{fig:posit_14}}
-        \subfigure[]{
-                \includegraphics[scale=0.44]{figs_posit/poses_composit_scale5}
-                \label{fig:posit_15}}
-         \caption{Rotación según eje \textit{x} para Modern POSIT \subref{fig:posit_10} y para Classic POSIT \subref{fig:posit_11}, rotación según eje \textit{y} para Modern POSIT \subref{fig:posit_12} y para Classic POSIT \subref{fig:posit_13} y rotación según eje \textit{z} para Modern POSIT \subref{fig:posit_14} y para Classic POSIT \subref{fig:posit_15}}
-\end{figure}
+%Para otro grupo de imágenes sintéticas se comparó la pose original con la pose obtenida luego de aplicar el procesamiento, se relevó el desempe\~no de los algoritmos para rotaciones según los tres ejes. En general se vio que la implementación de  POSIT moderno dio mejores resultados. 
+%En la Figura \ref{fig:posit_16} se pueden algunos de los resultados obtenidos de la comparación de desempe\~no de los dos algoritmos implementados. En la columna de la izquierda se muestran los resultados de POSIT moderno y en la de la derecha los resultados para POSIT clásico. 
+%\begin{figure}\label{fig:posit_16}
+%        \centering
+%        \subfigure[]{
+%                \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale3}
+%				\label{fig:posit_10}}
+%        \subfigure[]{
+%                \includegraphics[scale=0.44]{figs_posit/poses_composit_scale3}
+%                \label{fig:posit_11}}
+%        
+%       \subfigure[]{
+%                \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale4}
+%				\label{fig:posit_12}}
+%        \subfigure[]{
+%                \includegraphics[scale=0.44]{figs_posit/poses_composit_scale4}
+%                \label{fig:posit_13}}
+%        
+%        \subfigure[]{
+%                \includegraphics[scale=0.44]{figs_posit/poses_coplanar_scale5}
+%				\label{fig:posit_14}}
+%        \subfigure[]{
+%                \includegraphics[scale=0.44]{figs_posit/poses_composit_scale5}
+%                \label{fig:posit_15}}
+%         \caption{Rotación según eje \textit{x} para Modern POSIT \subref{fig:posit_10} y para Classic POSIT \subref{fig:posit_11}, rotación según eje \textit{y} para Modern POSIT \subref{fig:posit_12} y para Classic POSIT \subref{fig:posit_13} y rotación según eje \textit{z} para Modern POSIT \subref{fig:posit_14} y para Classic POSIT \subref{fig:posit_15}}
+%\end{figure}
 
 
 
