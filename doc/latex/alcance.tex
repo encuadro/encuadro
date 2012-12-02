@@ -2,7 +2,7 @@
 \label{chap: alcance}
 \section{Introducción}
 
-En el presente capítulo se habla del alcance del proyecto. Esto es, se plantean los objetivos tal y como fueron formulados originalmente y luego se los clasifica en las que se les llaman las tres partes fundamentales del proyecto: \textit{investigación}, \textit{implementación} y \textit{aplicación}. Estas son ponderadas en función de la importancia que tienen en el mismo, así como las dedicación total que se les dió. Luego, se resume la estructura de lo que terminó siendo la aplicación final, de manera de poder comprender a todo el proyecto en su conjunto. Finalmente, se comenta en qué parte de la documentación se detalla cada parte de dicha estructura.\\
+En el presente capítulo se habla del alcance del proyecto. Esto es, se plantean los objetivos tal y como fueron formulados originalmente y luego se los clasifica en las tres partes fundamentales del proyecto: \textit{investigación}, \textit{implementación} y \textit{aplicación}. Estas son ponderadas en función de la importancia que tienen en el mismo, así como las dedicación total que se les dió. Luego, se resume la estructura de lo que terminó siendo la aplicación final, de manera de poder comprender a todo el proyecto en su conjunto. Finalmente, se comenta en qué parte de la documentación se detalla cada parte de dicha estructura.\\
  
 \section{Objetivos del proyecto}
 
@@ -27,7 +27,19 @@ $$
 \end{array}
 $$
 
-Es importante aclarar que en ocaciones el límite entre los tres frentes de trabajo es difuso.
+Es importante aclarar que en ocaciones el límite entre los tres frentes de trabajo es difuso.\\
+
+\section{Estado del arte}
+Para llevar a cabo los objetivos planteados es bueno tener un contexto del estado del arte en cuanto al desarrollo de aplicaciones de realidad aumentada. Existen en la actualidad m\'ultiples entornos de desarrollo comerciales para aplicaciones de realidad aumentada, en los que de manera sencilla, se logran este tipo de aplicaciones con desempe\~nos verdaderamente muy buenos. Tal es el caso de \textit{Metaio} \cite{?}, \textit{Vuforia} \cite{?}, \textit{String} \cite{?} y \textit{Aurasma} \cite{?}. Por su parte, \textit{Layer} \cite{?}, es tambi\'en un kit de desarrollo para aplicaciones de realidad aumentada, pero se especializa en el agregado de contenido digital s\'olo sobre páginas impresas como revistas y catálogos. Ninguna de las aplicaciones anteriores es gratuita y ni siquiera en c\'odigo abierto. En la figura \ref{fig: metaio} se muestra un ejemplo que incluye por defecto la herramienta \textit{Metaio}.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.2]{figs_alcance/metaio.png}
+\caption{Ejemplo de realidad aumentada que incluye por defecto el entorno de desarrollo \textit{Metaio}.}
+\label{fig: metaio}
+\end{figure}
+
+Si bien se probaron algunas de estas herramientas y se tomaron de ellas est\'andares en cuanto a la \textit{performance} que una aplicaci\'on de realidad aumentada debe tener, \textbf{no es un objetivo} del proyecto el desarrollo de aplicaciones de realidad aumentada con entornos de desarrollo ya existentes. Se hace hincapi\'e en la investigaci\'on de herramientas y adquisici\'on de experiencia propia, con el objetivo de marcar una hoja de ruta para todo aqu\'l que desee continuar la investigaci\'on con nuevas ideas y algoritmos. Se deja a disposici\'on de cualquier interesado el c\'odigo de la aplicaci\'on final, los algoritmos implementados o editados, as\'i como toda la documentaci\'on.
 
 \section{Explicación global de la aplicación}
 \label{sec: app}
@@ -51,7 +63,7 @@ Por identificación de obras se entiende al proceso mediante el cual la aplicació
 
 \subsection{Realidad Aumentada}
 
-El proceso mediante el cual se logra la realidad aumentada puede verse en el diagrama de bloques de la Figura \ref{fig: bloques_ra}.\\
+El proceso mediante el cual se logra la realidad aumentada puede verse en el diagrama de bloques de la Figura \ref{fig: bloques_ra}. Resulta muy importante aclarar que cada uno de estos bloques es perfectamente intercambiable por otro de idéntica función, tan sólo ajustando las interfaces entre ellos.\\
 
 \begin{figure}[h!]
 \centering
