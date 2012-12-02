@@ -469,9 +469,9 @@ Se estudia cual es el rango de funcionamiento de los algoritmos, es decir para q
 \subsubsection{Error de orientación}
 En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para un conjunto de 180 imágenes sintéticas, se tomaron 3 grupos de 60 fotos en las cuales solo se giró en torno a un solo eje.  
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
-        \includegraphics[scale=0.6]{figs_posit/histAngulosPosit2}
+        \includegraphics[scale=0.5]{figs_posit/histAngulosPosit2}
         \label{fig:posit_8}
          \caption{Histograma de los errores obtenidos en la orientación. En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala de las gráficas es logarítmica.}
 \end{figure}
@@ -483,10 +483,10 @@ Se puede ver que los dos algoritmos se comportan de manera similar, en la mayorí
 \label{fig:posit_9}
         \centering
         \subfigure[]{
-                \includegraphics[scale=0.5]{figs_posit/barrido}
+                \includegraphics[scale=0.3]{figs_posit/barrido}
 				\label{fig:posit_10}}
         \subfigure[]{
-                \includegraphics[scale=0.4]{figs_posit/zoom}
+                \includegraphics[scale=0.3]{figs_posit/zoom}
                 \label{fig:posit_11}}
                 
          \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver mas de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
@@ -497,9 +497,9 @@ En la Figura \ref{fig:posit_11} se puede ver que el algoritmo no presenta proble
 \subsubsection{Error de posición}
 En la Figura \ref{fig:posit_12} se muestran los errores de posición para los diferentes ejes, en general la estimación de la posición es buena, en la mayoría de los casos el error es menor al $1\% $ . Se vio que para las distancias al marcador a las que se trabaja el algoritmo no presenta problema, en este caso la limitante esta dada por el filtro de correspondencias presentado en \ref{ch: marcadores}. 
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
-        \includegraphics[scale=0.6]{figs_posit/histTrasPosit2}
+        \includegraphics[scale=0.5]{figs_posit/histTrasPosit2}
         \label{fig:posit_12}
          \caption{Histograma de los errores obtenidos en traslación En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala en el de las gráficas es logarítmica.}
 \end{figure}
@@ -529,6 +529,13 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 
 Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_16} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
 
+
+ 
+
+
+ 
+A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de la imágenes para un mismo caso. Esto sirve para evaluar el comportamiento de los algoritmos ya que los puntos a la entrada son los mismos para las dos variantes. En las tablas hay valores que no pudieron ser calculados debido a que el filtro de segmentos no pudo detectar todos los segmentos. Estos comportamientos fueron discutidos en \ref{ch:detection}. 
+
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_8b}
@@ -536,55 +543,82 @@ Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posicion
 \caption{Posiciones que se utilizaron para las imágenes de prueba.}
 \end{figure}
 
+\begin{figure}[H]
+\label{fig:posit_17}
+        \centering
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/histDistEuclCopl}
+				\label{fig:posit_18}}
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/histDistEuclComp}
+                \label{fig:posit_19}}
+                
+         \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes de prueba. \subref{fig:posit_18}, POSIT moderno. \subref{fig:posit_19}, POSIT clásico}
+ \end{figure}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
-\begin{tabular}{|l||r|r|r|r|}
+\begin{tabular}{|l||r|r|}
 \hline
- & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} \\ \hline \hline
-\textbf{Caso1} & 3.6136 &     0.8104 &     4.5979 &     1.1392 \\ \hline
-\textbf{Caso2} &     0.8449 &     0.4153 &     0.9275 &     0.4415 \\ \hline
-\textbf{Caso3} &        - &        - &        - &        - \\ \hline
-\textbf{Caso4} &     1.5894 &     0.2600 &     1.1081 &     0.1696 \\ \hline
-\textbf{Caso5} &        - &        - &        - &        - \\ \hline
-\textbf{Caso6} &        - &        - &        - &        - \\ \hline
-\textbf{Caso7} &     0.6742 &     0.1468 &     0.5416 &     0.1022 \\ \hline
-\textbf{Caso8} &        - &        - &        - &        - \\ \hline
-\textbf{Caso9} &        - &        - &        - &        - \\ \hline
+ & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} \\ \hline \hline
+\textbf{Media} & 3.9684 &  5.1368  \\ \hline
+\textbf{Desviación estándar} &   5.1212 &     6.8950 \\ \hline
 \end{tabular}
 \caption{Error de proyección de imágenes de pruebas.}
 \label{posit_tabla1}
 \end{table} 
- 
 
-
- 
-A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de la imágenes para un mismo caso. Esto sirve para evaluar el comportamiento de los algoritmos ya que los puntos a la entrada son los mismos para las dos variantes. En las tablas hay valores que no pudieron ser calculados debido a que el filtro de segmentos no pudo detectar todos los segmentos. Estos comportamientos fueron discutidos en \ref{ch:detection}. En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de POSIT coplanar moderno. 
-
-\begin{figure}[H]
+\begin{figure}[ht]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_9b}
-\label{fig:posit_17}
+\label{fig:posit_20}
 \caption{Posiciones que se utilizaron para las imágenes sintéticas}
 \end{figure}
-\begin{table}[htbp]
+
+\begin{figure}[H]
+\label{fig:posit_21}
+        \centering
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/histDistEuclCoplSint}
+				\label{fig:posit_22}}
+        \subfigure[]{
+                \includegraphics[scale=0.4]{figs_posit/histDistEuclCompSint}
+                \label{fig:posit_23}}
+                
+         \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes sintéticas. \subref{fig:posit_22}, POSIT moderno. \subref{fig:posit_23}, POSIT clásico}
+ \end{figure}
+
+\begin{table}[ht]
 \centering
-\begin{tabular}{|l||r|r|r|r|}
+\begin{tabular}{|l||r|r|}
 \hline
- & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} \\ \hline \hline
-\textbf{Caso1} &   4.2712 &     0.3192 &     5.7352 &     0.4525 \\ \hline
-\textbf{Caso2} &     1.0831 &     0.0375 &     1.0889 &     0.0358 \\ \hline
-\textbf{Caso3} &        - &        - &        - &        - \\ \hline
-\textbf{Caso4} &     0.7975 &     0.0169 &     0.9778 &     0.0185 \\ \hline
-\textbf{Caso5} &        - &        - &        - &        - \\ \hline
-\textbf{Caso6} &        - &        - &        - &        - \\ \hline
-\textbf{Caso7} &     0.3796 &     0.0121 &     0.4761 &     0.0077 \\ \hline
-\textbf{Caso8} &        - &        - &        - &        - \\ \hline
-\textbf{Caso9} &        - &        - &        - &        - \\ \hline
+ & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} \\ \hline \hline
+\textbf{Media} & 4.033 &  5.4942  \\ \hline
+\textbf{Desviación estándar} &   5.6196 &    7.2591 \\ \hline
 \end{tabular}
-\caption{Error de proyección en imágenes sintéticas}
+\caption{Error de proyección de imágenes sintéticas.}
 \label{posit_tabla2}
-\end{table}
+\end{table} 
+
+
+%\begin{table}[htbp]
+%\centering
+%\begin{tabular}{|l||r|r|r|r|}
+%\hline
+% & \multicolumn{1}{l|}{\textbf{Modern POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} & \multicolumn{1}{l|}{\textbf{Classic POSIT}} & \multicolumn{1}{l|}{\textbf{Varianza}} \\ \hline \hline
+%\textbf{Caso1} &   4.2712 &     0.3192 &     5.7352 &     0.4525 \\ \hline
+%\textbf{Caso2} &     1.0831 &     0.0375 &     1.0889 &     0.0358 \\ \hline
+%\textbf{Caso3} &        - &        - &        - &        - \\ \hline
+%\textbf{Caso4} &     0.7975 &     0.0169 &     0.9778 &     0.0185 \\ \hline
+%\textbf{Caso5} &        - &        - &        - &        - \\ \hline
+%\textbf{Caso6} &        - &        - &        - &        - \\ \hline
+%\textbf{Caso7} &     0.3796 &     0.0121 &     0.4761 &     0.0077 \\ \hline
+%\textbf{Caso8} &        - &        - &        - &        - \\ \hline
+%\textbf{Caso9} &        - &        - &        - &        - \\ \hline
+%\end{tabular}
+%\caption{Error de proyección en imágenes sintéticas}
+%\label{posit_tabla2}
+%\end{table}
 
 %Para otro grupo de imágenes sintéticas se comparó la pose original con la pose obtenida luego de aplicar el procesamiento, se relevó el desempe\~no de los algoritmos para rotaciones según los tres ejes. En general se vio que la implementación de  POSIT moderno dio mejores resultados. 
 %En la Figura \ref{fig:posit_16} se pueden algunos de los resultados obtenidos de la comparación de desempe\~no de los dos algoritmos implementados. En la columna de la izquierda se muestran los resultados de POSIT moderno y en la de la derecha los resultados para POSIT clásico. 
@@ -616,7 +650,6 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 
 
 
-
-
+En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de POSIT coplanar moderno. 
 
 
