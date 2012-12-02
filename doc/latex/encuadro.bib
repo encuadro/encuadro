@@ -1,6 +1,16 @@
 % This file was created with JabRef 2.7b.
 % Encoding: UTF-8
 
+@CONFERENCE{fex,
+  author = {A.Etemadi},
+  title = {Robust Segmentation of Edge Data},
+  booktitle = {Proceedings of the 4th international conference on Image Processing
+	and its applications},
+  year = {1992},
+  owner = {roho},
+  timestamp = {2012.11.29}
+}
+
 @INPROCEEDINGS{abdel1971,
   author = {Abdel-Aziz, Y. I. and Karara, H. M.},
   title = {Direct linear transformation from comparator coordinates into object
@@ -27,12 +37,81 @@
   year = {2012}
 }
 
+@ARTICLE{burns86,
+  author = {J. Brian Burns and Allen R. Hanson and Edward M. Riseman},
+  title = {Extracting Straight Lines},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  year = {1986},
+  volume = {8},
+  pages = {425-455},
+  address = {Los Alamitos, CA, USA},
+  doi = {http://doi.ieeecomputersociety.org/10.1109/TPAMI.1986.4767808},
+  issn = {0162-8828},
+  publisher = {IEEE Computer Society}
+}
+
+@ARTICLE{Canny:1986:ACA,
+  author = {F. John Canny},
+  title = {A {C}omputational {A}pproach to {E}dge {D}etection},
+  journal = j-IEEE-PAMI,
+  year = {1986},
+  volume = {8},
+  pages = {679--698},
+  number = {6},
+  abstract = {This paper describes a computational approach to edge detection. The
+	success of the approach depends on the definition of a comprehensive
+	set of goals for the computation of edge points. These goals must
+	be precise enough to delimit the desired behavior of the detector
+	while making minimum assumptions about the form of the solution.
+	We define detection and localisation criteria for a class of edges,
+	and present mathematical forms for these criteria as functionals
+	on the operator impulse response. A third criteria is then added
+	to ensure that the detector has only one response to a single edge.
+	We use the criteria in numerical optimisation to derive detectors
+	for several common image features, including step edges. On specialising
+	the analysis to step edges we find that there is a natural uncertainty
+	principle between detection and localisation performance, which are
+	the two main goals. With this principle we derive a single operator
+	shape which is optimal at any scale. The optimal detector has a single
+	approximate implementation in which edges are marked at maxima in
+	gradient magnitude in a Gaussian smoothed image. We extend this simple
+	detector using operators of several widths to cope with different
+	signal to noise ratios in the image. We present a general method
+	called feature synthesis for the fine to coarse integration of information
+	from operators at different scales. Finally we show that step edge
+	detector performance improves considerably as the operator point
+	spread function is extended along the edge. This detection scheme
+	uses several elongated operators at each point, and the directional
+	operator outputs are integrated with the gradient maximum detector.},
+  doi = {http://doi.acm.org/10.1145/11274.11275},
+  optnote = {CANNY86},
+  optstatus = {OK, URL, Paper, RI}
+}
+
 @MISC{isgl3d12,
   author = {Stuart Caunt},
   title = {ISGL3D homepage},
   howpublished = {\url{http://www.isgl3d.com}},
   month = nov,
   year = {2012}
+}
+
+@ARTICLE{Daniel03simultaneouspose,
+  author = {Philip David and Daniel Dementhon and Ramani Duraiswami and Hanan
+	Samet},
+  title = {Simultaneous Pose and Correspondence Determination using Line Features},
+  year = {2003},
+  pages = {424--431}
+}
+
+@INPROCEEDINGS{SoftLine,
+  author = {Philip David and Daniel DeMenthon and Ramani Duraiswami and Hanan
+	Samet},
+  title = {Simultaneous Pose and Correspondence Determination using Line Feature},
+  booktitle = {CVPR (2)},
+  year = {2003},
+  pages = {424-431},
+  ee = {http://doi.ieeecomputersociety.org/10.1109/CVPR.2003.1211499}
 }
 
 @ARTICLE{DeMenthon95,
@@ -44,26 +123,6 @@
   pages = {123--141}
 }
 
-@ARTICLE{CoplanarPosit,
-  author = {Oberkampf, Denis and DeMenthon, Daniel F. and Davis, Larry S.},
-  title = {Iterative pose estimation using coplanar feature points},
-  journal = {Comput. Vis. Image Underst.},
-  year = {1996},
-  volume = {63},
-  pages = {495--511},
-  number = {3},
-  month = {may},
-  acmid = {228149},
-  address = {New York, NY, USA},
-  bdsk-url-1 = {http://dx.doi.org/10.1006/cviu.1996.0037},
-  doi = {10.1006/cviu.1996.0037},
-  issn = {1077-3142},
-  issue_date = {May 1996},
-  numpages = {17},
-  publisher = {Elsevier Science Inc.},
-  url = {http://dx.doi.org/10.1006/cviu.1996.0037}
-}
-
 @MISC{DeMenthonCoplanarCode,
   author = {Denis Oberkampf, Daniel DeMenthon},
   title = {Posit for coplanar points},
@@ -73,25 +132,29 @@
   timestamp = {2012.11.27}
 }
 
-@ARTICLE{Daniel03simultaneouspose,
-  author = {Philip David and Daniel Dementhon and Ramani Duraiswami and Hanan
-	Samet},
-  title = {Simultaneous Pose and Correspondence Determination using Line Features},
-  year = {2003},
-  pages = {424--431}
+@ARTICLE{desolneux00,
+  author = {Agn{\`e}s Desolneux and Lionel Moisan and Jean-Michel Morel},
+  title = {Meaningful Alignments},
+  journal = {International Journal of Computer Vision},
+  year = {2000},
+  volume = {40},
+  pages = {7-23},
+  number = {1},
+  bibsource = {DBLP, http://dblp.uni-trier.de},
+  ee = {http://dx.doi.org/10.1023/A:1026593302236}
 }
 
-@inproceedings{SoftLine,
-  author    = {Philip David and
-               Daniel DeMenthon and
-               Ramani Duraiswami and
-               Hanan Samet},
-  title     = {Simultaneous Pose and Correspondence Determination using
-               Line Feature},
-  booktitle = {CVPR (2)},
-  year      = {2003},
-  pages     = {424-431},
-  ee        = {http://doi.ieeecomputersociety.org/10.1109/CVPR.2003.1211499}
+@CONFERENCE{lpeg,
+  author = {A. Etemadi and J-P. Schmidt and G.Matas and J.Illingworth and J.
+	Kittler},
+  title = {Low-level Grouping of Straight-Line Segments},
+  booktitle = {Processings of the British Machine Vision Conference},
+  year = {1991},
+  editor = {Peter Mowforth},
+  publisher = {Springer-Verlag},
+  journal = {Processings of the British Machine Vision Conference},
+  owner = {roho},
+  timestamp = {2012.11.29}
 }
 
 @MISC{artag,
@@ -104,6 +167,28 @@
 	Research Council Canada,},
   owner = {roho},
   timestamp = {2012.11.24}
+}
+
+@ARTICLE{Fischler,
+  author = {Fischler, Martin A. and Bolles, Robert C.},
+  title = {Random sample consensus: a paradigm for model fitting with applications
+	to image analysis and automated cartography},
+  journal = {Commun. ACM},
+  year = {1981},
+  volume = {24},
+  pages = {381--395},
+  number = {6},
+  month = jun,
+  acmid = {358692},
+  address = {New York, NY, USA},
+  doi = {10.1145/358669.358692},
+  issn = {0001-0782},
+  issue_date = {June 1981},
+  keywords = {automated cartography, camera calibration, image matching, location
+	determination, model fitting, scene analysis},
+  numpages = {15},
+  publisher = {ACM},
+  url = {http://doi.acm.org/10.1145/358669.358692}
 }
 
 @BOOK{furht11,
@@ -125,40 +210,52 @@
   timestamp = {2012.11.27}
 }
 
-@Article{GJMR12,
-  author       = {Grompone von Gioi, Rafael and Jakubowicz, J\'{e}r\'{e}mie and Morel, J.-M. and Randall, Gregory},
-  title        = {LSD: a Line Segment Detector },
-  journal      = {Image Processing Online},
-  month        = {mar},
-  year         = {2012},
-  url          = {http://iie.fing.edu.uy/publicaciones/2012/GJMR12}
+@ARTICLE{GJMR12,
+  author = {Grompone von Gioi, Rafael and Jakubowicz, J\'{e}r\'{e}mie and Morel,
+	J.-M. and Randall, Gregory},
+  title = {LSD: a Line Segment Detector },
+  journal = {Image Processing Online},
+  year = {2012},
+  month = {mar},
+  url = {http://iie.fing.edu.uy/publicaciones/2012/GJMR12}
 }
 
-@article{burns86,
-author = {J. Brian Burns and Allen R. Hanson and Edward M. Riseman},
-title = {Extracting Straight Lines},
-journal ={IEEE Transactions on Pattern Analysis and Machine Intelligence},
-volume = {8},
-issn = {0162-8828},
-year = {1986},
-pages = {425-455},
-doi = {http://doi.ieeecomputersociety.org/10.1109/TPAMI.1986.4767808},
-publisher = {IEEE Computer Society},
-address = {Los Alamitos, CA, USA}
+@ARTICLE{GJMR08,
+  author = {Grompone von Gioi, Rafael and Jakubowicz, J\'{e}remie and Morel,
+	J.-M. and Randall, Gregory},
+  title = {On Straight Line Segment Detection},
+  journal = {Journal of Mathematical Imaging and Vision},
+  year = {2008},
+  url = {http://iie.fing.edu.uy/publicaciones/2008/GJMR08}
 }
 
-@article{desolneux00,
-  author    = {Agn{\`e}s Desolneux and
-               Lionel Moisan and
-               Jean-Michel Morel},
-  title     = {Meaningful Alignments},
-  journal   = {International Journal of Computer Vision},
-  volume    = {40},
-  number    = {1},
-  year      = {2000},
-  pages     = {7-23},
-  ee        = {http://dx.doi.org/10.1023/A:1026593302236},
-  bibsource = {DBLP, http://dblp.uni-trier.de}
+@ARTICLE{Haralick,
+  author = {Haralick, Robert M. and Lee, Chung-Nan and Ottenberg, Karsten and
+	N\"{o}lle, Michael},
+  title = {Review and analysis of solutions of the three point perspective pose
+	estimation problem},
+  journal = {Int. J. Comput. Vision},
+  year = {1994},
+  volume = {13},
+  pages = {331--356},
+  number = {3},
+  month = dec,
+  acmid = {206444},
+  address = {Hingham, MA, USA},
+  doi = {10.1007/BF02028352},
+  issn = {0920-5691},
+  issue_date = {Dec. 1994},
+  numpages = {26},
+  publisher = {Kluwer Academic Publishers},
+  url = {http://dx.doi.org/10.1007/BF02028352}
+}
+
+@INPROCEEDINGS{Harris88acombined,
+  author = {Chris Harris and Mike Stephens},
+  title = {A combined corner and edge detector},
+  booktitle = {In Proc. of Fourth Alvey Vision Conference},
+  year = {1988},
+  pages = {147--151}
 }
 
 @BOOK{Hartley2004,
@@ -221,6 +318,61 @@ address = {Los Alamitos, CA, USA}
   volume = {1},
   pages = {1--89},
   number = {1}
+}
+
+@ARTICLE{Lowe:2004,
+  author = {Lowe, David G.},
+  title = {Distinctive Image Features from Scale-Invariant Keypoints},
+  journal = {Int. J. Comput. Vision},
+  year = {2004},
+  volume = {60},
+  pages = {91--110},
+  number = {2},
+  month = nov,
+  acmid = {996342},
+  address = {Hingham, MA, USA},
+  doi = {10.1023/B:VISI.0000029664.99615.94},
+  issn = {0920-5691},
+  issue_date = {November 2004},
+  keywords = {image matching, invariant features, object recognition, scale invariance},
+  numpages = {20},
+  publisher = {Kluwer Academic Publishers},
+  url = {http://dx.doi.org/10.1023/B:VISI.0000029664.99615.94}
+}
+
+@INPROCEEDINGS{Lowe:1999,
+  author = {Lowe, David G.},
+  title = {Object Recognition from Local Scale-Invariant Features},
+  booktitle = {Proceedings of the International Conference on Computer Vision-Volume
+	2 - Volume 2},
+  year = {1999},
+  series = {ICCV '99},
+  pages = {1150--},
+  address = {Washington, DC, USA},
+  publisher = {IEEE Computer Society},
+  acmid = {851523},
+  isbn = {0-7695-0164-8},
+  url = {http://dl.acm.org/citation.cfm?id=850924.851523}
+}
+
+@ARTICLE{CoplanarPosit,
+  author = {Oberkampf, Denis and DeMenthon, Daniel F. and Davis, Larry S.},
+  title = {Iterative pose estimation using coplanar feature points},
+  journal = {Comput. Vis. Image Underst.},
+  year = {1996},
+  volume = {63},
+  pages = {495--511},
+  number = {3},
+  month = {may},
+  acmid = {228149},
+  address = {New York, NY, USA},
+  bdsk-url-1 = {http://dx.doi.org/10.1006/cviu.1996.0037},
+  doi = {10.1006/cviu.1996.0037},
+  issn = {1077-3142},
+  issue_date = {May 1996},
+  numpages = {17},
+  publisher = {Elsevier Science Inc.},
+  url = {http://dx.doi.org/10.1006/cviu.1996.0037}
 }
 
 @ARTICLE{garciaocon07,
@@ -286,90 +438,21 @@ address = {Los Alamitos, CA, USA}
   adress = {Hagenberg, Austria}
 }
 
-
-@ARTICLE{Haralick,
- author = {Haralick, Robert M. and Lee, Chung-Nan and Ottenberg, Karsten and N\"{o}lle, Michael},
- title = {Review and analysis of solutions of the three point perspective pose estimation problem},
- journal = {Int. J. Comput. Vision},
- issue_date = {Dec. 1994},
- volume = {13},
- number = {3},
- month = dec,
- year = {1994},
- issn = {0920-5691},
- pages = {331--356},
- numpages = {26},
- url = {http://dx.doi.org/10.1007/BF02028352},
- doi = {10.1007/BF02028352},
- acmid = {206444},
- publisher = {Kluwer Academic Publishers},
- address = {Hingham, MA, USA}
- }
-
-@ARTICLE{Fischler,
- author = {Fischler, Martin A. and Bolles, Robert C.},
- title = {Random sample consensus: a paradigm for model fitting with applications to image analysis and automated cartography},
- journal = {Commun. ACM},
- issue_date = {June 1981},
- volume = {24},
- number = {6},
- month = jun,
- year = {1981},
- issn = {0001-0782},
- pages = {381--395},
- numpages = {15},
- url = {http://doi.acm.org/10.1145/358669.358692},
- doi = {10.1145/358669.358692},
- acmid = {358692},
- publisher = {ACM},
- address = {New York, NY, USA},
- keywords = {automated cartography, camera calibration, image matching, location determination, model fitting, scene analysis}
-} 
-
-@article{Lowe:2004,
- author = {Lowe, David G.},
- title = {Distinctive Image Features from Scale-Invariant Keypoints},
- journal = {Int. J. Comput. Vision},
- issue_date = {November 2004},
- volume = {60},
- number = {2},
- month = nov,
- year = {2004},
- issn = {0920-5691},
- pages = {91--110},
- numpages = {20},
- url = {http://dx.doi.org/10.1023/B:VISI.0000029664.99615.94},
- doi = {10.1023/B:VISI.0000029664.99615.94},
- acmid = {996342},
- publisher = {Kluwer Academic Publishers},
- address = {Hingham, MA, USA},
- keywords = {image matching, invariant features, object recognition, scale invariance}
-} 
-
-@inproceedings{Lowe:1999,
- author = {Lowe, David G.},
- title = {Object Recognition from Local Scale-Invariant Features},
- booktitle = {Proceedings of the International Conference on Computer Vision-Volume 2 - Volume 2},
- series = {ICCV '99},
- year = {1999},
- isbn = {0-7695-0164-8},
- pages = {1150--},
- url = {http://dl.acm.org/citation.cfm?id=850924.851523},
- acmid = {851523},
- publisher = {IEEE Computer Society},
- address = {Washington, DC, USA}
-} 
-
-@MISC{vlfeat12,
-  title = {VLFeat homepage},
-  howpublished = {\url{http://www.vlfeat.org}},
-  month = {nov},
-  year = {2012}
+@MISC{blender,
+  owner = {roho},
+  timestamp = {2012.12.01}
 }
 
 @MISC{IpolSift12,
   title = {Image Processing On Line - LSD: a Line Segment Detector},
   howpublished = {\url{http://www.ipol.im/pub/art/2012/gjmr-lsd/}},
+  month = {nov},
+  year = {2012}
+}
+
+@MISC{vlfeat12,
+  title = {VLFeat homepage},
+  howpublished = {\url{http://www.vlfeat.org}},
   month = {nov},
   year = {2012}
 }
