@@ -1,5 +1,6 @@
 \chapter{Benchmark}
 \label{chap: benchmark}
+\section{Introducción}
 Durante el desarrollo del proyecto se hizo presente la necesidad de contar con herramientas de medida del desempeño objetivas para la validación de los algoritmos que se utilizaron y desarrollaron. En particular se desea evaluar los algoritmos asociados a la detección y estimación de pose. Estos son LSD, filtrado de segmentos, determinación de correspondencias y Posit Coplanar. 
 
 El enfoque elegido para la validación de dichos algoritmos consiste en la generación de una ``verdad de piso'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en ese proyecto como \emph{Benchmark} o Comparativa. De esta forma se pueden generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
@@ -29,7 +30,7 @@ Blender utiliza el sistema de coordenadas que se ve en la Figura \ref{fig:blende
 
 Finalmente, la escena conteniendo el modelo 3D del marcador se resume en el archivo: \textbf{Marker.blend}.
 
-\subsection{Ajuste de escena y parámetros}
+\subsection{Ajustes de escena y parámetros: GUI}
 El software Blender permite el ajuste de la escena y los parámetros y características asociados al render, la cámara y el objeto mediante su interfaz gráfica. Estos tienen como resultado final la imagen renderizada. Los parámetros y ajustes que fueron realizados y resultan ser los más relevantes para la reproducción del proceso de renderizado del marcador se explican a continuación.
 
 \begin{itemize}
@@ -49,28 +50,28 @@ Vale la pena observar que los ajustes de Render y Cámara constituyen una forma d
 \begin{figure}[h!]
   \centering
   \subfigure[Ajustes de mundo y fondo]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_wrldprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_wrldprops.png}}
     \label{fig:blender_props_a}
   \subfigure[Ajustes de render]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_rndrprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_rndrprops.png}}
     \label{fig:blender_props_b}
   \subfigure[Ajustes de cámara]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_cameraprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_cameraprops.png}}
     \label{fig:blender_props_c}
   \subfigure[Pose del objeto]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_objprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_objprops.png}}
     \label{fig:blender_props_d}
   \caption{Ajustes en la escena en Blender para realizar el render.}
   \label{fig:blender_props}
 \end{figure}
 
-\subsection{Python scripting}
+\subsection{Ajustes de parámetros: Python scripting}
 Python es un lenguaje de programación interpretado, interactivo y orientado a objetos. Incorpora módulos, excepciones, tipeo dinámico, tipos de datos de muy alto nivel y clases. Python logra combinar notáblemente poder con claridad en la sintaxis \cite{blender_python}. La mayoría de las áreas de Blender pueden ser programadas mediante \emph{scripts}, incluyendo Animación, Renderizado, Importación y Exportación, Creación de objetos y tareas repetitivas. Para la interacción con Blender se hace uso de una API ``ajustada a medida''.
 
 La API de Blender para Python se encuentra empaquetada en el módulo \texttt{bpy}. Mediante este módulo se puede acceder a los objetos y sus propiedades de la escena. De esta forma se puede de forma programática ajustar las propiedades y parámetros explicados anteriormente. Por lo tanto mediante la interprete de comandos de Blender se puede prescindir de la interfaz gráfica de Blender. En la Figura \ref{blender_pyconsole} se muestra un \emph{screenshot} de la consola interactiva de Python en Blender.
 \begin{figure}[h!]
   \centering
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_pyconsole.png}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_pyconsole.png}
   \caption{Consola interactiva de Python incrustada en Blender.}
   \label{fig:blender_pyconsole}
 \end{figure}
@@ -148,19 +149,38 @@ Finalmente se pueden agregar argumentos de línea de comando sobre el script de P
 \end{verbatim}
 En donde el \texttt{<fname>} determina el nombre de la imagen producto del Renderizado. El parseo de estos argumentos de Python se debe hacer dentro del script en el cual se deben realizar las asignaciones y las conversiones a tipos de datos apropiadas.
 
-\subsection{Ejecución Batch: Matlab}
+\subsubsection{Comentarios sobre el script de Python}
+A continuación se realizan algunos comentarios respecto al desarrollo del script en Python para lograr coherencia entre los sistemas de coordenadas y dimensiones que se utilizan en el algoritmo de estimación de pose.\\
+
+Debido a que el sistema de coordenadas que utiliza Blender difiere con el adoptado por el algoritmo de estimación de pose es que debe ajustar en algún punto los ejes de alguno de los dos sistemas para trabajar de forma coherente. Lo razonable y el enfoque que se eligió es el de ajustar los ejes que se van a utilizar en Blender dentro del script de Python. Por lo tanto se aplica una transformación sobre los valores de las rotaciones y traslaciones correspondientes a esta convención de ejes:
+\begin{eqnarray*}
+ x_{blender} = x_{posit} \\
+ y_{blender} = -y_{posit} \\
+ z_{blender} = -z_{posit}
+\end{eqnarray*}
+Esto se traduce en invertir el valor de las rotaciones y traslaciones de los ejes $z$ e $y$. \\
+
+Otra aclaración importante refiere a que las unidades de Blender fueron ajustadas para corresponder con centímetros mientras que a lo largo del proyecto las unidades utilizadas para las coordenadas del modelo 3D y del mundo son los milímetros. Por esto es que las traslaciones dentro del script son ajustadas para corresponder con centímetros.\\
+
+Con estos dos ajustes la realización de imágenes sintéticas con el entorno desarrollado es \emph{transparente} al usuario ya que si este es coherente con las convenciones tomadas para el algoritmo de estimación de pose no se tendrán que realizar reajustes.
+
+\section{Ejecución Batch: Matlab}
 Se generó un entorno de ejecución serial tipo batch en Matlab en donde se ejecuta Blender, en su modo de ejecución por consola de comandos con script de Python con argumentos , mediante el uso de la función de Matlab \texttt{system} la cual realiza una llamada al sistema.
 
 El entorno desarrollado para generación automática de juegos de imágenes sintéticas en Matlab tipo batch consiste en varios pasos:
 \begin{itemize}
  \item 
-\textbf{Configuración de Cámara}:
+\textbf{Configuración de Cámara}: Se fijan los parámetros intrínsecos y extrínsecos de la cámara así como el tamaño de imagen.
  \item 
-\textbf{Setup general}:
+\textbf{Setup general}: Se definen las rutas a los archivos del modelo y script de Blender así como las rutas a las carpetas para las imágenes de salida y se genera esta estructura de carpetas en caso de ser necesario. Se establece el identificador sobre el juego de poses a renderizar. 
  \item 
-\textbf{Generar poses}:
+\textbf{Generar Poses}: Se generara el juego de poses correspondiente al identificador del Setup. Las definiciones sobre los juegos de poses se realizan previamente. Existe la posibilidad de agregar ruido al juego de poses. Por ejemplo un juego de poses puede consistir en variar el ángulo de rotación respecto del eje $x$ manteniendo todos las otras rotaciones fijas y la traslación en en un $z=1000mm$
  \item 
-\textbf{Ejecución de Blender}:
+\textbf{Ejecución de Blender}: En base a la Cámara, el Setup y las Poses se ejecuta para cada pose una llamada al sistema con el comando de Blender de línea de comandos con script de Python y argumentos de línea. El valor de los argumentos se ajusta para cada ejecución de forma de lograr el resultado esperado. Se genera en la estructura de carpetas un juego de imágenes de salida que corresponden a una imagen sintética del marcador.
 
+\item
+\textbf{Registro}: Se guarda un archivo de texto con las poses utilizadas y otro con las configuraciones de las cámara.
 \end{itemize}
 
+\section{Resumen}
+En este capítulo se describió el proceso general para la generación de imágenes sintéticas para la validación de los algoritmos desarrollados y utilizados en el proyecto. Se explicó que ajustes son de interés a realizar en Blender mediante su interfaz gráfica así como por su consola de comandos interactiva de Python. Se describió el proceso para realizar renders desde consola de comandos mediante la utilización de un script en Python y adicionalmente mediante la inclusión de argumentos de línea de comandos de forma de parametrizar el proceso. Finalmente se describió el entorno desarrollado en Matlab para automatizar este proceso.
