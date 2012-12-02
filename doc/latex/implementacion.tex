@@ -1,14 +1,14 @@
 \chapter{Implementación}
 \label{chap: imp}
 \section{Introducción}
-En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García, que se eligieron para hacer el prototipo.\\
-La aplicación consta de distintas funcionalidades tales como:\\
+En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García, que se eligieron para hacer el prototipo. Se siguió la línea que se planteó desde un inicio que fue la de tener tres partes fundamentales: Navegación, Identificación y Realidad Aumentada. Para eso se incorporaron a la aplicación las siguientes funcionalidades:
  \begin{itemize}
-\item[(1)] Detección QR
-\item[(2)] Navegación por listas de cuadros
-\item[(3)] Comunicación con un servidor con la base de datos.
-\item[(4)] Detección SIFT para identificar el cuadro.
-\item[(5)] Diferentes realidades aumentadas según la obra.
+\item Navegación por detección de QRs.
+\item Identificación de obras mediante SIFT.
+\item Comunicación con un servidor.
+\item Navegación por listas de cuadros.
+\item Interactividad con modelos.
+\item Utilización de redes sociales.
 \end{itemize}
 En las próximas secciones se describe más en detalle cada uno de estos puntos y su integración a la aplicación final. También se describe el flujo de la aplicación y algunas clases implementadas.
 \section{Diagrama global de la aplicación}
@@ -20,7 +20,7 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \caption{Diagrama global de la aplicación}
 \label{fig: Diaglobal}
 \end{figure}
-Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de leer códigos QR desplegados en las distintas salas o secciones del museo, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: reconocimiento de obra. El reconocimiento de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}\\
+Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de navegar por el museo leyendo códigos QR desplegados en las distintas salas o secciones, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: identificación de la de obra. La identificación de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}\\
 
 De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y así entonces interactuar con él. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la Figura \ref{fig: story}, se presenta el \textit{Storyboard} de la misma, que muestra la relación entre las distintas clases. Se recuerda al lector que el \textit{Storyboard} es una herramienta de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una representación gráfica de la interfaz de usuario. A su vez, a la Figura \ref{fig: story} se le agregó un número identificador en cada \textit{ViewController} para poder referencialos en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
 \begin{figure}[h!]
@@ -221,7 +221,8 @@ UIImageView* vistaImg = [[UIImageView alloc] init];
 UIScreen *screen = [UIScreen mainScreen];
 CGRect fullScreenRect = screen.bounds;   
 
-[vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
+[vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, 
+fullScreenRect.size.height/2)];
 [vistaImg setBounds:fullScreenRect];
     
 [self.window addSubview:vistaImg];
@@ -241,12 +242,15 @@ Como fue mencionado en el capítulo \ref{chap: hwysw}, en Xcode, si se quiere sim
     self.videoDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     
     /*Creamos al videoInput*/
-    self.videoInput  = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:nil];
+    self.videoInput  = [AVCaptureDeviceInput deviceInputWithDevice:
+    self.videoDevice error:nil];
     
     /*Creamos y seteamos al frameOutpt*/
     self.frameOutput = [[AVCaptureVideoDataOutput alloc] init];
     
-    self.frameOutput.videoSettings = [NSDictionary dictionaryWithObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id) kCVPixelBufferPixelFormatTypeKey];
+    self.frameOutput.videoSettings = [NSDictionary dictionaryWithObject:
+    [NSNumber numberWithInt:kCVPixelFormatType_32BGRA] forKey:(id)
+     kCVPixelBufferPixelFormatTypeKey];
     
     /*Ahora conectamos todos los objetos*/
     /*Primero le agregamos a la sesion el videoInput y el videoOutput*/
@@ -256,7 +260,7 @@ Como fue mencionado en el capítulo \ref{chap: hwysw}, en Xcode, si se quiere sim
 \end{verbatim}
 
 Como se ve, es necesario crear una sesión de captura, luego un dispositivo de captura y una salida de los datos y agregarlos a la sesión. También se puede configurar el tipo de captura de la cámara (tiene que ser soportado por el \textit{hardware}, sino se genera un error en este punto). \\
-Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.\\
+Otra cosa importante que se hace en la clase \textit{Isgl3dViewController} es la configuración del \textit{multithreading}. A continuación se muestra el código que logra esto.
 \begin{verbatim}
     dispatch_queue_t processQueue = dispatch_queue_create("procesador", NULL);
     [self.frameOutput setSampleBufferDelegate:self queue:processQueue];
@@ -268,53 +272,17 @@ Finalmente se da comienzo a la sesión:\\
 \begin{verbatim}
 [self.session startRunning];
 \end{verbatim}
-Como la clase \textit{Isgl3dViewController} implementa el protocolo \textit{AVCaptureVideoDataOutputSampleBufferDelegate}, una vez que comienza la sesión, se invoca cuadro a cuadro el siguiente método:\\
+Como la clase \textit{Isgl3dViewController} implementa el protocolo 			textit{AVCaptureVideoDataOutputSampleBufferDelegate}, una vez que comienza la sesión, se invoca cuadro a cuadro el siguiente método:\\
 \begin{verbatim}
 -(void) captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer
 :(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection;
 \end{verbatim}
 donde \textit{sampleBuffer} es una referencia al \textit{buffer} que contiene los píxeles de la cámara en ese momento. Así entonces, se accede a los píxeles y se invoca dentro del \textit{captureOutput} periódicamente al método \textit{procesamiento}, encargado de procesar la imagen recibida por la cámara.
-\section{QR}
+\section{El QR en la aplicación}
 \label{sec: QR}
-\subsection{Identificadores QR. Una realidad}
-El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión móvil a internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
-\subsection{?`Qué son realmente los QR?}
-Se puede decir que los QRs tienen muchos puntos en común con los códigos de barras pero con la ventaja de poder almacenar mucho más información debido a su bidimensionalidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.\\
-
-En la Figura \ref{fig: implementacion_2} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos propiamente dicho, que podrían verse como el cuerpo del paquete.\\
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.4]{figs_implementacion/qrcode_overview4.eps}
-\caption{Las distintas componentes de un QR. Fuente (poner fuente).}
-\label{fig: implementacion_2}
-\end{figure}
-%fuente http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
-
-\newpage
-\subsection{Codificación y decodificación de c\'odigos QR}
-
-Es fácil darse cuenta que la codificación resulta mucho más sencilla que la decodificación. Para la codificación es necesario comprender el protocolo, las distintas variantes y el tipo de información que se pretende almacenar. Sin embargo, para la decodificación, además de tener que cumplir con lo anterior, es necesario contar con buenos sensores y ciertas condiciones de luminosidad y distancia que favorezcan a la cámara y se traduzcan en buenos resultados luego de la detección de errores. Si bien la plataforma es importante para lograr buenos resultados, dada una plataforma, existen variadas aplicaciones tanto para iOS como para Android que cuentan con performances bastante diferentes en función del algoritmo de procesamiento utilizado.\\
-
-Debido a que el centro del presente proyecto no fue la codificación y decodificación de QRs, y que además ya existen distintas librerías que resuelven muy bien este problema, se optó por investigar varias de ellas e incorporar la más adecuada a la aplicación.\\
-
-Entre todas las librerías que resuelven la decodificación, las llamadas ZXing y ZBar son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossin'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.\\
-
-Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector y finalmente se optó por utilizar esta librería para los fines de la aplicación. El lector del código de ejemplo consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate}. Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista previa de la cámara. Luego el protocolo se encarga de la captura y procesamiento del QR almacenando como resultado la información embebida en este en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
-%fuente http://code.google.com/p/zxing/
-\subsection{El QR en la aplicación}
-Para el caso particular de la aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor como se explicó en la sección \ref{fig: imagenServer}. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
+Para el prototipo de aplicación se optó por tener un identificador QR para cada uno de los tres artistas elegidos del Museo Nacional de Artes Visuales (MNAV). De esta manera, para el caso del recorrido del museo de forma automática, es posible determinar la posición del usuario utilizando imágenes QR debidamente ubicadas en cada zona. Esto sirve como localización y también sirve para lograr que el paso siguiente, que es la identificación de la obra que el usuario tiene enfrente, sea mediante una búsqueda en una base de datos discriminada por autor como se explicó en la sección \ref{fig: imagenServer}. Es decir, si el usuario no escanea el QR la búsqueda de la obra a identificar se hará en una base de datos global del museo, pero en el caso que el usuario sí decida escanear el QR, entonces se cuenta con la posibilidad de realizar la búsqueda en una base de datos reducida y por lo tanto m\'as veloz. \\
 
 
-
-\subsection{Buen gusto para los QR}
-La opción de usar los QR de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QR tradicionales para lograr un valor estético además del funcional. V\'ease en la figura \ref{fig: implementacion_3} un ejemplo de cómo puede lograrse el mismo resultado pero con el valor agregado de originalidad.
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.2]{figs_implementacion/qrArtist.eps}
-\caption{Ejemplo de un QR creativo. Fuente (poner fuente).}
-\label{fig: implementacion_3}
-\end{figure}
-%fuente http://www.qrcartist.com/wordpress/wp-content/uploads/2012/10/studiothirt3-gr.png
 
 
 \section{Servidor}
@@ -347,7 +315,7 @@ Una vez instalado el servidor en cualquiera de ambos sistemas operativos, se pue
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.3]{figs_implementacion/Itworks.eps}
+\includegraphics[scale=0.3]{figs_implementacion/Itworks2.png}
 \caption{Página por defecto del servidor Apache.}
 \label{fig: implementacion_4}
 \end{figure}
@@ -359,119 +327,14 @@ Como se mencionó el servidor se implementó sin MySQL y tampoco con ningún otro g
 \section{SIFT}
 \label{sec: sift}
 
-El algoritmo SIFT, acr\'onimo de ``Scale Invariant Feature Transform'',  es un algoritmo de visi\'on artificial \cite{Lowe:2004}, \cite{Lowe:1999}, que se encarga de extraer caracter\'isticas distintivas de las im\'agenes en escala de grises. Mediante estas, es posible luego reconocer dicha imagen dentro de una base de datos o incluso dentro de otra imagen mayor con otra cantidad de elementos en desorden. Estas caracter\'isticas son invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades. El algoritmo consta b\'asicamente de cuatro pasos que se explicar\'an brevemente en secciones subsiguientes.\\ 
-
-SIFT fue utilizado en el presente proyecto para el reconocimiento de las obras contempladas por los usuarios, cuando estos deciden realizar el recorrido interactivo del museo de forma autom\'atica. El algoritmo corre en el servidor y el c\'odigo utilizado es una adaptaci\'on propia de la implementaci\'on en C que está en la librer\'ia VL-Feat. VL-Feat es una librer\'ia gratis y en c\'odigo abierto que implementa algoritmos populares de visi\'on artificial que puede ser descargada de su p\'agina web oficial \cite{vlfeat12}. \\
-
+SIFT fue utilizado en el presente proyecto para el reconocimiento de las obras contempladas por los usuarios, cuando estos deciden realizar el recorrido interactivo del museo de forma autom\'atica. El algoritmo corre en el servidor y el c\'odigo utilizado es una adaptaci\'on propia de la implementaci\'on en C que está en la librer\'ia VL-Feat. VL-Feat es una librer\'ia gratis y en c\'odigo abierto que implementa algoritmos populares de visi\'on artificial que puede ser descargada de su p\'agina web oficial \cite{vlfeat12}.\\
 % ------------------------------------------------------------------------------------------------------------------------------------------
-\subsection{Detecci\'on de extremos en el espacio-escala}
-Se busca encontrar dentro del \textit{scale-space} (espacio-escala) de la imagen puntos caracter\'isticos; invariantes a la traslaci\'on, el escalado y la rotaci\'on de la misma. Adem\'as esos puntos deben ser m\'inimamente afectados por el ruido y peque\~nas distorsiones. Ser\'an los puntos extremos (m\'aximos o m\'inimos) obtenidos de las diferencias Gaussianas aplicadas al \textit{scale-space} de la imagen. El \textit{scale-space} de una imagen se define como una familia de im\'agenes $L(x,y,\sigma)$ que se obtienen de convolucionar un n\'ucleo Gaussiano variable en su desviaci\'on est\'andar $G(x,y,\sigma)$ con una imagen de entrada $I(x,y)$:
-\[
-L(x,y,\sigma) =  G(x,y,\sigma) * I(x,y)
-\]
-donde $*$ denota la convoluci\'on en $x$ e $y$, y adem\'as:
-\[
-G(x,y,\sigma) = \frac{1}{2\pi{\sigma}^2}{\rm e}^{-\frac{x^2 + y^2}{2\sigma^2}} 
-\]
 
-Una imagen diferencia de Gaussianas, $D(x,y,\sigma)$, se define entonoces de la siguiente manera:\\
-\[
-D(x,y,\sigma) = L(x,y,k\sigma) - L(x,y,\sigma) 
-\]
-con $k$ un factor multiplicativo constante.\\
-
-Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ de diferencias Gaussianas con la desviaci\'on est\'andar variando de manera creciente a lo largo de una octava (hasta obtener un $\sigma' = 2\sigma$). Para obtener $s$ intervalos enteros dentro de dicha octava el valor de $k$ en cada diferencia Gaussiana debe ser de $2^{\frac{1}{s}}$. Una vez calculadas las diferencias Gaussianas a lo largo de la octava, la imagen se submuestrea tomando 1 de cada 2 p\'ixeles en filas y columnas y se procede de la misma manera. La cantidad de octavas involucradas en el c\'alculo así como la cantidad de diferencias Gaussianas calculadas por octava son un par\'ametro a determinar. En la figura \ref{fig:SIFT_1} se puede ver lo anterior explicado gr\'aficamente.\\
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.4]{figs_implementacion/SIFT_1.png}
-\caption{Para cada octava, la imagen original es convolucionada repetidamente con Gaussianas de desviaci\'on est\'andar variable para producir el \textit{scale-space} de la izquierda. Imágenes adyacentes del \textit{space-scale} son restadas para lograr la diferencia de Gaussianas de la derecha. Despu\'es de cada octava, la imagen borrosa es submuestreada por un factor de dos y el proceso se repite. Figura tomada de \cite{Lowe:2004}.}
-\label{fig:SIFT_1}
-\end{figure}
-
-Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transicion entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver figura \ref{fig:SIFT_2}. \\
-
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.4]{figs_implementacion/SIFT_2.png}
-\caption{M\'aximos y m\'inimos de las im\'agenes diferencia de Gaussianas son obtenidos comparando cada p\'ixeles con sus vecinos en la misma escala, y en las escalas adyacentes. Figura tomada de \cite{Lowe:2004}.}
-\label{fig:SIFT_2}
-\end{figure}
-% -------------------------------------------------------------------------------------------------------------------------------------------
-
-\subsection{Localizaci\'on exacta de puntos clave}
-La b\'usqueda de extremos en las diferencias de Gaussianas produce m\'ultilpes candidatos entre los que se encuentran puntos con poco contraste;  los cuales no son estables a cambios de iluminaci\'on y al ruido. Para quitarlos se procede de la siguente manera.\\
-
-Primero se realiza una expansi\'on de Taylor de grado 2 entorno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
-\begin{equation}
-D(\chi) = D + \frac{\partial D^T}{\partial \chi} \chi + \frac{1}{2}{\chi}^T\frac{\partial^2D}{\partial {\chi}^2} \chi
-\label{eq:1}
-\end{equation}
-donde $D$ y sus derivadas son evaluadas siempre en el punto en cuesti\'on y $\chi = (x,y,\sigma)^T$ es la posici\'on relativa al mismo. Derivando la aproximaci\'on anterior e igual\'andola a cero se obtiene:\\
-\begin{equation}
-\bar{\chi} = -\frac{\partial ^2D^{-1}}{\partial {\chi^2}}\frac{\partial D}{\partial \chi}
-\label{eq:2}
-\end{equation}
-Reemplazando (\ref{eq:2}) en (\ref{eq:1}) se obtiene el valor del m\'aximo local:\\
-\[
-D(\bar{\chi}) = D + \frac{1}{2}\frac{\partial D^T}{\partial \chi} \bar{\chi}
-\]
-Finalmente, si $\left| D(\bar{\chi}) \right|< 0.03$ el punto es eliminado de la lista de puntos clave; suponiendo que D toma valores entre 0 y 1.\\
-
-Adem\'as de quitar aquellos puntos con poco contraste, hay que quitar a los puntos candidatos que pertenecen a una l\'inea y no a una esquina. Para ello, sea $H$ la matriz Hessiana de $D(x,y,\sigma)$ evaluada en un punto extremo de las diferencias de Gaussianas determinado $(x_0,y_0,\sigma_0)$, se estar\'a en presencia de un borde (l\'inea) si sus valores propios $\alpha$ y $\beta$ son uno grande y el otro peque\~no. Lo anterior es equivalente a trabajar con los siguientes resultados:\\
-\[
-Traza(H) = \frac{\partial^2 D}{\partial x^2} + \frac{\partial^2 D}{\partial y^2} = \alpha +\beta
-\]
-\[
-Det(H) = \frac{\partial^2 D}{\partial x^2} \times \frac{\partial^2 D}{\partial y^2} - \left(\frac{\partial^2 D}{\partial x. \partial y} \right)^2= \alpha . \beta
-\]
-Sea la $\alpha = r.\beta$, la condici\'on se reduce a:\\
-\[
-\frac{Traza(H)^2}{Det(H)} < \frac{(r+1)^2}{r}
-\]
-Luego de varios experimentos, se propone un umbral de $r=10$. V\'ease que conforme aumenta la relaci\'on $r$ entre ambos valores propios tambi\'en lo hace la relaci\'on entre el cuadrado de la traza de la matriz Hessiana y su determinante.\\
-
-% -------------------------------------------------------------------------------------------------------------------------------------------
-\subsection{Asignaci\'on de orientaci\'on}
-Mediante la asignaci\'on de una orientaci\'on a cada punto de la imagen basada en caracter\'isticas locales de la misma, los puntos clave pueden ser descriptos relativos a estas orientaciones y de esta manera lograr caracter\'isticas invariantes a las rotaciones. Para cada punto clave obtenido $D (x_0,y_0,\sigma_0)$ , se busca su imagen borrosa correspondiente en el espacio escala $L (x,y,\sigma_0)$ y se determina el m\'odulo de su gradiente $m(x,y)$ y la fase del mismo $\theta (x,y)$ utilizando diferencias entre p\'ixeles:\\
-\[
-\begin{array}{c}
-m(x,y) = \sqrt{ (\Delta L_x)^2 + (\Delta L_y)^2} \\ 
-m(x,y) = \sqrt{[L(x+1,y) - L(x-1,y)]^2 + [L(x,y+1) - L(x,y-1)]^2}
-\end{array}
-\]
-\[
-\begin{array}{c}
-\theta(x,y) = tan^{-1}\left( \frac{\Delta L_y}{\Delta L_x}\right) \\ 
-\theta(x,y) = tan^{-1}\left( \frac{L(x,y+1) - L(x,y-1)}{L(x+1,y) - L(x-1,y)}\right) 
-\end{array}
-\]
-
-Para determinar de una forma fiel la orientaci\'on de cada punto clave, \'esta es determinada tomando en cuenta las direcciones de todos los puntos de la imagen dentro de cierto entorno al mismo. Se genera entonces un histograma de direcciones con valores que var\'ian de a 10 grados, ponderado por el m\'odulo del gradiente y una ventana Gaussiana circular centrada en el punto clave, de desviaci\'on est\'andar igual a 1.5 veces el valor del nivel del en cuesti\'on. Cada m\'aximo en el histograma corresponde a la direcci\'on dominante en el gradiente local y ser\'a la asignada al punto clave. Si existen en el histograma otros m\'aximos secundarios de valor mayor o igual al $80\%$ del m\'aximo principal, estos ser\'an utilizados para generar nuevos puntos clave con esa direcci\'on. S\'olo al $15\%$ de los puntos clave se les asigna m\'as de una direcci\'on.\\
-% -------------------------------------------------------------------------------------------------------------------------------------------
-\subsection{Descriptor de puntos clave}
-\begin{figure}[h!]
-\centering
-\includegraphics[scale=0.4]{figs_implementacion/SIFT_3.png}
-\caption{Izq.: La ventana Gaussiana pondera los valores de m\'odulo y fase en la vecindad de los puntos de inter\'es. Der.: los histogramas con 8 direcciones posibles realizados para cada subregi\'on. Figura tomada de \cite{Lowe:2004}.}
-\label{fig:SIFT_3}
-\end{figure}
-
-Hasta el momento, se le ha asignado a cada punto clave una escala, una locaci\'on y una orientaci\'on. El siguiente paso es determinar para cada punto clave un descriptor relativamente invariante a cambios de iluminaci\'on y afinidades, basado en el entorno del mismo.\\
-
-Una vez determinadas la magnitud y fase del gradiente entorno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcciones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.\\
-
-En la figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\
-
-
-\subsection{Resumen}
-
-Se tiene entonces, para cada obra en cuesti\'on, una lista de 128 descriptores invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades; almacenada en el servidor. Cuando el usuario se encuentra frente a una obra determinada, este le toma una fotograf\'ia y esta es subida al servidor, en donde es procesada con SIFT y luego sus descriptores son comparados contra todos los descriptores de la base de datos, o al menos los correspondientes a la regi\'on del museo en donde el usuario se encuentra. La obra con m\'as descriptores en com\'un con la imagen en cuesti\'on ser\'a la que el usuario contempla.\\
-
-
+Se tiene entonces, para cada obra en cuesti\'on, una lista de 128 descriptores invariantes a factores de escala, traslaci\'on, rotaci\'on y parcialmente invariantes a cambios de iluminaci\'on y afinidades; almacenada en el servidor. Cuando el usuario se encuentra frente a una obra determinada, le toma una fotograf\'ia que es subida al servidor, en donde es procesada con SIFT y luego sus descriptores son comparados contra todos los descriptores de la base de datos, o al menos los correspondientes a la regi\'on del museo en donde el usuario se encuentra. La obra con m\'as descriptores en com\'un con la imagen en cuesti\'on ser\'a la que el usuario contempla.\\
 
 % ------------------------------------------------------------------------------------- |COMENTARIOS SOBRE LA IMPLEMENTACIÓN| ---------------------------------------------------------------------------
 \section{Comentarios finales sobre la implementación}
-Hasta el momento se mencionaron una cantidad de herramientas más que interesantes, que reunidas logran un recorrido interactivo para uno o más museos. Sin embargo, no se expusieron cuáles son las aplicaciones puntuales de realidad aumentada que se dijo se iba a hacer sobre las obras. Por otra parte, aunque dejando afuera aspectos estéticos y artísticos, en el capítulo \ref{chap: casoUso} se mostró como se resolvieron los aspectos técnicos necesarios para llevar a cabo una aplicación final real de realidad aumentada. Así entonces el generar un \textit{render} de un perro junto a un sillón (caso de uso ``modelos''), que claramente puede llegar a ser de muy poco interés para un museo, resuelve el mismo problema que si se quisiera generar un \textit{render} con el modelo de José Artigas. Asimismo ser capaz de responder frente a al toque en la pantalla del modelo de un cubo y así entonces actuar en consecuencia (caso de uso ``interactivo''), resuelve el mismo problema que animar al modelo de José Artigas si este es tocado. Lo que se tiene en este caso (y efectivamente se logró), es una escultura digital e interactiva de Artigas, que sólo puede visualizarse a través de un \textit{iPad}. Ver figura \ref{fig:artigases}.\\ 
+Hasta el momento se mencionaron una cantidad de herramientas más que interesantes, que reunidas logran un recorrido interactivo para uno o más museos. Sin embargo, no se expusieron cuáles son las aplicaciones puntuales de realidad aumentada que se dijo se iba a hacer sobre las obras. Por otra parte, aunque dejando afuera aspectos estéticos y artísticos, en el Capítulo \ref{chap: casoUso} se mostró cómo se resolvieron los aspectos técnicos necesarios para llevar a cabo una aplicación final real de realidad aumentada. Así entonces generar un \textit{render} de un perro junto a un sillón (caso de uso ``modelos''), que claramente puede llegar a ser de muy poco interés para un museo, resuelve el mismo problema que si se quisiera generar un \textit{render} con el modelo de José Artigas. Asimismo ser capaz de responder frente a al toque en la pantalla del modelo de un cubo y así entonces actuar en consecuencia (caso de uso ``interactivo''), resuelve el mismo problema que animar al modelo de José Artigas si este es tocado. Lo que se tiene en este caso (y efectivamente se logró), es una escultura digital e interactiva de Artigas, que sólo puede visualizarse a través de un \textit{iPad}. Ver figura \ref{fig:artigases}.\\ 
 
 \begin{figure}[h!]
 \centering

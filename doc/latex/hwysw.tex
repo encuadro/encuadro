@@ -1,7 +1,7 @@
 \chapter{Hardware y Software}
 \label{chap: hwysw}
 \section{Introducción}
-Introducción
+En el presente capítulo se introducen algunos conceptos básicos para el desarrollo sobre plataformas móviles. En particular se describe el hardware que fue utilizado, el lenguaje de programación y el entorno de desarrollo que permitieron incorporar procesamiento sobre los dispositivos. En lo que respecta al hardware esto es todo lo que se comenta sobre el mismo y a nivel de software simplemente se introducen algunos conceptos básicos y se comenta brevemente la función de algunas librerías que fueron utilizadas. No forman parte de este capítulo detalles sobre la implementación de estas librerías en aplicaciones reales, sino simplemente un marco teórico de desarrollo.
 \section{Software de procesamiento de imágenes}
 Software de procesamiento de imágenes
 \subsection{Lenguaje C}
@@ -11,32 +11,111 @@ Ventajas del Lenguaje C para procesamiento de imágenes
 \subsubsection{IPOL}
 \subsubsection{ITK e ImageMagik}
 
-\section{Dispositivos móviles Apple}
-Al trabajar con Apple se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres tipos de dispositivos en los que se pueden desarrollar: iPhone, iPad y iPod Touch. Para cada variante de plataforma existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de lo dispositivos al mercado y se describen resumidamente las principales características.
+\section{Elección de plataforma}
+La elección de la plataforma para desarrollar fue una de las primeras desiciones que se tuvo que tomar más allá del proceso natural inicial de investigación del proyecto. Esto es debido a que existen muchos factores que se ven afectados en función de la plataforma que van desde el aprendizaje del lenguaje de programación y del entorno de desarrollo hasta la adquisición de plataformas y/o máquinas para desarrollar. Así entonces las dos grandes posibilidades que se tenían al comienzo y que determinaban estos factores eran plataformas que tuvieran los sistemas operativos Android o iOS (en ningún momento se consideró desarrollar sobre plataformas con Symbian dado que está en proceso de desaparición). Uno de los aspectos desfavorables que se veía de trabajar sobre Android era la multiplicidad de plataformas existentes, de distintas características de procesamiento, cámara y sensores entre otras cosas con respecto a las plataformas que utilizan iOS. Por otra parte luego de un proceso de investigación se vio que el conjunto de herramientas existentes y el estado de maduración del desarrollo de aplicaciones para iOS hacían de este sistema operativo, un camino más seguro para comenzar en un área que era desconocida. Es sabido que Android es un sistema operativo que viene en pleno crecimiento y que a nivel masivo es una buena alternativa desarrollar en él, pero para los fines de investigación y de desarrollo de sotware que tenía el presente proyecto se vio que era mejor desarrollar sobre iOS y plataformas Apple.\\
+
+Al trabajar con Apple entonces se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres familias de dispositivos en los que se puede desarrollar: iPhone, iPad y iPod Touch. Para cada variante de plataforma existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de los dispositivos al mercado y se describen resumidamente las principales características.
 \subsection{iPhone, iPad, iPod Touch}
+\subsubsection{Comparación de plataformas.}
 Sin dudas el iPhone fue uno de los saltos más grandes en el mundo tecnológico en los últimos a\~nos. Logró llenar el hueco que los PDAs de la década de los 90 no habían sabido completar y comenzó a desplazar al invento que revolucionó el mercado de los contenidos de música, el iPod. Gracias a su pantalla táctil capacitiva de alta sensibilidad logró reunir todas las funcionalidades agregando solamente un gran botón y algunos extra para controlar volumen o desbloquar el dispositivo. \\
-La primera generación del iPhone fue lanzada por Apple en Junio de 2007 en Estados Unidos, luego de una gran inversión de la operadora ATT que exigía exclusividad de venta dentro de dicho país durante los siguientes cuatro a\~nos. La misma soportaba tecnología GSM cuatribanda y se lanzó en dos variantes de 4GB y 8GB de ROM. El segundo modelo lanzó como novedad el soporte de tecnología 3G cuatribanda y GPS asistido. Luego le siguieron el iPhone 3GS, 4, 4S y el 5, siendo este último, la sexta y última generación disponible al momento de la redacción de este trabajo.\\
-\\
-HACER TABLA COMPARANDO\\
-\\
+La primera generación del iPhone fue lanzada por Apple en Junio de 2007 en Estados Unidos, luego de una gran inversión de la operadora AT\&T que exigía exclusividad de venta dentro de dicho país durante los siguientes cuatro a\~nos. La misma soportaba tecnología GSM cuatribanda y se lanzó en dos variantes de 4GB y 8GB de ROM. El segundo modelo lanzó como novedad el soporte de tecnología 3G cuatribanda y GPS asistido. Luego le siguieron el iPhone 3GS, 4, 4S y el 5, siendo este último, la sexta y última generación disponible al momento de la redacción de este trabajo.\\
+
 %http://ipod.about.com/od/ipadcomparisons/a/ipad-iphone-3gs-ipod-touch.htm
 %http://www.apple.com/ipod-touch/specs.html
 %http://www.apple.com/iphone/specs.html
 %http://www.apple.com/ipod-touch/fourth-generation-specs.html
 %http://www.apple.com/ipad/compare/
+
 %http://en.wikipedia.org/wiki/List_of_iOS_devices
 %http://en.wikipedia.org/wiki/IPod_Touch
 %http://en.wikipedia.org/wiki/IPhone
 %http://en.wikipedia.org/wiki/IPad
-Por su parte tanto el iPad como el iPod Touch también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los efectos del presente proyecto.
-\\
-\\
-\\
-Las dimensiones del iPhone 5 son de 58.6 x 123.8 x 7.6 millimetres, resolución de pantalla de 640 x 1136, tiene una velocidad de reloj en la CPU de 1200MHz, RAM de 1GB y la ROM varía según la variante (16GB, 30GB o 64GB).
 
- 
+%SUPPORT
+%http://support.apple.com/kb/SP587
+%http://support.apple.com/kb/SP643
+%http://support.apple.com/kb/SP594
+%http://support.apple.com/kb/SP622
+
+%PLATFORM NOTES
+%http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/OpenGLESPlatforms/OpenGLESPlatforms.html
+
+%BENCHMARK GPU
+%http://www.anandtech.com/show/4216/apple-ipad-2-gpu-performance-explored-powervr-sgx543mp2-benchmarked
+
+%COMPARE
+%http://www.gsmarena.com/compare.php3
+
+%GPU SGX
+%http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/OpenGLESPlatforms/OpenGLESPlatforms.html
+Por su parte tanto el iPad como el iPod Touch también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los 
+efectos del presente proyecto.
+
+\tiny
+\begin{table}[htbp]
+\caption{Comparativa de algunas plataformas Apple}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+& \textbf{iPhone 4} & \textbf{iPhone 4s} & \textbf{iPod Touch 4G} & \textbf{iPad 2} \\ \hline
+
+\textbf{ROM} & \scriptsize 8, 16 o 32 GB & \scriptsize 16, 32 o 64 GB & \scriptsize 8, 32 o 64 GB & \scriptsize  16, 32 o 64 GB \\ \hline
+
+\textbf{RAM} & \scriptsize 512 MB  & \scriptsize 512 MB & \scriptsize 256 MB & \scriptsize 512 MB \\ \hline
+
+\textbf{SoC} & \scriptsize Apple A4 & \scriptsize Apple A5 & \scriptsize Apple A4 & \scriptsize Apple A5 \\ \hline
+
+\textbf{CPU} & \scriptsize 1 GHz, ARM Cortex-A8 & \scriptsize 1 GHz,  dual-core ARM Cortex-A9 & \scriptsize 800 MHz, ARM Cortex-A8 & \scriptsize 1 GHz  dual-core ARM Cortex-A9   \\ \hline
+
+\textbf{GPU} & \scriptsize PowerVR SGX535 GPU & \scriptsize PowerVR SGX543MP2 & \scriptsize PowerVR SGX535 GPU & \scriptsize PowerVR SGX543MP2 \\ 
+		    & \scriptsize  & \scriptsize  (2-core) GPU & \scriptsize  & \scriptsize  (2-core) GPU \\ \hline
+
+\textbf{CÁMARA} & \scriptsize Foto: 5.0 MP & \scriptsize Foto: 8.0 MP & \scriptsize Foto: 0.7 MP & \scriptsize Foto: 0.7 MP \\ 
+				    	& \scriptsize  Video: 720p HD (30 fps) & \scriptsize  Video: 1080p HD (30 fps) & \scriptsize Video: 720p HD (30 fps) & \scriptsize Video: 720p HD (30 fps) \\ \hline
+
+\textbf{PANTALLA} & \scriptsize Diagonal: 3.5'' & \scriptsize Diagonal: 3.5'' & \scriptsize Diagonal: 3.5'' & \scriptsize Diagonal: 9.7'' \\ 
+				  & \scriptsize Pixels: 960x640 & \scriptsize Pixels: 960x640 & \scriptsize Pixels: 960x640 & \scriptsize Pixels: 1024x768 \\ 
+				  & \scriptsize Densidad de Pixels: 326 ppi  & \scriptsize  Densidad de Pixels: 326 ppi  & \scriptsize Densidad de Pixels: 326 ppi  & \scriptsize  Densidad de Pixels: 123 ppi \\ 
+				  & \scriptsize Multitáctil & \scriptsize Multitáctil & \scriptsize Multitáctil & \scriptsize Multitáctil \\ \hline
+
+
+\textbf{SENSORES} & \scriptsize Girsóscopo de 3 ejes & \scriptsize Girsóscopo de 3 ejes & \scriptsize Girsóscopo de 3 ejes & \scriptsize Girsóscopo de 3 ejes \\
+& \scriptsize Acelerómetro  & \scriptsize Acelerómetro & \scriptsize Acelerómetro & \scriptsize Acelerómetro\\
+& \scriptsize Sensor de luz ambiente & \scriptsize Sensor de luz ambiente & \scriptsize  Sensor de luz ambiente & \scriptsize  Sensor de luz \\ 
+& \scriptsize Sensor de proximidad & \scriptsize Sensor de proximidad &  & \\ \hline
+\end{tabular}
+\label{tab: compHWiOS}
+\end{table}
+\normalsize
+%http://www.edaboard.com/thread75452.html
+
+%Microcontroller and System-on-a-chip
+%Seminar on Embedded Systems Architecture
+%Peter Thoman (peter.thoman@uibk.ac.at)
+%University of Innsbruck 2009-12-03
+\subsubsection{Algunas características a detallar.}
+Hay algunos comentarios respecto de la Tabla \ref{tab: compHWiOS} que es bueno destacar. Primeramente, es importante decir que se eligieron esos cuatro dispositivos pues pareció de interés conocer al menos una plataforma de cada familia y dentro de las mismas se eligieron las que fueron utilizadas para desarrollar.\\
+Uno de los puntos a evaluar es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. \textit{System on Chip} es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria.  \\
+%http://www.arm.com/products/processors/cortex-a/index.php
+En la Figura \ref{fig: soc} se ilustran los dos tipos de \textit{SoC} de los dispositivos de la Tabla \ref{tab: compHWiOS}: Apple A4 y Apple A5. Algunos dispositivos que no figuran en la tabla como el \textit{iPhone 5} o el \textit{iPad 4} usan \textit{SoCs} más recientes como el Apple A6 o Apple A6x respectivamente. La familia de \textit{SoCs} Apple Ax, es la que la mencionada firma utiliza en todas sus plataformas, inclusive en el \textit{Apple TV} y es manufacturada por Samsung. Estos \textit{SoCs} se caracterizan por utilizar CPUs de arquitectura ARM, en su mayoría ARMv7 y GPUs de PowerVR de la línea SGX. \\
+
+\begin{figure}[h!]
+\centering
+$
+\begin{array}{cc}
+\includegraphics[scale=0.33]{figs_hwysw/applea4.png} & \includegraphics[scale=0.3]{figs_hwysw/applea5.png} \\
+\end{array}
+$
+\caption{\textit{System on Chip}: SoC.}
+\label{fig: soc}
+\end{figure}
+
+La arquitectura ARM incorpora algunas características de la arquitectura RISC (\textit{Reduced Instruction Set Computer}) como el hecho que las operaciones sean llevadas a cabo sobre un conjunto de registros a tales efectos y no sobre la memoria directamente. Otra característica que tiene de RISC es que tiene un modo simple de direccionamiento donde las direcciones son también guardadas sobre registros destinados a tales efectos. La mayoría de los procesadores están hechos con un ancho de palabra de 32-bit salvo el reciente ARMv8 que incorpora la posibilidad de utilizar ambos anchos de palabra: 32-bit o 64-bit. Otra característica a destacar sobre estos procesadores es que es posible programar sobre ellos utilizando lenguaje C/C++. Por más información sobre esta arquitectura referirse a la web de la empresa \url{http://www.arm.com}.\\
+Por su parte las GPU utilizadas en los \textit{SoCs} de la serie Apple Ax, son GPUs de PowerVR, una división de la firma Imagination Technologies (\url{http://www.imgtec.com/}) que desarrolla hardware y software para \textit{rendering} 2D y 3D, procesamiento de imágenes y codificación. La función que tiene la GPU es asignar a cada pixel de la pantalla su color para cada cuadro. En particular, estas GPU implementan un concepto innovador de \textit{renderizado} que mejora notoriamente la performance de los gráficos: \textit{Tile-Bassed Deferred Rendering} (TBDR). Este concepto aprovecha la independencia de áreas alejadas de la pantalla y de la correlación de píxeles cercanos y divide la pantalla en \textit{tiles} o baldozas. A cada \textit{tile} se le asocia un procesamiento paralelo y con esto se mejora notablemente la performance respecto al método tradicional: Immediate mode renderers (IMRs), que procesa la pantalla completa. Las imágenes \textit{renderizadas} están hechas por triángulos (polígonos), por lo que uno de los indicadores fundamentales para evaluar la performance de una GPU es la cantidad de triángulos (polígonos) que es capaz de procesar por segundo. En (referencia benchmark: http://www.anandtech.com/show/4216/apple-ipad-2-gpu-performance-explored-powervr-sgx543mp2-benchmarked) se puede ver un análsis interesante que compara entre otros, a los dos tipos de GPU que se presentaron en la Tabla \ref{tab: compHWiOS}: SGX535 y SGX543MP2. En dicho análisis se muestra por ejemplo que en el mejor de los casos la GPU SGX535 fue capaz de procesar 8.69 millones de triángulos por segundo frente a los 29 millones procesados por la GPU SGX543MP2.\\
+%http://www.imgtec.com/powervr/powervr-graphics-technology.asp
+
 
 \section{Software de Apple Inc.}
+
 \subsection{Sistemas Operativos}
 Para poder desarrollar aplicaciones sobre dispositivos móviles de la firma Apple Inc. es necesario contar con computadoras que corran el sistema operativo \textbf{Mac OS X}. Esto puede ser llevado a cabo, ya sea adquiriendo plataformas de desarrollo de la mencionada firma o creando máquinas virtuales que corran dicho sistema operativo. Para la segunda opción (la más económica pero con ciertas dificultades de performance), es necesario que la computadora cuente con virtualización de hardware. Se comenzó trabajando de esta manera hasta el momento de adquirir plataformas de desarrollo que contaran con Mac OS X en forma nativa.\\
 Mac OS X refiere a la versión número 10 (en números romanos) de una serie de sistemas operativos que comenzaron a desarrollarse en la década de los 80 (Mac OS 1 data del a?o 1984). En los últimos 28 a?os se han ido sucediendo nuevas versiones que han ido mejorando características en la estructura de datos con la incorporación de la jerarquía de archivos en Mac OS 3 por ejemplo, en la búsqueda de archivos, con la simultaneidad de tareas, multiplicidad de usuarios o incluso con el énfasis en la interfaz de usuario por mencionar algunas características importantes en la evolución de esta familia de sistemas operativos. Dentro de Mac OS X existen distintas versiones, siendo la más actual la Versión 10.8: Mountain Lion lanzada durante 2012.\\
@@ -148,18 +227,29 @@ Para poder hacer uso del \textit{Instruments}, es necesario correr la aplicación
 \caption{Distintas opciones de \textit{Instruments}.}
 \label{fig: instru}
 \end{figure}
-Luego de elegir el tipo de datos a ser recolectados según lo que se busque analizar, se despliega una ventana como se ve en la Figura \ref{fig: instru2}. Allí es necesario registrar durante varios segundos los datos mientras se corre la aplicación y luego de terminado el registro, \textit{Instruments} dedica un tiempo a analizar los datos recolectados. En el detalle inferior, se desglozan los procesos que corre la aplicación en forma de árbol. Cuando se desea medir tiempos por ejemplo, esto resulta muy útil porque entre otras cosas se puede analizar qué porcentaje del tiempo de la aplicación es consumido por un método en particular. Esto es posible simplemente buscando dentro del árbol mencionado, al método y leyendo el valor asignado de tiempo. Para el caso de análisis de memoria también es posible identificar fácilmente en qué parte del código se está dando algún problema de reserva de memoria no liberada.
+
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.6]{figs_hwysw/instruments_tracing.png}
 \caption{Trazado y análisis de datos recogidos.}
 \label{fig: instru2}
 \end{figure}
+
+Luego de elegir el tipo de datos a ser recolectados según lo que se busque analizar, se despliega una ventana como se ve en la Figura \ref{fig: instru2}. Allí es necesario registrar durante varios segundos los datos mientras se corre la aplicación y luego de terminado el registro, \textit{Instruments} dedica un tiempo a analizar los datos recolectados. En el detalle inferior, se desglozan los procesos que corre la aplicación en forma de árbol. Cuando se desea medir tiempos por ejemplo, esto resulta muy útil porque entre otras cosas se puede analizar qué porcentaje del tiempo de la aplicación es consumido por un método en particular. Esto es posible simplemente buscando dentro del árbol mencionado, al método y leyendo el valor asignado de tiempo. Para el caso de análisis de memoria también es posible identificar fácilmente en qué parte del código se está dando algún problema de reserva de memoria no liberada.
+
 En el presente proyecto se hizo uso principalmente del \textbf{Time Profiler} que permite analizar tiempos y del \textbf{Memory Leak} que permite hacer un análisis de la reserva de memoria no liberada. Con los mismos fue posible optimizar tiempos en determinados métodos del procesamiento, así como también eliminar problemas de memoria no liberada que desencadenaban en la interrupción abrupta de la aplicación luego de llegado un cierto nivel de reserva. Esta interrupción abrupta es una forma de proteger la memoria del dispositivo y evitar que se vea afectada cierta memoria útil a otros efectos. El resto de las herramientas de \textit{Instruments} fueron probadas pero no utilizadas en detalle para resolver problemas particulares.
 
 \section{Herramientas}
-Herramientas
+Además de las herramientas mencionadas propias del entorno de desarrollo fueron utilizadas algunas herramientas más generales de desarrollo de software en lo que respecta al control de versiones de código. A continuación se describen brevemente ciertos detalles de las mismas.
 \subsection{GIT}
+GIT es un software para gestionar código que fue desarrollado por Linus Trovals y permite tener un control de versiones. Se basa en la idea de desarrollo colaborativo en el que existen diversas fuentes que aportan al código. Así entonces lo que se hace es generar un repositorio remoto donde se aloja todo el código y generar un clon o copia local donde es posible realizar modificaciones y actualizar ese repositorio remoto. El repositorio tiene una estructura de archivos y mediante distintos comandos en terminal es posible hacer las actualizaciones. Otro aspecto a considerar es que es posible que existan distintas líneas de desarrollo simultáneas que pueden ser independientes o no. Es posible entonces crear, borrar o \textit{converger} (\textit{merge}) distintas líneas de desarrollo. Existen numerosas empresas que hacen uso de esta herramienta en su desarrollo como Facebook, Tweeter o RedHat entre otros. Más información sobre este software se puede encontrar en \url{http://git-scm.com/}.
 \subsection{GoogleCode}
-\subsection{Github}
+GoogleCode es un sitio que ofrece Google para \textit{hosting} de proyectos, foros de discusión sobre temas de desarrollo y una API para quienes desarrollan sobre recursos de Google. Una de las características principales es que es \textit{open-source} y que ofrece la opción de utilizar distintos software para la gestión de código como Subversion, Mercurial y Git. También ofrece otras funcionalidades como una página \textit{wiki} y la posibilidad de vincular directamente el código con esta página. 
 
+\subsection{Github}
+Github es otro sitio que ofrece \textit{hosting} para proyectos \textit{open-source}. Cuenta con muchas herramientas de gran utilidad y se ha vuelto uno de los sitios más populares. También utiliza el software Git y entre otras cosas permite navegar dentro de la estructura de archivos \textit{online}, ofrece un historial para cada archivo, permite identificar qué colaborador realizó determinados cambios e incluso realizar modificaciones de archivos \textit{online}, sin necesidad de hacer actualizaciones desde terminal.\\
+Para el presente proyecto comenzó utilizándose GoogleCode pero luego se decidió migrar todo el respositorio a Github por contar con mayores facilidades de gestión.
+
+\section{Conclusión}
+En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se conoce el poder de procesamiento de los \textit{SoCs} que componen estas plataformas que integran CPU ARMv7 en varias versiones y GPU SGX con distintas capacidades. Se vio un análisis comparativo entre las tres familias de dispositivos y dentro de las mismas en detalle los modelos de plataformas que fueron utilizados. \\
+Se explicaron algunas características generales de los sistemas operativos iOS y Mac OS X, así como también del lenguaje de programación Objective-C, superconjunto de C y que es el utilizado para desarrollar en los dispositivos mencionados. Se analizaron en detalle los distintos \textit{frameworks} dentro de iOS según los distintos niveles de abstracción que aplican según el uso que el desarrollador esté buscando para su aplicación. También se vieron algunas herramientas que provee el entorno de desarrollo Xcode y otras herramientas que son comunes a cualquier proyecto de desarrollo de software como la utilización del software Git para el control de versiones.
