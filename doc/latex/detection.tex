@@ -1,18 +1,20 @@
 \chapter{Detección}
 \label{ch:detection}
-En este Capítulo se trata con algunas de las herramientas y algoritmos de detección de características del tipo de primitivas geométricas como ser puntos, esquinas, bordes, lineas, segmentos de línea y arcos. 
 
-El objetivo principal es mostrar que características se podrían detectar y con la utilización de que algoritmos con el fin de su utilización en un algoritmo de estimación pose, tema que se desarrolla en los Capítulos \ref{ch:camypose} y, en forma mas específica, \ref{ch:posit}. El tipo de características que serán elegidas para su detección en la aplicación final estarán fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se deberá ejecutar en tiempo real así. También se desea que la característica ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
+\section{Introuducción}
+En este Capítulo se trata con algunas de las herramientas y algoritmos de detección de características del tipo de primitivas geométricas como ser puntos, esquinas, bordes, líneas, segmentos de línea y arcos. 
 
-Se busca que las características detectadas, asociadas a objetos o elementos presentes en la escena, presenten estabilidad en su ubicación frente a cambios en la pose. En forma mas específica, si se tiene una esquina a detectar en una escena, por ejemplo de una mesa, la esquina pueda ser detectada frente a imágenes o ``fotos'' de la mesa desde distintas posiciones y que en todos los casos la esquina detectada corresponda con la esquina de la mesa en la foto. También se busca que las características sean robustas frente a cambios en las condiciones en que se adquiere la imagen. Estas condiciones podrían ser iluminación, presencia de ruido, oclusiones, etc.
+El objetivo principal es mostrar qué características se pueden detectar y con la utilización de qué algoritmos con el fin de su utilización en un algoritmo de estimación pose, tema que se desarrolla en los Capítulos \ref{ch:camypose} y, en forma más específica en el Capítulo \ref{ch:posit}. El tipo de características elegidas para su detección en la aplicación final están fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se debe ejecutar en tiempo real. También se desea que la característica ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
 
-El capítulo comienza con algunos detectores clásicos de bordes y esquinas como son Canny y Harris. Posteriormente se desarrollan algunos detectores de líneas, segmentos de línea y algunas estructuras mas complejas, estos son el Método de la Transformada de Hough, LSD, EDLines y ORT. A lo largo de todo el capítulo se presentan resultados de estos algoritmos 
+Se busca que las características detectadas, asociadas a objetos o elementos presentes en la escena, presenten estabilidad en su ubicación frente a cambios en la pose. En forma más específica, si se tiene una esquina a detectar en una escena, por ejemplo de una mesa, la esquina puede ser detectada frente a imágenes o ``fotos'' de la mesa desde distintas posiciones y que en todos los casos la esquina detectada corresponde con la esquina de la mesa en la foto. También se busca que las características sean robustas frente a cambios en las condiciones en que se adquiere la imagen. Estas condiciones podrían ser iluminación, presencia de ruido, oclusiones, etc.
+
+El capítulo comienza con algunos detectores clásicos de bordes y esquinas como son Canny y Harris. Posteriormente se desarrollan algunos detectores de líneas, segmentos de línea y algunas estructuras más complejas, como el Método de la Transformada de Hough, LSD, EDLines y ORT. A lo largo de todo el capítulo se presentan resultados de estos algoritmos 
 % \section{Típos de características}
 
 \section{Bordes y esquinas}
 Los detectores de bordes, en particular los detectores de bordes tipo escalón son una parte esencial de muchos sistemas de visión. El proceso de detección de bordes cumple la función de simplificar drásticamente la cantidad de información a procesar conservando aspectos estructurales utilizables para establecer los límites de cierto objeto en la imagen \cite{canny}. 
 
-Un borde se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. De forma mas formal puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación esta relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo. Hay implementaciones de detección de bordes que toman en cuenta el efecto rampa y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
+Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. De forma más formal puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación está relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo. Hay implementaciones de detección de bordes que toman en cuenta el \textit{efecto rampa} y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
 \begin{figure}[h!]
   \centering
     \includegraphics[scale=0.8]{figs_detection/rampa.png}
@@ -21,13 +23,13 @@ Un borde se puede definir intuitivamente como un cambio brusco sobre una zona en
 \end{figure}
 	
 \subsection{Detector de bordes de Canny}
-El detector de bordes de Canny fue desarrollado en 1988 por John F. Canny\cite{canny} con el objetivo de descubrir el algoritmo de detección de bordes óptimo. En esta Sección se describe brevemente el algoritmo y se muestran algunos resultados de interés. El desarrollo esta inspirado principalmente en el artículo del detector de bordes de Canny de Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Canny_edge_detector}}.\\
+El detector de bordes de Canny fue desarrollado en 1988 por John F. Canny\cite{canny} con el objetivo de descubrir el algoritmo de detección de bordes óptimo. En esta Sección se describe brevemente el algoritmo y se muestran algunos resultados de interés. El desarrollo está inspirado principalmente en el artículo del detector de bordes de Canny de Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Canny_edge_detector}}.\\
 
-Las características buscadas por Canny para el detector de borde óptimo son
+Las características buscadas por Canny para el detector de borde óptimo son:
 \begin{itemize}
  \item \textbf{Buena detección}: El algoritmo debe marcar todos los bordes reales en la imagen como sea posible.
- \item \textbf{Buena localización}: Los bordes marcados deben estar lo mas cercanos posibles a los bordes reales en la imagen.
- \item \textbf{Respuesta mínima}: Dado un borde en la imagen este no debe ser marcado mas de una vez y de ser posible la presencia de ruido no debe crear falsos bordes.
+ \item \textbf{Buena localización}: Los bordes marcados deben estar lo más cercanos posibles a los bordes reales en la imagen.
+ \item \textbf{Respuesta mínima}: Dado un borde en la imagen este no debe ser marcado más de una vez y de ser posible la presencia de ruido no debe crear falsos bordes.
 \end{itemize}
 En la Figura \ref{fig:resultado_canny_lena}(b) se muestra un ejemplo del detector de bordes de Canny para la imagen de Lena original\ref{fig:resultado_canny_lena}(a).
 
@@ -41,11 +43,11 @@ En la Figura \ref{fig:resultado_canny_lena}(b) se muestra un ejemplo del detecto
   \label{fig:resultado_canny_lena}
 \end{figure}
 
-El algoritmo se puede consiste en cuatro etapas básicas las cuales se describen a continuación. A lo largo de estas etapas se ejemplifica mediante el uso del \emph{demo on-line} de Canny en IPOL\footnote{\url{http://dev.ipol.im/~coco/ipol_demo/canny/}} para la imagen de Lena. Estos resultados intermedio se encuentan en la Figura \ref{fig:resultado_canny_lena_inter}.
+El algoritmo consiste en cuatro etapas básicas las cuales se describen a continuación. A lo largo de estas etapas se ejemplifica mediante el uso del \emph{demo on-line} de Canny en IPOL\footnote{\url{http://dev.ipol.im/~coco/ipol_demo/canny/}} para la imagen de Lena. Estos resultados intermedio se encuentan en la Figura \ref{fig:resultado_canny_lena_inter}.
 \begin{itemize}
 
  \item 
-\textbf{Reducción de Ruido}: Debido a que el detector de bordes de Canny es sensible a la presencia de ruido en las imágenes se utiliza en una primera etapa una filtrado Gaussiano en donde se realiza la convolución de la imagen con un núcleo Gaussiano. El resultado da lugar a una imagen levemente borrosa como se puede observar en la Figura \ref{fig:resultado_canny_lena_inter}(a).
+\textbf{Reducción de Ruido}: Debido a que el detector de bordes de Canny es sensible a la presencia de ruido en las imágenes se utiliza en una primera etapa un filtrado Gaussiano en donde se realiza la convolución de la imagen con un núcleo Gaussiano. El resultado da lugar a una imagen levemente borrosa como se puede observar en la Figura \ref{fig:resultado_canny_lena_inter}(a).
 
  \item 
 \textbf{Gradiente de intensidad de la imagen}: De forma de detectar bordes en todas las direcciones se utilizan cuatro filtros para detectar bordes en direcciones horizontal, vertical, y las dos direcciones diagonales. El operador de detección de bordes, por ejemplo Roberts, Prewitt o Sobel, devuelve un valor para la derivada primera en la dirección horizontal ($\mathbf{G}_x$) y otro para la derivada primera en la dirección vertical ($\mathbf{G}_y$). En base a estos valores se puede obtener módulo y dirección del gradiente sobre cada píxel (Figura \ref{fig:resultado_canny_lena_inter}(b)). 
@@ -64,7 +66,7 @@ La búsqueda de máximos se realiza observando el ángulo del punto y el módulo de 
 \textbf{Umbrales con histéresis}: El umbralizado con histéresis requiere de dos umbrales, uno bajo y uno alto. El umbral alto asegura que se marcan bordes de los cuales se puede estar suficientemente seguros de que son borde (Figura \ref{fig:resultado_canny_lena_inter}(d)). Luego en base a los bordes correspondientes a umbrales altos se aplica el umbral bajo recorriendo los caminos de dirección obtenidos previamente. Una vez finalizado el proceso se tiene una imagen binaria en donde cada píxel es marcado como borde o no (Figura \ref{fig:resultado_canny_lena_inter}(e)).
 \end{itemize}
 
-El algoritmo consiste en una serie de parámetros que ya fueron mencionados pero que vale la pena resaltar. En primer lugar el parámetros $\sigma$, la desviación estandar, del filtro Gaussiano utilizado en la etapa de reducción de ruido. Este parámetro afecta notablemente el desempeño del algoritmo y debe ser ajustado según la aplicación ya que aporta un compromiso entre el detalle para bordes mas fino y la cantidad de falsos bordes producto de ruido. Por otro lado en la etapa de umbralizado con histéresis se tienen dos parámetros mas, los valores de los dos umbrales; alto y bajo. En estos dos parámetros residen los típicos problemas de los umbrales y no hay un enfoque genérico que lo solucione, si el umbral alto es muy alto se puede perder información importante y por otro lado si el umbral bajo es muy bajo se producirán más falsos bordes debido a ruido. 
+El algoritmo consiste en una serie de parámetros que ya fueron mencionados pero que vale la pena resaltar. En primer lugar el parámetro $\sigma$, la desviación estandar, del filtro Gaussiano utilizado en la etapa de reducción de ruido. Este parámetro afecta notablemente el desempeño del algoritmo y debe ser ajustado según la aplicación ya que aporta un compromiso entre el detalle para bordes más fino y la cantidad de falsos bordes producto del ruido. Por otro lado en la etapa de umbralizado con histéresis se tienen dos parámetros más, los valores de los dos umbrales; alto y bajo. En estos dos parámetros residen los típicos problemas de los umbrales y no hay un enfoque genérico que lo solucione, si el umbral alto es muy alto se puede perder información importante y por otro lado si el umbral bajo es muy bajo se producirán más falsos bordes debido a ruido. 
 \begin{figure}[h!]
   \centering
   \subfigure[Reducción de ruido: Blur]{
@@ -83,7 +85,7 @@ El algoritmo consiste en una serie de parámetros que ya fueron mencionados pero 
 
 
 \subsubsection{Ejemplos de interés}
-En la Figura \ref{fig:resulado_canny_marcador} se muestran distintos resultados de Canny para distinto valor de sigma, $\sigma$, utilizando como entrada una imagen conteniendo el marcador utilizado en el proyecto.
+En la Figura \ref{fig:resultado_canny_marcador} se muestran distintos resultados de Canny para distinto valor de $\sigma$, utilizando como entrada una imagen conteniendo el marcador utilizado en el proyecto.
 \begin{figure}[h!]
   \centering
   \subfigure[Imagen de entrada: Marcador]{
@@ -94,21 +96,21 @@ En la Figura \ref{fig:resulado_canny_marcador} se muestran distintos resultados 
     \includegraphics[scale=0.4]{figs_detection/canny_mrkr/canny_14.png}}
   \subfigure[$\sigma=6.0$]{
     \includegraphics[scale=0.4]{figs_detection/canny_mrkr/canny_60.png}}
-  \caption{Resultados del detector de bordes de Canny variando el parámetro de reducción de ruido $\sigma$ para una imagen de entrada conteniendo un marcador.$th_{lo}=0.2$, $th_{hi}=0.8$ (umbrales normalizados}
+  \caption{Resultados del detector de bordes de Canny variando el parámetro de reducción de ruido $\sigma$ para una imagen de entrada conteniendo un marcador. $th_{lo}=0.2$, $th_{hi}=0.8$ (umbrales normalizados}
   \label{fig:resultado_canny_marcador}
 \end{figure}
-Se puede ver que con $\sigma = 0.5$ la presencia de ruido afecta notablemente la detección produciendo una gran cantidad de falsos bordes. Para $\sigma=1.4$ la detección es buena eliminando prácticamente todos los falsos bordes producto del ruido y conservando la información de borde real. Por otro lado para $\sigma=6.0$ el \emph{bluring} resulta en una detección de bordes muy reducida aun que preservando la información de bordes mas significativos como los bordes del marcador los cuales son el interés principal en la aplicación. De todas formas se produce un efecto indeseado de ``redondeo'' de los bordes asociados al uso de un núcleo Gaussiano circular.
+Se puede ver que con $\sigma = 0.5$ la presencia de ruido afecta notablemente la detección produciendo una gran cantidad de falsos bordes. Para $\sigma=1.4$ la detección es buena eliminando prácticamente todos los falsos bordes producto del ruido y conservando la información de borde real. Por otro lado para $\sigma=6.0$ el \emph{bluring} resulta en una detección de bordes muy reducida aunque preservando la información de bordes más significativos como los bordes del marcador los cuales son el interés principal en la aplicación. De todas formas se produce un efecto no deseado de ``redondeo'' de los bordes asociados al uso de un núcleo Gaussiano circular.
 
 
 \subsection{Detector de bordes y esquinas de Harris}
-El detector de \textbf{Harris} es un método de detección de bordes y esquinas. Consideremos una ventana en el píxel $(x,y)$ en donde definimos la suma
+El detector de \textbf{Harris} es un método de detección de bordes y esquinas. Se considera una ventana en el píxel $(x,y)$ en donde se define la suma
 cuadrada ponderada de los elementos de la ventana como
 $$E_{x,y}= \sum_{u,v} w_{u,v}[I_{x+u,y+v}-I(u,v)]^2 = \sum_{u,v} w_{u,v}[xI_x+yI_y+O(x^2,y^2)]^2 $$
 en donde $w_{u,v}$ es un núcleo gaussiano para suavizar la respuesta y los gradientes pueden ser aproximados por
 $$I_x = I*(-1,0,1) \hspace{8mm} I_y = I*(-1,0,1)^T.$$
-Para pequeños movimientos, se puede tomar la aproximación 
+Para pequeños variaciones, se puede tomar la aproximación 
 $$E(x,y) = Ax^2 + 2Cxy + By^2$$
-en donde $A = I_x^2*w$, $B = I_y^2*w$ y $C = I_xI_y*w$. De forma de tomar en cuenta la variación de $E$ junto con la dirección del cambio se re-formula la
+en donde $A = I_x^2*w$, $B = I_y^2*w$ y $C = I_xI_y*w$. De forma de tomar en cuenta la variación de $E$ junto con la dirección del cambio se reformula la
 ecuación anterior como 
 $$E(x,y) =  \begin{pmatrix}
 	      x &   y
@@ -126,9 +128,9 @@ $$E(x,y) =  \begin{pmatrix}
 				    x\\
 				    y
 				\end{pmatrix}$$
-Dado que $E$ esta fuertemente relacionado con la función de autocorrelación, si $\alpha$ y $\beta$ son los valores propios de la matriz $M$,
+Dado que $E$ está fuertemente relacionado con la función de autocorrelación, si $\alpha$ y $\beta$ son los valores propios de la matriz $M$,
 serán proporcionales a la curvatura de la función de autocorrelación formando un descriptor invariante a rotaciones de $M$. La respuesta
-a esquinas propuesta para el detector de harris es computacionalmente mas eficiente y no es necesario calcular valores propios de la matriz $M$. Esta dada
+a esquinas propuesta para el detector de harris es computacionalmente más eficiente y no es necesario calcular valores propios de la matriz $M$. Esta dada
 por 
 $$R = det(M)-k tr^2(M)$$
 en donde $k$ es una constante de sensibilidad. Las esquinas están representadas por los valores de $R$ positivos mientras que los bordes corresponden a los 
@@ -148,37 +150,37 @@ En la Figura \ref{fig:resultado_harris} se muestran los resultados para el detec
 Se puede ver que los resultados son buenos para ambos casos y particularmente buenos si se desean detectar las esquinas del marcador.
 
 \subsubsection{Aplicabilidad}
-Se pudo ver que el detector de Harris resultó en una detección razonable aún que su funcionamiento no es tan bueno bajo otras condiciones menos controladas ya que puede ser inestable y no muy robusto \textbf{¿fruta?}.
+Se pudo ver que el detector de Harris resultó en una detección razonable aunque su funcionamiento no es tan bueno bajo otras condiciones menos controladas ya que puede ser inestable y no muy robusto \textbf{¿fruta?}.
 
-Una desventaja importante que tiene la detección de características tipo esquinas es que si se deseara saber que esquinas se unen entre sí mediante los lados del marcador sin ambiguedad se debería obtener mas información que permita conectarlas. Por lo tanto un buen complemento puede ser el gradiente o una detección de bordes. La detección de líneas o segmentos ya contiene esta información y por lo tanto parece mas apropiada.
+Una desventaja importante que tiene la detección de características tipo esquinas es que si se desea saber qué esquinas se unen entre sí mediante los lados del marcador sin ambiguedad se debe obtener más información que permita conectarlas. Por lo tanto un buen complemento puede ser el gradiente o una detección de bordes. La detección de líneas o segmentos ya contiene esta información y por lo tanto parece más apropiada.
 
 \section{Líneas y segmentos de línea}
-Las líneas o segmentos de línea son elementos que contienen unas estructura mas definida en comparación con los bordes. Esta estructura definida produce a su vez que la detección de este tipo de elementos sea mas estable y menos sensible al ruido que la detección de bordes. Como se verá en a lo largo de la sección, los detectores de líneas que se presentan y mucho en general tienen en común que utilizan al inicio de la detección las herramientas de gradientes y operadores gradientes o directamente la detección de bordes en si misma para realizar el objetivo de detección de líneas.
+Las líneas o segmentos de línea son elementos que contienen una estructura más definida en comparación con los bordes. Esta estructura definida produce a su vez que la detección de este tipo de elementos sea más estable y menos sensible al ruido que la detección de bordes. Como se verá en a lo largo de la sección, los detectores de líneas que se presentan tienen en común que utilizan al inicio de la detección las herramientas de gradientes y operadores gradientes o directamente la detección de bordes en sí misma para realizar el objetivo de detección de líneas.
 
-En esta sección de explican brevemente algunos detectores de líneas y segmentos de línea. En primer lugar se menciona un detector de líneas clásico y popular como es el detector de Hough y se explica su funcionamiento así como el sus principales desventajas las que hacen que este método sea descartado para su desarrollo en el proyecto. En segundo lugar se menciona y se hace referencia al capítulo en donde será tratado el detector de segmentos de línea, uno de los pilares principales de este proyecto, el LSD. También se muestran otros detectores que fueron tomados en consideración pero por diferentes razones no fueron utilizados como son el ORT y EDLines.
+En esta sección de explican brevemente algunos detectores de líneas y segmentos de línea. En primer lugar se menciona un detector de líneas clásico y popular como es el detector de Hough y se explica su funcionamiento así como sus principales desventajas que hacen que este método sea descartado para su desarrollo en el proyecto. En segundo lugar se menciona y se hace referencia al capítulo en donde será tratado el detector de segmentos de línea, uno de los pilares principales de este proyecto, el LSD. También se muestran otros detectores que fueron tomados en consideración pero por diferentes razones (explicadas en su secciones correspondientes) no fueron utilizados como son el ORT y EDLines.
 
  \subsection{Detector de líneas de Hough}
-El Método de la Transformada de Hough forma parte de una técnica de extracción de características con fuerte aplicación a detección curvas y líneas. 
+El Método de la Transformada de Hough forma parte de una técnica de extracción de características con fuerte aplicación a detección de curvas y líneas. 
 
-Esta técnica consiste en tres pasos básicos. En primer lugar la imagen en niveles de gris es procesada por un detector de bordes devolviendo una mascara binaria en donde los puntos borde son marcados. En segundo lugar la Transformada de Hough es aplicada a la máscara de forma de detectar candidatos a líneas en forma de máximos locales. Esta transformada consiste en una representación paramétrica de formas geométricas. Para detección de líneas se utiliza la representación
+Esta técnica consiste en tres pasos básicos. En primer lugar la imagen en niveles de gris es procesada por un detector de bordes devolviendo una máscara binaria en donde los puntos borde son marcados. En segundo lugar la Transformada de Hough es aplicada a la máscara de forma de detectar candidatos a líneas en forma de máximos locales. Esta transformada consiste en una representación paramétrica de formas geométricas. Para detección de líneas se utiliza la representación
 \begin{equation}
  r = xcos(\theta) + y sin(\theta)
 \end{equation}
-en donde $r$ representa la distancia entra la  linea y el origen, $\theta$ es el ángulo del vector perpendicular a la recta desde el origen. Es posible
+en donde $r$ representa la distancia entre la línea y el origen y $\theta$ es el ángulo del vector perpendicular a la recta desde el origen. Es posible
 asociar una recta al par de parámetros $(r, \theta)$. El plano $(r,\theta)$ es es plano de Hough. Se determina en este plano para cada punto de la imagen
 una única sinusoidal en donde mediante su superposición se tendrá, para una serie de puntos alineados en la imagen, un punto de cruce de estas sinusoides dado
 por los parámetros $(r,\theta)$
 
 Por lo tanto buscando máximos locales en el plano de Hough se tienen definidas líneas en la imagen.
 
-Finalmente los segmentos son extraídos de las líneas detectadas utilizando umbrales sobre dos parámetros geométricos: el largo mínimo de un segmentos y la distancia máxima permitida entre dos segmentos consecutivos.\\
+Finalmente los segmentos son extraídos de las líneas detectadas utilizando umbrales sobre dos parámetros geométricos: el largo mínimo de un segmento y la distancia máxima permitida entre dos segmentos consecutivos.\\
 
-La principal desventaja del método de la transformada de Hough para detección de lineas resulta ser el ajuste de parámetros. El detector de bordes contiene por lo menos un parámetro ajustable de tipo de sensibilidad, la Transformada de Hough estandar involucra usualmente cuatro parámetros. Uno asociado a la escala, un segundo asociado al compromiso entre falsos positivos y falsos negativos y los otros dos a la discretización de los parámetros $r$ y $\theta$, aun que estos último pueden ser asociados a la resolución de la imagen. Por otro lado están los dos parámetros asociados a la etapa de extracción de segmentos.
+La principal desventaja del método de la transformada de Hough para detección de líneas resulta ser el ajuste de parámetros. El detector de bordes contiene por lo menos un parámetro ajustable de tipo de sensibilidad, la Transformada de Hough estándar involucra usualmente cuatro parámetros. Uno asociado a la escala, un segundo asociado al compromiso entre falsos positivos y falsos negativos y los otros dos a la discretización de los parámetros $r$ y $\theta$, aunque estos últimos pueden ser asociados a la resolución de la imagen. Por otro lado están los dos parámetros asociados a la etapa de extracción de segmentos.
 
-El ajuste de estos parámetros puede dar a problemas y desafortunadamente no hay una regla general para realizar esto. Si el ajuste es correcto este método puede proveer muy buenos resultados pero en otro caso el desempeño se puede ver fuertemente afectado.
+El ajuste de estos parámetros puede dar problemas y desafortunadamente no hay una regla general para realizar esto. Si el ajuste es correcto este método puede proveer muy buenos resultados pero en otro caso el desempeño se puede ver fuertemente afectado.
 
 \subsubsection{Ejemplos de interés}
-En la Figura \ref{fig:resultado_hough} se muestran los resultados para el detector líneas mediante el Método de la Transformada de Hough implementado por Matlab mediante el uso de la función \texttt{houghlines}. El script utilizado se encuentra en el Centro de Documentación de Mathworks\footnote{\url{http://www.mathworks.com/help/images/ref/houghlines.html}}. De el script proporcionado se realizaron algunos cambios, se cargó la ruta de la imagen de entrada, se eliminó la rotación a la imagen de entrada y se modificaron algunos parámetros. Los resultado mostrados representan los mejores para los distintos ajustes de parámetros probados. El tamaño mínimo de segmento se fijo en $15$ y el máximo hueco entre segmentos a llenar en $8$.
+En la Figura \ref{fig:resultado_hough} se muestran los resultados para el detector líneas mediante el Método de la Transformada de Hough implementado por Matlab mediante el uso de la función \texttt{houghlines}. El script utilizado se encuentra en el Centro de Documentación de Mathworks\footnote{\url{http://www.mathworks.com/help/images/ref/houghlines.html}}. Del script proporcionado se realizaron algunos cambios, se cargó la ruta de la imagen de entrada, se eliminó la rotación a la imagen de entrada y se modificaron algunos parámetros. Los resultados mostrados representan los mejores casos para los distintos ajustes de parámetros probados. El tamaño mínimo de segmento se fijó en $15$ y el máximo hueco entre segmentos a llenar en $8$.
 \begin{figure}[h!]
   \centering
   \subfigure[El plano de Hough]{
@@ -190,7 +192,7 @@ En la Figura \ref{fig:resultado_hough} se muestran los resultados para el detect
 \end{figure}
 
 \subsubsection{Aplicabilidad}
-Se comprobó la dificultad intrínseca del método asociada al ajuste de parámetros no pudiendose obtener los resultados deseados en ningún caso.
+Se comprobó la dificultad intrínseca del método asociada al ajuste de parámetros no pudiéndose obtener los resultados deseados en ningún caso.
 
   \subsection{Detector de segmentos de línea: LSD}
 El algoritmo Line Segment Detector (LSD) es capaz de detectar segmentos de línea rectos y uno de los componentes principales en este proyecto. Debido a su importancia es que se le dedica el Capítulo \ref{ch:LSD} a su desarrollo.
@@ -203,31 +205,31 @@ En la Figura \ref{fig:resultado_lsd_ipol} se muestran los resultados del algorit
   \caption{Resultados de LSD para la imagen del marcador.}
   \label{fig:resultado_lsd_ipol}
 \end{figure}
-Se puede observar que el algoritmo logra detectar con éxito todos las estructuras de segmento de línea presentes en la imagen y en particular las que corresponden al marcador, los lados de los cuadriláteros.
+Se puede observar que el algoritmo logra detectar con éxito todas las estructuras de segmento de línea presentes en la imagen y en particular las que corresponden al marcador, los lados de los cuadriláteros.
 
 El algoritmo produjo un número de $169$ segmentos de línea detectados en un tiempo de ejecución de $130ms$ sobre el servidor que aloja la aplicación. La misma ejecución realizada en el marco de este proyecto sobre una PC con procesador Intel Core 2 Duo de $2Ghz$ tomó un tiempo de aproximadamente $40ms$.
 
   \subsection{Detector de segmentos de línea: EDLines}
-EDLines es un detector de segmentos de línea de tiempo lineal y que provee resultados comparables con LSD. No requiere ajuste de parámetros y se ejecuta en tiempo real. En muchos aspectos es similar al LSD ya que utiliza validación de líneas mediante el principio de Helmholtz que permite controlar el número de falsos positivos. El algoritmo hace uso del rápido detector de bordes Edge Drawing (ED) desarrollado por los mismos autores que provee una cadena de píxeles borde en forma contigua.
+EDLines es un detector de segmentos de línea de tiempo lineal que provee resultados comparables con LSD. No requiere ajuste de parámetros y se ejecuta en tiempo real. En muchos aspectos es similar al LSD ya que utiliza validación de líneas mediante el principio de Helmholtz que permite controlar el número de falsos positivos. El algoritmo hace uso del rápido detector de bordes Edge Drawing (ED) desarrollado por los mismos autores que provee una cadena de píxeles borde en forma contigua.
 
-EDLines trabaja sobre imágenes en niveles de gris y consiste en básicamente tres etapas; detección de bordes seguido por extracción de segmentos y finalmente la validación de líneas. Se describen aquí cada una de estas etapas.
+EDLines trabaja sobre imágenes en niveles de gris y consiste básicamente en tres etapas: detección de bordes seguido por extracción de segmentos y finalmente la validación de líneas. Se describen aquí cada una de estas etapas.
 \begin{itemize}
  \item 
 \textbf{Detección de bordes}: La detección de bordes se realiza utilizando el algoritmo Edge Drawing el cual provee resultados rápidos y libres de artefactos de ruido.
 
-El algoritmo se aplica a la imagen de entrada en niveles de gris. En primer lugar se le aplica un filtrado para remoción de ruido y suavizar la imagen. A continuación se calcula el gradiente, módulo y dirección, en cada pixel de la imagen suavizada. En tercer lugar se calculan un conjunto de píxeles llamados \emph{anchors} que corresponden a puntos con alta probabilidad de ser borde. Por último se conectan estos \emph{anchors} mediante un proceso de dibujado de bordes entre ellos basandose en el valor del módulo y dirección del gradiente previamente calculado. Este es en cierto sentido un proceso similar a los juegos de dibujo para niños.
+El algoritmo se aplica a la imagen de entrada en niveles de gris. En primer lugar se le aplica un filtrado para remoción de ruido y suavizar la imagen. A continuación se calcula el gradiente, módulo y dirección, en cada pixel de la imagen suavizada. En tercer lugar se calculan un conjunto de píxeles llamados \emph{anchors} que corresponden a puntos con alta probabilidad de ser borde. Por último se conectan estos \emph{anchors} mediante un proceso de dibujado de bordes entre ellos basándose en el valor del módulo y dirección del gradiente previamente calculado. Este es en cierto sentido un proceso similar a los juegos de dibujo para niños.
 
  \item 
-\textbf{Extracción de segmentos de línea}: El objetivo de esta etapa es el de ``partir'' la cadena contigua de píxeles obtenida mediante el detector de bordes en una o mas segmentos de línea rectos. Básicamente lo que se hace es recorrer la secuencia de píxeles e ir ajustando líneas a los píxeles utilizando el método de ajuste de líneas por mínimos cuadrados hasta que el error exceda cierto umbral. En el momento en que se excede ese umbral se genera un nuevo segmento de línea y así recursivamente se recorren todos lo píxeles de la cadena.
+\textbf{Extracción de segmentos de línea}: El objetivo de esta etapa es el de ``partir'' la cadena contigua de píxeles obtenida mediante el detector de bordes en uno o más segmentos de línea rectos. Básicamente lo que se hace es recorrer la secuencia de píxeles e ir ajustando líneas a los píxeles utilizando el método de ajuste de líneas por mínimos cuadrados hasta que el error exceda cierto umbral. En el momento en que se excede ese umbral se genera un nuevo segmento de línea y así recursivamente se recorren todos lo píxeles de la cadena.
 
  \item 
-\textbf{Validación de líneas}: El método de validación de segmentos de línea esta basado en el principio de Helmholtz el cual postula que para que una estructura sea perceptualmente significativa, la esperanza de que la misma (agrupado o Gestalt) ocurra por de casualidad debe ser muy baja. Este es un efoque \emph{a contrario} en donde los objetos son detectados como \emph{outliers} sobre el modelo de fondo. En esta etapa se logra eliminar los falsos positivos controlando el numero de falsas alarmas. Este enfoque en particular es el mismo que utiliza LSD y el cual se explica en detalle el Capítulo \ref{ch:lsd}. 
+\textbf{Validación de líneas}: El método de validación de segmentos de línea está basado en el principio de Helmholtz el cual postula que para que una estructura sea perceptualmente significativa, la esperanza de que la misma (agrupado o Gestalt) ocurra de casualidad debe ser muy baja. Este es un efoque \emph{a contrario} en donde los objetos son detectados como \emph{outliers} sobre el modelo de fondo. En esta etapa se logra eliminar los falsos positivos controlando el número de falsas alarmas. Este enfoque en particular es el mismo que utiliza LSD, el cual se explica en detalle el Capítulo \ref{ch:lsd}. 
 
-Si la aplicación lo permite, esta validación puede ser eliminada o sustituida por otra, por ejemplo por un umbral de largo máximo de segmentos, acelerando aún mas el algoritmo EDLines. En LSD esta etapa esta integrada con la etapa de detección de segmentos para cada iteración aun que podría ser desacoplada en cierta medida. De todas formas EDLines presenta esa ventaja de modularidad frente a LSD que puede llegar a ser útil.
+Si la aplicación lo permite, esta validación puede ser eliminada o sustituida por otra, por ejemplo por un umbral de largo máximo de segmentos, acelerando aún más el algoritmo EDLines. En LSD esta etapa esta integrada con la etapa de detección de segmentos para cada iteración aunque podría ser desacoplada en cierta medida. De todas formas EDLines presenta esa ventaja de modularidad frente a LSD que puede llegar a ser útil.
 \end{itemize}
 
 \subsection{Ejemplos de interés}
-En la Figura \ref{fig:resultado_edlines}(a) se muestra la imagen de entrada junto con los segmentos detectados por EDLines para la imagen del marcador. En la figura \ref{fig:resultado_edlines}(b) se muestra únicamente los segmentos de salida de EDlines numerados.
+En la Figura \ref{fig:resultado_edlines}(a) se muestra la imagen de entrada junto con los segmentos detectados por EDLines para la imagen del marcador. En la Figura \ref{fig:resultado_edlines}(b) se muestra únicamente los segmentos de salida de EDlines numerados.
 \begin{figure}[h!]
   \centering
   \subfigure[Imagen de entrada y segmentos]{
@@ -237,17 +239,17 @@ En la Figura \ref{fig:resultado_edlines}(a) se muestra la imagen de entrada junt
   \caption{Resultados de EDLines para la imagen del marcador.}
   \label{fig:resultado_edlines}
 \end{figure}
-El tiempo de ejecución declarado para esta imagen por la aplicación \emph{on-line} es de $30ms$ en su servidor pero alega que para una PC Intel con CPU de $2Ghz$ el mismo sería de $10ms$. Suponiendo una detección en el tiempo declarado para una PC este sería dos veces mas veloz que el de LSD para la misma imagen. Se detectaron $178$ segmentos y se puede ver que los resultados son muy similares a los que produce LSD que detecta $169$ segmentos para la misma imagen (Figura\ref{fig:resultado_lsd_ipol}).
+El tiempo de ejecución declarado para esta imagen por la aplicación \emph{on-line} es de $30ms$ en su servidor pero alega que para una PC Intel con CPU de $2Ghz$ el mismo sería de $10ms$. Suponiendo una detección en el tiempo declarado para una PC este sería dos veces más veloz que el de LSD para la misma imagen. Se detectaron $178$ segmentos y se puede ver que los resultados son muy similares a los que produce LSD que detecta $169$ segmentos para la misma imagen (Figura\ref{fig:resultado_lsd_ipol}).
 
 \subsubsection{Aplicabilidad}
 El algoritmo EDLines se encuentra disponible para descarga como una librería compilada para Windows o Linux. También se puede probar en forma de \emph{demo} \emph{on-line} desde la página web del laboratorio Computer Vision \& Pattern Recognition de la Universidad de Anadolu de Turquía en donde también explica en forma resumida su funcionamiento\footnote{\url{http://ceng.anadolu.edu.tr/cv/EDLines/}}.\\
 
-El código fuente por su parte no esta disponible para la descarga de ningún tipo en contraste con el LSD. Esto es un factor determinante para la utilización del algoritmo en el proyecto ya que se tiene que poder compilar para la plataforma de desarrollo utilizada, en este caso sería para el sistema operativo iOS. Una implementación del algoritmo en lenguaje C/C++ no fue considerada como parte del alcance de este proyecto pero si puede ser considerada como trabajo a futuro si se desea seguir con el enfoque de segmentos de línea para detección.
+El código fuente por su parte no está disponible para la descarga de ningún tipo en contraste con el LSD. Esto es un factor determinante para la utilización del algoritmo en el proyecto ya que se tiene que poder compilar para la plataforma de desarrollo utilizada, en este caso sería para el sistema operativo iOS. Una implementación del algoritmo en lenguaje C/C++ no fue considerada como parte del alcance de este proyecto pero sí puede ser considerada como trabajo a futuro si se desea seguir con el enfoque de segmentos de línea para detección.
 
   \subsection{Detector de segmentos de línea y arcos: ORT}
-El Object Recongnition Toolkit (ORT) provee una serie de herramientas para la detección de segmentos de línea, arcos y también puntos e incluso estructuras mas complejas como polígonos. El código esta disponible para su descarga en la página del curso ``CSE 576 Computer Vision'' de la Univeristy of Washington de Estados Unidos de América\footnote{\url{http://www.cs.washington.edu/education/courses/cse576/07sp/software/index.html}} como también desde un repositorio SVN público de Juan Cadelino se puede encontrar otra distribución del código con documentación incluida\footnote{\url{https://iie.fing.edu.uy/avn/external_code/ORT-2.3/}}.
+El Object Recongnition Toolkit (ORT) provee una serie de herramientas para la detección de segmentos de línea, arcos y también puntos e incluso estructuras más complejas como polígonos. El código está disponible para su descarga en la página del curso ``CSE 576 Computer Vision'' de la Univeristy of Washington de Estados Unidos de América\footnote{\url{http://www.cs.washington.edu/education/courses/cse576/07sp/software/index.html}} como también desde un repositorio SVN público de Juan Cadelino se puede encontrar otra distribución del código con documentación incluída\footnote{\url{https://iie.fing.edu.uy/avn/external_code/ORT-2.3/}}.
 
-El ORT consiste en un número de herramientas para ejecución en cascada desde consola de comandos que resultan en la detección de las características deseadas. Cada una de las herramientas corresponde a un algoritmo, estos son \textbf{Fex}\cite{fex}, \textbf{Lpeg}\cite{lpeg} e \textbf{Ipeg} 
+El ORT consiste en un número de herramientas para ejecución en cascada desde consola de comandos que resultan en la detección de las características deseadas. Cada una de las herramientas corresponde a un algoritmo, estos son \textbf{Fex}\cite{fex}, \textbf{Lpeg}\cite{lpeg} e \textbf{Ipeg}. 
 
 A continuación de explican algunas de ellas.
 \begin{itemize}
@@ -299,12 +301,12 @@ En la Figura \ref{fig:resultado_ort} se muestran los resultados de las diferente
   \caption{Resultados del Object Recognition Toolkit (ORT) para una imagen de entrada salida de Canny.}
   \label{fig:resultado_ort}
 \end{figure}
-Se puede observar que la salida de Fex logra capturar en buena forma los segmentos de línea correspondientes al marcador aún que alguno de ellos en forma ``quebrada''. También se pueden ver los segmentos de arco detectados, otro de los elementos de este algoritmo. Lpeg logra eliminar una buena parte de los segmentos dejando solo aquellos que son en alguna sentido paralelos entre sí. Por su parte Ipeg no produce ningún cambio sobre los resultados de Lpeg. En otras pruebas realizadas tampoco se logro tampoco lograr los resultados deseados para este algoritmo aún utilizando los parámetros opcionales. Un estudio mas detallado del funcionamiento de esta herramienta en particular queda pendiente ya que resulta interesante para la aplicación.
+Se puede observar que la salida de Fex logra capturar en buena forma los segmentos de línea correspondientes al marcador aunque alguno de ellos en forma ``quebrada''. También se pueden ver los segmentos de arco detectados, otro de los elementos de este algoritmo. Lpeg logra eliminar una buena parte de los segmentos dejando sólo aquellos que son en algún sentido paralelos entre sí. Por su parte Ipeg no produce ningún cambio sobre los resultados de Lpeg. En otras pruebas realizadas tampoco se lograron los resultados deseados para este algoritmo aún utilizando los parámetros opcionales. Un estudio más detallado del funcionamiento de esta herramienta en particular queda pendiente ya que resulta interesante para la aplicación.
 
 \subsubsection{Aplicabilidad}
-El código fuente de estas herramientas esta disponible para la descarga pero este genera un conjunto de programas ejecutables para consola de comandos. Su aplicación para el proyecto no es directa ya que se debería portar a una interfaz compatible con nuestra aplicación. Por otro lado mediante algunas pruebas realizadas sobre este algoritmo los tiempos de ejecución total no resultaron suficientemente buenos para cumplir los requerimientos de tiempo real. También se debe notar que aun que se obtuvieron resultados razonables para las herramientas Fex y Lpeg no se fue así para Ipeg que aporta un interés adicional para la aplicación.
+El código fuente de estas herramientas está disponible para la descarga pero este genera un conjunto de programas ejecutables para consola de comandos. Su aplicación para el proyecto no es directa ya que se debería portar a una interfaz compatible con nuestra aplicación. Por otro lado mediante algunas pruebas realizadas sobre este algoritmo los tiempos de ejecución total no resultaron suficientemente buenos para cumplir los requerimientos de tiempo real. También se debe notar que aunque se obtuvieron resultados razonables para las herramientas Fex y Lpeg no fue así para Ipeg que aporta un interés adicional para la aplicación.
 
-Un estudio mas detallado del código fuente y la posibilidad de re-utilizarlo dentro del marco de la aplicación queda como trabajo a futuro ya que ORT provee algunas herramientas interesantes y de mas alto nivel que el detector de segmentos elegido LSD.
+Un estudio más detallado del código fuente y la posibilidad de re-utilizarlo dentro del marco de la aplicación queda como trabajo a futuro ya que ORT provee algunas herramientas interesantes y de más alto nivel que el detector de segmentos elegido LSD.
 % \section{Regiones y puntos de interés}
 %   \subsection{FAST}		
 %   \subsection{Blobs}
@@ -662,6 +664,6 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
 
 \subsection{Resultados}
-Mas imágenes con resultados?\\
+más imágenes con resultados?\\
 Todo sobre la misma imagen de entrada?\\
 O toda la secuencia para distintas imágenes?\\
