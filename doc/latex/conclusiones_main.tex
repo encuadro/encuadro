@@ -1,0 +1,99 @@
+\documentclass[12pt,a4paper, spanish]{report}
+\usepackage[spanish]{babel}
+\usepackage[latin1]{inputenc}  % Ambos para solucin de asuntos de idioma
+\usepackage[T1]{fontenc}
+\usepackage{tocbibind}  % Bibliografa en el indice
+\usepackage{titlesec}  % Posibilidad de editar los formatos de chapter y section
+%\usepackage{times}  % Fuente de letras
+\usepackage{amsmath,amssymb,mathrsfs,mathptmx}  % Matemticas varias
+\usepackage{hyperref} % Para escribir URLs
+
+
+
+% --- Arreglos varios para la inclusion de imgenes
+%\usepackage[pdftex]{graphicx}
+%\usepackage[dvips]{graphicx}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{float}
+\usepackage{subfigure}
+%\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage[usenames,dvipsnames]{color}
+\DeclareGraphicsExtensions{.png,.jpg,.pdf,.mps,.gif,.bmp, .eps}
+
+
+	
+
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tabulary}
+\usepackage[table]{xcolor}
+\usepackage{color}
+\usepackage{listings}
+%\usepackage{subfloat}
+\usepackage{tikz}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+
+% --- Para las dimensiones de los mrgenes etc
+\frenchspacing \addtolength{\hoffset}{-1.5cm}
+\addtolength{\textwidth}{3cm} \addtolength{\voffset}{-2.5cm}
+\addtolength{\textheight}{4cm}
+% --- Para el encabezado
+\usepackage{fancyhdr}
+\fancyhead[R]{2012}\fancyhead[L]{enCuadro} \fancyfoot[C]{\thepage}
+\pagestyle{fancy}
+
+% --- Formato de la etiqueta Chapter
+%\newcommand{\bigrule}{\titlerule[0.5mm]}
+%\titleformat{\chapter}[display]{\bfseries\Huge}
+%{\Large\chaptertitlename\ \Large\thechapter}
+%{0mm} {\filleft} [\vspace{0.5mm} \bigrule]
+
+\titleformat{\chapter}[display]
+{\normalfont\Large\filcenter}
+{\titlerule[1pt]%
+\vspace{1pt}%
+\titlerule
+\vspace{1pc}%
+\LARGE\MakeUppercase{\chaptertitlename} \thechapter}
+{1pc}
+{\titlerule
+\vspace{1pc}%
+\Huge}
+
+%-------------------------
+
+\begin{document}
+% Esto es para que se muestren todas las referencias aunque no se citen:
+\nocite{*}
+
+\renewcommand{\tablename}{Tabla}
+\renewcommand{\theenumi}{\Roman{enumi}}
+\renewcommand{\labelenumi}{[\textbf{\theenumi}]}
+\renewcommand{\thefootnote}{\arabic{footnote}}
+% --- Modificacin de entornos enumerate
+\renewcommand{\theenumi}{\roman{enumi}}
+\renewcommand{\labelenumi}{\theenumi)}
+% --- Modificacin de entornos enumerate
+
+% --- Para hacer highlights
+\newcommand{\highlAmarillo}[1]{\colorbox{yellow}{#1}}
+\newcommand{\highlVerde}[1]{\colorbox{green}{#1}}
+\newcommand{\highlRojo}[1]{\colorbox{red}{#1}}
+
+\tableofcontents
+
+
+
+\include{conclusiones}
+
+
+
+
+\bibliographystyle{unsrt}   
+\bibliography{encuadro}  
+\end{document}
