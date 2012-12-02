@@ -308,14 +308,13 @@ Se puede observar que la salida de Fex logra capturar en buena forma los segment
 \subsubsection{Aplicabilidad}
 El código fuente de estas herramientas está disponible para la descarga pero este genera un conjunto de programas ejecutables para consola de comandos. Su aplicación para el proyecto no es directa ya que se debería portar a una interfaz compatible con nuestra aplicación. Por otro lado mediante algunas pruebas realizadas sobre este algoritmo los tiempos de ejecución total no resultaron suficientemente buenos para cumplir los requerimientos de tiempo real. También se debe notar que aunque se obtuvieron resultados razonables para las herramientas Fex y Lpeg no fue así para Ipeg que aporta un interés adicional para la aplicación.
 
-Un estudio más detallado del código fuente y la posibilidad de re-utilizarlo dentro del marco de la aplicación queda como trabajo a futuro ya que ORT provee algunas herramientas interesantes y de más alto nivel que el detector de segmentos elegido LSD.
-% \section{Regiones y puntos de interés}
-%   \subsection{FAST}		
-%   \subsection{Blobs}
-% 
-% \section{Descriptores}
-% SIFT (puntero a capitulo que tiene SIFT para reconocimiento o mismo acá) \\
-% SURF, ETC ETC.
+Un estudio más detallado del código fuente y la posibilidad de reutilizarlo dentro del marco de la aplicación queda como trabajo a futuro ya que ORT provee algunas herramientas interesantes y de más alto nivel que el detector de segmentos elegido LSD.
+
+\section{Resumen}
+En este capítulo se introdujo el tema de detección de características orientado a primitivas. Se hizo énfasis en el tipo de características de esquinas, bordes, líneas y segmentos de línea recorriendo algunos algoritmos de detección clásicos y otros más actuales. Se realizó mediante el uso de un mismo ejemplo conteniendo un marcador algunas de las propiedades que interesan al proyecto concluyendo que el uso de segmentos de línea es el más apropiado por la naturaleza del marcador elegido. Se observó que todos los algoritmos de líneas y segmentos de línea analizados tienen en común utilizan algún tipo de detección de bordes o gradientes asociados a bordes al comienzo de la detección. Se compararon los detectores de segmentos de línea obteniendo buenos resultados para los tres presentados, LSD, EDLines y ORT; eligiendo por diferentes razones LSD. A lo largo del análisis se establecieron pautas para realizar como trabajo a futuro en cuanto a los detectores de segmentos de línea, si es que se desea continuar con esta línea de trabajo.
+
+
+
 
 \chapter{Marcadores}
 \label{ch:marcadores}
@@ -669,3 +668,7 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 más imágenes con resultados?\\
 Todo sobre la misma imagen de entrada?\\
 O toda la secuencia para distintas imágenes?\\
+
+
+\section{Resumen}
+En este capítulo se comentaron algunos sistemas de Realidad Aumentada basados en marcadores planos como ARToolKit y ARTag. Se desarrolló el diseño del Marcador QR utilizado para el proyecto y se definieron juegos de parámetros que permiten flexibilidad en la aplicación de los mismos. Se desarrollaron los algoritmos para detección de los marcadores diseñados basados en un esquema de, en primer lugar, filtrado y agrupamiento de segmentos y en segundo lugar determinación de correspondencias de sus esquinas. Se vió que algunos de los parámetros de diseño del marcador pueden ser modificados sin necesidad de modificar los algoritmos desarrollados. ¿Finalmente se obtuvieron resultados de benchmark para los algoritmos de filtrado de segmentos mediante el uso de imágenes sintéticas generadas?.
