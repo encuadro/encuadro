@@ -1,0 +1,109 @@
+\chapter{Benchmark}
+\label{chap: benchmark}
+Durante el desarrollo del proyecto se hizo presente la necesidad de contar con herramientas de medida del desempeño objetivas para la validación de los algoritmos que se utilizaron y desarrollaron. En particular se desea evaluar los algoritmos asociados a la detección y estimación de pose. Estos son LSD, filtrado de segmentos, determinación de correspondencias y Posit Coplanar. 
+
+El enfoque elegido para la validación de dichos algoritmos consiste en la generación de una ``verdad de piso'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en ese proyecto como \emph{Benchmark} o Comparativa. De esta forma se pueden generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
+
+\section{Generación de imágenes sintéticas: Blender}
+La generación de imágenes sintéticas consiste en producir una imagen 2D en base a una modelo 3D de una escena y una pose de la cámara respecto a esa escena o viceversa. Este proceso se denomina \emph{Rendering} y el mismo trata en el Capítulo \ref{chap: render} para la herramienta para dispositivos móviles \emph{ISGL3D}. 
+
+Para realizar el Benchmark se desarrolló un entorno de generación de imágenes sintéticas que utiliza herramientas gratuitas y de código abierto que permiten capacidades de \emph{scripting} y ejecución en forma ``batch'' de forma de serializar la producción de renders en un proceso automático. En el proceso de estos renders fue realizada mediante el uso del software Blender.
+
+Blender es un \emph{suite} de creación de contenidos gratiuito y de código abierto. Esta disponible para los principales sistemas operativos, Windows, Mac, Linux; bajo la Licencia Pública General GNU\cite{blender}. Algunas de sus prestaciones son modelado, \emph{shading}, animación, renderizado, e iteracción 3D. También presenta herramientas de \emph{scripting} mediante el uso del lenguaje \emph{Python} las cuales se explicarán mas adelante.
+
+\subsection{Modelo 3D y escena}
+Para lograr hacer un render es necesario contar con una escena 3D y en particular con un modelo 3D del objeto de interés. Para realizar las tareas de detección se utiliza un marcador plano que se describe en el Capítulo \emph{ch:marcador}. 
+
+Se manejaron algunas alternativas para la generación del modelo 3D del marcador entre las cuales se encuentran, VTK, Paraview, Autodesk 3ds Max y el mismo programa utilizado por este proyecto para rendering en una PC, Blender. Finalmente debido a la simplicidad del marcador, y principalmente a que es un marcador plano, se utilizó un dibujo vectorial del marcador (formato svg) generado en Inkscape. Este dibujo vectorial puede ser importado a Blender y con el generar un modelo 3D que será un actor en la escena. Dentro de la interfaz de Blender se ajustó un factor de escala para que las medidas reales del marcador se correspondan con las unidades de Blender. En la Figura \ref{fig:blender_usrprsp} se muestra la vista de \emph{Perspectiva de usuario} en donde se reflejan algunos de los cambios que se realizan sobre la escena.
+\begin{figure}[h!]
+  \centering
+    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_usrprsp.png}
+  \caption{Vista de perspectiva de usuario para el modelo 3D del marcador y la cámara en la escena.}
+  \label{fig:blender_usrprsp}
+\end{figure}
+Se busca construir una escena mínima y controlada en la cual solo actúa el marcador. Con este fin es que se decide por una escena que contenga únicamente el marcador y una cámara. No se añaden luces ya que el efecto de estas en el marcador para alguna pose puede resultar en artefactos de iluminación indeseados. La no inclusión de luces en las imagen esta ligada a que el modelo 3D del marcador es en realidad hueco en las zonas blancas y negro en las zonas negras por lo tanto el negro permanece negro y la parte hueca asume el color del fondo. En otro caso se podría utilizar algún tipo de iluminación de ambiente que sea pareja en todas las direcciones y lograr un efecto similar.\\
+
+La escena conteniendo el modelo 3D del marcador se resume en el archivo \texttt{Marker.blend}.
+
+\subsection{Ajuste de escena y parámetros}
+El software Blender permite el ajuste de la escena y los parámetros y características asociados al render, la cámara y el objeto mediante su interfaz gráfica. Estos tienen como resultado final la imagen renderizada. Los parámetros y ajustes que fueron realizados y resultan ser los más relevantes para la reproducción del proceso de renderizado del marcador se explican a continuación.
+
+\begin{itemize}
+ \item 
+\textbf{Mundo y fondo}: Los ajustes realizados al mundo y fondo se explicaron en cierta medida anteriormente. Al no utilizar iluminación en la escena es importante definir el color del fondo ya que los huecos del modelo 3D asumirán ese color. Los ajustes realizados se muestran en la Figura \ref{fig:blender_props}(a) y consisten principalmente en definir el fondo de color blanco.
+
+ \item 
+\textbf{Parametros de Render}: Los principales parámetros ajustables en cuanto a las propiedades de render son el tamaño de imagen y el porcentaje de escala sobre el tamaño de imagen el cual por defecto en proyectos nuevos se ubica en $50\%$ y en este caso interesa que sea $100\%$. Estos ajustes se pueden ver en la Figura \ref{fig:blender_props}(b).
+
+ \item 
+\textbf{Parámetros de Cámara}: Sobre las propiedades ajustables de la cámara se encuentra un parámetro de interés como es el campo visual, \emph{field of view}, o $fov$. Adicionalmente el \emph{Shift} representa el corrimiento del centro de imagen de la misma y también se puede ajustar en \emph{near} y el \emph{far}. Los ajustes realizados se pueden ver en la Figura \ref{fig:blender_props}(c).
+
+ \item 
+\textbf{Parámetros de Objeto}: Las propiedades ajustables de mayor interés sobre el objeto se refieren a su pose. La locación y rotación del objeto pueden ser asociadas a la pose del objeto respecto a la cámara si se asume una interacción del tipo cámara fija, objeto movil. Se aclara aquí que un ajuste idéntico se puede realizar sobre el objeto cámara. La cámara se fija para todos los casos en el origen de coordenadas de Blender con orientación nula en las tres direcciónes. Esto resulta en una cámara que mira en el eje $z$. Volviendo a los ajustes del objeto marcador, se presentan los ajustes de escala ya mencionados en el ajuste de unidades del modelo 3D y también un factor de importancia como es el orden y tipo de rotación \emph{XYZ Euler}. Todos los ajustes aquí descritos para el objeto marcadores se pueden ver en la Figura \ref{fig:blender_props}(d).
+\end{itemize}
+Vale la pena observar que los ajustes de Render y Cámara constituyen una forma de establecer los \textbf{parámetros intrínsecos} de la cámara. Mientras que los ajustes de Objeto para la Cámara y el Marcador representan la \textbf{pose del objeto} en el modelo de vinculación adoptado. Se aclara que los \textbf{parámetros extrínsecos} de la cámara respecto a las coordenadas de Blender es nula en rotación y traslación.
+\begin{figure}[h!]
+  \centering
+  \subfigure[Ajustes de mundo y fondo]{
+    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_wrldprops.png}}
+    \label{fig:blender_props_a}
+  \subfigure[Ajustes de render]{
+    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_rndrprops.png}}
+    \label{fig:blender_props_b}
+  \subfigure[Ajustes de cámara]{
+    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_cameraprops.png}}
+    \label{fig:blender_props_c}
+  \subfigure[Pose del objeto]{
+    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_objprops.png}}
+    \label{fig:blender_props_d}
+  \caption{Ajustes en la escena en Blender para realizar el render.}
+  \label{fig:blender_props}
+\end{figure}
+
+\subsection{Python scripting}
+Python es un lenguaje de programación interpretado, interactivo y orientado a objetos. Incorpora módulos, excepciones, tipeo dinámico, tipos de datos de muy alto nivel y clases. Python logra combinar notáblemente poder con claridad en la sintaxis \cite{blender_python}. La mayoría de las áreas de Blender pueden ser programadas mediante \emph{scripts}, incluyendo Animación, Renderizado, Importación y Exportación, Creación de objetos y tareas repetitivas. Para la interacción con Blender se hace uso de una API ``ajustada a medida''.
+
+La API de Blender para Python se encuentra empaquetada en el módulo \texttt{bpy}. Mediante este módulo se puede acceder a los objetos y sus propiedades de la escena. De esta forma se puede de forma programática ajustar las propiedades y parámetros explicados anteriormente. De esta forma mediante la interprete de comandos de Blender se puede prescindir de la interfaz gráfica de Blender. En la Figura \ref{blender_pyconsole} se muestra un \emph{screenshot} de la consola interactiva de Python en Blender.
+\begin{figure}[h!]
+  \centering
+    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_pyconsole.png}
+  \caption{Consola interactiva de Python incrustada en Blender.}
+  \label{fig:blender_pyconsole}
+\end{figure}
+
+\begin{itemize}
+ \item Obtener referencias a la escena y el marcador.
+\begin{verbatim}
+>>> scene = bpy.data.scenes["Scene"]
+>>> marker = bpy.data.objects["Marker"]
+\end{verbatim}
+ 
+ \item Seleccionar modo de rotación y ubicar y orientar cámara como se desea.
+\begin{verbatim}
+>>> scene.camera.rotation_mode = 'XYZ'
+>>> scene.camera.rotation_euler = [0,0,0]
+>>> scene.camera.location = [0,0,0]
+\end{verbatim}
+
+ \item Asignación de valores asociados a \textbf{parámetros intrínsecos} de la cámara.
+\begin{verbatim}
+>>> scene.render.resolution_x = width
+>>> scene.render.resolution_y = height
+>>> scene.camera.data.angle = fov*(pi/180.0)
+\end{verbatim}
+
+ \item Asignación de valores asociados a la \textbf{pose} del marcador.
+\begin{verbatim}
+>>> marker.rotation_mode = 'XYZ'
+>>> marker.rotation_euler = [rx,ry,rz]
+>>> marker.location = [tx,ty,tz]
+\end{verbatim}
+
+ \item Asignación de nombre de imagen renderizada y ejecución de renderizado para guardar la imagen.
+\begin{verbatim}
+>>> bpy.data.scenes["Scene"].render.filepath = str(fname)
+>>> bpy.ops.render.render( write_still=True ) 
+\end{verbatim}
+\end{itemize}
+
+\subsection{Ejecución de consola de comandos}
