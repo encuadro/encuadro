@@ -1,45 +1,85 @@
-\chapter{Alcance del proyecto.}
+\chapter{Alcance del proyecto}
 \label{chap: alcance}
 \section{Introducción}
-Introducción
 
-\section{Características generales del proyecto}
-Desarrollo de software sobre plataformas móviles\\
-Comprensión de una plataforma de desarrollo\\
-Procesamiento de imágenes en tiempo real\\
-Implementación del sotware para generar contenido interactivo\\
+En el presente capítulo se habla del alcance del proyecto. Esto es, se plantean los objetivos tal y como fueron formulados originalmente y luego se los clasifica en las que se les llaman las tres partes fundamentales del proyecto: \textit{investigación}, \textit{implementación} y \textit{aplicación}. Estas son ponderadas en función de la importancia que tienen en el mismo, así como las dedicación total que se les dió. Luego, se resume la estructura de lo que terminó siendo la aplicación final, de manera de poder comprender a todo el proyecto en su conjunto. Finalmente, se comenta en qué parte de la documentación se detalla cada parte de dicha estructura.\\
+ 
+\section{Objetivos del proyecto}
 
+El presente proyecto de fin de carrera cuenta con varios objetivos en conjunto. Por un lado, se busca investigar distintos algoritmos de procesamiento de imágenes con el fin de implementarlos y estudiar su desempe\~no sobre ciertas plataformas móviles; para lo cual también se deben estudiar dichas plataformas y elegir la más apta de entre las opciones \textit{Android} e \textit{iOS}. Por otro lado, más adelante en el proyecto, se espera utilizar lo investigado para lograr una aplicación de realidad aumentada completa funcionando sobre un dispositivo móvil y en tiempo real. Finalmente se le quiere dar, a la aplicación de realidad aumentada, un marco dentro de un \textit{recorrido interactivo en realidad aumentada} para museos.\\
+
+Los objetivos anteriores pueden resumirse en las tres partes fundamentales del proyecto, que se expresan a continuación:
+
+\begin{itemize}
+\item[1.] \textbf{Investigación:} comprensión de la arquitectura de las plataformas móviles y de sus plataformas de desarrollo, con el objetivo de embeber los distintos algoritmos y \textit{software} en general en las mismas. Estudio de las diferentes maneras de lograr la realidad aumentada, elección de los algoritmos a utilizar, su comprensión y en algunos casos su implementación total o parcial. Aprendizaje de herramientas en general.
+\item[2.] \textbf{Implementación}: integración de los distintos bloques para lograr la realidad aumentada. Implementación de bloques lógicos accesorios que faciliten la integración de los primeros. Validación de los algoritmos utilizados y desarrollados.
+\item[3.] \textbf{Aplicación}: implementación de una aplicación total en la que el usuario ingrese al museo, se ubique dentro de él, se dirija a un cuadro, reciba información respecto del mismo y finalmente disfrute de la realidad aumentada sobre la obra.
+\end{itemize}
+
+Cada una de ellas se jerarquizó en función de la importancia que se que cree tiene para el proyecto, así como también el tiempo que se les dedicó:\\
+
+$$
+\begin{array}{|c|c|} \hline
+\textbf{Frente de trabajo}			& \textbf{Porcentaje} \\ \hline
+\small \textbf{Investigación}		&	50\% \\ \hline
+\small \textbf{Implementación}	& 30\% \\ \hline
+\small \textbf{Aplicación}			& 20\%  \\ \hline
+\end{array}
+$$
+
+Es importante aclarar que en ocaciones el límite entre los tres frentes de trabajo es difuso.
 
 \section{Explicación global de la aplicación}
-La motivación inicial del presente proyecto fue la de desarrollar una aplicación integral que tuviera res grandes componentes:\\
+\label{sec: app}
+Si bien se dijo que la creación de la aplicación integral, correspondiente a un recorrido en realidad aumentada para muesos, corresponde tan sólo a un quinto del alcance total del proyecto; la visualización de la aplicación total es quizá la forma más sencilla de comprender el proyecto en su conjunto.\\
+
+Esta se desglosa en tres grandes bloques:
+
 \begin{itemize}
-\item Navegación
-\item Identificación de obras
-\item Realidad aumentada
+\item \textbf{Navegación}
+\item \textbf{Identificación de obras}
+\item \textbf{Realidad aumentada}
 \end{itemize}
-idea inicial de:\\
+que son resumidos individualmente en secciones subsiguientes.
 
 
 \subsection{Navegación}
-Se estudiaron distintas alternativas para la navegación o localización en el interior del museo. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se podría ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación.
+La navegación es la ubicación del usuario dentro del museo, útil tanto para el usuario como para la aplicación, ya que sabiendo en qué región del museo este se encuentra, se simplifica un poco la identificación de la obra. Se estudiaron distintas alternativas para la navegación. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se puede ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación. Esta discusión técnica se ve más en detalle en el Capítulo \ref{chap: navident}.\\
 
 \subsection{Identificación de obras}
-Motivación de identificar las obras para el usuario.
+Por identificación de obras se entiende al proceso mediante el cual la aplicación detecta frente a qué obra se encuentra el usuario para así entonces brindarle información de la misma, una audioguía y si fuera el caso la posibilidad de desplegar realidad aumentada sobre ella. La forma en la que se implementó este bloque fue mediante un algoritmo de detección de características de imágenes llamado SIFT. Este algoritmo genera descriptores que sireven como identificadores de las imágenes y se verá en profundidad en el Capítulo \ref{chap: navident}.\\
 
 \subsection{Realidad Aumentada}
 
-\subsubsection{Definición}
-\label{sec:DefiniciónAR}
-Es posible definir la realidad aumentada (AR del inglés \textit{Augmented Reality}) como una vista directa o indirecta en tiempo real, de algún elemento o escena física del mundo real, a la que se le agrega información de manera virtual o digital mediante el uso de herramientas computacionales \cite{furht11}. Cuando se genera una escena por medio de la realidad aumentada, conviven en ella elementos reales con elementos virtuales que buscan verse tan reales como se pueda. Es basicamente un juego de percepciones.\\
-La realidad aumentada es un área que se encuentra en pleno desarrollo y todo el tiempo aparecen ideas novedosas y muy interesantes, lo que la hace por demás apasionante.
+El proceso mediante el cual se logra la realidad aumentada puede verse en el diagrama de bloques de la Figura \ref{fig: bloques_ra}.\\
 
-\subsubsection{Cómo es el camino hacia la realidad aumentada.}
-\label{sec:FundamentoAR}
-(REVISAR ESTE FUNDAMENTO Y AGREGAR IMAGEN DE 1ER HITO)\\
-El proceso mediante el cual se logra la realidad aumenada puede dividirse básicamente en dos grandes partes. La primera es el seguimiento de la cámara. Esto es el lograr ubicar la cámara perfectamente (rotación y traslación), respecto de un eje de coordenadas arbitrario asignado al mundo real. Este seguimiento puede lograrse mediante el reconocimiento de características de las imágenes tomadas por la cámara o incluso mediante la detección de bordes o esquinas de algún marcador en particular correctamente modelado respecto del \textit{eje del mundo} previamente mencionado. Tener un correcto modelo de los objetos del mundo respecto de este eje resulta una cuestión realmente importante para poder luego recostruír la imagen con la infrmación agregada digitalmente. \\
-Una vez conocida la posición del la cámara en el mundo, resta agregar la información a la imagen. Esto es posible ya que al tener un correcto modelo del mundo respecto de su eje de coordenadas, es posible ubicar (en el modelo teórico) un objeto digital y resolviendo un sencillo sistema de ecuaciones se obtiene su posición en la imagen cuadro a cuadro.\\
-El proceso mediante el cual se genera una imagen 2D a partir de un modelo 3D se denomina Renderización y se analizará con algo más de detalle en secciones subsiguientes. También se analizarán más a fondo el concepto del modelado 3D y el de modelado de la cámara en cuestión, ya que no todas las cámaras se comportan de igual manera desde que su construcción no es idéntica a la construcción de ninguna otra cámara (aunque bajo ciertas hipótesis, se deberá suponer que cierto conjunto de cámaras cuenta con características similares). Para realizar entonces la transformación desde el mundo 2D al mundo 3D y viceversa, resulta de vital importancia contar con un modelo detallado y preciso de la cámara utilizada.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.2]{figs_alcance/bloques_ra.eps}
+\caption{Diagrama de bloques del proceso mediante el cual se logra la realidad aumentada.}
+\label{fig: bloques_ra}
+\end{figure}
 
+En el diagrama de bloques de la Figura \ref{fig: bloques_ra}, primero la cámara toma una imagen, que luego es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores; que luego son utilizados por un algún algoritmo de estimación de la pose, que busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta. Con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la información digital a\~nadida.\\
 
-\section{Explicación del documento}
-Explicar cada uno de los cap´itulos asociados a cada una de las partes necesarias para lograr la realidad aumentada.
+Para este proyecto se dise\~nó cierto marcador formado por tres grupos de cuadrados concéntricos, a partir del cual se extraen las características necesarias para la estimación de la pose del dispositivo. Además, el bloque de detección de características está compuesto por los bloques del diagrama de la Figura \ref{fig: bloques_correspondencias}.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.2]{figs_alcance/bloques_correspondencias.eps}
+\caption{Diagrama de bloques de la detección de características utilizada en este proyecto.}
+\label{fig: bloques_correspondencias}
+\end{figure}
+
+En el diagrama de bloques de la figura \ref{fig: bloques_correspondencias}, primero se detectan idealmente todos los segmentos que hay en la imagen y luego mediante cierto algoritmo se filtran tan sólo los pertenecientes al marcador antedicho y se agrupan por cuadrado. En el tercer bloque, se hallan las esquinas de estos cuadrados mediante la intersección de los segmentos. Finalmente, medianate cierta lógica, estos puntos son ordenados de una manera predefinida. Detalles respecto de este proceso y sobre el marcador utilizado se ven en el Capítulo \ref{ch:marcadores}.\\
+
+\section{Sobre el documento}
+
+En el presente documento se verán en detalle todos los aspectos técnicos referidos a los temas vistos en este capítulo. Se explica claramente la investigación realizada, los algoritmos utilizados, las herramientas aprendidas y en general, toda la experiencia adquirida a lo largo del proyecto. Se justifican claramente todas las decisiones que hubo que tomar y se comentará además, en cada caso, si estas fueron acertadas o no.\\
+
+En el Capítulo \ref{chap: hwysw} se comparan ambas plataformas y se justifica la elección de una de ellas. Luego se ven más a fondo algunas características de la plataforma seleccionada y finalmente algunas herramientas genéricas requeridas para el desarrollo. En el Capítulo \ref{chap: navident} se ven en detalle las soluciones técnicas para la navegación y la detección de la obra. Los Capítulos \ref{ch:detection} y \ref{ch:marcadores} abarcan respectivamente los temas detección de características de las imágenes en general; y detalles respecto de marcadores comunmente utilizados en aplicaciones de realidad aumentada, siendo una adaptación de estos, el marcador utilizado en este proyecto en parcitular. \\
+
+Más adelante, en el Capítulo \ref{chap: lsd}, se estudia a fondo un algoritmo de detección de segmentos en imágenes digitales llamado LSD, utilizado para la detección de segmentos representada en el primer bloque de la Figura \ref{fig: bloques_correspondencias}. Luego, en el Capítulo \ref{chap: camypose}, se plantea un modelo para la cámara utilizada para la captura y se introducen conceptos básicos para comprender cómo es el proceso de la estimación de la pose de la misma. El algoritmo utilizado en este proyecto para tal fin, se presenta en el Capítulo \ref{chap: posit}.\\
+
+La etapa de análisis de desempe\~no y validación de los algoritmos, en particular los asociados a la detección de características y estimación de pose, se da en el Capítulo \ref{chap: benchmark}. En este, se presenta la necesidad de realizar un filtrado tipo \textit{Kalman} sobre la estimación de pose. En el capítulo \ref{chap: kalman} se presenta el algoritmo de \textit{Kalman} y sus ecuaciones básicas. Finalmente, se realiza un nuevo análisis de desempe\~no con este nuevo agregado. \\
+
+En el Capítulo \ref{chap: render} se introduce brevemente el concepto de \textit{render} y se presenta la herramienta utilizada para realizar \textit{renders} en la plataforma escogida. Luego, en el Capítulo \ref{chap: casoUso}, se presentan los distintos casos de uso implementados para probar integrar todo los bloques necesarios para la realidad aumentada en peque\~nas aplicaciones individuales. Finalmente, en el Capítulo \ref{chap: imp}, se explican los detalles técnicos respecto de la aplicación de la aplicación completa, tal y como se define en la sección \ref{sec: app}.

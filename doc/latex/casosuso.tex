@@ -3,14 +3,14 @@
 \section{Introducción}
 En este capítulo se presentan los distintos casos de uso que se implementaron con el fin de integrar los algoritmos comentados en capítulos anteriores en peque\~nas aplicaciones que funcionen \textit{de punta a punta}. Se buscó resolver individualmente los diferentes desafíos técnicos que una aplicación real de realidad aumentada para museos puede llegar a tener. Estas últimas no serán más que una combinación guionada de cada uno de estos casos de uso.\\
 
-A lo cargo del capítulo se verán entonces los tres casos de uso implementados: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. El último caso de uso muestra cómo es posible importar modelos a ISGL3D de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con las primitivas del \textit{framework}, por detalles ver capítulo \ref{chap: render}.
+A lo cargo del capítulo se verán entonces los tres casos de uso implementados: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. El último caso de uso muestra cómo es posible importar modelos a ISGL3D de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con las primitivas del \textit{framework}, por detalles ver Capítulo \ref{chap: render}.
 
 % -------------------------------- |Caso de uso INTERACTIVIDAD| ------------------------------------
 
 \section{Caso de uso ``interactividad''}
 \label{sec: casoUso1}
 \subsection{Comentarios sobre el caso de uso}
-En este caso de uso se implementa la parte interactiva de la aplicación. Al enfocar el marcador, se puede ver un cubo sobre el QlSet de la esquina superior izquierda. Ver Figura \ref{fig:CasoUso1}. Si el cubo es tocado a través de la pantalla del dispositivo, este se anima y se reproduce un audio que indica la posición del cubo en el instante de ser presionado. Inmediatamente después, es desplazado hacia el QlSet de la esquina superior derecha. Nuevamente, si el cubo es tocado a través de la pantalla del dispositivo, este se anima y se reproduce un audio que indica la posición del cubo en el instante de ser presionado. Inmediatamente después, este se desplaza hacia el QlSet restante. Lo anterior sucederá de forma cíclica, cada vez que se presione sobre el mpdelo.\\ 
+En este caso de uso se implementa la parte interactiva de la aplicación. Al enfocar el marcador, se puede ver un cubo sobre el $QlSet$ de la esquina superior izquierda. Ver Figura \ref{fig:CasoUso1}. Si el cubo es tocado a través de la pantalla del dispositivo, este se anima y se reproduce un audio que indica la posición del cubo en el instante de ser presionado. Inmediatamente después, es desplazado hacia el $QlSet$ de la esquina superior derecha. Nuevamente, si el cubo es tocado a través de la pantalla del dispositivo, este se anima y se reproduce un audio que indica la posición del cubo en el instante de ser presionado. Inmediatamente después, este se desplaza hacia el $QlSet$ restante. Lo anterior sucederá de forma cíclica, cada vez que se presione sobre el modelo.\\ 
 
 Esta funcionalidad es fundamental si lo que se quiere implementar es por ejemplo una audioguía interactiva. Podría pensarse una aplicación en la que el cubo anterior se reemplace por flechas 3D, y que estas sean ubicadas conjuntamente en distintas partes de una obra. Entones, al seleccionar cada una de las flechas, se podría reproducir un audio con información referente a esa zona o punto en particular.\\ 
 
@@ -18,19 +18,19 @@ Esta funcionalidad es fundamental si lo que se quiere implementar es por ejemplo
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_casosuso/CasoUso1.PNG}
-\caption{Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el QlSet de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.}
+\caption{Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el $QlSet$ de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.}
 \label{fig:CasoUso1}
 \end{figure}
 
 Esta aplicación también se utilizó con fines de \textit{debugging} o depuración de la integración de cada uno de los bloques. Se le agregaron las siguientes funcionalidades:
 \begin{itemize}
-\item[$\bullet$] La posibilidad de ver dibujados sobre la imagen los segmentos detectados por LSD. En sus versiones original y opimizada.
-\item[$\bullet$] La posibilidad de ver dibujados sobre la imagen los segmentos filtrados pertenecientes al marcador. Así como también las esquinas detectadas de cada uno de los cuadriláteros que lo forman.
-\item[$\bullet$] La posibilidad de variar el umbral utilizado para el filtrado de segmentos. 
-\item[$\bullet$] La posibilidad de ver las esquinas de cada uno de los cuadriláteros que forman al marcador reproyectadas según la pose del dispositivo obtenida.
-\item[$\bullet$] La posibilidad de prender o apagar el filto de Kalman.
-\item[$\bullet$] La posibilidad de aumentar o disminuir el ruido de medición del filtro de Kalman.
-\item[$\bullet$] La posibilidad de elegir si usar o no la fusión de la estimación de pose con los sensores. 
+\item La posibilidad de ver dibujados sobre la imagen los segmentos detectados por LSD. En sus versiones original y opimizada.
+\item La posibilidad de ver dibujados sobre la imagen los segmentos filtrados pertenecientes al marcador. Así como también las esquinas detectadas de cada uno de los cuadriláteros que lo forman.
+\item La posibilidad de variar el umbral utilizado para el filtrado de segmentos. 
+\item La posibilidad de ver las esquinas de cada uno de los cuadriláteros que forman al marcador reproyectadas según la pose del dispositivo obtenida.
+\item La posibilidad de prender o apagar el filto de Kalman.
+\item La posibilidad de aumentar o disminuir el ruido de medición del filtro de Kalman.
+\item La posibilidad de elegir si usar o no la fusión de la estimación de pose con los sensores. 
 \end{itemize} 
 
 %\begin{figure}[h!]
@@ -120,26 +120,26 @@ Finalmente, es bueno aclarar que \textit{claseDibujar} se instancia y se destruy
 
 \section{Caso de uso ``video''}
 \subsection{Comentarios sobre el caso de uso}
-Este caso de uso proyecta un video sobre el QlSet de la esquina superior izquierda del marcador de manera consistente con la pose del dispositivo. Ver Figura \ref{fig:CasoUso2}. La aplicación de esta solución técnica es directa. Tan sólo ajustando un par de parámetros el video podría ser proyectado dentro del marco de un cuadro, sobre uno de sus extremos, sobre una pared blanca o incluso sobre un mapa. Esto puede ser de gran interés para un museo, por ejemplo como complemento a una audioguía. A continuación se explican brevemente algunos detalles técnicos que fue necesario solucionar para lograr implementar este caso de uso.\\
+Este caso de uso proyecta un video sobre el $QlSet$ de la esquina superior izquierda del marcador de manera consistente con la pose del dispositivo. Ver Figura \ref{fig:CasoUso2}. La aplicación de esta solución técnica es directa. Tan sólo ajustando un par de parámetros el video podría ser proyectado dentro del marco de un cuadro, sobre uno de sus extremos, sobre una pared blanca o incluso sobre un mapa. Esto puede ser de gran interés para un museo, por ejemplo como complemento a una audioguía. A continuación se explican brevemente algunos detalles técnicos que fue necesario solucionar para lograr implementar este caso de uso.\\
 	
 \begin{figure}
 \centering
 \includegraphics[scale=0.3]{figs_casosuso/CasoUso2}
-\caption{Captura de pantalla del caso de uso ``video''. Se puede ver al video proyectado sobre el QlSet de la esquina superior izquierda}
+\caption{Captura de pantalla del caso de uso ``video''. Se puede ver al video proyectado sobre el $QlSet$ de la esquina superior izquierda}
 \label{fig:CasoUso2}
 \end{figure}
 
 \subsection{Detalles constructivos}
 El desafío técnico es, dados 4 puntos dinámicos cualesquiera sobre la pantalla, poder repdocucir un video cuyas esquinas se ajusten a esos 4 puntos. Por lo tanto, en la implementación del presente caso de uso, de toda la lógica de estimación de pose, solamente se hace uso de los bloques de detección, filtrado y determinación de correspondencias. En particular, no se utiliza el algoritmo POSIT visto en el Capítulo \ref{ch: posit}.  Teniendo entonces detectados los límites dentro de los que se quiere reproducir el video, parecería que el problema está resuelto, pues sólo basta con ubicar al video dentro de los mismos. Sin embargo, \textit{Xcode} no permite posicionar en forma directa una \textit{view} (que será la que embeba al video) tomando como límites cuatro puntos cualesquiera.\\
 
-Si simplemente se quiere reproducir un video, y no se quiere procesar su contenido, la solución más simple es utilizar la clase \textit{MPMoviePlayerController} que hereda de \textit{NSObject}. Una alternativa similar es hacer uso de la clase \textit{MPMoviePlayerViewController} que hereda de \textit{UIViewController} y tiene como única propiedad una del tipo \textit{MPMoviePlayerController}. \textit{MPMoviePlayerController} tiene como atributo una \textit{view}, del tipo \textit{UIView}, y son las esquinas de este atributo a las que se las quiere posicionar sobre 4 de los 36 puntos detectados por el filtro. La clase \textit{UIView} tiene un atributo \textit{frame} que es del tipo \textit{CGRect}:
+Si sólo se quiere reproducir un video, y no se quiere procesar su contenido, la solución más simple es utilizar la clase \textit{MPMoviePlayerController} que hereda de \textit{NSObject}. Una alternativa similar es hacer uso de la clase \textit{MPMoviePlayerViewController} que hereda de \textit{UIViewController} y tiene como única propiedad una del tipo \textit{MPMoviePlayerController}. \textit{MPMoviePlayerController} tiene como atributo una \textit{view}, del tipo \textit{UIView}, y son las esquinas de este atributo a las que se las quiere posicionar sobre 4 de los 36 puntos detectados por el filtro. La clase \textit{UIView} tiene un atributo \textit{frame} que es del tipo \textit{CGRect}:
 \begin{verbatim}
 theMovie.view.frame = CGRectMake(0, 0, 60, 60);
 \end{verbatim}
-En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, parecería que los videos solamente pueden ser reproducidos sobre rectángulos y no sobre cualquier cuadrilátero genérico. Sin embargo algo que sí se les puede hacer a las instancias de la clase \textit{UIView} es una transformación afín o incluso, de forma más genérica, una homografía. \\
+En el código anterior \textit{theMovie} es del tipo \textit{MPMoviePlayerController}. De esta manera, parecería que los videos solamente pueden ser reproducidos sobre rectángulos y no sobre cualquier cuadrilátero genérico. Sin embargo, algo que sí se les puede hacer a las instancias de la clase \textit{UIView} es una transformación afín o incluso, de forma más genérica, una homografía. \\
 
 \subsection{\textit{CGAffineTransform} y \textit{CATransform3D}}
-La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que es del tipo \textit{CGAffineTransform}. Las primeras letras de esta clase  (\textit{CG}) refieren a la API \textit{\textbf{Core Graphics} }utilizada ampliamente como herramienta para resolver problemaz de \textit{rendering} y cualquier tipo de transformación en 2D.\\
+La clase \textit{UIView} tiene una propiedad llamada \textit{transform} que es del tipo \textit{CGAffineTransform}. Las primeras letras de esta clase  (\textit{CG}) refieren a la API \textit{\textbf{Core Graphics} }utilizada ampliamente como herramienta para resolver problemas de \textit{rendering} y cualquier tipo de transformación en 2D.\\
 
 La clase \textit{UIView} además tiene una propiedad llamada \textit{layer} que es del tipo \textit{CALayer} y que permite realizar transformaciones del tipo	 \textit{CATransform3D}. Las primeras letras de estas dos clases  (\textit{CA}) refieren a la API \textit{\textbf{Core Animation}} que es utilizada para generar animaciones y transformaciones sobre objetos 3D solamente indicando un punto inicial y final para el objeto (también es posible agregar efectos para la transición). En definitiva, para resolver el problema del caso de uso existen \textit{a priori} dos alternativas posibles: \textit{CGAffineTransform} y \textit{CATransform3D}.\\
 
@@ -154,7 +154,7 @@ CGAffineTransform CGAffineTransformMake (
    CGFloat ty
 );
 \end{verbatim}
-que toma 6 \textit{CGFloats} (números reales en coma flotante y precisión simple), y crea una \textit{CGAffineTransform}, donde cada uno de los valores anteriores se corresponde con los elementos de una matriz transformación afín de la siguiente manera:
+que toma 6 \textit{CGFloats} (números reales en coma flotante y precisión simple), y crea una \textit{CGAffineTransform}, donde cada uno de los valores anteriores se corresponde con los elementos de una matriz transformación afín de la siguiente manera\footnote{Véase que en este caso \textit{Apple} expresa la matriz afín de forma traspuesta a lo que se comunmente acostumbra.}:
 \[
 \left( \begin{array}{ccc}
 a & b & 0 \\ 
@@ -162,7 +162,7 @@ c & d & 0 \\
 t_{x} & t_{y} & 1 
 \end{array} \right)
 \]
-Así entonces, de los 9 valores de la matriz, 2 de ellos son nulos por tratarse de una transformación afín y otro de ellos es un factor de valor constante 1. Resolviendo el sistema como se muestra en la sección \ref{sec: resHomo} y obteniendo los restantes 6 valores, se le puede asignar transformaciones a la propiedad \textit{transform} y realizar la trasnformación deseada. Sin embargo, una transformación afín preserva colinealidad y realaciones entre distancias; lo que realmente se necesita es una transformación proyectiva. Se decidió entonces estudiar la posibilidad de utilizar una \textit{CATransform3D}.\\
+Así entonces, de los 9 valores de la matriz, 2 de ellos son nulos por tratarse de una transformación afín y otro de ellos es un factor de escala de valor constante 1. Resolviendo el sistema como se muestra en la Sección \ref{sec: resHomo} y obteniendo los restantes 6 valores, se le puede asignar transformaciones a la propiedad \textit{transform} y realizar la trasnformación deseada. Sin embargo, una transformación afín preserva colinealidad y realaciones entre distancias; y lo que realmente se necesita en este caso es una transformación proyectiva. Se decidió entonces estudiar la posibilidad de utilizar una \textit{CATransform3D}.\\
 
 Una \textit{CATransform3D} se define de la siguiente manera:
 \begin{verbatim}
@@ -184,71 +184,71 @@ m_{21} & m_{22} &    0   & m_{24}\\
 m_{41} & m_{42} &    0   & m_{44}
 \end{array} \right)
 \]
-donde también en este caso se asume el valor unitario para $m_{44}$ por ser tan sólo un factor de escala. Al igual que para la transformación afín, resolviendo la homografía como se ve en la sección \ref{sec: resHomo} se obtienen los 8 valores restantes de la matriz.
+donde también en este caso se asume el valor unitario para $m_{44}$ por ser tan sólo un factor de escala. Al igual que para la transformación afín, resolviendo la homografía como se ve en la Sección \ref{sec: resHomo} se obtienen los 8 valores restantes de la matriz.
 
 \subsection{Resolución de Homografía}
 \label{sec: resHomo}
-A continuación se plantea la resolución del sistema de ecuaciones que, dados 4 punto correspondientes entre 2 planos, halla los parámetros de la homografía que los relaciona. Esta transformación proyectiva se puede expresar en forma matricial, en coordenadas homogéneas, de la siguiente manera:
+A continuación se plantea la resolución del sistema de ecuaciones que, dados 4 punto correspondientes entre 2 planos, halla los parámetros de la homografía que los relaciona. La explicación que sigue es un caso particular de la del método DLT explicado en la Sección \ref{subsec: DLT}. Esta transformación proyectiva se puede expresar en forma matricial, en coordenadas homogéneas, de la siguiente manera:
 \[
 \left( \begin{array}{ccc}
-h_{11} & h_{12} & h_{13} \\ 
-h_{21} & h_{22} & h_{23} \\
-h_{31} & h_{32} & h_{33} 
+\textbf{H}_{11} & \textbf{H}_{12} & \textbf{H}_{13} \\ 
+\textbf{H}_{21} & \textbf{H}_{22} & \textbf{H}_{23} \\
+\textbf{H}_{31} & \textbf{H}_{32} & \textbf{H}_{33} 
 \end{array} \right)
 \left( \begin{array}{c}
 x \\ 
 y \\
-z
+s
 \end{array} \right)
 =
 \left( \begin{array}{c}
-i \\
-j \\
-k
+U \\
+V \\
+P
 \end{array} \right)
 \]
-donde la matriz $h_{3x3}$  representa la transformación homográfica, el vector $(x,y,z)^t$  representa los puntos de referencia y el vector $(i,j,k)^t$  respresenta los puntos transformados. Asumiendo un valor unitario para las coordenadas $z$ y $k$ la resolución del sistema se simplifica mucho y no se pierde generalidad. Imponiendo esto entonces, el sistema anterior se puede expresar de la siguiente forma:
+donde la matriz $\textbf{H}_{3x3}$  representa la transformación homográfica, el vector $(x,y,s)^t$  representa los puntos de referencia y el vector $(U,V,P)^t$  respresenta los puntos transformados. Asumiendo un valor unitario para las coordenadas $s$ y $P$ la resolución del sistema se simplifica mucho y no se pierde generalidad. Imponiendo esto entonces, el sistema anterior se puede expresar de la siguiente forma:
 \begin{equation}\label{eq_1}
-xh_{11} + yh_{12} + h_{13} = i
+x\textbf{H}_{11} + y\textbf{H}_{12} + \textbf{H}_{13} = U
 \end{equation}
 \begin{equation}\label{eq_2}
-xh_{21} + yh_{22} + h_{23} = j
+x\textbf{H}_{21} + y\textbf{H}_{22} + \textbf{H}_{23} = V
 \end{equation}
 \begin{equation}\label{eq_3}
-xh_{31} + yh_{32} + h_{33} = 1
+x\textbf{H}_{31} + y\textbf{H}_{32} + \textbf{H}_{33} = 1
 \end{equation}
-Multiplicando la ecuación \eqref{eq_3} por $i$ e igualándola a la ecuación \eqref{eq_1} se obtiene lo siguiente:
+Multiplicando la ecuación \eqref{eq_3} por $U$ e igualándola a la ecuación \eqref{eq_1} se obtiene lo siguiente:
 \begin{equation}
-xh_{11} + yh_{12} + h_{13} = ixh_{31} + iyh_{32} + ih_{33}
+x\textbf{H}_{11} + y\textbf{H}_{12} + \textbf{H}_{13} = xU\textbf{H}_{31} + yU\textbf{H}_{32} + U\textbf{H}_{33}
 \end{equation}
 o lo que es lo mismo:
 \begin{equation}\label{eq_4}
-xh_{11} + yh_{12} + h_{13} - ixh_{31} - iyh_{32} - ih_{33}=0
+x\textbf{H}_{11} + y\textbf{H}_{12} + \textbf{H}_{13} - xU\textbf{H}_{31} - yU\textbf{H}_{32} - U\textbf{H}_{33}=0
 \end{equation}
-Procediendo de manera análoga y multiplicando la ecuación \eqref{eq_3} por $j$ e igualándola a la ecuación \eqref{eq_2} se obtiene lo siguiente:
+Procediendo de manera análoga y multiplicando la ecuación \eqref{eq_3} por $V$ e igualándola a la ecuación \eqref{eq_2} se obtiene lo siguiente:
 \begin{equation}
-xh_{21} + yh_{22} + h_{23} = jxh_{31} + jyh_{32} + jh_{33}
+x\textbf{H}_{21} + y\textbf{H}_{22} + \textbf{H}_{23} = xV\textbf{H}_{31} + yV\textbf{H}_{32} + V\textbf{H}_{33}
 \end{equation}
 o lo que es lo mismo:
 \begin{equation}\label{eq_4}
-xh_{21} + yh_{22} + h_{23} - jxh_{31} - jyh_{32} - jh_{33}=0
+x\textbf{H}_{21} + y\textbf{H}_{22} + \textbf{H}_{23} - xV\textbf{H}_{31} - yV\textbf{H}_{32} - V\textbf{H}_{33}=0
 \end{equation}
 Las ecuaciones \eqref{eq_3} y \eqref{eq_4} se pueden expresar en forma matricial, de la siguiente manera:
 \[
 \left( \begin{array}{ccccccccc}
-x & y & 1 & 0 & 0 & 0 & -ix & -iy & -i \\ 
-0 & 0 & 0 & x & y & 1 & -jx & -jy & -j
+x & y & 1 & 0 & 0 & 0 & -xU & -yU & -U \\ 
+0 & 0 & 0 & x & y & 1 & -xV & -yV & -V
 \end{array} \right)
 \left( \begin{array}{ccccccccc}
-h_{11} \\ 
-h_{12} \\
-h_{13} \\
-h_{21} \\
-h_{22} \\
-h_{23} \\
-h_{31} \\
-h_{32} \\
-h_{33}
+\textbf{H}_{11} \\ 
+\textbf{H}_{12} \\
+\textbf{H}_{13} \\
+\textbf{H}_{21} \\
+\textbf{H}_{22} \\
+\textbf{H}_{23} \\
+\textbf{H}_{31} \\
+\textbf{H}_{32} \\
+\textbf{H}_{33}
 \end{array} \right)
 =
 \left( \begin{array}{ccccccccc}
@@ -263,56 +263,56 @@ h_{33}
 0
 \end{array} \right)
 \]
-Teniendo entonces 4 parejas de puntos referencia y puntos transformados, y asumiendo $h_{33}$ de valor unitario, se logran 8 ecuaciones con 8 incógnitas. Se tiene ahora un sistema compatible determinado, que puede ser expresado de la siguiente manera:\\
+Teniendo entonces 4 parejas de puntos de referencia y puntos transformados, y asumiendo $\textbf{H}_{33}$ de valor unitario, se logran 8 ecuaciones con 8 incógnitas. Se tiene ahora un sistema compatible determinado, que puede ser expresado de la siguiente manera:\\
 \[
 \left( \begin{array}{cccccccc}
-x_0 & y_0 & 1 &  0  &  0  & 0 & -i_0x_0 & -i_0y_0 \\ 
-0   &  0  & 0 & x_0 & y_0 & 1 & -j_0x_0 & -j_0y_0 \\
+x_0 & y_0 & 1 &  0  &  0  & 0 & -U_0x_0 & -U_0y_0 \\ 
+0   &  0  & 0 & x_0 & y_0 & 1 & -V_0x_0 & -V_0y_0 \\
 
-x_1 & y_1 & 1 &  0  &  0  & 0 & -i_1x_1 & -i_1y_1 \\ 
-0   &  0  & 0 & x_1 & y_1 & 1 & -j_1x_1 & -j_1y_1 \\
+x_1 & y_1 & 1 &  0  &  0  & 0 & -U_1x_1 & -U_1y_1 \\ 
+0   &  0  & 0 & x_1 & y_1 & 1 & -V_1x_1 & -V_1y_1 \\
 
-x_2 & y_2 & 1 &  0  &  0  & 0 & -i_2x_2 & -i_2y_2 \\ 
-0   &  0  & 0 & x_2 & y_2 & 1 & -j_2x_2 & -j_2y_2 \\
+x_2 & y_2 & 1 &  0  &  0  & 0 & -U_2x_2 & -U_2y_2 \\ 
+0   &  0  & 0 & x_2 & y_2 & 1 & -V_2x_2 & -V_2y_2 \\
 
-x_3 & y_3 & 1 &  0  &  0  & 0 & -i_3x_3 & -i_3y_3 \\ 
-0   &  0  & 0 & x_3 & y_3 & 1 & -j_3x_3 & -j_3y_3  
+x_3 & y_3 & 1 &  0  &  0  & 0 & -U_3x_3 & -U_3y_3 \\ 
+0   &  0  & 0 & x_3 & y_3 & 1 & -V_3x_3 & -V_3y_3  
 
 \end{array} \right)
 \left( \begin{array}{cccccccc}
-h_{11} \\ 
-h_{12} \\
-h_{13} \\
-h_{21} \\
-h_{22} \\
-h_{23} \\
-h_{31} \\
-h_{32} 
+\textbf{H}_{11} \\ 
+\textbf{H}_{12} \\
+\textbf{H}_{13} \\
+\textbf{H}_{21} \\
+\textbf{H}_{22} \\
+\textbf{H}_{23} \\
+\textbf{H}_{31} \\
+\textbf{H}_{32} 
 \end{array} \right)
 =
 \left( \begin{array}{cccccccc}
-i_0 \\ 
-j_0 \\
-i_1 \\
-j_1 \\
-i_2 \\
-j_2 \\
-i_3 \\
-j_3
+U_0 \\ 
+V_0 \\
+U_1 \\
+V_1 \\
+U_2 \\
+V_2 \\
+U_3 \\
+V_3
 \end{array} \right)
 \]
 
-Finalmente, si los puntos de referencia se definen como 4 puntos del modelo del marcador (en el caso particular de la imagen \ref{fig:CasoUso2}, se usan los puntos 4, 5, 6 y 7 del QlSet de la esquina superior izquierda del marcador), y los transformados son sus correspondientes filtrados e identificados cuadro a cuadro en las imágenes capturadas por el dispositivo; es posible transformar en cada instante a la \textit{view} que contiene al video de manera de que se mantenga siempre en dentro de los límites que uno quiere.\\ 
+Finalmente, si los puntos de referencia se definen como 4 puntos del modelo del marcador (en el caso particular de la imagen \ref{fig:CasoUso2}, se usan los puntos 4, 5, 6 y 7 del $QlSet$ de la esquina superior izquierda del marcador), y los transformados son sus correspondientes filtrados e identificados cuadro a cuadro en las imágenes capturadas por el dispositivo; es posible transformar en cada instante a la \textit{view} que contiene al video de manera de que se mantenga siempre en dentro de los límites que uno quiere.\\ 
 %%
 %%Así entonces, lo que se hace para resolver la homografía es cuadro a cuadro tener detectados los puntos en los que se quiere presentar la vista del video que se corresponden con cuatro puntos detectados por el filtro y tener las correspondencias con el marcador real, se posiciona la vista en la posición de referencia y se le aplica la homografía hallada que vincula la posición referencia con los puntos detectados.
 \section{Caso de uso ``modelos''}
 \subsection{Comentarios sobre el caso de uso}
 
-El presente caso de uso no hace más que importar modelos en ISGL3D de manera de agregarle valor a la realidad aumentada. La aplicación de este caso de uso es casi cualquier ejemplo de realidad aumentada en la que se espere contar con una escena con más que tan sólo primitivas agregadas de forma individual o conjunta. Es importante entonces, contar con una peque\~na aplicación piloto para de forma controlada importar los modelos a la escena, ajustar sus tama\~nos, definir sus posiciones, probar diferentes configuraciones para las luces de la misma y hasta intentar animarlos; para así entonces a la hora de implementar una aplicación final, contar con las herramientas suficientes para que los modelos se vean de la mejor manera posible.\\
+El presente caso de uso no hace más que importar modelos en ISGL3D de manera de agregarle valor a la realidad aumentada. La aplicación de este caso de uso es casi cualquier ejemplo de realidad aumentada en la que se espere contar con una escena con más que tan sólo primitivas agregadas de forma individual o conjunta. Es importante entonces, contar con una peque\~na aplicación piloto para, de forma controlada, importar los modelos a la escena, ajustar sus tama\~nos, definir sus posiciones, probar diferentes configuraciones para las luces de la misma y hasta intentar animarlos; para así entonces, a la hora de implementar una aplicación final, contar con las herramientas suficientes para que los modelos se vean de la mejor manera posible.\\
 
 También resulta importante contar con una instancia de prueba para buscar y descargrar distintos modelos 3D de internet; incluso puede ser un buen ejercicio probar editarlos, rotarlos o escalarlos en algún \textit{software} de cración y animado de modelos. Finalmente, habrá que llevar a cabo todos los pasos necesarios para darle al modelo el formato POD, necesario para ser importado en ISGL3D.\\
 
-En la figura \ref{fig:CasoUso3} se pueden dos imágenes de los modelos 3D pertenecientes a un perro chihuahue\~no y dos sillones, uno de 2 plazas y otro de 3, vistas desde dos ángulos distintos. Todos descansan sobre el marcador.
+En la figura \ref{fig:CasoUso3} se pueden ver dos imágenes de los modelos 3D pertenecientes a un perro chihuahue\~no y dos sillones, uno de dos plazas y otro de tres, vistas desde dos ángulos distintos. Todos descansan sobre el marcador.
 \begin{figure}[h!]
 \centering
 $$
@@ -320,7 +320,7 @@ $$
 \includegraphics[scale=0.2]{figs_casosuso/CasoUso3_1.png} & \includegraphics[scale=0.2]{figs_casosuso/CasoUso3_2.png}
 \end{array}
 $$
-\caption{2 capturas de pantalla del caso de uso ``modelos'', desde dos ángulos disintos. Se pueden ver los modelos 3D pertenecientes a un perro chihuahue\~no y a dos sillones, uno de 2 plazas y otro de 3.}
+\caption{Dos capturas de pantalla del caso de uso ``modelos'', desde dos ángulos disintos. Se pueden ver los modelos 3D pertenecientes a un perro chihuahue\~no y a dos sillones, uno de dos plazas y otro de tres.}
 \label{fig:CasoUso3}
 \end{figure}
 
@@ -328,3 +328,5 @@ $$
 Los detalles constructivos de este caso de uso pueden consultarse en el Capítulo \ref{chap: render}.
 
 \section{Conclusión}
+
+En este capítulo se presentó la necesidad de contar con ciertos casos de uso que resolvieran cada uno de los desafíos técnicos existentes en una aplicación interactiva y de realidad aumentada completa para museos. Se definieron y describieron los tres casos de uso, y se mostraron algunas imágenes que ayudaran al lector a comprender el funcionamiento de cada uno de ellos. Además, se definieron en cada caso, las herramientas técnicas extra necesarias para su implemenetación.
