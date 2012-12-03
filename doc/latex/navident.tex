@@ -51,7 +51,7 @@ Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un k
 
 
 \subsubsection{Expresiones artísticas con QRs.}
-La opción de usar los QR de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QR tradicionales para lograr un valor estético además del funcional. V\'ease en la figura \ref{fig: qrArt} un ejemplo de cómo puede lograrse el mismo resultado pero con el valor agregado de originalidad.
+La opción de usar los QR de una manera distinta ha comenzado a ser notoria en los últimos tiempos. Hay quienes desafían a la información \textit{cruda de 1s y 0s} incorporando imágenes y modificando colores y contornos en los QR tradicionales para lograr un valor estético además del funcional. V\'ease en la Figura \ref{fig: qrArt} un ejemplo de cómo puede lograrse el mismo resultado pero con el valor agregado de originalidad.
 
 \begin{figure}[h!]
 \centering
@@ -67,7 +67,7 @@ $
 %fuente http://www.qrcartist.com/
 
 \section{Técnicas de identificación}
-Existen múltiples técnicas de identificación basadas en la extracción de características. En el capítulo \ref{ch:detection} se analizan variados algoritmos de extracción de características que tienen como fin la estimación de pose. En esta sección se presenta y desarrolla el algoritmo SIFT, que se basa en la extracción de características y permite generar descriptores que sirven como identificadores de una imagen. Por su parte este algoritmo también puede ser utilizado para la estimación de pose pero en el presente proyecto no se profundizó en este aspecto por lo que se desarrollará el enfoque de identificación.
+Existen múltiples técnicas de identificación basadas en la extracción de características. En el Capítulo \ref{ch:detection} se analizan variados algoritmos de extracción de características que tienen como fin la estimación de pose. En esta sección se presenta y desarrolla el algoritmo SIFT, que se basa en la extracción de características y permite generar descriptores que sirven como identificadores de una imagen. Por su parte este algoritmo también puede ser utilizado para la estimación de pose pero en el presente proyecto no se profundizó en este aspecto por lo que se desarrollará el enfoque de identificación.
 
 \subsection{SIFT}
 \label{sec: sift}
@@ -89,7 +89,7 @@ D(x,y,\sigma) = L(x,y,k\sigma) - L(x,y,\sigma)
 \]
 con $k$ un factor multiplicativo constante.\\
 
-Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ de diferencias Gaussianas con la desviaci\'on est\'andar variando de manera creciente a lo largo de una octava (hasta obtener un $\sigma' = 2\sigma$). Para obtener $s$ intervalos enteros dentro de dicha octava el valor de $k$ en cada diferencia Gaussiana debe ser de $2^{\frac{1}{s}}$. Una vez calculadas las diferencias Gaussianas a lo largo de la octava, la imagen se submuestrea tomando 1 de cada 2 p\'ixeles en filas y columnas y se procede de la misma manera. La cantidad de octavas involucradas en el c\'alculo así como la cantidad de diferencias Gaussianas calculadas por octava son un par\'ametro a determinar. En la figura \ref{fig:SIFT_1} se puede ver lo anterior explicado gr\'aficamente.\\
+Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ de diferencias Gaussianas con la desviaci\'on est\'andar variando de manera creciente a lo largo de una octava (hasta obtener un $\sigma' = 2\sigma$). Para obtener $s$ intervalos enteros dentro de dicha octava el valor de $k$ en cada diferencia Gaussiana debe ser de $2^{\frac{1}{s}}$. Una vez calculadas las diferencias Gaussianas a lo largo de la octava, la imagen se submuestrea tomando 1 de cada 2 p\'ixeles en filas y columnas y se procede de la misma manera. La cantidad de octavas involucradas en el c\'alculo así como la cantidad de diferencias Gaussianas calculadas por octava son un par\'ametro a determinar. En la Figura \ref{fig:SIFT_1} se puede ver lo anterior explicado gr\'aficamente.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_navident/SIFT_1.png}
@@ -97,7 +97,7 @@ Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ d
 \label{fig:SIFT_1}
 \end{figure}
 
-Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transicion entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver figura \ref{fig:SIFT_2}. \\
+Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transicion entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver Figura \ref{fig:SIFT_2}. \\
 
 \begin{figure}[h!]
 \centering
@@ -169,7 +169,7 @@ Hasta el momento, se le ha asignado a cada punto clave una escala, una locaci\'o
 
 Una vez determinadas la magnitud y fase del gradiente entorno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcciones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.\\
 
-En la figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\
+En la Figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\
 \section{Resumen}
 La alternativa de utilizar códigos QR para identificar regiones del museo es una alternativa simple y que aprovecha la creciente popularidad de los mismos. Es una solución muy funcional que permite fácil y rápidamente al usuario ubicarse dentro del museo. Existe una gran variedad de librerías que permiten resolver este problema en distintos lenguajes. En particular ZBar provee de herramientas interesantes y sencillas de incorporar a aplicaciones.\\
 Por su parte el algoritmo SIFT es un algoritmo muy rápido que resuelve el problema de la identificación de manera muy efectiva. Existe a su vez bastante documentación sobre el mismo así como código disponible en C lo que hace también de este algoritmo algo fácil de incorporar a una aplicación.

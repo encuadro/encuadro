@@ -281,12 +281,12 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 
 
 \section{SoftPOSIT}\label{sec:SoftPosit}
-Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
+Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el Capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
 
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
 
-El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la Ecuación \ref{eq_10} que se presentó en la sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran solamente los vectores \textbf{i}, \textbf{j}. 
+El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la Ecuación \ref{eq_10} que se presentó en la Sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran solamente los vectores \textbf{i}, \textbf{j}. 
 \begin{equation*}
 \begin{split}
 M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
@@ -313,7 +313,7 @@ El sistema a resolver queda
 sX_0 & sY_0 \end{array} \right] = \left[ \begin{array}{cc}
 x^{'} & y^{'} \end{array} \right] 
 \end{equation}
-donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver utilizando mínimos cuadrados, como se vio en la sección \ref{sec:classicPosit4}.%%Se calcula la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vió en \ref{eq_13}. Finalmente el vector de traslación se obtiene como.
+donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver utilizando mínimos cuadrados, como se vio en la Sección \ref{sec:classicPosit4}.%%Se calcula la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vió en \ref{eq_13}. Finalmente el vector de traslación se obtiene como.
 %\begin{align}\label{eq_26}
 %X_0 &= \frac{(sX_0)}{s}& Y_0 &= \frac{(sY_0)}{s}& Z_0 &= \frac{f}{s} 
 %\end{align} 
@@ -436,7 +436,7 @@ Durante la investigación de este algoritmo se desarrollaron versiones de POSIT m
 \section{POSIT moderno para puntos coplanares}
 La implementación que se usó en la aplicación es el POSIT moderno adaptado para trabajar con puntos coplanares. Inicialmente se quiso desarrollar una versión de SoftPOSIT que trabajara con puntos coplanares, para ello previamente se desarrolló POSIT moderno coplanar a modo de prueba. 
 
-Como se vio en la sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{eq_11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
+Como se vio en la Sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{eq_11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
 
 Se definen los puntos $M_0M_i^*$ como los puntos $M_0M_i$ sin la coordenada \textit{z}, ya que la coordenada \textit{z} es función de \textit{x} e \textit{y}. A su vez se definen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ como los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ sin la componente según el eje \textit{w} en el sistema de coordenadas del modelo. Teniendo esto en cuenta se tiene 
 \begin{equation*}
@@ -450,7 +450,7 @@ Los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se calculan de
 \textbf{Q}_2^* = \left(\sum_{i=1}^M m^{'}_i M_0M_i^{*T} M_0M_i^*\right)^{-1}\left(\sum_{j=1}^N \sum_{i=1}^M m_{ji} \left(1+ \epsilon_i\right)y_j M_0M_i^* \right)
 \end{equation*}
 En este caso el término $L = \sum_{i=1}^M m^{'}_i M_0M_i^{*T} M_0M_i^* $ es una matriz $3\times 3$.
-Una vez que se tienen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se procede como se vio en la sección \ref{sec:classicPosit5}
+Una vez que se tienen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se procede como se vio en la Sección \ref{sec:classicPosit5}
 
 Esta implementación de POSIT para puntos coplanares dio resultados levemente mejores que la versión obtenida de \cite{DeMenthonCoplanarCode}. Es una variante de POSIT coplanar que no se encuentra en la bibliografía, permite obtener la pose minimizando una función de costo a diferencia de POSIT clásico que usa mínimos cuadrados. 
 
