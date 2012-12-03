@@ -87,7 +87,7 @@ donde \textbf{M} y \textbf{m} son los puntos ya definidos y vienen expresados en
 Para determinar la forma de la matriz de proyección se estudia cómo se relacionan las coordenadas de \textbf{M} con las coordenadas de \textbf{m}; para hallar esta relación se debe analizar cada transformación, entre los sistemas de coordenadas mencionados con anterioridad, por separado.\\
 \begin{itemize}
 \item \textbf{Proyección 3D - 2D:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,T_0)$, a las coordenadas homogéneas del punto \textbf{m} expresadas en el sistema de coordenadas de la imagen $(x_0,y_0,s_0)$:\\
-Se desprende de la imagen \ref{fig:CalibracionCamara} y algo de trigonometría la siguiente relación entre las coordenadas en cuestión y la distancia focal (f):
+Se desprende de la Figura \ref{fig:CalibracionCamara} y algo de trigonometría la siguiente relación entre las coordenadas en cuestión y la distancia focal (f):
 \[
 \frac{f}{Z_0} = \frac{x_0}{X_0} = \frac{y_0}{Y_0}
 \]
@@ -627,9 +627,9 @@ Desarrollando el producto se tiene que
 \]
 
 \subsubsection{Orden de rotaciones}
-Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en qué orden se aplican las rotaciones, pues no es una transformación conmutativa. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig: mono3}.
+Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario saber en qué orden se aplican las rotaciones, pues no es una transformación conmutativa. Un objeto rotado primero según el eje $x$ y luego según el eje $y$ termina en una posición diferente que si se lo rota primero según $y$ y luego según $x$. Esto se puede ver en la Figura \ref{fig:mono3}.
 
-\begin{figure}[h!]\label{fig: mono3}
+\begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{figs_camaraypose/mono3}
 \caption{Se parte del mismo objeto, en la fila superior se aplica una rotación de $45^\circ$ según $x$ y luego una rotación de $45^\circ$ según $y$. En la fila de abajo se aplican las mismas rotaciones pero en orden inverso. Se puede ver que se obtienen diferentes posiciones.}
@@ -718,7 +718,7 @@ Esto es una rotación entorno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi
 
 Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y por otra parte también se hace otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final, partiendo de los ejes alineados para una y otra rotacioón del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque está más arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que está por debajo de $z$ en la jerarquía. 
 
-\begin{figure}\label{fig: gimbal}
+\begin{figure}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.44]{figs_camaraypose/gimbal1}
@@ -734,6 +734,7 @@ Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rot
                 \includegraphics[scale=0.44]{figs_camaraypose/gimbal60z}
                 \label{fig: gimbal60z}}
          \caption{Los ejes rojo, verde y azul, son los ejes $x$, $y$ y $z$. En \subref{fig: gimbal1} se ve la posición inicial. En \subref{fig: gimbal90y} se puede ver el eje $y$ rotado $90^\circ$. En \subref{fig: gimbal60x} se ve la rotación según $x$ de $60^\circ$ respecto a la posición de \subref{fig: gimbal90y}. En \subref{fig: gimbal60z} se ve la rotación según $z$ de $-60^\circ$ respecto a la posición de \subref{fig: gimbal90y}.}
+         \label{fig: gimbal}
 \end{figure}
 
 \subsection{Cuaternios}

@@ -274,14 +274,14 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.405]{figs_posit/posit_6}
-\label{fig: posit_6}
 \caption{Diagrama de flujo del algoritmo para puntos coplanares, \textit{E} es el error de reproyección, la condición $Z_i>0$ verifica que los puntos reproyectados están por delante del plano imagen. Tomado de: \cite{CoplanarPosit}.}
+\label{fig: posit_6}
 \end{figure}
 \end{comment}
 
 
 \section{SoftPOSIT}\label{sec:SoftPosit}
-Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
+Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el Capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
 
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
@@ -322,8 +322,8 @@ Sin embargo se propone un método que busca minimizar la distancia al cuadrado en
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=1.5]{figs_posit/posit_7}
-\label{fig: posit_7}
 \caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{eq_24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{eq_24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{Daniel03simultaneouspose}.}
+\label{fig: posit_7}
 \end{figure}
 
 En el término de la derecha de la Ecuación \ref{eq_24} se tiene la proyección SOP de $M_i$, $p_i$. Las coordenadas de este punto son
@@ -474,15 +474,14 @@ En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para el error
 \begin{figure}[H]
 \centering
         \includegraphics[scale=0.62]{figs_posit/histAngulosPosit2}
-        \label{fig:posit_8}
          \caption{Histograma de los errores obtenidos en la orientación. En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala de las gráficas es logarítmica.}
+         \label{fig:posit_8}
 \end{figure}
 
 
 Se puede ver que los dos algoritmos se comportan de manera similar, en la mayoría de los casos se obtiene un error de estimación menor a $2^\circ$. Los casos en los que el error es mayor a  $2^\circ$ se corresponden con posiciones de la cámara en las que el plano imagen es paralelo al plano del marcador. Este comportamiento se puede ver en la Figura \ref{fig:posit_9}. Si los ángulos de rotación en torno a $x$ o a $y$ están en un intervalo de $(-10^\circ,+10^\circ)$, la proyección SOP del marcador varía muy poco. Esto lleva a que el algoritmo termine eligiendo una pose que no es la correcta, o puede llevar a que el algoritmo no converja. 
 
 \begin{figure}[ht]
-\label{fig:posit_9}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.65]{figs_posit/barrido}
@@ -492,8 +491,9 @@ Se puede ver que los dos algoritmos se comportan de manera similar, en la mayorí
                 \label{fig:posit_11}}
                 
          \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver mas de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
+         \label{fig:posit_9}
 \end{figure}
-En la Figura \ref{fig:posit_11} se puede ver que el algoritmo no presenta problemas para posiciones de la cámara que corresponden a imágenes del marcador muy deformadas por la perspectiva, ángulos cercanos a $90^\circ$. Este límite está dado por el filtro de correspondencias visto en \ref{ch:marcadores}.
+En la Figura \ref{fig:posit_10} se puede ver que el algoritmo no presenta problemas para posiciones de la cámara que corresponden a imágenes del marcador muy deformadas por la perspectiva, ángulos cercanos a $90^\circ$. Este límite está dado por el filtro de correspondencias visto en \ref{ch:marcadores}.
 
 
 \subsubsection{Error de posición}
@@ -502,14 +502,13 @@ En la Figura \ref{fig:posit_12} se muestran los errores de posición para los dif
 \begin{figure}[H]
 \centering
         \includegraphics[scale=0.62]{figs_posit/histTrasPosit2}
-        \label{fig:posit_12}
          \caption{Histograma de los errores obtenidos en traslación En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala en el de las gráficas es logarítmica.}
+         \label{fig:posit_12}
 \end{figure}
 
 \subsubsection{Comportamiento global}\label{sec: positComportamientoGlobal}
-A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
+A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo, Figura \ref{fig:posit_13}. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
 \begin{figure}[H]
-\label{fig:posit_13}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.4]{figs_posit/recorridaCopl}
@@ -519,6 +518,7 @@ A continuación se muestra el comportamiento de las dos variantes del algoritmo p
                 \label{fig:posit_15}}
                 
          \caption{Trayectoria en la que se ve que el error es mayor cuando el marcador es visto de frente. Cuando se empieza a rotar el error de orientación es chico. En la Figura \subref{fig:posit_14} se puede ver el comportamiento de POSIT coplanar moderno y en la Figura \subref{fig:posit_15} se puede ver el comportamiento para POSIT coplanar clásico.}
+         \label{fig:posit_13}
  \end{figure}
 
 El primer movimiento simula la cámara acercándose al marcador. En este movimiento se puede ver cómo ambos algoritmos fallan en la estimación de la pose. La versión moderna comete menos error. El segundo movimiento se tiene a la cámara en una posición fija y va cambiando su orientación, se puede apreciar que para este caso el error cometido en orientación es muy peque\~no. 
@@ -541,12 +541,11 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_8b}
-\label{fig:posit_16}
 \caption{Posiciones que se utilizaron para las imágenes de prueba.}
+\label{fig:posit_16}
 \end{figure}
 
 \begin{figure}[H]
-\label{fig:posit_17}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.4]{figs_posit/histDistEuclCopl}
@@ -556,6 +555,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
                 \label{fig:posit_19}}
                 
          \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes de prueba. \subref{fig:posit_18}, POSIT moderno. \subref{fig:posit_19}, POSIT clásico}
+         \label{fig:posit_17}
  \end{figure}
 
 \begin{table}[H]
@@ -573,12 +573,12 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_9b}
-\label{fig:posit_20}
 \caption{Posiciones que se utilizaron para las imágenes sintéticas}
+\label{fig:posit_20}
 \end{figure}
 
 \begin{figure}[H]
-\label{fig:posit_21}
+
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.4]{figs_posit/histDistEuclCoplSint}
@@ -588,6 +588,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
                 \label{fig:posit_23}}
                 
          \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes sintéticas. \subref{fig:posit_22}, POSIT moderno. \subref{fig:posit_23}, POSIT clásico}
+         \label{fig:posit_21}
  \end{figure}
 
 \begin{table}[ht]
