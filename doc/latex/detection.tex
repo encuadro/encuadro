@@ -43,19 +43,19 @@ En la Figura \ref{fig:resultado_canny_lena}(b) se muestra un ejemplo del detecto
   \label{fig:resultado_canny_lena}
 \end{figure}
 
-El algoritmo consiste en cuatro etapas básicas las cuales se describen a continuación. A lo largo de estas etapas se ejemplifica mediante el uso del \emph{demo on-line} de Canny en IPOL\cite{ipol_canny} para la imagen de Lena. Estos resultados intermedio se encuentan en la Figura \ref{fig:resultado_canny_lena_inter}.
+El algoritmo consiste en cuatro etapas básicas las cuales se describen a continuación. A lo largo de estas etapas se ejemplifica mediante el uso del demo \emph{online} de Canny en IPOL\cite{ipol_canny} para la imagen de Lena. Estos resultados intermedio se encuentran en la Figura \ref{fig:resultado_canny_lena_inter}.
 \begin{itemize}
 
  \item 
 \textbf{Reducción de Ruido}: Debido a que el detector de bordes de Canny es sensible a la presencia de ruido en las imágenes se utiliza en una primera etapa un filtrado Gaussiano en donde se realiza la convolución de la imagen con un núcleo Gaussiano. El resultado da lugar a una imagen levemente borrosa como se puede observar en la Figura \ref{fig:resultado_canny_lena_inter}(a).
 
  \item 
-\textbf{Gradiente de intensidad de la imagen}: De forma de detectar bordes en todas las direcciones se utilizan cuatro filtros para detectar bordes en direcciones horizontal, vertical, y las dos direcciones diagonales. El operador de detección de bordes, por ejemplo Roberts, Prewitt o Sobel, devuelve un valor para la derivada primera en la dirección horizontal ($\mathbf{G}_x$) y otro para la derivada primera en la dirección vertical ($\mathbf{G}_y$). En base a estos valores se puede obtener módulo y dirección del gradiente sobre cada píxel (Figura \ref{fig:resultado_canny_lena_inter}(b)). 
+\textbf{Gradiente de intensidad de la imagen}: De forma de detectar bordes en todas las direcciones posibles, respecto a vecinos inmediatos de un píxel, se utilizan cuatro filtros para detectar bordes en direcciones horizontal, vertical, y las dos direcciones diagonales. Un operador de detección de bordes, por ejemplo Roberts, Prewitt o Sobel, devuelve un valor para la derivada primera en la dirección horizontal ($\mathbf{G}_x$) y otro para la derivada primera en la dirección vertical ($\mathbf{G}_y$). En base a estos valores se puede obtener módulo y dirección del gradiente sobre cada píxel (Figura \ref{fig:resultado_canny_lena_inter}(b)). 
 \begin{eqnarray}
 \mathbf{G} = \sqrt{\mathbf{G}_x^2 + \mathbf{G}_y^2} \\
 \Theta = \arctan\left(\frac{\mathbf{G}_y}{\mathbf{G}_x}\right)
 \end{eqnarray}
-El ángulo de dirección del borde es redondeado a uno de los cuatro ángulos ($0$, $45$, $90$ o $135$ grados).
+Finalmente el ángulo de dirección del borde es redondeado a uno de los cuatro ángulos ($0$, $45$, $90$ o $135$ grados).
 
  \item 
 \textbf{Supresión de no-máximos}: Dados los estimadores del gradiente de la imagen se realiza una búsqueda para determinar si el módulo del gradiente asume un rol de máximo local. De esta etapa se obtiene un conjunto puntos en forma de imagen binaria llamados ``thin edges'' como se puede ver en la Figura \ref{fig:resultado_canny_lena_inter}(c). Estos proporcionan información de dirección para realizar el umbralizado con histéresis.  
@@ -105,41 +105,106 @@ Se puede ver que con $\sigma = 0.5$ la presencia de ruido afecta notablemente la
 \subsection{Detector de bordes y esquinas de Harris}
 El detector de bordes y esquinas de \textbf{Harris} es un método desarrollado por Chris Harris et al. en 1988 en el artículo \emph{``A combined corner and edge detector''}\cite{Harris88acombined}. 
 
-Se considera una ventana en el píxel $(x,y)$ en donde se define la suma
-cuadrada ponderada de los elementos de la ventana como
-$$E_{x,y}= \sum_{u,v} w_{u,v}[I_{x+u,y+v}-I(u,v)]^2 = \sum_{u,v} w_{u,v}[xI_x+yI_y+O(x^2,y^2)]^2 $$
-en donde $w_{u,v}$ es un núcleo gaussiano para suavizar la respuesta y los gradientes pueden ser aproximados por
+% Se considera una ventana en el píxel $(x,y)$ en donde se define la suma
+% cuadrada ponderada de los elementos de la ventana como
+% $$E_{x,y}= \sum_{u,v} w_{u,v}[I_{x+u,y+v}-I(u,v)]^2 = \sum_{u,v} w_{u,v}[xI_x+yI_y+O(x^2,y^2)]^2 $$
+% en donde $w_{u,v}$ es un núcleo gaussiano para suavizar la respuesta y los gradientes pueden ser aproximados por
+% $$I_x = I*(-1,0,1) \hspace{8mm} I_y = I*(-1,0,1)^T.$$
+% Para pequeños variaciones, se puede tomar la aproximación 
+% $$E(x,y) = Ax^2 + 2Cxy + By^2$$
+% en donde $A = I_x^2*w$, $B = I_y^2*w$ y $C = I_xI_y*w$. De forma de tomar en cuenta la variación de $E$ junto con la dirección del cambio se reformula la
+% ecuación anterior como 
+% $$E(x,y) =  \begin{pmatrix}
+% 	      x &   y
+% 	    \end{pmatrix}
+% 		  \begin{pmatrix}
+%                    A & C \\
+% 		   C & B
+%                   \end{pmatrix} \begin{pmatrix}
+% 				    x\\
+% 				    y
+% 				\end{pmatrix} = \begin{pmatrix}
+% 	      x &   y
+% 	    \end{pmatrix}
+% 		  M \begin{pmatrix}
+% 				    x\\
+% 				    y
+% 				\end{pmatrix}$$
+% Dado que $E$ está fuertemente relacionado con la función de autocorrelación, si $\alpha$ y $\beta$ son los valores propios de la matriz $M$,
+% serán proporcionales a la curvatura de la función de autocorrelación formando un descriptor invariante a rotaciones de $M$. La respuesta
+% a esquinas propuesta para el detector de harris es computacionalmente más eficiente y no es necesario calcular valores propios de la matriz $M$. Esta dada
+% por 
+% $$R = det(M)-k tr^2(M)$$
+% en donde $k$ es una constante de sensibilidad. Las esquinas están representadas por los valores de $R$ positivos mientras que los bordes corresponden a los 
+% $R$ negativos y con $R$ cercano a cero tendremos zonas planas. 
+Si tomamos una imagen $(I)$ en escala de grises y dos regiones solapadas de la misma que distan $(x,y)$ en las direcciones $i$ y $j$ respectivamente, definidas por una ventana $w(u,v)$; la suma ponderada del cuadrado de las diferencias entre ambas regiones ser\'a:\\
+\[
+E(x,y) = \sum_u{\sum_v{w(u,v) \left[ I(u+x,v+y) - I(u,v) \right]^2}}
+\]
+en donde $w_{u,v}$ es un núcleo Gaussiano para suavizar la respuesta. Si realizamos una expansi\'on de Taylor de $I(u+x,v+y)$, obtenemos la siguiente aproximaci\'on:\\
+\[
+I(u+x,v+y) \approx I(u,v) + I_x(u,v)x + I_y(u,v)y
+\]
+Los gradientes de la imagen representados por $I_x$, $I_y$  pueden ser aproximados por:
 $$I_x = I*(-1,0,1) \hspace{8mm} I_y = I*(-1,0,1)^T.$$
-Para pequeños variaciones, se puede tomar la aproximación 
-$$E(x,y) = Ax^2 + 2Cxy + By^2$$
-en donde $A = I_x^2*w$, $B = I_y^2*w$ y $C = I_xI_y*w$. De forma de tomar en cuenta la variación de $E$ junto con la dirección del cambio se reformula la
-ecuación anterior como 
-$$E(x,y) =  \begin{pmatrix}
-	      x &   y
-	    \end{pmatrix}
-		  \begin{pmatrix}
-                   A & C \\
-		   C & B
-                  \end{pmatrix} \begin{pmatrix}
-				    x\\
-				    y
-				\end{pmatrix} = \begin{pmatrix}
-	      x &   y
-	    \end{pmatrix}
-		  M \begin{pmatrix}
-				    x\\
-				    y
-				\end{pmatrix}$$
-Dado que $E$ está fuertemente relacionado con la función de autocorrelación, si $\alpha$ y $\beta$ son los valores propios de la matriz $M$,
-serán proporcionales a la curvatura de la función de autocorrelación formando un descriptor invariante a rotaciones de $M$. La respuesta
-a esquinas propuesta para el detector de harris es computacionalmente más eficiente y no es necesario calcular valores propios de la matriz $M$. Esta dada
-por 
-$$R = det(M)-k tr^2(M)$$
-en donde $k$ es una constante de sensibilidad. Las esquinas están representadas por los valores de $R$ positivos mientras que los bordes corresponden a los 
-$R$ negativos y con $R$ cercano a cero tendremos zonas planas. 
+Reemplazando entonces:
+\[
+E(x,y) \approx \sum_u{\sum_v{w(u,v) \left[  I_x(u,v)x + I_y(u,v)y \right]^2}}
+\]
+o lo que es lo mismo:
+\[
+E(x,y) = ( \: x\:,\:y\: ) 
+A 
+\left(\begin{array}{c}
+x\\
+y
+\end{array}\right)
+\]
+siendo:
+\[
+A = 
+\left( 
+\begin{array}{cc}
+\left<I_x^2\right> & \left<I_xI_y\right> \\
+\left<I_xI_y\right> & \left<I_y^2\right> 
+\end{array} 
+\right)
+\]
+donde los par\'entesis angulares denotan el promediado ponderado que puede ser como se explica anteriormente Gaussiano.\\
+
+Por construcci\'on, es f\'acil ver que grandes variaciones en $E(x,y)$ ocasionadas por cambios en ambas direcciones $(i,j)$ estar\'an indicando la existencia de una esquina, mientras que grandes variaciones en $E(x,y)$ ocasionadas por cambios en una sóla de direcci\'on indicar\'an la existencia de un borde. Es posible entonces limitar el estudio a la matriz A y sus valores propios.\\
+Sean $\alpha$ y $\beta$ los valores propios de A. Se concluye por lo anterior que si:
+\begin{itemize}
+\item
+Ambos valores propios son grandes: Se esta en presencia de una esquina.
+\item
+Un valor propio es grande y el otro peque\~no: Se esta en presencia de un borde.
+\item
+Ambos valores propios son peque\~nos: Se esta en presencia de una regi\'on ``plana''.
+\end{itemize}
+En la Figura \ref{fig:Fundamento1} se muestra la clasificación de la región correspondiente a la matriz $A$ correspondiente a las tres zonas de arriba (imagen tomada de \cite{Harris88acombined}).
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.5]{figs_detection/harris/fundamento1.jpg}
+\caption{Clasificación de características según los valores propios}
+\label{fig:Fundamento1}
+\end{figure}
+Debido a que el cálculo de los valores propios de una matriz es un proceso computacionalmente costoso, se define la función de respuesta $R$ que depende únicamente de los valores propios $\alpha$ y $\beta$ y almacena b\'asicamente la misma informaci\'on.
+\[
+R = \alpha.\beta - k.(\alpha + \beta) = Det(A) - k.Tr(A)
+\] 
+donde $Det(A)$ denota el determinante de la matriz A, $Tr(A)$ su traza y $k$ es un parámetros de sensibilidad que normalmente pertenece al rango $[0.04 - 0.15]$. Por lo tanto se pueden clasificar los píxeles de la siguiente forma:
+\begin{itemize}
+\item
+$ R \gg 0$: Se tiene una esquina.
+\item
+$R \ll 0$: Se tiene un borde.
+\item
+$R \approx 0$: Se tiene una regi\'on ``plana''.
+\end{itemize}
 
 \subsubsection{Ejemplos de interés}
-En la Figura \ref{fig:resultado_harris} se muestran los resultados para el detector de Harris implementado por Matlab por la función \texttt{corner}. La misma tiene un parámetro modificable asociado a la máxima cantidad de esquinas que se desean tener.
+En la Figura \ref{fig:resultado_harris} se muestran los resultados para el detector de Harris provisto por Matlab en la función \texttt{corner}. La misma tiene un parámetro modificable asociado a la máxima cantidad de esquinas que se desean tener.
 \begin{figure}[h!]
   \centering
   \subfigure[Harris para $n=50$]{
@@ -152,7 +217,7 @@ En la Figura \ref{fig:resultado_harris} se muestran los resultados para el detec
 Se puede ver que los resultados son buenos para ambos casos y particularmente buenos si se desean detectar las esquinas del marcador.
 
 \subsubsection{Aplicabilidad}
-Se pudo ver que el detector de Harris resultó en una detección razonable aunque su funcionamiento no es tan bueno bajo otras condiciones menos controladas ya que puede ser inestable y no muy robusto \textbf{¿fruta?}.
+Se pudo ver que el detector de Harris resultó en una detección razonable aunque su funcionamiento no es tan bueno bajo otras condiciones menos controladas ya depende en gran medida de la escala de detección y puede ser inestable y poco robusto.
 
 Una desventaja importante que tiene la detección de características tipo esquinas es que si se desea saber qué esquinas se unen entre sí mediante los lados del marcador sin ambiguedad se debe obtener más información que permita conectarlas. Por lo tanto un buen complemento puede ser el gradiente o una detección de bordes. La detección de líneas o segmentos ya contiene esta información y por lo tanto parece más apropiada.
 
