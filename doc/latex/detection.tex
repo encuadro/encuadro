@@ -475,7 +475,7 @@ Un detalle del marcador completo se muestra en la figura \ref{fig:MarkerDetail} 
 \label{ec:detection_ejes}
 \end{equation}
 
-La disposición de los $QlSet$ es tal que la distancia indicada $d_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $d_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $d_{01}\gg d_{02}$. Este criterio facilita la identificación de los $QlSet$ entre sí basados únicamente en la posición de sus centros y es explicado en la sección de determinación de correspondencias (sec.: \ref{subsec:detection_correspondencias}).
+La disposición de los $QlSet$ es tal que la distancia indicada $d_{01}$ definida como la norma del vector entre los centros $\mathbf{c}_1$ y $\mathbf{c}_0$ es significativamente mayor que la distancia $d_{02}$ definida como la norma del vector entre los centros $\mathbf{c}_2$ y $\mathbf{c}_1$. Esto es, $d_{01}\gg d_{02}$. Este criterio facilita la identificación de los $QlSet$ entre sí basados únicamente en la posición de sus centros y es explicado en la sección de determinación de correspondencias (Sección \ref{sec:detection_correspondencias}).
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_detection/MarkerDetail.eps}
@@ -567,7 +567,7 @@ Dos segmentos $\mathbf{s}_i$ y $\mathbf{s}_j$ son vecinos si se cumple que la di
 
 Una vez encontrado el conjunto de cuatro segmentos conexos estos se marcan como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $m$ segmentos de la lista de entrada. De esta forma se obtiene una lista de salida $\mathbf{S}$ de $n$ segmentos en donde $n$ es por construcción múltiplo de cuatro.\\
 
-En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd)}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
+En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea detectados por LSD]{
@@ -580,7 +580,7 @@ En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos par
 
 El algoritmo descrito es simple y provee resultados aceptables en general pero es propenso a tanto a detectar \emph{falsos positivos} como al \emph{sobre-filtrado} algunos conjuntos. 
 
-La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ más cercanos de cada segmento. Como se explicará en le sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
+La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ más cercanos de cada segmento. Como se explicará en le Sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/FilterError.eps}
@@ -593,7 +593,7 @@ El sobre-filtrado de segmentos tiende a ocurrir cuando no se cumple la condición
 El algoritmo de filtrado y agrupamiento de segmentos es sensible respecto a la elección del parámetro $d_{th}$. Si esta parámetro esta por debajo del valor óptimo la \emph{performance} del algoritmo se vera afectada fuertemente pues se corre el riesgo de sobre filtrar y no proporcionar suficientes segmentos para la correcta determinación de correspondencias. Por el contrario, si el parámetro esta por encima del valor óptimo, el filtrado tiende a proveer falsos positivos aun que este caso no llega a ser tan crítico como el primero para la aplicación. A modo de ejemplo, para una imagen de tamaño $480 \times 320$ con el marcador ocupando entre un $25\%$ y un $80\% $ el valor del parámetro que da mejores resultados es aproximadamente de $6$ o $7$ píxeles.
 
 \subsection{Determinación de correspondencias}
-\label{subsec:detection_correspondencias}
+\label{sec:detection_correspondencias}
 Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcado (sec.: \ref{sec:detection_estructuras}), de forma de desarrollar un algoritmo modular, escalable y simple.
 
 Se toma como entrada la lista de segmentos filtrados y agrupados
