@@ -29,7 +29,7 @@ Cuando se crea una aplicación ISGL3D, el núcleo de la misma es la llamada ``\tex
 Es importante entender que el llamado \textit{render} se realiza sumando la información de la escena, objetos 3D y sus hijos, luces, etc.; más la información de dónde se encuentra la cámara, sus características y hacia dónde esta apunta.\\
 
 \section{FOV y ejes de ISGL3D}
-Una particularidad de la cámara de ISGL3D es que el parámetro intrínseco ``distancia focal'' visto en la Sección \ref{sec:Calibracion de camara}, no es directamente configurable. En cambio, el valor que sí se puede alterar es el llamado ``FOV'', acrónimo de ``Field Of View''. El \textit{field of view} de una cámara no es más que su campo visual, y se mide como la extensión angular máxima mapeable en el plano imagen, medida desde el centro óptico O. Puede ser medido de forma horizontal o de forma vertical; sin embargo, en ISGL3D es definido verticalmente. Ver Figura \ref{fig:render1}.
+Una particularidad de la cámara de ISGL3D es que el parámetro intrínseco ``distancia focal'' visto en la sección \ref{sec:Calibracion de camara}, no es directamente configurable. En cambio, el valor que sí se puede alterar es el llamado ``FOV'', acrónimo de ``Field Of View''. El \textit{field of view} de una cámara no es más que su campo visual, y se mide como la extensión angular máxima mapeable en el plano imagen, medida desde el centro óptico O. Puede ser medido de forma horizontal o de forma vertical; sin embargo, en ISGL3D es definido verticalmente. Ver figura \ref{fig:render1}.
 
 \begin{figure}[h!]
 \centering
@@ -111,7 +111,7 @@ ISGL3D cuenta con algunas estructuras primitivas que pueden ser usadas como mode
 \label{fig:render2}
 \end{figure}
 
-Para la creación de cada primitiva, se debe especificar además, la cantidad de segmentos que la forman en las distintas dimensiones. En la Figura \ref{fig:render2} se pueden ver todas las primitivas anteriores. Es fácil ver que dichas primitivas cuentan con cierta textura cuadriculada de colores rojo y blanco, que fue lograda mapeando una imagen sobre cada una de ellas. La porción de código que se usó para realizar tal mapeo se muestra a continuación:\\
+Para la creación de cada primitiva, se debe especificar además, la cantidad de segmentos que la forman en las distintas dimensiones. En la figura \ref{fig:render2} se pueden ver todas las primitivas anteriores. Es fácil ver que dichas primitivas cuentan con cierta textura cuadriculada de colores rojo y blanco, que fue lograda mapeando una imagen sobre cada una de ellas. La porción de código que se usó para realizar tal mapeo se muestra a continuación:\\
 \footnotesize
 \begin{verbatim}
 Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial
@@ -123,12 +123,12 @@ Isgl3dMeshNode * _torus = [self.scene createNodeWithMesh:torusMesh andMaterial:m
 \end{verbatim}
 
 \normalsize
-En la primera línea de código se crea el material. Dicho material es del tipo \textit{Isgl3dTextureMaterial}; y la imagen con la que este se crea es la de la Figura \ref{fig:render3}. Luego, se crea el toroide asignándole los parámetros vistos más atrás en esta sección; y finalmente, se crea y se agrega a la escena el nodo asociado al toroide, con el material creado al principio. \\
+En la primera línea de código se crea el material. Dicho material es del tipo \textit{Isgl3dTextureMaterial}; y la imagen con la que este se crea es la de la figura \ref{fig:render3}. Luego, se crea el toroide asignándole los parámetros vistos más atrás en esta sección; y finalmente, se crea y se agrega a la escena el nodo asociado al toroide, con el material creado al principio. \\
 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{figs_render/red_checker}
-\caption{Imagen \textit{red$\_$checker.png}, utilizada para crear la textura asociada a las primitivas de la Figura \ref{fig:render2}.}
+\caption{Imagen \textit{red$\_$checker.png}, utilizada para crear la textura asociada a las primitivas de la figura \ref{fig:render2}.}
 \label{fig:render3}
 \end{figure}
 
@@ -148,7 +148,7 @@ Isgl3dNode * _model = [self.scene createNode];
 \end{verbatim}
 
 \normalsize
-En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} que sirve para transformar modelos POD a objetos ISGL3D, y se le asigna a la misma el modelo ``modelo.pod''. Luego, se crea un nodo llamado ``$\_$model'', al que se le asigna el modelo; y se agrega a la escena. Finalmente, se le asigna al nodo una posición. En la Figura \ref{fig:render4} se puede ver un modelo de José Artigas, agregado dos veces a una misma escena, pero visto desde ángulos distintos.\\
+En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter} que sirve para transformar modelos POD a objetos ISGL3D, y se le asigna a la misma el modelo ``modelo.pod''. Luego, se crea un nodo llamado ``$\_$model'', al que se le asigna el modelo; y se agrega a la escena. Finalmente, se le asigna al nodo una posición. En la figura \ref{fig:render4} se puede ver un modelo de José Artigas, agregado dos veces a una misma escena, pero visto desde ángulos distintos.\\
 
 \begin{figure}[h!]
 \centering
@@ -178,7 +178,7 @@ Isgl3dAnimationController * _animationController = [[Isgl3dAnimationController a
 \normalsize
 En la primera línea de código se instancia la clase \textit{Isgl3dPODImporter}, y se le asigna a la misma el modelo animado ``animated$\_$model.pod''.  Luego, se crea y se agrega a la escena un nodo del tipo \textit{Isgl3dSkeletonNode} llamado ``$\_$model'' que contiene al modelo animado. La clase \textit{Isgl3dSkeletonNode} provee una interfaz sencilla para animar al ahora objeto ISGL3D, que con la ayuda de la clase \textit{Isgl3dAnimationController}, logra automatizar el movimiento del mismo. Finalmente, se instancia y configura la clase \textit{Isgl3dAnimationController} y se le da inicio a la animación en la última línea.\\
 
-\item\textbf{Múltiples modelos inanimados:} otra forma de animar un modelo 3D es usando múltiples modelos inanimados. Estos pueden ser cargados en ISGL3D como un único objeto o nodo y mediante ciertas instrucciones sencillas, se le dice al \textit{framework} que presente uno a continuación del otro, interpolando entre posiciones contiguas, lo que genera una sensación de movimento. Este fue el método utilizado en el presente proyecto para animar al modelo de José Artigas. En la Figura \ref{fig:render5} se puede ver al mismo en 3 posiciones distintas.\\
+\item\textbf{Múltiples modelos inanimados:} otra forma de animar un modelo 3D es usando múltiples modelos inanimados. Estos pueden ser cargados en ISGL3D como un único objeto o nodo y mediante ciertas instrucciones sencillas, se le dice al \textit{framework} que presente uno a continuación del otro, interpolando entre posiciones contiguas, lo que genera una sensación de movimento. Este fue el método utilizado en el presente proyecto para animar al modelo de José Artigas. En la figura \ref{fig:render5} se puede ver al mismo en 3 posiciones distintas.\\
 
 \begin{figure}[h!]
 \centering

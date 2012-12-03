@@ -61,7 +61,7 @@ y^{'}_i = y_0 + s(Y_i - Y_0)
 \subsection{Ecuaciones para calcular la proyección perspectiva}\label{sec:classicPosit3}
 
 Como se mencionó anteriormente la pose queda determinada si se conocen los vectores \textbf{i},\textbf{j} y la coordenada \textbf{$Z_0$} del vector de traslación. La relación entre las coordenadas de los puntos $M_i$  en el sistema de coordenadas del objeto y el sistema de coordenadas de la cámara es
-\begin{equation}\label{eq_1}
+\begin{equation}\label{posit_eq1}
  \left(\begin{array}{ccc}
  X_i \\
  Y_i \\
@@ -93,17 +93,17 @@ x_i = \frac{\textbf{M}_0\textbf{M}_i\cdot\frac{f}{Z_0}\textbf{i}+x_0}{\textbf{M}
 Lo mismo se tiene para $y_i$.
 
 Por lo tanto la condición necesaria para que la pose definida por \textbf{i},\textbf{j}, $x_0$, $y_0$ y $Z_0$ sea la pose exacta se puede expresar en las siguientes ecuaciones: 
-\begin{equation}\label{eq_2}
+\begin{equation}\label{posit_eq2}
 \textbf{$M_0M_i$}\frac{f}{Z_0} \textbf{i}=x_i(1+\epsilon_i)-x_0
 \end{equation}
-\begin{equation}\label{eq_3}
+\begin{equation}\label{posit_eq3}
 \textbf{$M_0M_i$}\frac{f}{Z_0} \textbf{j}=y_i(1+\epsilon_i)-y_0
 \end{equation}
 donde $\epsilon_i$ se define como
-\begin{equation}\label{eq_4}
+\begin{equation}\label{posit_eq4}
 \epsilon_i=\frac{1}{Z_0}\textbf{$M_0M_i$} \cdot \textbf{k}
 \end{equation}
-Se puede ver que los términos $x_i(1+\epsilon_i)$ y $y_i(1+\epsilon_i)$ son las coordenadas $(x^{'}_i,y^{'}_i)$ de la SOP, en el caso en que la pose está determinada. En la expresión de $\epsilon_i$ en la Ecuación \ref{eq_4}, el producto escalar con \textbf{k} da la coordenada  \textit{z} de $M_0M_i$, $Z_i - Z_0$. Entonces se tiene que 
+Se puede ver que los términos $x_i(1+\epsilon_i)$ y $y_i(1+\epsilon_i)$ son las coordenadas $(x^{'}_i,y^{'}_i)$ de la SOP, en el caso en que la pose está determinada. En la expresión de $\epsilon_i$ en la Ecuación \ref{posit_eq4}, el producto escalar con \textbf{k} da la coordenada  \textit{z} de $M_0M_i$, $Z_i - Z_0$. Entonces se tiene que 
 \begin{equation*}
 (1+\epsilon_i) = \frac{Z_i - Z_0}{Z_0} + 1 = \frac{Z_i}{Z_0}
 \end{equation*}
@@ -114,11 +114,11 @@ x_i(1+\epsilon_i) = f\frac{X_i}{Z_i} \frac{Z_i}{Z_0} = f\frac{X_i}{Z_0}
 que es la coordenada $x^{'}_i$ del punto $p_i$.
 
 \subsection{Algoritmo}\label{sec:classicPosit4}
-Las Ecuaciones \ref{eq_2} y \ref{eq_3} se puede reescribir como:
-\begin{equation}\label{eq_8}
+Las Ecuaciones \ref{posit_eq2} y \ref{posit_eq3} se puede reescribir como:
+\begin{equation}\label{posit_eq8}
 \textbf{$M_0M_i$} \textbf{I}=x_i(1+\epsilon_i)-x_0
 \end{equation}
-\begin{equation}\label{eq_9}
+\begin{equation}\label{posit_eq9}
 \textbf{$M_0M_i$} \textbf{J}=y_i(1+\epsilon_i)-y_0
 \end{equation} 
 en donde 
@@ -126,24 +126,24 @@ en donde
 \textbf{I}& = \frac{f}{Z_0}\textbf{i} = s\cdot \textbf{i},&  \textbf{J} = \frac{f}{Z_0}\textbf{j} = s\cdot\textbf{j}
 \end{align}
 
-Si se conociera el valor de $\epsilon_i$, las Ecuaciones \ref{eq_8} y \ref{eq_9} representan un sistema de ecuaciones en que las incógnitas son los vectores $\textbf{I}$ y $\textbf{J}$. Una vez obtenidos estos vectores se pueden obtener los versores $\textbf{i}$ y $\textbf{j}$ normalizando, y $Z_0$ se obtiene de la norma de cualquiera de los vectores  $\textbf{I}$ o $\textbf{J}$. A esta parte del del algoritmo se le llama \textit{POS} (\textit{P}ose from \textit{O}rthography and \textit{Scaling}), ya que estima la pose a partir de las proyecciones SOP de los puntos $M_i$.
+Si se conociera el valor de $\epsilon_i$, las Ecuaciones \ref{posit_eq8} y \ref{posit_eq9} representan un sistema de ecuaciones en que las incógnitas son los vectores $\textbf{I}$ y $\textbf{J}$. Una vez obtenidos estos vectores se pueden obtener los versores $\textbf{i}$ y $\textbf{j}$ normalizando, y $Z_0$ se obtiene de la norma de cualquiera de los vectores  $\textbf{I}$ o $\textbf{J}$. A esta parte del del algoritmo se le llama \textit{POS} (\textit{P}ose from \textit{O}rthography and \textit{Scaling}), ya que estima la pose a partir de las proyecciones SOP de los puntos $M_i$.
 
 Si se conocieran los valores exactos de los $\epsilon_i$ la pose obtenida de resolver el sistema de ecuaciones sería la pose exacta del objeto, como no se conocen los valores exactos de $\epsilon_i$ se utiliza un método iterativo que converge a la solución buscada. En la primera iteración se le toma $\epsilon_i = 0$. La ecuación para un punto cualquiera está dada por: 
-\begin{equation}\label{eq_10}
+\begin{equation}\label{posit_eq10}
 \begin{split}
 M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
 M_0M_j\cdot\textbf{J} = y^{'}_i - y_0
 \end{split}
 \end{equation}
-Si se escribe la Ecuación \ref{eq_10} para los $n$ puntos del modelo, se tiene un sistema de $n$ ecuaciones con \textbf{I} y \textbf{J} como incógnitas
-  \begin{equation}\label{eq_11}
+Si se escribe la Ecuación \ref{posit_eq10} para los $n$ puntos del modelo, se tiene un sistema de $n$ ecuaciones con \textbf{I} y \textbf{J} como incógnitas
+  \begin{equation}\label{posit_eq11}
  \begin{split}
  \textbf{A}\textbf{I} = x^{'} - x_0 \\
  \textbf{A}\textbf{J} = y^{'} - y_0
  \end{split}
  \end{equation}
 \textbf{A} es una matriz $n\times3$ con las coordenadas de los puntos del modelo $M_i$ en el marco de coordenadas del objeto. Si se tienen mas de 4 puntos y no son coplanares, la matriz \textbf{A} es de rango 3, y las soluciones al sistema están dadas por
- \begin{equation}\label{eq_12}
+ \begin{equation}\label{posit_eq12}
  \begin{split}
  \textbf{I} = \textbf{B}\left(x^{'} - x_0\right)\\
  \textbf{J} = \textbf{B}\left(y^{'} - y_0\right)
@@ -152,7 +152,7 @@ Si se escribe la Ecuación \ref{eq_10} para los $n$ puntos del modelo, se tiene u
 donde \textbf{B} es la pseudo inversa de la matriz \textbf{A}. Se debe notar que la matriz \textbf{B} depende únicamente de la geometría del modelo que se asume conocida, por lo tanto solo es necesario calcularla una sola vez. 
 
 Una vez obtenidos \textbf{I} y \textbf{J} se calculan \textit{s} y los versores \textbf{i}, \textbf{j} y \textbf{k}
-\begin{subequations} \label{eq_13}
+\begin{subequations} \label{posit_eq13}
  \begin{align}
  s& =\left(\vert\textbf{I}\vert \vert\textbf{J}\vert\right)^{1/2} \\
  \textbf{i}& = \frac{\textbf{I}}{s} \\
@@ -161,18 +161,18 @@ Una vez obtenidos \textbf{I} y \textbf{J} se calculan \textit{s} y los versores 
  \end{align}
  \end{subequations}
 El vector traslación del centro del objeto al centro de la cámara es el vector $OM_0$ 
-\begin{equation}\label{eq_14}
+\begin{equation}\label{posit_eq14}
 OM_0 = \frac{Z_0}{f}Om_0 = \frac{Om_0}{s}
 \end{equation}
 El vector $Om_0$ es conocido ya que se conocen las coordenadas de los puntos $m_i$, en particular $m_0$.
 
-Una vez que se calcularon \textbf{i}, \textbf{j}, \textbf{k} y \textbf{T} se calculan los valores actualizados de $\epsilon_i$ según la Ecuación \ref{eq_4}. Si la variación de los $\epsilon_i$ es mayor a un determinado umbral, se repite el procedimiento actualizando las proyecciones SOP en la Ecuación \ref{eq_11}, si es menor al umbral se deja de iterar y se guarda la pose calculada.
+Una vez que se calcularon \textbf{i}, \textbf{j}, \textbf{k} y \textbf{T} se calculan los valores actualizados de $\epsilon_i$ según la Ecuación \ref{posit_eq4}. Si la variación de los $\epsilon_i$ es mayor a un determinado umbral, se repite el procedimiento actualizando las proyecciones SOP en la Ecuación \ref{posit_eq11}, si es menor al umbral se deja de iterar y se guarda la pose calculada.
 
 \subsection{POSIT para puntos coplanares}\label{sec:classicPosit5}
 
 Como se mencionó anteriormente, el algoritmo POSIT no funciona en el caso en que los puntos del modelo pertenecen a un mismo plano. Como los marcadores utilizados son planos, se buscó una versión de POSIT que resuelve el problema de la estimación de pose para este caso. El algoritmo fue escrito por DeMenthon et al. en \cite{CoplanarPosit}.
 
-Para entender cual es el problema de trabajar con puntos coplanares se explica la situación desde un punto de vista geométrico. Como se vio anteriormente, $$ M_0M_i\cdot\textbf{I}=x^{'}_i-x_0.$$ Esto quiere decir que si se toma que la base de \textbf{I} en \textbf{$M_0$} , la punta del vector $\textbf{I}$ se proyecta sobre el vector $M_0M_i$ en un punto ${H_x}_i$, entonces todas las posibles puntas del vector \textbf{I} se encuentran en el plano perpendicular a $M_0M_i$ que pasa por el punto ${H_x}_i$. Si se tuvieran 4 puntos no coplanares $M_0$, $M_1$, $M_2$ y $M_3$, el vector \textbf{I} quedaría determinado. La base de \textbf{I} estaría en $M_0$ y la punta estaría en la intersección de los planos perpendiculares a $M_0M_1$, $M_0M_2$ y $M_0M_3$ por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$ respectivamente. Para este caso el sistema definido en \ref{eq_11} es de rango 3. 
+Para entender cual es el problema de trabajar con puntos coplanares se explica la situación desde un punto de vista geométrico. Como se vio anteriormente, $$ M_0M_i\cdot\textbf{I}=x^{'}_i-x_0.$$ Esto quiere decir que si se toma que la base de \textbf{I} en \textbf{$M_0$} , la punta del vector $\textbf{I}$ se proyecta sobre el vector $M_0M_i$ en un punto ${H_x}_i$, entonces todas las posibles puntas del vector \textbf{I} se encuentran en el plano perpendicular a $M_0M_i$ que pasa por el punto ${H_x}_i$. Si se tuvieran 4 puntos no coplanares $M_0$, $M_1$, $M_2$ y $M_3$, el vector \textbf{I} quedaría determinado. La base de \textbf{I} estaría en $M_0$ y la punta estaría en la intersección de los planos perpendiculares a $M_0M_1$, $M_0M_2$ y $M_0M_3$ por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$ respectivamente. Para este caso el sistema definido en \ref{posit_eq11} es de rango 3. 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_posit/posit_2.eps}
@@ -180,8 +180,8 @@ Para entender cual es el problema de trabajar con puntos coplanares se explica l
 \label{fig: posit_2}
 \end{figure}
 
-Si los puntos son coplanares, los vectores $M_0M_1$, $M_0M_2$ y $M_0M_3$ son todos coplanares y los planos perpendiculares que pasan por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$, se intersectan todos un una línea o en dos líneas paralelas por lo tanto hay infinitas soluciones para el vector \textbf{I}. En este caso el sistema de ecuaciones en \ref{eq_11} queda de rango 2. El vector solución que se obtiene al realizar la pseudo inversa de \textbf{A} es el que está a menor distancia de los planos, en la Figura \ref{fig: posit_2} es el vector $\textbf{I}_{0}$. Esta solución no es la solución al problema de los vectores de rotación, las soluciones se pueden expresar como
-\begin{equation}\label{eq_15}
+Si los puntos son coplanares, los vectores $M_0M_1$, $M_0M_2$ y $M_0M_3$ son todos coplanares y los planos perpendiculares que pasan por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$, se intersectan todos un una línea o en dos líneas paralelas por lo tanto hay infinitas soluciones para el vector \textbf{I}. En este caso el sistema de ecuaciones en \ref{posit_eq11} queda de rango 2. El vector solución que se obtiene al realizar la pseudo inversa de \textbf{A} es el que está a menor distancia de los planos, en la Figura \ref{fig: posit_2} es el vector $\textbf{I}_{0}$. Esta solución no es la solución al problema de los vectores de rotación, las soluciones se pueden expresar como
+\begin{equation}\label{posit_eq15}
 \begin{split}
 \textbf{I} = \textbf{I}_{0} + \lambda \textbf{u}\\
 \textbf{J} = \textbf{J}_{0}+ \mu \textbf{u}
@@ -190,7 +190,7 @@ Si los puntos son coplanares, los vectores $M_0M_1$, $M_0M_2$ y $M_0M_3$ son tod
 donde \textbf{u} es un versor perpendicular al plano de los puntos, $\textbf{J}_{0}$ se calcula de manera análoga a $\textbf{I}_{0}$ y $\lambda$ y $\mu$ son las coordenadas de \textbf{I} y \textbf{J} según el versor \textbf{u}. Para encontrar las soluciones hay que calcular el versor \textbf{u} y los valores de $\lambda$ y $\mu$.
 
 Como el vector \textbf{u} es perpendicular al plano de los puntos característicos se cumple $M_0M_i\cdot\textbf{u}=0$, se puede hallar  entonces como la base del núcleo de la matriz \textbf{A}. En la práctica este vector se halla a partir de la descomposición \textit{SVD} de la matriz \textbf{A}. La descomposición en valores singulares de la matriz \textbf{A} queda:
-\begin{equation}\label{eq_16}
+\begin{equation}\label{posit_eq16}
 A = U \Sigma V^{T}
 \end{equation}
 donde $U \in \Re^{n\times n}$ es ortogonal, $\Sigma \in \Re^{n \times 3}$ es diagonal, con los valores singulares en la diagonal y $V \in \Re^{3 \times 3}$ es ortogonal. Como la matriz \textbf{A} es de rango 2, los dos primeros vectores columna de la matriz V corresponden a la base de todos los puntos que pertenecen al plano del modelo, mientras que el último vector de \textbf{V} es la base del núcleo de \textbf{A}, o sea el vector \textbf{u}. El cálculo \textbf{u} se realiza junto al cálculo de la matriz \textbf{B}, ya que para ambos es necesario hacer la descomposición \textit{SVD} de \textbf{A}. 
@@ -200,16 +200,16 @@ $$
 \textbf{I}\cdot\textbf{J} = (\textbf{I}_{0} + \lambda \textbf{u})\cdot(\textbf{J}_{0}+ \mu \textbf{u}) = 0
 $$
 entonces se tiene que 
-\begin{equation}\label{eq_17}
+\begin{equation}\label{posit_eq17}
 \lambda \mu = -\textbf{I}_{0} \cdot \textbf{J}_{0}
 \end{equation}
 Como tienen que ser del mismo largo se tiene que
-\begin{equation}\label{eq_18}
+\begin{equation}\label{posit_eq18}
 (\textbf{I}_{0} + \lambda \textbf{u}) \cdot (\textbf{I}_{0} + \lambda \textbf{u}) = (\textbf{J}_{0} + \mu \textbf{u}) \cdot (\textbf{J}_{0} + \mu \textbf{u}) \Leftrightarrow \lambda^{2} - \mu^{2} = \textbf{J}_{0}^{2} - \textbf{I}_{0}^{2}
 \end{equation}
 
-Se define el número complejo $C = \lambda + i\mu$, si se eleva al cuadrado queda $C^{2} = \lambda^{2} - \mu^{2} + i\lambda\mu$. Utilizando \ref{eq_17} y \ref{eq_18} se llega a que
-\begin{equation}\label{eq_19}
+Se define el número complejo $C = \lambda + i\mu$, si se eleva al cuadrado queda $C^{2} = \lambda^{2} - \mu^{2} + i\lambda\mu$. Utilizando \ref{posit_eq17} y \ref{posit_eq18} se llega a que
+\begin{equation}\label{posit_eq19}
 C^{2} = \textbf{J}_{0}^{2} - \textbf{I}_{0}^{2} - 2i\textbf{I}_{0} \cdot \textbf{J}_{0}
 \end{equation}
 por lo que $\lambda$ y $\mu$ pueden calcularse como las partes real e imaginaria del complejo \textit{$C^{2}$}. Para hallar la raíces de \textit{$C^{2}$}, se expresa en forma polar:
@@ -225,20 +225,20 @@ Se obtienen 2 raíces, $C  = \left[ \rho, \theta \right]$, y $C  = \left[ \rho, \
 $\rho = \sqrt{R}$, y $\theta = \frac{\Theta}{2}$
 \end{center}
 como se mencionó anteriormente $\lambda$ y $\mu$ son las partes real e imaginaria de \textit{C}, por lo tanto
-\begin{subequations}\label{eq_20}
+\begin{subequations}\label{posit_eq20}
 \begin{align}
-\lambda_1& = \rho \cos \theta,  &\mu_1&  = \rho \sin \theta\label{eq_21}\\
-\lambda_2& = -\rho \cos \theta, &\mu_2&  = -\rho \sin \theta\label{eq_22}
+\lambda_1& = \rho \cos \theta,  &\mu_1&  = \rho \sin \theta\label{posit_eq21}\\
+\lambda_2& = -\rho \cos \theta, &\mu_2&  = -\rho \sin \theta\label{posit_eq22}
 \end{align}
 \end{subequations}
 Esto quiere decir que se obtienen dos soluciones para \textbf{I} y \textbf{J}
-\begin{subequations}\label{eq_23}
+\begin{subequations}\label{posit_eq23}
 \begin{align}
-\textbf{I}_1&= \textbf{I}_0 + \rho \cos \theta\textbf{u},  & \textbf{J}_1& = \textbf{J}_0 + \rho \sin \theta\textbf{u}\label{eq_23a}\\
-\textbf{I}_2&= \textbf{I}_0 - \rho \cos \theta\textbf{u},   &\textbf{J}_2& = \textbf{J}_0 - \rho \sin \theta\textbf{u}\label{eq_23b}
+\textbf{I}_1&= \textbf{I}_0 + \rho \cos \theta\textbf{u},  & \textbf{J}_1& = \textbf{J}_0 + \rho \sin \theta\textbf{u}\label{posit_eq23a}\\
+\textbf{I}_2&= \textbf{I}_0 - \rho \cos \theta\textbf{u},   &\textbf{J}_2& = \textbf{J}_0 - \rho \sin \theta\textbf{u}\label{posit_eq23b}
 \end{align}
 \end{subequations}
-Como el vector \textbf{u} es perpendicular al plano del objeto, la solución encontrada en \ref{eq_23a} es simétrica a \ref{eq_23b}.  Desde el punto de vista de la cámara, se puede ver que las dos posibles soluciones son aquellas que tienen la misma proyección SOP, este comportamiento se puede ver en la Figura \ref{fig: posit_3}. 
+Como el vector \textbf{u} es perpendicular al plano del objeto, la solución encontrada en \ref{posit_eq23a} es simétrica a \ref{posit_eq23b}.  Desde el punto de vista de la cámara, se puede ver que las dos posibles soluciones son aquellas que tienen la misma proyección SOP, este comportamiento se puede ver en la Figura \ref{fig: posit_3}. 
 
 \begin{figure}[H]
 \centering
@@ -274,8 +274,8 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.405]{figs_posit/posit_6}
-\label{fig: posit_6}
 \caption{Diagrama de flujo del algoritmo para puntos coplanares, \textit{E} es el error de reproyección, la condición $Z_i>0$ verifica que los puntos reproyectados están por delante del plano imagen. Tomado de: \cite{CoplanarPosit}.}
+\label{fig: posit_6}
 \end{figure}
 \end{comment}
 
@@ -286,7 +286,7 @@ Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo re
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
 
-El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la Ecuación \ref{eq_10} que se presentó en la Sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran solamente los vectores \textbf{i}, \textbf{j}. 
+El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la Ecuación \ref{posit_eq10} que se presentó en la Sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran solamente los vectores \textbf{i}, \textbf{j}. 
 \begin{equation*}
 \begin{split}
 M_0M_i\cdot\textbf{I} = x^{'}_i - x_0\\
@@ -299,22 +299,22 @@ X_0 = x_0/s \\
 Y_0 = y_0/s
 \end{split}
 \end{equation*}
-se puede reescribir la Ecuación \ref{eq_10} como
-\begin{equation}\label{eq_24}
+se puede reescribir la Ecuación \ref{posit_eq10} como
+\begin{equation}\label{posit_eq24}
 \begin{split}
 x^{'}_i = M_0M_i\cdot s\textbf{i} + sX_0\\
 y^{'}_i = M_0M_j\cdot s\textbf{j} + sY_0
 \end{split}
 \end{equation}
 El sistema a resolver queda
-\begin{equation}\label{eq_25}
+\begin{equation}\label{posit_eq25}
  \textbf{A}\cdot \left[ \begin{array}{cc}
 \textbf{I} & \textbf{J} \\
 sX_0 & sY_0 \end{array} \right] = \left[ \begin{array}{cc}
 x^{'} & y^{'} \end{array} \right] 
 \end{equation}
-donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver utilizando mínimos cuadrados, como se vio en la Sección \ref{sec:classicPosit4}.%%Se calcula la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vió en \ref{eq_13}. Finalmente el vector de traslación se obtiene como.
-%\begin{align}\label{eq_26}
+donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéneas. Este sistema se puede resolver utilizando mínimos cuadrados, como se vio en la Sección \ref{sec:classicPosit4}.%%Se calcula la pseudo inversa de la matriz \textbf{A} y luego se obtienen \textbf{i}, \textbf{j} y \textbf{k} como se vió en \ref{posit_eq13}. Finalmente el vector de traslación se obtiene como.
+%\begin{align}\label{posit_eq26}
 %X_0 &= \frac{(sX_0)}{s}& Y_0 &= \frac{(sY_0)}{s}& Z_0 &= \frac{f}{s} 
 %\end{align} 
 
@@ -322,20 +322,20 @@ Sin embargo se propone un método que busca minimizar la distancia al cuadrado en
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=1.5]{figs_posit/posit_7}
+\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{posit_eq24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{posit_eq24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{Daniel03simultaneouspose}.}
 \label{fig: posit_7}
-\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{eq_24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{eq_24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{Daniel03simultaneouspose}.}
 \end{figure}
 
-En el término de la derecha de la Ecuación \ref{eq_24} se tiene la proyección SOP de $M_i$, $p_i$. Las coordenadas de este punto son
+En el término de la derecha de la Ecuación \ref{posit_eq24} se tiene la proyección SOP de $M_i$, $p_i$. Las coordenadas de este punto son
 $$ p_i = s(M_0M_i\cdot \textbf{i} + X_0 , M_0M_i\cdot \textbf{j} + Y_0).$$
-Por otro lado, en el término de la izquierda de \ref{eq_24} se tienen las coordenadas del punto $p^{'}_i$ 
+Por otro lado, en el término de la izquierda de \ref{posit_eq24} se tienen las coordenadas del punto $p^{'}_i$ 
 $$ p^{'}_i = (1 + \epsilon_i)(x_i, y_i).$$
-que es la proyección SOP de la intersección de la línea de vista del punto $m_i$ con el plano $G''$, esto esta demostrado en \cite{David02softposit}. La pose encontrada es correcta cuando ambos lados de la Ecuación \ref{eq_24} son iguales. Por lo tanto la ecuación que se busca minimizar es la siguiente:
-\begin{equation}\label{eq_27}
+que es la proyección SOP de la intersección de la línea de vista del punto $m_i$ con el plano $G''$, esto esta demostrado en \cite{David02softposit}. La pose encontrada es correcta cuando ambos lados de la Ecuación \ref{posit_eq24} son iguales. Por lo tanto la ecuación que se busca minimizar es la siguiente:
+\begin{equation}\label{posit_eq27}
 E = \sum _i \left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_i \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_i \right) ^2 \right)
 \end{equation}
 donde 
-\begin{equation}\label{eq_28}
+\begin{equation}\label{posit_eq28}
 \begin{split}
 \textbf{Q}_1 = s(i,X_0)\\
 \textbf{Q}_2 = s(j,Y_0)
@@ -355,15 +355,15 @@ desarrollando el término a la izquierda y despejando se tiene que:
 \sum_i \left(\textbf{Q}_1 \cdot M_0M_i M_0M_i^T\right) = \sum_i \left( (1+ \epsilon_i)x_i M_0M_i^T\right)
 \end{equation*}
 si se pasa $\textbf{Q}_1$  para afuera de la sumatoria y se despeja queda:
-\begin{equation}\label{eq_29}
+\begin{equation}\label{posit_eq29}
 \textbf{Q}_1 = \left(\sum_i M_0M_i M_0M_i^T\right)^{-1}\left(\sum_i \left(1+ \epsilon_i\right)x_i M_0M_i^T\right)
 \end{equation}
 \end{comment}
 La expresión para calcular  $\textbf{Q}_1$ y $\textbf{Q}_2$ queda:
-\begin{equation}\label{eq_30}
+\begin{equation}\label{posit_eq30}
 \textbf{Q}_1 = \left(\sum_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_i \left(1+ \epsilon_i\right)x_i M_0M_i\right)
 \end{equation}
-\begin{equation}\label{eq_31}
+\begin{equation}\label{posit_eq31}
 \textbf{Q}_2 = \left(\sum_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_i \left(1+ \epsilon_i\right)y_i M_0M_i\right)
 \end{equation}
 La matriz $L = \left(\sum_i M_0M_i^T M_0M_i\right)$ es una matriz $4 \times 4$ y como sólo depende de los puntos del modelo puede ser calculada previamente.
@@ -383,17 +383,17 @@ d^2_{ji} = \left(\textbf{Q}_1 \cdot M_iM_0 - \left(1+\epsilon_i\right) x_j\right
 \end{equation*}
 Se puede ver que para cada punto de modelo hay \textit{N} candidatos, la distancia $d^2_{ji}$ da una idea de que tan cerca esta de ser el correspondiente. 
 Para resolver el problema de estimar la pose y las correspondencias simultáneamente se busca minimizar la siguiente función:
-\begin{multline}\label{eq_32}
+\begin{multline}\label{posit_eq32}
 E = \sum_{j=1}^N \sum_{i=1}^M a_{ji}(d^2_{ji} - \alpha)\\
   = \sum_{j=1}^N \sum_{i=1}^M a_{ji}\left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_j \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_j \right) ^2 - \alpha\right)
 \end{multline}
 donde $a_{ji}$ son pesos para cada una de las distancias $d^2_{ji}$. Los pesos $a_{ji}$ forman lo que se llama matriz de asignación, en esta matriz se puede ver el grado de correspondencia de cualquier punto detectado con cualquier punto del modelo. El valor $\alpha$ es la tolerancia que se le da a la medida de distancia.
 
 Las expresiones para los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ se modifican
-\begin{equation}\label{eq_33}
+\begin{equation}\label{posit_eq33}
 \textbf{Q}_1 = \left(\sum_{i=1}^M a^{'}_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_{j=1}^N \sum_{i=1}^M a_{ji} \left(1+ \epsilon_i\right)x_j M_0M_i\right)
 \end{equation}
-\begin{equation}\label{eq_34}
+\begin{equation}\label{posit_eq34}
 \textbf{Q}_2 = \left(\sum_{i=1}^M a^{'}_i M_0M_i^T M_0M_i\right)^{-1}\left(\sum_{j=1}^N \sum_{i=1}^M a_{ji} \left(1+ \epsilon_i\right)y_j M_0M_i\right)
 \end{equation}
 donde $a^{'}_i = \sum_{j=1}^N a_{ji}$. El término $L = \sum_{i=1}^M a^{'}_i M_0M_i^T M_0M_i $ es una matriz $4\times 4$, para este caso \textit{L} no se puede calcular previamente porque la matriz de asignación cambia en cada iteración.
@@ -408,7 +408,7 @@ Para minimizar \textit{E} se procede como sigue:
 \end{itemize}
 Esto se repite hasta que la pose converge. \\
 
-Este algoritmo realiza la búsqueda a partir de una pose inicial. La función de costo que se busca minimizar, presentada en la Ecuación \ref{eq_32}, presenta mínimos locales. La técnica de \textit{softassign} suaviza esta función de costo por lo que muchos mínimos locales se evitan. Sin embargo no siempre es posible suavizar la función de costo hasta tener un solo el mínimo global, y mucho suavizado hacer que se pierda el mínimo global. Es importante entonces contar con una buena pose inicial para que el resultado sea el correcto. Otro enfoque que se presenta en \cite{Daniel03simultaneouspose} es el de correr  el algoritmo varias veces con poses iniciales aleatorias y llegar así al mínimo global. 
+Este algoritmo realiza la búsqueda a partir de una pose inicial. La función de costo que se busca minimizar, presentada en la Ecuación \ref{posit_eq32}, presenta mínimos locales. La técnica de \textit{softassign} suaviza esta función de costo por lo que muchos mínimos locales se evitan. Sin embargo no siempre es posible suavizar la función de costo hasta tener un solo el mínimo global, y mucho suavizado hacer que se pierda el mínimo global. Es importante entonces contar con una buena pose inicial para que el resultado sea el correcto. Otro enfoque que se presenta en \cite{Daniel03simultaneouspose} es el de correr  el algoritmo varias veces con poses iniciales aleatorias y llegar así al mínimo global. 
 
 \subsection{Matriz de asignación}\label{sec:SoftPosit3}
 Se busca tener una matriz \textit{a} que indique las correspondencias entre los \textit{N} puntos detectados y los \textit{M} puntos en del modelo y además minimice \textit{E}. 
@@ -436,7 +436,7 @@ Durante la investigación de este algoritmo se desarrollaron versiones de POSIT m
 \section{POSIT moderno para puntos coplanares}
 La implementación que se usó en la aplicación es el POSIT moderno adaptado para trabajar con puntos coplanares. Inicialmente se quiso desarrollar una versión de SoftPOSIT que trabajara con puntos coplanares, para ello previamente se desarrolló POSIT moderno coplanar a modo de prueba. 
 
-Como se vio en la Sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{eq_11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
+Como se vio en la Sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{posit_eq11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
 
 Se definen los puntos $M_0M_i^*$ como los puntos $M_0M_i$ sin la coordenada \textit{z}, ya que la coordenada \textit{z} es función de \textit{x} e \textit{y}. A su vez se definen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ como los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ sin la componente según el eje \textit{w} en el sistema de coordenadas del modelo. Teniendo esto en cuenta se tiene 
 \begin{equation*}
@@ -474,15 +474,14 @@ En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para el error
 \begin{figure}[H]
 \centering
         \includegraphics[scale=0.62]{figs_posit/histAngulosPosit2}
-        \label{fig:posit_8}
          \caption{Histograma de los errores obtenidos en la orientación. En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala de las gráficas es logarítmica.}
+         \label{fig:posit_8}
 \end{figure}
 
 
 Se puede ver que los dos algoritmos se comportan de manera similar, en la mayoría de los casos se obtiene un error de estimación menor a $2^\circ$. Los casos en los que el error es mayor a  $2^\circ$ se corresponden con posiciones de la cámara en las que el plano imagen es paralelo al plano del marcador. Este comportamiento se puede ver en la Figura \ref{fig:posit_9}. Si los ángulos de rotación en torno a $x$ o a $y$ están en un intervalo de $(-10^\circ,+10^\circ)$, la proyección SOP del marcador varía muy poco. Esto lleva a que el algoritmo termine eligiendo una pose que no es la correcta, o puede llevar a que el algoritmo no converja. 
 
 \begin{figure}[ht]
-\label{fig:posit_9}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.65]{figs_posit/barrido}
@@ -492,8 +491,9 @@ Se puede ver que los dos algoritmos se comportan de manera similar, en la mayorí
                 \label{fig:posit_11}}
                 
          \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver mas de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
+         \label{fig:posit_9}
 \end{figure}
-En la Figura \ref{fig:posit_11} se puede ver que el algoritmo no presenta problemas para posiciones de la cámara que corresponden a imágenes del marcador muy deformadas por la perspectiva, ángulos cercanos a $90^\circ$. Este límite está dado por el filtro de correspondencias visto en \ref{ch:marcadores}.
+En la Figura \ref{fig:posit_10} se puede ver que el algoritmo no presenta problemas para posiciones de la cámara que corresponden a imágenes del marcador muy deformadas por la perspectiva, ángulos cercanos a $90^\circ$. Este límite está dado por el filtro de correspondencias visto en \ref{ch:marcadores}.
 
 
 \subsubsection{Error de posición}
@@ -502,14 +502,13 @@ En la Figura \ref{fig:posit_12} se muestran los errores de posición para los dif
 \begin{figure}[H]
 \centering
         \includegraphics[scale=0.62]{figs_posit/histTrasPosit2}
-        \label{fig:posit_12}
          \caption{Histograma de los errores obtenidos en traslación En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala en el de las gráficas es logarítmica.}
+         \label{fig:posit_12}
 \end{figure}
 
 \subsubsection{Comportamiento global}\label{sec: positComportamientoGlobal}
-A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
+A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo, Figura \ref{fig:posit_13}. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
 \begin{figure}[H]
-\label{fig:posit_13}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.4]{figs_posit/recorridaCopl}
@@ -519,6 +518,7 @@ A continuación se muestra el comportamiento de las dos variantes del algoritmo p
                 \label{fig:posit_15}}
                 
          \caption{Trayectoria en la que se ve que el error es mayor cuando el marcador es visto de frente. Cuando se empieza a rotar el error de orientación es chico. En la Figura \subref{fig:posit_14} se puede ver el comportamiento de POSIT coplanar moderno y en la Figura \subref{fig:posit_15} se puede ver el comportamiento para POSIT coplanar clásico.}
+         \label{fig:posit_13}
  \end{figure}
 
 El primer movimiento simula la cámara acercándose al marcador. En este movimiento se puede ver cómo ambos algoritmos fallan en la estimación de la pose. La versión moderna comete menos error. El segundo movimiento se tiene a la cámara en una posición fija y va cambiando su orientación, se puede apreciar que para este caso el error cometido en orientación es muy peque\~no. 
@@ -541,12 +541,11 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_8b}
-\label{fig:posit_16}
 \caption{Posiciones que se utilizaron para las imágenes de prueba.}
+\label{fig:posit_16}
 \end{figure}
 
 \begin{figure}[H]
-\label{fig:posit_17}
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.4]{figs_posit/histDistEuclCopl}
@@ -556,6 +555,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
                 \label{fig:posit_19}}
                 
          \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes de prueba. \subref{fig:posit_18}, POSIT moderno. \subref{fig:posit_19}, POSIT clásico}
+         \label{fig:posit_17}
  \end{figure}
 
 \begin{table}[H]
@@ -573,12 +573,12 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.2]{figs_posit/posit_9b}
-\label{fig:posit_20}
 \caption{Posiciones que se utilizaron para las imágenes sintéticas}
+\label{fig:posit_20}
 \end{figure}
 
 \begin{figure}[H]
-\label{fig:posit_21}
+
         \centering
         \subfigure[]{
                 \includegraphics[scale=0.4]{figs_posit/histDistEuclCoplSint}
@@ -588,6 +588,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
                 \label{fig:posit_23}}
                 
          \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes sintéticas. \subref{fig:posit_22}, POSIT moderno. \subref{fig:posit_23}, POSIT clásico}
+         \label{fig:posit_21}
  \end{figure}
 
 \begin{table}[ht]
