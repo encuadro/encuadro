@@ -388,7 +388,7 @@ Los marcadores planos se pueden obtener mediante la construcción en una geometrí
 
 Como se explica en el Capítulo \ref{chap: camypose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre puntos 3D en la escena en coordenadas del mundo y puntos en la imagen.
 
-En el primer lugar se explican brevemente algunos de los sistemas de Realidad Aumentada más populares basados en marcadores planos. En segundo lugar se propone el diseño de un marcador específico para la aplicación a este proyecto y se desarrollan las soluciones a los algoritmos de detección de dicho marcador mostrando algunos resultados parciales en el proceso. Por último se muestran algunos resultados de la detección.
+En el primer lugar se explican brevemente algunos de los sistemas de Realidad Aumentada más populares basados en marcadores planos. En segundo lugar se propone el diseño de un marcador específico para la aplicación a este proyecto y se desarrollan las soluciones a los algoritmos de detección de dicho marcador mostrando algunos resultados parciales en el proceso. Por último se muestran algunos resultados de Benchmark para establecer límites para la detección.
 
 \section{Sistemas basados en marcadores planos}
 Existen muchos sistemas de visión basados en \emph{marcadores planos} con aplicación en Realidad Aumentada y Navegación. Algunos de ellos son \emph{ARToolKit}
@@ -507,22 +507,13 @@ Por otro lado se tiene otro juego de parámetros \textbf{dinámicos} que concluyen
 
 En este caso se debe cumplir siempre la condición impuesta previamente en donde $d_{01}\gg d_{02}$. De otra forma se deberán realizar ciertas hipótesis no genéricas o se deberá aumentar ligeramente la complejidad del algoritmo para la identificación del marcador.\\
 
-\subsection{Diseños utilizados}
-\begin{itemize}
- \item \textbf{Test}: Durante el desarrollo de los algoritmos de detección e identificación de los vértices del marcador QR se trabajó con determinados parámetros de diseño de dimensiones apropiadas para posibilitar el traslado y las pruebas domésticas. 
+\subsection{Diseño utilizado}
+\textbf{Diseño de Test}: Durante el desarrollo e implementación de los algoritmos de detección e identificación de los vértices del marcador se trabajó con determinados parámetros de diseño de dimensiones apropiadas para posibilitar el traslado y las pruebas domésticas. 
 \begin{itemize}
  \item $l = 30 mm$
  \item $d_{01} = 190 mm$
  \item $d_{02} = 100 mm$
 \end{itemize}
- \item \textbf{Da Vinci}
-
- \item \textbf{Artigas}
-
- \item \textbf{Mapa}
-
-\end{itemize}
-
 
 \section{Detección}
 La etapa de detección del marcador se puede separar en tres grandes bloques:
