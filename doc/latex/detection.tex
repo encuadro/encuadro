@@ -337,8 +337,8 @@ Los sistemas basados en marcadores planos utilizan típicamente marcadores bitona
     \includegraphics[scale=0.45]{figs_detection/artoolkit.png}}
   \subfigure[\emph{ARTag}]{
     \includegraphics[scale=0.45]{figs_detection/artag.png}}
-  \label{fig:Marcadores_AR}
   \caption{Cuatro ejemplos de marcadores para los sistemas de Realidad Aumentada indicados. Figura tomada de \cite{artag}.}
+  \label{fig:Marcadores_AR}
 \end{figure}
 
 Es importante que los marcadores puedan ser localizados en un campo de visión amplio para permitir la correcta detección bajo la distorsión asociada a la transformación proyectiva que lleva el marcador en el mundo real al plano de imagen. Por otro lado, si los marcadores contienen información en su interior, esta no debe ser muy densa para permitir la recuperación de la misma a mayor distancia. Típicamente, esta información es solo una identificación entre marcadores de un mismo sistema por lo que la información es poca y esto no es un problema.
@@ -472,8 +472,8 @@ La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD 
     \includegraphics[scale=0.45]{figs_detection/img.png}}
   \subfigure[Salida: segmentos de línea detectados por LSD]{
     \includegraphics[scale=0.45]{figs_detection/lsd.png}}
-  \label{fig:resultado_lsd}
   \caption{Resultados del algoritmo de detección de segmentos de línea LSD.}
+  \label{fig:resultado_lsd}
 \end{figure}
 
 \subsection{Filtrado y agrupamiento de segmentos}
@@ -504,8 +504,8 @@ En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos par
     \includegraphics[scale=0.45]{figs_detection/lsd.png}}
   \subfigure[Salida: segmentos de línea filtrados y agrupados]{
     \includegraphics[scale=0.45]{figs_detection/lsdfilt.png}}
-  \label{fig:resultado_lsdfilt}
   \caption{Resultados del algoritmo de filtrado y agrupamiento de segmentos de línea.}
+  \label{fig:resultado_lsdfilt}
 \end{figure}
 
 El algoritmo descrito es simple y provee resultados aceptables en general pero es propenso a tanto a detectar \emph{falsos positivos} como al \emph{sobre-filtrado} algunos conjuntos. 
@@ -634,8 +634,8 @@ Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ ne
     \includegraphics[scale=0.45]{figs_detection/lsdfilt.png}}
   \subfigure[Salida: puntos vértices ordenados.]{
     \includegraphics[scale=0.45]{figs_detection/points.png}}
-  \label{fig:resultado_points}
   \caption{Resultados del algoritmo de determinación de correspondencias.}
+  \label{fig:resultado_points}
 \end{figure}
 
 \subsection{Detección robusta}
@@ -658,8 +658,8 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
     \includegraphics[scale=0.45]{figs_detection/mrkr_incompleto/lsdfilt.png}}
   \subfigure[Salida: puntos vértices ordenados.]{
     \includegraphics[scale=0.45]{figs_detection/mrkr_incompleto/points.png}}
-  \label{fig:resultado_inc_points}
   \caption{Resultados del algoritmo de determinación de correspondencias robusto para una falla en el filtrado de segmentos.}
+  \label{fig:resultado_inc_points}
 \end{figure}
 
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
