@@ -2,7 +2,7 @@
 \label{chap: alcance}
 \section{Introducción}
 
-En el presente capítulo se habla del alcance del proyecto. Esto es, se plantean los objetivos tal y como fueron formulados originalmente y luego se los clasifica en las tres partes fundamentales del proyecto: \textit{investigación}, \textit{implementación} y \textit{aplicación}. Estas son ponderadas en función de la importancia que tienen en el mismo, así como las dedicación total que se les dió. Luego, se resume la estructura de lo que terminó siendo la aplicación final, de manera de poder comprender a todo el proyecto en su conjunto. Finalmente, se comenta en qué parte de la documentación se detalla cada parte de dicha estructura.\\
+En el presente capítulo se habla del alcance del proyecto. Esto es, se plantean los objetivos tal y como fueron formulados originalmente y luego se los clasifica en las tres partes fundamentales del proyecto: \textit{investigación}, \textit{implementación} y \textit{aplicación}. Estas son ponderadas en función de la importancia que tienen en el mismo, así como las dedicación total que se les dio. Luego, se resume la estructura de lo que terminó siendo la aplicación final, de manera de poder comprender a todo el proyecto en su conjunto. Finalmente, se comenta en qué parte de la documentación se detalla cada parte de dicha estructura.\\
  
 \section{Objetivos del proyecto}
 
@@ -27,10 +27,10 @@ $$
 \end{array}
 $$
 
-Es importante aclarar que en ocaciones el límite entre los tres frentes de trabajo es difuso.\\
+Es importante aclarar que en ocasiones el límite entre los tres frentes de trabajo es difuso.\\
 
 \section{Estado del arte}
-Para llevar a cabo los objetivos planteados es bueno tener un contexto del estado del arte en cuanto al desarrollo de aplicaciones de realidad aumentada. Existen en la actualidad m\'ultiples kits de desarrollo comerciales para aplicaciones de realidad aumentada, en los que de manera sencilla, se logran este tipo de aplicaciones con desempe\~nos verdaderamente muy buenos. Tal es el caso de \textit{Metaio} \cite{metaio12}, \textit{Vuforia} \cite{vuforia12}, \textit{String} \cite{string12} y \textit{Aurasma} \cite{aurasma12}. Por su parte, \textit{Layar} \cite{layar12}, es tambi\'en un kit de desarrollo para aplicaciones de realidad aumentada, pero se especializa en el agregado de contenido digital s\'olo sobre páginas impresas como revistas y catálogos. Ninguna de las herramientas anteriores es gratuita y ni siquiera en c\'odigo abierto. En la figura \ref{fig: metaioystring} se muestra un ejemplo que incluye por defecto \textit{Metaio} y otro que incluye \textit{String}.\\
+Para llevar a cabo los objetivos planteados es bueno tener un contexto del estado del arte en cuanto al desarrollo de aplicaciones de realidad aumentada. Existen en la actualidad m\'ultiples kits de desarrollo comerciales para aplicaciones de realidad aumentada, en los que de manera sencilla, se logran este tipo de aplicaciones con desempe\~nos verdaderamente muy buenos. Tal es el caso de \textit{Metaio} \cite{metaio12}, \textit{Vuforia} \cite{vuforia12}, \textit{String} \cite{string12} y \textit{Aurasma} \cite{aurasma12}. Por su parte, \textit{Layar} \cite{layar12}, es tambi\'en un kit de desarrollo para aplicaciones de realidad aumentada, pero se especializa en el agregado de contenido digital s\'olo sobre páginas impresas como revistas y catálogos. Ninguna de las herramientas anteriores es gratuita y ni siquiera en c\'odigo abierto. En la Figura \ref{fig: metaioystring} se muestra un ejemplo que incluye por defecto \textit{Metaio} y otro que incluye \textit{String}.\\
 
 \begin{figure}[H]
 \centering
@@ -43,7 +43,7 @@ $$
 \label{fig: metaioystring}
 \end{figure}
 
-Si bien se probaron algunas de estas herramientas y se tomaron de ellas est\'andares en cuanto a la \textit{performance} que una aplicaci\'on de realidad aumentada debe tener, \textbf{no es un objetivo} del proyecto el desarrollo de aplicaciones de realidad aumentada con kits de desarrollo ya existentes. Se hace hincapi\'e en la investigaci\'on de herramientas y adquisici\'on de experiencia propia, con el objetivo de marcar una hoja de ruta para todo aqu\'l que desee continuar la investigaci\'on con nuevas ideas y algoritmos. Se deja a disposici\'on de cualquier interesado el c\'odigo de la aplicaci\'on final, los algoritmos implementados o editados, as\'i como toda la documentaci\'on.
+Si bien se probaron algunas de estas herramientas y se tomaron de ellas est\'andares en cuanto a la \textit{performance} que una aplicaci\'on de realidad aumentada debe tener, \textbf{no es un objetivo} del proyecto el desarrollo de aplicaciones de realidad aumentada con kits de desarrollo ya existentes. Se hace hincapi\'e en la investigaci\'on de herramientas y adquisici\'on de experiencia propia, con el objetivo de marcar una hoja de ruta para todo aquel que desee continuar la investigaci\'on con nuevas ideas y algoritmos. Se deja a disposici\'on de cualquier interesado el c\'odigo de la aplicaci\'on final, los algoritmos implementados o editados, as\'i como toda la documentaci\'on.
 
 \section{Explicación global de la aplicación}
 \label{sec: app}
@@ -60,10 +60,10 @@ que son resumidos individualmente en secciones subsiguientes.
 
 
 \subsection{Navegación}
-La navegación es la ubicación del usuario dentro del museo, útil tanto para el usuario como para la aplicación, ya que sabiendo en qué región del museo este se encuentra, se simplifica un poco la identificación de la obra. Se estudiaron distintas alternativas para la navegación. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se puede ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación. Esta discusión técnica se ve más en detalle en el Capítulo \ref{chap: navident}.\\
+La navegación es la ubicación del usuario dentro del museo, útil tanto para el usuario como para la aplicación, ya que sabiendo en qué región del museo este se encuentra, se simplifica un poco la identificación de la obra. Se estudiaron distintas alternativas para la navegación. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se puede ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación. Esta discusión técnica se ve más en detalle en el Capítulo \ref{chap: navident}.\\
 
 \subsection{Identificación de obras}
-Por identificación de obras se entiende al proceso mediante el cual la aplicación detecta frente a qué obra se encuentra el usuario para así entonces brindarle información de la misma, una audioguía y si fuera el caso la posibilidad de desplegar realidad aumentada sobre ella. La forma en la que se implementó este bloque fue mediante un algoritmo de detección de características de imágenes llamado SIFT. Este algoritmo genera descriptores que sireven como identificadores de las imágenes y se verá en profundidad en el Capítulo \ref{chap: navident}.\\
+Por identificación de obras se entiende al proceso mediante el cual la aplicación detecta frente a qué obra se encuentra el usuario para así entonces brindarle información de la misma, una audioguía y si fuera el caso la posibilidad de desplegar realidad aumentada sobre ella. La forma en la que se implementó este bloque fue mediante un algoritmo de detección de características de imágenes llamado SIFT. Este algoritmo genera descriptores que sirven como identificadores de las imágenes y se verá en profundidad en el Capítulo \ref{chap: navident}.\\
 
 \subsection{Realidad Aumentada}
 
@@ -76,9 +76,9 @@ El proceso mediante el cual se logra la realidad aumentada puede verse en el dia
 \label{fig: bloques_ra}
 \end{figure}
 
-En el diagrama de bloques de la Figura \ref{fig: bloques_ra}, primero la cámara toma una imagen, que luego es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores; que luego son utilizados por un algún algoritmo de estimación de la pose, que busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta. Es de interés para este proyecto el utilizar en particular la detección de segmentos como método para la extracción de características de las imágenes adquiridas. Con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la información digital a\~nadida.\\
+En el diagrama de bloques de la Figura \ref{fig: bloques_ra}, primero la cámara toma una imagen, que luego es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores; que luego son utilizados por un algún algoritmo de estimación de la pose, que busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta. Es de interés para este proyecto el utilizar en particular la detección de segmentos como método para la extracción de características de las imágenes adquiridas. Con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la realidad aumentada incorporada.\\
 
-Para este proyecto se dise\~nó cierto marcador formado por tres grupos de cuadrados concéntricos, a partir del cual se extraen las características necesarias para la estimación de la pose del dispositivo. Además, el bloque de detección de características está compuesto por los bloques del diagrama de la Figura \ref{fig: bloques_correspondencias}.\\
+Para este proyecto se dise\~nó un marcador formado por tres grupos de cuadrados concéntricos, a partir del cual se extraen los segmentos necesarios para la estimación de la pose del dispositivo. El bloque de detección de características está compuesto por los bloques del diagrama de la Figura \ref{fig: bloques_correspondencias}.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=1.2]{figs_alcance/bloques_correspondencias.eps}
@@ -86,7 +86,7 @@ Para este proyecto se dise\~nó cierto marcador formado por tres grupos de cuadra
 \label{fig: bloques_correspondencias}
 \end{figure}
 
-En el diagrama de bloques de la figura \ref{fig: bloques_correspondencias}, primero se detectan idealmente todos los segmentos que hay en la imagen y luego mediante cierto algoritmo se filtran tan sólo los pertenecientes al marcador antedicho y se agrupan por cuadrado. En el tercer bloque, se hallan las esquinas de estos cuadrados mediante la intersección de los segmentos. Finalmente, medianate cierta lógica, estos puntos son ordenados de una manera predefinida. Detalles respecto de este proceso y sobre el marcador utilizado se ven en el Capítulo \ref{ch:marcadores}.\\
+En el diagrama de bloques de la Figura \ref{fig: bloques_correspondencias}, primero se detectan idealmente todos los segmentos que hay en la imagen y luego mediante cierto algoritmo se filtran tan sólo los pertenecientes al marcador antedicho y se agrupan por cuadrado. En el tercer bloque, se hallan las esquinas de estos cuadrados mediante la intersección de los segmentos. Finalmente, mediante cierta lógica, estos puntos son ordenados de una manera predefinida. Detalles respecto de este proceso y sobre el marcador utilizado se ven en el Capítulo \ref{ch:marcadores}.\\
 
 \section{Sobre el documento}
 
@@ -96,6 +96,6 @@ En el Capítulo \ref{chap: hwysw} se comparan ambas plataformas y se justifica la
 
 Más adelante, en el Capítulo \ref{chap: lsd}, se estudia a fondo un algoritmo de detección de segmentos en imágenes digitales llamado LSD, utilizado para la detección de segmentos representada en el primer bloque de la Figura \ref{fig: bloques_correspondencias}. Luego, en el Capítulo \ref{chap: camypose}, se plantea un modelo para la cámara utilizada para la captura y se introducen conceptos básicos para comprender cómo es el proceso de la estimación de la pose de la misma. El algoritmo utilizado en este proyecto para tal fin, se presenta en el Capítulo \ref{chap: posit}.\\
 
-El Capítulo \ref{chap: kalman} presenta el algoritmo de \textit{Kalman} y sus ecuaciones básicas. En el Capítulo \ref{chap: render} se introduce brevemente el concepto de \textit{render} y se presenta la herramienta utilizada para realizar \textit{renders} en la plataforma escogida. Luego, en el Capítulo \ref{chap: casoUso}, se presentan los distintos casos de uso implementados para probar integrar todo los bloques necesarios para la realidad aumentada en peque\~nas aplicaciones individuales. Más adelate, en el Capítulo \ref{chap: imp}, se explican los detalles técnicos respecto de la aplicación de la aplicación completa, tal y como se define en la sección \ref{sec: app}.\\
+El Capítulo \ref{chap: kalman} presenta el filtro de \textit{Kalman} y sus ecuaciones básicas. En el Capítulo \ref{chap: render} se introduce brevemente el concepto de \textit{render} y se presenta la herramienta utilizada para realizar \textit{renders} en la plataforma escogida. Luego, en el Capítulo \ref{chap: casoUso}, se presentan los distintos casos de uso implementados para probar integrar todos los bloques necesarios para la realidad aumentada en peque\~nas aplicaciones individuales. Más adelate, en el Capítulo \ref{chap: imp}, se explican los detalles técnicos respecto de la aplicación completa, tal y como se define en la sección \ref{sec: app}.\\
 
-Las herramientas utilizadas para analizar el desempe\~no y la validación de cada algoritmo se explican en el Capítulo \ref{chap: benchmark}. Finalmente, en el Capítulo \ref{char: costos}, se analizan los costos económicos que tuvo el proyecto.
+Las herramientas utilizadas para analizar el desempe\~no y la validación de cada algoritmo se explican en el Capítulo \ref{chap: benchmark}. Finalmente, en el Capítulo \ref{chap: costos}, se analizan los costos económicos que tuvo el proyecto.

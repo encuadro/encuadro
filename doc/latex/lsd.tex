@@ -256,7 +256,7 @@ Tiempo medio de procesamiento		& \textbf{189,8ms}		& \textbf{90,8ms} \\ \hline
 \end{table}
 \end{itemize}
 
-\section{Conslusión}
+\section{Resumen}
 En el presente capítulo se vió en detalle LSD, un algoritmo de detección de segmentos en imágenes que puede ser considerado el estado del arte en su rubro. Luego se afirmó que, si bien sus autores sostienen que el algoritmo es temporalmente lineal, lo que haría viable su uso en tiempo real; la implementación disponible del mismo, realizada por los propios autores, no está optimizada para tal caso y por eso hubo que hacerle algunos prque\~nos cambios al código. Dichos cambios lograron mejoras importantes en cuanto al tiempo de procesamiento, manteniendo prácticamente invariado su desempe\~no.\\
 
 Los resultados expuestos en las Tablas \ref{tab:gaussian_double} y \ref{tab:gaussian_float} pueden interpretarse como que la decisión de cambiar la precisión de la implementación del algoritmo de \textit{double} a \textit{float} fue una idea acertada. Por su parte, la lectura de las Tablas \ref{tab:lsd_double1}, \ref{tab:lsd_double2}, \ref{tab:lsd_float1} y \ref{tab:lsd_float2} sugiere que las mejoras en los tiempos de LSD optimizado para el tiempo real, respecto del original, son del órden de:
