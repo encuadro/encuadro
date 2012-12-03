@@ -2,7 +2,7 @@
 \label{ch:detection}
 
 \section{Introducción}
-En este Capítulo se trata con algunas de las herramientas y algoritmos de detección de características del tipo de primitivas geométricas como ser puntos, esquinas, bordes, líneas, segmentos de línea y arcos. 
+En este capítulo se trata con algunas de las herramientas y algoritmos de detección de características del tipo de primitivas geométricas como ser puntos, esquinas, bordes, líneas, segmentos de línea y arcos. 
 
 El objetivo principal es mostrar qué características se pueden detectar y con la utilización de qué algoritmos con el fin de su utilización en un algoritmo de estimación pose, tema que se desarrolla en los Capítulos \ref{chap: camypose} y, en forma más específica en el Capítulo \ref{chap: posit}. El tipo de características elegidas para su detección en la aplicación final están fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se debe ejecutar en tiempo real. También se desea que la característica ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
 
@@ -534,7 +534,7 @@ La etapa de detección del marcador se puede separar en tres grandes bloques:
 En esta sección se muestran algunos resultados para la detección de segmentos de línea por LSD y se centra en profundidad en los algoritmos desarrollados durante el proyecto para el filtrado de segmentos y determinación de correspondencias.
 
 \subsection{Detección de segmentos de línea}
-La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
+La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el Capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
 
 \begin{figure}[h!]
   \centering
@@ -735,7 +735,7 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
 
 \section{Comentarios sobre la implementación de los algoritmos}
-Los algoritmos desarrollados en el presente capítulo capítulo fueron implementados en Lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento.\\
+Los algoritmos desarrollados en el presente capítulo fueron implementados en Lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento.\\
 
 La elección del lenguaje y la filosofía de desarrollo comentada atrás permite \textbf{portabilidad} en el uso de los mismos para aplicaciones mas allá del proyecto y es un ejercicio de aprendizaje necesario. El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
 
