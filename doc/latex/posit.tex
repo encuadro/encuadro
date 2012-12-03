@@ -2,9 +2,9 @@
 \label{chap: posit}
 
 \section{Introducción}
-En este capítulo se explica el algoritmo utilizado para el cálculo de la pose a partir de una imagen capturada por la cámara. Como lo dice el nombre de algoritmo se utiliza una técnica llamada \textit{POS} (\textit{P}ose from \textit{O}rtography and \textit{S}caling), esta técnica consiste en aproximar la pose de la cámara a partir de la proyección \textit{SOP}(\textit{S}caled \textit{O}rtographic \textit{Projection}). Se comienza explicando la versión clásica de POSIT, en la cual se presentan las técnicas utilizadas dentro del algoritmo, entre ellas se explica en que consiste la proyección SOP. Luego se presenta el problema de trabajar con marcadores planos y se explica como se modifica el algoritmo para este caso. 
+En este capítulo se explica el algoritmo utilizado para el cálculo de la pose a partir de una imagen capturada por la cámara. Como lo dice el nombre del algoritmo se utiliza una técnica llamada \textit{POS} (\textit{P}ose from \textit{O}rtography and \textit{S}caling), esta técnica consiste en aproximar la pose de la cámara a partir de la proyección \textit{SOP}(\textit{S}caled \textit{O}rtographic \textit{Projection}). Se comienza explicando la versión clásica de POSIT, en la cual se presentan las técnicas utilizadas dentro del algoritmo, entre ellas se explica en qué consiste la proyección SOP. Luego se presenta el problema de trabajar con marcadores planos y se explica cómo se modifica el algoritmo para este caso. 
 Se presenta también el algoritmo llamado SoftPOSIT, que sirve para obtener la pose en el caso en que no se conocen las correspondencias entre los puntos del modelo y los puntos detectados. 
-También  se presenta el una variación de POSIT que resuelve la estimación de una manera diferente a la version clásica.
+También  se presenta una variación de POSIT que resuelve la estimación de una manera diferente a la version clásica.
 Finalmente se presentan los resultados obtenidos de la comparación de las dos versiones de POSIT. 
 
 
@@ -281,7 +281,7 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 
 
 \section{SoftPOSIT}\label{sec:SoftPosit}
-Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D y una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT.
+Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
 
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
 Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
@@ -387,7 +387,7 @@ Para resolver el problema de estimar la pose y las correspondencias simultáneame
 E = \sum_{j=1}^N \sum_{i=1}^M a_{ji}(d^2_{ji} - \alpha)\\
   = \sum_{j=1}^N \sum_{i=1}^M a_{ji}\left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_j \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_j \right) ^2 - \alpha\right)
 \end{multline}
-donde $m_{ji}$ son pesos para cada una de las distancias $d^2_{ji}$. Los pesos $a_{ji}$ forman lo que se llama matriz de asignación, en esta matriz se puede ver el grado de correspondencia de cualquier punto detectado con cualquier punto del modelo. El valor $\alpha$ es la tolerancia que se le da a la medida de distancia.
+donde $a_{ji}$ son pesos para cada una de las distancias $d^2_{ji}$. Los pesos $a_{ji}$ forman lo que se llama matriz de asignación, en esta matriz se puede ver el grado de correspondencia de cualquier punto detectado con cualquier punto del modelo. El valor $\alpha$ es la tolerancia que se le da a la medida de distancia.
 
 Las expresiones para los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ se modifican
 \begin{equation}\label{eq_33}
@@ -406,7 +406,9 @@ Para minimizar \textit{E} se procede como sigue:
 
 \item[(3)] Con los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ calculados se calculan los $\epsilon_i$ corregidos. 
 \end{itemize}
-Esto se repite hasta que la pose converge. 
+Esto se repite hasta que la pose converge. \\
+
+Este algoritmo realiza la búsqueda a partir de una pose inicial. La función de costo que se busca minimizar, presentada en la Ecuación \ref{eq_32}, presenta mínimos locales. La técnica de \textit{softassign} suaviza esta función de costo por lo que muchos mínimos locales se evitan. Sin embargo no siempre es posible suavizar la función de costo hasta tener un solo el mínimo global, y mucho suavizado hacer que se pierda el mínimo global. Es importante entonces contar con una buena pose inicial para que el resultado sea el correcto. Otro enfoque que se presenta en \cite{Daniel03simultaneouspose} es el de correr  el algoritmo varias veces con poses iniciales aleatorias y llegar así al mínimo global. 
 
 \subsection{Matriz de asignación}\label{sec:SoftPosit3}
 Se busca tener una matriz \textit{a} que indique las correspondencias entre los \textit{N} puntos detectados y los \textit{M} puntos en del modelo y además minimice \textit{E}. 
@@ -471,7 +473,7 @@ En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para el error
 
 \begin{figure}[H]
 \centering
-        \includegraphics[scale=0.5]{figs_posit/histAngulosPosit2}
+        \includegraphics[scale=0.62]{figs_posit/histAngulosPosit2}
         \label{fig:posit_8}
          \caption{Histograma de los errores obtenidos en la orientación. En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala de las gráficas es logarítmica.}
 \end{figure}
@@ -483,10 +485,10 @@ Se puede ver que los dos algoritmos se comportan de manera similar, en la mayorí
 \label{fig:posit_9}
         \centering
         \subfigure[]{
-                \includegraphics[scale=0.3]{figs_posit/barrido}
+                \includegraphics[scale=0.65]{figs_posit/barrido}
 				\label{fig:posit_10}}
         \subfigure[]{
-                \includegraphics[scale=0.3]{figs_posit/zoom}
+                \includegraphics[scale=0.6]{figs_posit/zoom}
                 \label{fig:posit_11}}
                 
          \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver mas de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
@@ -499,7 +501,7 @@ En la Figura \ref{fig:posit_12} se muestran los errores de posición para los dif
 
 \begin{figure}[H]
 \centering
-        \includegraphics[scale=0.5]{figs_posit/histTrasPosit2}
+        \includegraphics[scale=0.62]{figs_posit/histTrasPosit2}
         \label{fig:posit_12}
          \caption{Histograma de los errores obtenidos en traslación En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala en el de las gráficas es logarítmica.}
 \end{figure}
@@ -652,7 +654,9 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 
 En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de POSIT coplanar moderno.  Esto justifica la elección del POSIT coplanar moderno. 
 
-\section{Conclusiones}
+\section{Resumen}
+En este capítulo se presentó la teoría detrás del algoritmo POSIT. Se explicaron las diferentes versiones que se utilizaron, se vio que para marcadores coplanares hay ambigüedad en la estimación de la pose lo que genera errores. Se presentó una variante del POSIT coplanar moderno que minimiza una función de costo para estimar la pose, a diferencia de la versión clásica que resuelve la estimación utilizando mínimos cuadrados. También se explicó el algoritmo SoftPOSIT que estima las pose para conjuntos de puntos para los cuales no se saben las correspondencias. Este algoritmo requiere de una pose inicial para realizar la búsqueda. 
 
+Se realizó un estudio detallado del desempe\~no de los las dos versiones de POSIT coplanar y se compararon los resultados obtenidos, se vio que las dos versiones funcionan de manera similar.
 
 
