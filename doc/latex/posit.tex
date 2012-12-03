@@ -456,17 +456,17 @@ Esta implementación de POSIT para puntos coplanares dio resultados levemente mej
 
 Además desde el punto de vista de programación se mejoró en la interfaz respecto a la versión clásica. En la versión clásica se tiene varios archivos con las diferentes funciones que se necesitan, puede llegar a ser difícil entender por completo la arquitectura del algoritmo y el código esta comentado en francés. En cambio en la versión implementada para este proyecto se busco tener un solo archivo con todas las funciones y mejorar la arquitectura respecto a la versión anterior. 
 
-\section{Resultados}
-Se realizó un comparación entre la implementación en C de POSIT clásico para puntos coplanares, obtenida de \cite{DeMenthonCoplanarCode} , y una versión desarrollada para esta aplicación de POSIT moderno para puntos coplanares. 
+\section{Resultados}\label{sec: resultadosPosit}
+Se realizó una comparación entre la implementación en C de POSIT clásico para puntos coplanares, obtenida de \cite{DeMenthonCoplanarCode} , y una versión desarrollada para esta aplicación de POSIT moderno para puntos coplanares. 
 
 En una primera instancia se utilizaron imágenes sintéticas para las cuales se cuenta con la información de la pose. Con estas poses se proyectaron los puntos del modelo sobre las imágenes y se aplicó el algoritmo para los puntos del modelo y sus proyecciones. Se buscó evaluar los algoritmos de manera aislada y no como parte del proceso completo. Este análisis ayudó a elegir el algoritmo a utilizar. 
 
-Luego se utilizaron imágenes reales capturadas con el $iPad 2$ e imágenes sintéticas y se les aplico todo el proceso. Para estas imágenes se calculó el error de reproyección entre los puntos a la entrada de POSIT y los puntos reproyectados por la pose obtenida. 
+Luego se utilizaron imágenes reales capturadas con el \textit{iPad 2} e imágenes sintéticas y se les aplicó todo el proceso. Para estas imágenes se calculó el error de reproyección entre los puntos a la entrada de POSIT y los puntos reproyectados por la pose obtenida. 
 
 \subsection{Error en pose}
-En esta sección se analiza el error de estimación obtenido de las diferentes implementaciones. Se trabajó únicamente con imágenes sintéticas, para cada pose estimada se la compara con la pose utilizada para generar la imagen. Se definen dos tipos de errores. El \textit{error de orientación} es la diferencia entre los ángulos de la pose real y la pose estimada. El \textit{error de posición} es la diferencia entre la posición del centro del objeto calculado y el real. Se utilizó un conjunto de 360 imágenes. 180 imágenes simulan el marcador a 1m de distancia y se utilizan rotaciones entre $[-30^\circ,30^\circ]$ en torno a todos los ejes. Para las otras 180 imágenes se toman las mismas rotaciones pero la distancia al marcador es de 1.5m. 
+En esta sección se analiza el error de estimación obtenido de las diferentes implementaciones. Se trabajó únicamente con imágenes sintéticas, para cada pose estimada se la compara con la pose utilizada para generar la imagen. Se definen dos tipos de errores: el \textit{error de orientación} que es la diferencia entre los ángulos de la pose real y la pose estimada, y el \textit{error de posición} es la diferencia entre la posición del centro del objeto calculado y el real. Se utilizó un conjunto de 360 imágenes. 180 imágenes simulan el marcador a 1m de distancia y se utilizan rotaciones entre $[-30^\circ,30^\circ]$ en torno a todos los ejes. Para las otras 180 imágenes se toman las mismas rotaciones pero la distancia al marcador es de 1.5m. 
 
-Se estudia cual es el rango de funcionamiento de los algoritmos, es decir para que orientaciones y posiciones el algoritmo estima la pose correctamente.
+Se estudia cuál es el rango de funcionamiento de los algoritmos, es decir para qué orientaciones y posiciones el algoritmo estima la pose correctamente.
 
 \subsubsection{Error de orientación}
 En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para el error en orientación.  
@@ -479,7 +479,7 @@ En la Figura \ref{fig:posit_8}se muestran los resultados obtenidos para el error
 \end{figure}
 
 
-Se puede ver que los dos algoritmos se comportan de manera similar, en la mayoría de los casos se obtiene un error de estimación menos a $2^\circ$. Los casos en los que el error es mayor a  $2^\circ$ se corresponden con posiciones de la cámara en las que el plano imagen es paralelo al plano del marcador. Este comportamiento se puede ver en la Figura \ref{fig:posit_9}. Si los ángulos de rotación en torno a $x$ o a $y$ están en un intervalo de $(-10^\circ,+10^\circ)$, la proyección SOP del marcador varía muy poco. Esto lleva a que el algoritmo termine eligiendo una pose que no es la correcta, o puede llevar a que el algoritmo no converja. 
+Se puede ver que los dos algoritmos se comportan de manera similar, en la mayoría de los casos se obtiene un error de estimación menor a $2^\circ$. Los casos en los que el error es mayor a  $2^\circ$ se corresponden con posiciones de la cámara en las que el plano imagen es paralelo al plano del marcador. Este comportamiento se puede ver en la Figura \ref{fig:posit_9}. Si los ángulos de rotación en torno a $x$ o a $y$ están en un intervalo de $(-10^\circ,+10^\circ)$, la proyección SOP del marcador varía muy poco. Esto lleva a que el algoritmo termine eligiendo una pose que no es la correcta, o puede llevar a que el algoritmo no converja. 
 
 \begin{figure}[ht]
 \label{fig:posit_9}
@@ -497,7 +497,7 @@ En la Figura \ref{fig:posit_11} se puede ver que el algoritmo no presenta proble
 
 
 \subsubsection{Error de posición}
-En la Figura \ref{fig:posit_12} se muestran los errores de posición para los diferentes ejes, en general la estimación de la posición es buena, en la mayoría de los casos el error es menor al $1\% $ . Se vio que para las distancias al marcador a las que se trabaja el algoritmo no presenta problema, en este caso la limitante esta dada por el filtro de correspondencias presentado en \ref{ch: marcadores}. 
+En la Figura \ref{fig:posit_12} se muestran los errores de posición para los diferentes ejes, en general la estimación de la posición es buena, en la mayoría de los casos el error es menor al $1\% $ . Se vio que para las distancias al marcador a las que se trabaja el algoritmo no presenta problema, en este caso la limitante está dada por el filtro de correspondencias presentado en \ref{ch: marcadores}. 
 
 \begin{figure}[H]
 \centering
@@ -506,8 +506,8 @@ En la Figura \ref{fig:posit_12} se muestran los errores de posición para los dif
          \caption{Histograma de los errores obtenidos en traslación En la columna de la izquierda se muestran los resultados obtenidos para POSIT coplanar moderno según \textit{x}, \textit{y}  y \textit{z}.  En la columna de la derecha se muestran los histogramas para POSIT coplanar clásico según \textit{x}, \textit{y}  y \textit{z}. La escala en el de las gráficas es logarítmica.}
 \end{figure}
 
-\subsubsection{Comportamiento global}
-A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumo un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
+\subsubsection{Comportamiento global}\label{sec: positComportamientoGlobal}
+A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. La trayectoria se puede dividir en dos movimientos. 
 \begin{figure}[H]
 \label{fig:posit_13}
         \centering
@@ -521,7 +521,7 @@ A continuación se muestra el comportamiento de las dos variantes del algoritmo p
          \caption{Trayectoria en la que se ve que el error es mayor cuando el marcador es visto de frente. Cuando se empieza a rotar el error de orientación es chico. En la Figura \subref{fig:posit_14} se puede ver el comportamiento de POSIT coplanar moderno y en la Figura \subref{fig:posit_15} se puede ver el comportamiento para POSIT coplanar clásico.}
  \end{figure}
 
-El primer movimiento simula la cámara acercándose al marcador. En este movimiento se puede ver como ambos algoritmos fallan en la estimación de la pose. La versión moderna comete menos error. El segundo movimiento se tiene a la cámara en una posición fija y va cambiando su orientación. Se puede apreciar que para este caso el error cometido en orientación es muy peque\~no. 
+El primer movimiento simula la cámara acercándose al marcador. En este movimiento se puede ver cómo ambos algoritmos fallan en la estimación de la pose. La versión moderna comete menos error. El segundo movimiento se tiene a la cámara en una posición fija y va cambiando su orientación, se puede apreciar que para este caso el error cometido en orientación es muy peque\~no. 
 
 Si bien el comportamiento de los dos algoritmos resultó similar, la versión de POSIT coplanar moderno dio resultados levemente mejores que la versión clásica. Además en la práctica se comportó mejor por lo que esta versión es la que se utiliza en la aplicación final. 
 
@@ -529,7 +529,7 @@ Si bien el comportamiento de los dos algoritmos resultó similar, la versión de P
 
 Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sintéticas. Para ambos grupos de imágenes se midió el error de proyección obtenido entre los puntos del modelo y los puntos detectados. 
 
-Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_16} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
+Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_16} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba que se pueden ver en la Figura \ref{fig:posit_20}, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
 
 
  
@@ -566,7 +566,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \textbf{Media} & 3.9684 &  5.1368  \\ \hline
 \textbf{Desviación estándar} &   5.1212 &     6.8950 \\ \hline
 \end{tabular}
-\caption{Error de proyección de imágenes de pruebas.}
+\caption{Error de proyección de imágenes de pruebas. El error está expresado en píxeles}
 \label{posit_tabla1}
 \end{table} 
 
@@ -598,7 +598,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \textbf{Media} & 4.033 &  5.4942  \\ \hline
 \textbf{Desviación estándar} &   5.6196 &    7.2591 \\ \hline
 \end{tabular}
-\caption{Error de proyección de imágenes sintéticas.}
+\caption{Error de proyección de imágenes sintéticas. El error está expresado en píxeles}
 \label{posit_tabla2}
 \end{table} 
 
