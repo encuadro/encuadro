@@ -1,0 +1,78 @@
+\chapter{Conlusiones y trabajo a futuro}
+
+\section{Introducci\'on}
+
+En el presente capítulo se analiza al proyecto en su conjunto, primero desde el cumplimiento o no de sus objetivos y luego se hará una discusión técnica respecto de las elecciones realizadas, sobre todo en cuanto a los algoritmos utilizados para implementar cada uno de los bloques involucrados en la realidad aumentada. Finalmente, se plantea el trabajo que se podr\'ia hacer a futuro de manera de mejorar la aplicaci\'on final.
+
+\section{Conslusiones generales}
+
+En l\'ineas generales, se lo puede decir que el presente proyecto resultó exitoso. En primer lugar, porque se cree que se cumplieron con todos los objetivos originales. Al día de hoy se cuenta con una documentación de toda la investigación realizada que brinda herramientas y un registro de la experiencia a todo aquel que busque continuar con esta línea de investigación. Además, se logró implementar varios casos de uso que solucionan diferentes problemas en los que se puede emplear realidad aumentada. Finalmente, se implementó el mencionado recorrido interactivo por el museo, que cuanta con los bloques de \textit{navegación}, \textit{reconocimiento de obra} y \textit{realidad aumentada} que se explican en el capítulo \ref{chap: alcance}.\\
+
+En segundo lugar, se destaca el hecho de haber logrado desarrollar un aplicación completa que funcione correctamente. Se cree que el desempe\~no de la misma es muy bueno, y en particular, si bien la realidad aumentada puede mejorar, conforma.\\
+
+En cuanto al funcionamiento del grupo de trabajo, se cree que fue excelente. Se adquirió una dinámica de subgrupos de trabajo que resultaron muy eficientes. Se respetó mucho la división de tareas y el trabajo se mantuvo perfectamente equilibrado, con integrantes proactivos en todo momento.
+
+Finalmente, la relación con el tutor fue muy buena. Se cree que fue un excelente orientador y que su disposición al proyecto fue notable.
+
+\section{Conclusiones espec\'ificas}
+\label{sec: concluespe}
+Hay varios temas a discutir respecto de los bloques utilizados para el dise\~no de la realidad aumentada. Previo a tal discusión es bueno volver a detallar, tal y como se realizó en el Capítulo \ref{chap: alcance}, el diagrama de bloques del proceso mediante el cual se logra la realidad aumentada, en la Figura \ref{fig: bloques_ar}.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.2]{figs_conclusiones/bloques_ra.eps}
+\caption{Diagrama de bloques del proceso mediante el cual se logra la realidad aumentada.}
+\label{fig: bloques_ar}
+\end{figure}
+
+\subsection{Detecci\'on de caracter\'isticas}
+El bloque de detecci\'on de catacter\'isticas se expande en la Figura \ref{fig: bloques_correspondencias}. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.2]{figs_conclusiones/bloques_correspondencias.eps}
+\caption{Diagrama de bloques de la detección de características utilizada en este proyecto.}
+\label{fig: bloques_correspondencias}
+\end{figure}
+
+Se vio en capítulos anteriores que la detección de segmentos se realizó utilizando LSD. Se esta conforme tanto con el desempe\~no del algoritmo como con la optimización que se le hizo para el tiempo real. Sin embargo, se cree que la implementación se puede optimizar aún más.\\
+
+En lo que respecta a los algoritmos de filtrado y agrupación de segmentos, determinación de esquinas y correspondencias, se puede afirmar que funcionan correctamente. De cualquier manera, se cree que para ciertas aplicaciones en particular se podría utilizar un marcador más sencillo, con una geometría mas simple de detectar; lo que simplificaría los algoritmos de detección.
+
+\subsection{Estimaci\'on de pose}
+
+En el Cap\'itulo \ref{chap: posit} se explicaron en detalle diferentes versiones de POSIT, el algoritmo que este proyecto utiliza para estimar la pose de la c\'amara a partir de ciertas caracter\'isticas de la imagen. En particular, se utiliz\'o el POSIT coplanar moderno que toma como entrada ciertos puntos en un modelo predefinido y sus correspondientes en la imagen. Este es un algoritmo muy preciso bajo ciertas condiciones y significativamente veloz respecto de los algoritmos de estimación de pose tradicionales.  Sin embargo, resulta no del todo l\'ogico utilizar un algoritmo que tome puntos como entrada si las caracter\'isticas extra\'idas de la imagen primeramente son segmentos.
+
+Existe por su parte, otra versión de POSIT denominada ``\textit{Soft} POSIT de líneas''. Esta versión, toma como entrada líneas en una imagen y líneas en un modelo y tiene la habilidad de detectar correspondencias entre ellas y luego estimar la pose de la cámara a partir de dichas correspondencias. De haberse usado esta versión de POSIT, el segundo y tercer bloque del diagrama de la Figura \ref{fig: bloques_correspondencias} no hubieran sido necesarios.
+
+Sin embargo, \textit{Soft} POSIT de líneas no es coplanar. Esto quiere decir que el marcador del cual se extraen los segmentos no debe poseer una geometría coplanar. Además, requiere de una estimación de la pose inicial del dispositivo lo que no hace tan trivial su uso.
+
+\subsection{Una soluci\'on alternativa: SLAM}
+
+``\textit{Simultaneous Localization And Mapping}'' (SLAM), o en espa\~nol ``Localización y Mapeado Simultáneos'', es el problema de ubicar a un dispositivo de visión artificial en un determinado lugar desconocido y que este, de manera incremental, vaya construyendo un modelo del lugar y a la vez vaya ubicándose dentro del modelo.
+
+Este problema no sólo tiene solución, sino que además muchos de los kit de desarrollo de realidad aumentada, como por ejemplo \textit{Metaio}, presentado en el Capítulo \ref{chap: alcance}, lo utilizan. Y por lo que se pudo ver, da muy buenos resultados. En particular, logra resultados sustancialmente mejores a los de este proyecto, en cuanto a los tiempos de procesamiento.
+
+De esta manera, los bloques ``Detección de características'' y ``Estimación de pose'' del diagrama de la Figura \ref{fig: bloques_ar}, pueden ser sustituídos por un algoritmo que solucione este problema.
+
+
+\subsection{Dem\'as bloques}
+
+El desempe\~no de los dem\'as bloques involucrados en el proceso mediante el cual se logra de realidad aumentada no requiere de un análisis extra al realizado en capítulos anteriores. ISGL3D, la herramienta utilizada para realizar renders sobre las imágenes capturadas, funciona perfectamente y los dispositivos de captura y despliegue de imágenes del \textit{iPad} son muy buenos. Hubiera sido mejor capturar imágenes de mayor taman\~no, para así lograr una mejor calidad a la salida. Pero cuanto mayor es el tama\~no de la imagen capturada, tambi\'en lo es el tiempo de procesamiento de los algoritmos de detección, en particular LSD.
+
+\section{Trabajo a futuro}
+
+\subsection{Sobre el servidor}
+Se cree que la implementaci\'on del servidor en la aplicaci\'on final estuvo bien lograda, aunque no fue la más ortodoxa. Es poco escalable básicamente por dos razones. En primer lugar, no existe una interfaz de usuario para agregar o quitar obras de la base de datos del servidor, o incluso editar la información asociada a las mismas como por ejemplo imagen, audioguía, descripción, etc. Por eso, cualquier tipo de cambio en el servidor debe ser realizado por un técnico conocedor del sistema en su conjunto. En segundo lugar, al d\'ia de hoy toda la informaci\'on referente a la realidad aumentada y al modelo del marcador es almacenada en la aplicaci\'on y por lo tanto, de agregarse alg\'un cuadro a la base de datos, también requeriría de un técnico conocedor del sistema para agregar esta información a la aplicación.
+
+Un trabajo a futuro importante es, en primer lugar, implementar de manera prolija tanto la interacci\'on entre la aplicaci\'on y el servidor, como la forma de almacenar los datos en este. En segundo lugar, realizar la aplicaci\'on de usuario que sirva para agregar o quitar informaci\'on de la base de datos y finalmente, independizar completamente a la aplicaci\'on de los cuadros almacenados en la base de datos.\\
+
+Actualmente, se esta trabajando en coordinación con un proyecto de fin de estudios en la carrera Tecnólogo Informático del Centro Universitario Paysandú, que tiene como objetivo realizar los cambios descriptos en el párrafo anterior.
+\subsection{Sobre la realidad aumentada}
+
+Lo expuesto en la Sección \ref{sec: concluespe} sugiere, en primer lugar, probar diferentes marcadores y hacer un estudio detallado del desempe\~no de la realidad aumentada con cada uno de ellos para diferentes aplicaciones particulares.
+
+En segundo lugar, un desafío a futuro prometedor es investigar las herramientas que resuelven SLAM y buscar la forma de integrarlas al bloque de realidad aumentada. Se cree que de esta manera, puede llegar a mejorar mucho su desempe\~no, tanto desde el punto de vista de la precisión como en los tiempos de ejecución.\\ 
+
+De forma alternativa, se puede profundizar en la integraci\'on de los sensores inerciales del dispositivo a la estimaci\'on de la pose del mismo. Estos, mediante un bajo costo computacional, estiman de forma muy precisa cambios en su orientaci\'on.
+

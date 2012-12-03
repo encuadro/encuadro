@@ -30,16 +30,20 @@ $$
 Es importante aclarar que en ocaciones el límite entre los tres frentes de trabajo es difuso.\\
 
 \section{Estado del arte}
-Para llevar a cabo los objetivos planteados es bueno tener un contexto del estado del arte en cuanto al desarrollo de aplicaciones de realidad aumentada. Existen en la actualidad m\'ultiples entornos de desarrollo comerciales para aplicaciones de realidad aumentada, en los que de manera sencilla, se logran este tipo de aplicaciones con desempe\~nos verdaderamente muy buenos. Tal es el caso de \textit{Metaio} \cite{metaio12}, \textit{Vuforia} \cite{vuforia12}, \textit{String} \cite{string12} y \textit{Aurasma} \cite{aurasma12}. Por su parte, \textit{Layar} \cite{layar12}, es tambi\'en un kit de desarrollo para aplicaciones de realidad aumentada, pero se especializa en el agregado de contenido digital s\'olo sobre páginas impresas como revistas y catálogos. Ninguna de las aplicaciones anteriores es gratuita y ni siquiera en c\'odigo abierto. En la figura \ref{fig: metaio} se muestra un ejemplo que incluye por defecto la herramienta \textit{Metaio}.\\
+Para llevar a cabo los objetivos planteados es bueno tener un contexto del estado del arte en cuanto al desarrollo de aplicaciones de realidad aumentada. Existen en la actualidad m\'ultiples kits de desarrollo comerciales para aplicaciones de realidad aumentada, en los que de manera sencilla, se logran este tipo de aplicaciones con desempe\~nos verdaderamente muy buenos. Tal es el caso de \textit{Metaio} \cite{metaio12}, \textit{Vuforia} \cite{vuforia12}, \textit{String} \cite{string12} y \textit{Aurasma} \cite{aurasma12}. Por su parte, \textit{Layar} \cite{layar12}, es tambi\'en un kit de desarrollo para aplicaciones de realidad aumentada, pero se especializa en el agregado de contenido digital s\'olo sobre páginas impresas como revistas y catálogos. Ninguna de las herramientas anteriores es gratuita y ni siquiera en c\'odigo abierto. En la figura \ref{fig: metaioystring} se muestra un ejemplo que incluye por defecto \textit{Metaio} y otro que incluye \textit{String}.\\
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.2]{figs_alcance/metaio.png}
-\caption{Ejemplo de realidad aumentada que incluye por defecto el entorno de desarrollo \textit{Metaio}.}
-\label{fig: metaio}
+$$
+\begin{array}{cc}
+\includegraphics[scale=0.222]{figs_alcance/metaio.png} & \includegraphics[scale=0.5]{figs_alcance/string.png}
+\end{array}
+$$
+\caption{Izq.: Ejemplo de realidad aumentada que incluye por defecto el kit de desarrollo \textit{Metaio}. Der.: Otro ejemplo de realidad aumentada incluído por \textit{String}.}
+\label{fig: metaioystring}
 \end{figure}
 
-Si bien se probaron algunas de estas herramientas y se tomaron de ellas est\'andares en cuanto a la \textit{performance} que una aplicaci\'on de realidad aumentada debe tener, \textbf{no es un objetivo} del proyecto el desarrollo de aplicaciones de realidad aumentada con entornos de desarrollo ya existentes. Se hace hincapi\'e en la investigaci\'on de herramientas y adquisici\'on de experiencia propia, con el objetivo de marcar una hoja de ruta para todo aqu\'l que desee continuar la investigaci\'on con nuevas ideas y algoritmos. Se deja a disposici\'on de cualquier interesado el c\'odigo de la aplicaci\'on final, los algoritmos implementados o editados, as\'i como toda la documentaci\'on.
+Si bien se probaron algunas de estas herramientas y se tomaron de ellas est\'andares en cuanto a la \textit{performance} que una aplicaci\'on de realidad aumentada debe tener, \textbf{no es un objetivo} del proyecto el desarrollo de aplicaciones de realidad aumentada con kits de desarrollo ya existentes. Se hace hincapi\'e en la investigaci\'on de herramientas y adquisici\'on de experiencia propia, con el objetivo de marcar una hoja de ruta para todo aqu\'l que desee continuar la investigaci\'on con nuevas ideas y algoritmos. Se deja a disposici\'on de cualquier interesado el c\'odigo de la aplicaci\'on final, los algoritmos implementados o editados, as\'i como toda la documentaci\'on.
 
 \section{Explicación global de la aplicación}
 \label{sec: app}
@@ -72,7 +76,7 @@ El proceso mediante el cual se logra la realidad aumentada puede verse en el dia
 \label{fig: bloques_ra}
 \end{figure}
 
-En el diagrama de bloques de la Figura \ref{fig: bloques_ra}, primero la cámara toma una imagen, que luego es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores; que luego son utilizados por un algún algoritmo de estimación de la pose, que busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta. Con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la información digital a\~nadida.\\
+En el diagrama de bloques de la Figura \ref{fig: bloques_ra}, primero la cámara toma una imagen, que luego es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores; que luego son utilizados por un algún algoritmo de estimación de la pose, que busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta. Es de interés para este proyecto el utilizar en particular la detección de segmentos como método para la extracción de características de las imágenes adquiridas. Con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la información digital a\~nadida.\\
 
 Para este proyecto se dise\~nó cierto marcador formado por tres grupos de cuadrados concéntricos, a partir del cual se extraen las características necesarias para la estimación de la pose del dispositivo. Además, el bloque de detección de características está compuesto por los bloques del diagrama de la Figura \ref{fig: bloques_correspondencias}.\\
 \begin{figure}[h!]
@@ -92,6 +96,6 @@ En el Capítulo \ref{chap: hwysw} se comparan ambas plataformas y se justifica la
 
 Más adelante, en el Capítulo \ref{chap: lsd}, se estudia a fondo un algoritmo de detección de segmentos en imágenes digitales llamado LSD, utilizado para la detección de segmentos representada en el primer bloque de la Figura \ref{fig: bloques_correspondencias}. Luego, en el Capítulo \ref{chap: camypose}, se plantea un modelo para la cámara utilizada para la captura y se introducen conceptos básicos para comprender cómo es el proceso de la estimación de la pose de la misma. El algoritmo utilizado en este proyecto para tal fin, se presenta en el Capítulo \ref{chap: posit}.\\
 
-La etapa de análisis de desempe\~no y validación de los algoritmos, en particular los asociados a la detección de características y estimación de pose, se da en el Capítulo \ref{chap: benchmark}. En este, se presenta la necesidad de realizar un filtrado tipo \textit{Kalman} sobre la estimación de pose. En el capítulo \ref{chap: kalman} se presenta el algoritmo de \textit{Kalman} y sus ecuaciones básicas. Finalmente, se realiza un nuevo análisis de desempe\~no con este nuevo agregado. \\
+El Capítulo \ref{chap: kalman} presenta el algoritmo de \textit{Kalman} y sus ecuaciones básicas. En el Capítulo \ref{chap: render} se introduce brevemente el concepto de \textit{render} y se presenta la herramienta utilizada para realizar \textit{renders} en la plataforma escogida. Luego, en el Capítulo \ref{chap: casoUso}, se presentan los distintos casos de uso implementados para probar integrar todo los bloques necesarios para la realidad aumentada en peque\~nas aplicaciones individuales. Más adelate, en el Capítulo \ref{chap: imp}, se explican los detalles técnicos respecto de la aplicación de la aplicación completa, tal y como se define en la sección \ref{sec: app}.\\
 
-En el Capítulo \ref{chap: render} se introduce brevemente el concepto de \textit{render} y se presenta la herramienta utilizada para realizar \textit{renders} en la plataforma escogida. Luego, en el Capítulo \ref{chap: casoUso}, se presentan los distintos casos de uso implementados para probar integrar todo los bloques necesarios para la realidad aumentada en peque\~nas aplicaciones individuales. Finalmente, en el Capítulo \ref{chap: imp}, se explican los detalles técnicos respecto de la aplicación de la aplicación completa, tal y como se define en la sección \ref{sec: app}.
+Las herramientas utilizadas para analizar el desempe\~no y la validación de cada algoritmo se explican en el Capítulo \ref{chap: benchmark}. Finalmente, en el Capítulo \ref{char: costos}, se analizan los costos económicos que tuvo el proyecto.

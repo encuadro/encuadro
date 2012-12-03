@@ -12,7 +12,7 @@ Se genera en primer lugar, un campo de orientaciones asociadas a cada uno de los
 \end{itemize}
 Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman \cite{burns86}, y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel \cite{desolneux00}. \\
 
-En el presente capítulo se estudiará a fondo el algoritmo y se presentarán y justificarán algunos cambios que hubo que hacerle a la imlpementación del mismo con la que se contaba, versión 1.6 descargada de \cite{IpolSift12}, para mejorar su desempe\~no en el tiempo real.\\
+En el presente capítulo se estudiará a fondo el algoritmo y se presentarán y justificarán algunos cambios que hubo que hacerle a la imlpementación del mismo con la que se contaba, versión 1.6 descargada de \cite{IpolLsd12}, para mejorar su desempe\~no en el tiempo real.\\
 
 \section{\textit{Line-support regions}}
 El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual orientación, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``\textit{region growing}''; cada región comienza por un píxel y cierto ángulo asociado, que en este caso coincide con el de este primer píxel. Luego, se testean sus ocho vecinos y los que cuenten con un ángulo similar al de la región son incluídos en la misma. En cada iteración el ángulo asociado a la región es calculado como el promedio de las orientaciones de cada píxel dentro de la \textit{line-support region}; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.\\
