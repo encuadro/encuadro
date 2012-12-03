@@ -6,7 +6,7 @@ En el presente capítulo se analiza al proyecto en su conjunto, primero desde el 
 
 \section{Conslusiones generales}
 
-En l\'ineas generales, se puede decir que el presente proyecto resultó exitoso. En primer lugar, porque se cree que se cumplieron con todos los objetivos originales. Al día de hoy se cuenta con una documentación de toda la investigación realizada que brinda herramientas y un registro de la experiencia a todo aquel que busque continuar con esta línea de investigación. Además, se logró implementar varios casos de uso que solucionan diferentes problemas en los que se puede emplear realidad aumentada. Finalmente, se implementó el mencionado recorrido interactivo por el museo, que cuante con los bloques de \textit{navegación}, \textit{reconocimiento de obra} y \textit{realidad aumentada} que se explican en el Capítulo \ref{chap: alcance}.\\
+En l\'ineas generales, se puede decir que el presente proyecto resultó exitoso. En primer lugar, porque se cree que se cumplieron con todos los objetivos originales. Al día de hoy se cuenta con una documentación de toda la investigación realizada que brinda herramientas y un registro de la experiencia a todo aquel que busque continuar con esta línea de investigación. Además, se logró implementar varios casos de uso que solucionan diferentes problemas en los que se puede emplear realidad aumentada. Finalmente, se implementó el mencionado recorrido interactivo por el museo, que cuenta con los bloques de \textit{navegación}, \textit{reconocimiento de obra} y \textit{realidad aumentada} que se explican en el Capítulo \ref{chap: alcance}.\\
 
 En segundo lugar, se destaca el hecho de haber logrado desarrollar un aplicación completa que funcione correctamente. Se cree que el desempe\~no de la misma es muy bueno, y en particular, si bien la realidad aumentada puede mejorar, conforma.\\
 
@@ -41,11 +41,11 @@ En lo que respecta a los algoritmos de filtrado y agrupación de segmentos, deter
 
 \subsection{Estimaci\'on de pose}
 
-En el Cap\'itulo \ref{chap: posit} se explicaron en detalle diferentes versiones de POSIT, el algoritmo que este proyecto utiliza para estimar la pose de la c\'amara a partir de ciertas caracter\'isticas de la imagen. En particular, se utiliz\'o \textbf{el POSIT coplanar moderno} que toma como entrada ciertos puntos en un modelo predefinido y sus correspondientes en la imagen. Este es un algoritmo muy preciso bajo ciertas condiciones y significativamente veloz respecto de los algoritmos de estimación de pose tradicionales.  Sin embargo, resulta no del todo l\'ogico utilizar un algoritmo que tome puntos como entrada si las caracter\'isticas extra\'idas de la imagen primeramente son segmentos.
+En el Cap\'itulo \ref{chap: posit} se explicaron en detalle diferentes versiones de POSIT, el algoritmo que este proyecto utiliza para estimar la pose de la c\'amara a partir de ciertas caracter\'isticas de la imagen. En particular, se utiliz\'o \textbf{el POSIT coplanar moderno} que toma como entrada ciertos puntos en un modelo predefinido y sus correspondientes en la imagen. Este es un algoritmo muy preciso bajo ciertas condiciones y  veloz respecto de los algoritmos de estimación de pose tradicionales.  Sin embargo, resulta no del todo l\'ogico utilizar un algoritmo que tome puntos como entrada si las caracter\'isticas extra\'idas de la imagen primeramente son segmentos.
 
-Existe por su parte, otra versión de POSIT denominada ``\textit{Soft} POSIT de líneas''. Esta versión, toma como entrada líneas en una imagen y líneas en un modelo y tiene la habilidad de detectar correspondencias entre ellas y luego estimar la pose de la cámara a partir de dichas correspondencias. De haberse usado esta versión de POSIT, el segundo y tercer bloque del diagrama de la Figura \ref{fig: bloques_correspondencias} no hubieran sido necesarios.
+Existe por su parte, otra versión de POSIT denominada ``\textit{Soft} POSIT de líneas'' que fue la versión que motivó el uso de segmentos como características. Esta versión, toma como entrada líneas en una imagen y líneas en un modelo y tiene la habilidad de detectar correspondencias entre ellas y luego estimar la pose de la cámara a partir de dichas correspondencias. De haberse usado esta versión de POSIT, el segundo y tercer bloque del diagrama de la Figura \ref{fig: bloques_correspondencias} no hubieran sido necesarios.
 
-Sin embargo, \textit{Soft} POSIT de líneas no es coplanar. Esto quiere decir que el marcador del cual se extraen los segmentos no debe poseer una geometría coplanar. Además, requiere de una estimación de la pose inicial del dispositivo lo que no hace tan trivial su uso.
+Sin embargo, \textit{Soft} POSIT de líneas no funciona para marcadores planos como los utilizados en este proyecto. Además, requiere de una estimación de la pose inicial del dispositivo lo que no hace tan trivial su uso. Por estos motivos se optó por utilizar POSIT coplanar y resolver las correspondencias en la etapa de filtrado de segmentos. 
 
 \subsection{Una soluci\'on alternativa: SLAM}
 
@@ -53,7 +53,7 @@ Sin embargo, \textit{Soft} POSIT de líneas no es coplanar. Esto quiere decir que
 
 Este problema no sólo tiene solución, sino que además muchos de los kit de desarrollo de realidad aumentada, como por ejemplo \textit{Metaio}, presentado en el Capítulo \ref{chap: alcance}, lo utilizan. Y por lo que se pudo ver, da muy buenos resultados. En particular, logra resultados sustancialmente mejores a los de este proyecto, en cuanto a los tiempos de procesamiento.
 
-De esta manera, los bloques ``Detección de características'' y ``Estimación de pose'' del diagrama de la Figura \ref{fig: bloques_ar}, pueden ser sustituídos por un algoritmo que solucione este problema.
+De esta manera, los bloques ``Detección de características'' y ``Estimación de pose'' del diagrama de la Figura \ref{fig: bloques_ra_conclu}, pueden ser sustituidos por un algoritmo que solucione este problema.
 
 
 \subsection{Dem\'as bloques}
@@ -74,5 +74,8 @@ Lo expuesto en la Sección \ref{sec: concluespe} sugiere, en primer lugar, probar
 
 En segundo lugar, un desafío a futuro prometedor es investigar las herramientas que resuelven SLAM y buscar la forma de integrarlas al bloque de realidad aumentada. Se cree que de esta manera, puede llegar a mejorar mucho su desempe\~no, tanto desde el punto de vista de la precisión como en los tiempos de ejecución.\\ 
 
-De forma alternativa, se puede profundizar en la integraci\'on de los sensores inerciales del dispositivo a la estimaci\'on de la pose del mismo. Estos, mediante un bajo costo computacional, estiman de forma muy precisa cambios en su orientaci\'on.
+De forma alternativa, se puede profundizar en la integraci\'on de los sensores inerciales del dispositivo a la estimaci\'on de la pose del mismo. Estos, mediante un bajo costo computacional, estiman de forma muy precisa cambios en su orientaci\'on lo que puede llevar bajar el \textit{frame rate} obtenido en la aplicación.
 
+\subsection{Sobre la plataforma}
+
+Como trabajo a futuro también se considera la migración de todo lo desarrollado a plataformas que funcionen sobre \textit{Android}. Estos son dispositivos son de uso más masivo que los dispositivos \textit{Apple} y por ejemplo son los utilizados en el MAPI.  
