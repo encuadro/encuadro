@@ -236,9 +236,7 @@ Esta técnica consiste en tres pasos básicos. En primer lugar la imagen en nivele
 en donde $r$ representa la distancia entre la línea y el origen y $\theta$ es el ángulo del vector perpendicular a la recta desde el origen. Es posible
 asociar una recta al par de parámetros $(r, \theta)$. El plano $(r,\theta)$ es es plano de Hough. Se determina en este plano para cada punto de la imagen
 una única sinusoidal en donde mediante su superposición se tendrá, para una serie de puntos alineados en la imagen, un punto de cruce de estas sinusoides dado
-por los parámetros $(r,\theta)$
-
-Por lo tanto buscando máximos locales en el plano de Hough se tienen definidas líneas en la imagen.
+por los parámetros $(r,\theta)$. Mediante la búsqueda de máximos locales en el plano de Hough se tienen definidas líneas en la imagen.
 
 Finalmente los segmentos son extraídos de las líneas detectadas utilizando umbrales sobre dos parámetros geométricos: el largo mínimo de un segmento y la distancia máxima permitida entre dos segmentos consecutivos.\\
 
@@ -729,11 +727,12 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
 
-\subsection{Resultados}
-más imágenes con resultados?\\
-Todo sobre la misma imagen de entrada?\\
-O toda la secuencia para distintas imágenes?\\
+\section{Resultados}
+En esta sección se presentan algunos resultados de \emph{Benchmark} para los algoritmos de asociados al marcador. En particular se estudian los límites para la detección de segmentos mediante LSD y el filtrado y agrupamiento de los mismos para juegos de imágenes sintéticas generadas utilizando las herramientas explicadas en el Capítulo \ref{chap: benchmark}.
 
+\subsection{Benchmark: LSD}
+
+\subsection{Benchmark: Filtrado y agrupamiento de segmentos}
 
 \section{Resumen}
 En este capítulo se comentaron algunos sistemas de Realidad Aumentada basados en marcadores planos como ARToolKit y ARTag. Se desarrolló el diseño del Marcador QR utilizado para el proyecto y se definieron juegos de parámetros que permiten flexibilidad en la aplicación de los mismos. Se desarrollaron los algoritmos para detección de los marcadores diseñados basados en un esquema de, en primer lugar, filtrado y agrupamiento de segmentos y en segundo lugar determinación de correspondencias de sus esquinas. Se vió que algunos de los parámetros de diseño del marcador pueden ser modificados sin necesidad de modificar los algoritmos desarrollados. ¿Finalmente se obtuvieron resultados de benchmark para los algoritmos de filtrado de segmentos mediante el uso de imágenes sintéticas generadas?.
