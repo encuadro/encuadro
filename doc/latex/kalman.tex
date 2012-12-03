@@ -2,9 +2,9 @@
 \label{chap: kalman}
 
 \section{Introducción}
-Luego de obtener la pose de la cámara para un cuadro, se procedió a evaluar el desmpe\~no de la aplicación en tiempo real. Una de las cosas que se notó fue que había un ruido en la estimación. Por ejemplo con el dispositivo quieto se puede ver que la  pose varía. Si bien numéricamente no es mucha la variación, perceptivamente se nota. Es por esto que se decidió implementar un filtro de Kalman para suavizar la estimación.   
+Luego de obtener la pose de la cámara para un cuadro, se procedió a evaluar el desmpe\~no de la aplicación en tiempo real. Una de las cosas que se notó fue que había ruido en la estimación. Por ejemplo con el dispositivo quieto se puede ver que la  pose varía. Si bien numéricamente no es mucha la variación, perceptivamente se nota. Es por esto que se decidió implementar un filtro de Kalman para suavizar la estimación.   
 
-Otra razón por la cual se usó el filtro de Kalman fue para realizar fusión de sensores. El dispositivo cuenta con sensores inerciales y es posible obtener la variación en la orientación entre dos cuadros. Esta información se fusionó con la información obtenida de la pose mediante un filtro de Kalman.  
+Otra razón por la cual se usó el filtro de Kalman fue para realizar integración de sensores con el objetivo de mejorar la \textit{performance}. El dispositivo cuenta con sensores inerciales y es posible obtener la variación en la orientación entre dos cuadros. Esta información se integró con la información obtenida de la pose en la etapa de POSIT mediante un filtro de Kalman.  
 
 En este capítulo se presenta el filtro de Kalman de forma genérica para luego explicar las implementaciones particulares del caso de Kalman para suavizado y Kalman para fusión de sensores.
 
@@ -14,7 +14,7 @@ Sea $\mathbf{x}_k$ un vector de estados de dimensión $n$ que evoluciona de acuer
 \begin{equation}
  \mathbf{x}_{k+1}=\mathbf{F}_k\mathbf{x}_k + \mathbf{w}_k
 \end{equation}
-donde $\mathbf{F}_k$ es la matriz de transición de estados de dimensiones $n \times n$ y $\mathbf{w}_k$ es el vector de ruido del proceso, es de tama\~no $n$ y se modela como $\mathbf{w}_k\sim \mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ en donde $\mathbf{Q}_k$ es la matriz de covarianza de tama\~no $n\times n$ \cite{Hayes}. Este ruido sirve para ajustar la confianza que se le tiene al modelo utilizado. Si el modelo utilizado es bueno el ruido de proceso $\mathbf{w}_k$ es chico.
+donde $\mathbf{F}_k$ es la matriz de transición de estados de dimensiones $n \times n$ y $\mathbf{w}_k$ es el vector de ruido del proceso, es de tama\~no $n$ y se modela como $\mathbf{w}_k\sim \mathcal{N}(\mathbf{0},\mathbf{Q}_k)$ en donde $\mathbf{Q}_k$ es la matriz de covarianza de tama\~no $n\times n$ \cite{Hayes}. Este ruido sirve para ajustar la confianza que se le tiene al modelo utilizado. Si el modelo utilizado es bueno el ruido de proceso $\mathbf{w}_k$ es peque?o.
 
 Adicionalmente se tiene el vector de observaciones $\mathbf{y}_k$ formado como 
 \begin{equation}
@@ -22,7 +22,7 @@ Adicionalmente se tiene el vector de observaciones $\mathbf{y}_k$ formado como
 \end{equation}
 donde $\mathbf{y}_k$ es de largo $m$. $\mathbf{H}_k$ es la matriz de medición, relaciona las observaciones con los estados del proceso, es de tama\~no $m\times m$. $\mathbf{v}_k$ es el vector de ruido en la medición, es de tama\~no $m$ y se modela como $\mathbf{v}_k\sim \mathcal{N}(\mathbf{0},\mathbf{R}_k)$ siendo $\mathbf{R}_k$ la matriz de covarianza de tama\~no $m\times m$.
 
-Se tiene entonces un proceso representado por un modelo en variables de estado como
+Se tiene entonces un proceso representado por un modelo en variables de estado que se puede expresar así:
 \begin{equation*}
 	\begin{cases}
 	\mathbf{x}_{k+1}=\mathbf{F}_k\mathbf{x}_k + \mathbf{w}_k\\
@@ -48,16 +48,16 @@ El filtrado parte de una condición inicial $\hat{\mathbf{x}}_{0|0}$ y $\mathbf{P
 
 \section{Kalman para suavizado}
 
-La información que se obtiene de la etapa de estimación de pose son la orientación de la cámara expresada en ángulos de Euler y la traslación. Se busca suavizar el efecto del ruido introducido al estimar la rotación, este ruido es el que mas influye en la calidad de la realidad aumentada. Los estados son por lo tanto los tres ángulos de Euler, $\psi$, $\theta$ y $\phi$.  
+La información que se obtiene de la etapa de estimación de pose son la orientación de la cámara expresada en ángulos de Euler y la traslación. Se busca suavizar el efecto del ruido introducido al estimar la rotación, este ruido es el que más influye en la calidad de la realidad aumentada. Los estados son por lo tanto los tres ángulos de Euler, $\psi_k$, $\theta_k$ y $\phi_k$.  
 
-Para implementar el filtro de Kalman es necesario contar con un modelo físico que modele el la evolución de los estados. Como el dispositivo es controlado por una persona, no se puede asumir nada en cuanto al movimiento que va a realizar esta persona. 
+Para implementar el filtro de Kalman es necesario contar con un modelo físico que modele la evolución de los estados. Como el dispositivo es controlado por una persona, no se puede asumir nada en cuanto al movimiento que va a realizar esta persona. 
 Por lo tanto se toma un modelo de posición constante y se asume que los movimientos que se realizan son peque\~nos. La matriz de evolución de estados \textbf{F} se toma como la matriz identidad. 
 
-La matriz de covarianza del ruido de proceso $\mathbf{Q}$ se toma como una matriz diagonal constante ya que por como se definió el modelo se deduce que el ruido del proceso para cada estado son independientes.
+La matriz de covarianza del ruido de proceso $\mathbf{Q}$ se toma como una matriz diagonal constante ya que, por cómo se definió el modelo se deduce que el ruido del proceso para cada estado es independiente.
 
-En este caso las observaciones que se tienen coinciden con los tres estados por lo tanto la matriz de medición \textbf{H} se toma como la matriz identidad. 
+En este caso las observaciones que se tienen son los ángulos de Euler obtenidos en la etapa de estimación de pose $\psi_{Ck}$, $\theta_{Ck}$ y $\phi_{Ck}$. Estos tienen el mismo significado físico que los estados, por lo tanto la matriz de medición \textbf{H} se toma como la matriz identidad. 
 
-La matriz de covarianza del ruido de medición se calculó se obtuvo a través de varias mediciones con imágenes sintéticas. Se le  aplico el proceso a varias imágenes y se comparó la orientación obtenida contra la real. A partir de estos datos se computó la matriz \textbf{R}. Se tiene que
+Para calcular la matriz de covarianza del ruido de medición se tomó la estadística de alrededor de 200 imágenes sintéticas en las cuales tomó el error entre la estimación y la pose original. Con los errores de estimación para los tres ángulos se obtuvieron los datos suficientes para estimar la matriz \textbf{R}. A partir de estos datos se obtuvo que:
 
 \[
 \textbf{R} = \left(\begin{array}{ccc}
@@ -117,7 +117,7 @@ Con estos parámetros se implementó el filtro de Kalman para suavizado. El modelo
 \]
 
 \section{Kalman con sensores}
-Para hacer la fusión de sensores se tomaron los mismos estados, la misma matriz de evolución de estados y el mismo error de proceso. Como observaciones se tienen los ángulos de Euler calculados por POSIT $\left(\psi_C,\theta_C,\phi_C\right)$ y los ángulos de Euler a la salida de los sensores inerciales  $\left(\psi_S,\theta_S,\phi_S\right)$. El modelo en variables de estado queda:
+Para hacer la integración de sensores se tomaron los mismos estados, la misma matriz de evolución de estados y el mismo error de proceso que en caso de suavizado. Como observaciones se tienen los ángulos de Euler calculados por POSIT $\left(\psi_C,\theta_C,\phi_C\right)$ y los ángulos de Euler a la salida de los sensores inerciales  $\left(\psi_S,\theta_S,\phi_S\right)$. El modelo en variables de estado queda:
 
 \[
 \left\lbrace\begin{array}{l}
@@ -174,7 +174,21 @@ Para hacer la fusión de sensores se tomaron los mismos estados, la misma matriz 
 \end{array} \right)
 \end{array} \right.
 \]  
-La matriz de error de medición es una matriz de bloques diagonal compuesta por la matriz de covarianza del error de medición de POSIT y por la matriz de covarianza del error de medición de los sensores. Es razonable tomar la matriz covarianza como diagonal ya que esto implica que el error de medición de  POSIT es independiente de el de los sensores. Para los sensores no se contó con ninguna estadistica que permitiera calcular la matriz de covarianza, esto es un aspecto a mejorar.  
+La matriz de error de medición es una matriz de bloques diagonal compuesta por la matriz de covarianza del error de medición de POSIT y por la matriz de covarianza del error de medición de los sensores. Es razonable tomar la matriz covarianza como diagonal ya que esto implica que el error de medición de  POSIT es independiente de el de los sensores. Para los sensores no se contó con ninguna estadística que permitiera calcular la matriz de covarianza, lo que es un aspecto a mejorar.  
 %\section{Kalman robusto}
 
 \section{Resultados}
+En esta sección se muestra el resultado de aplicar el filtro de Kalman para suavizado a la trayectoria simulada en \ref{sec: positComportamientoGlobal}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.35]{figs_kalman/kalman.eps}
+\caption{Desempe\~no del filtro de Kalman para trayectoria de prueba. En verde se ve la pose original, en rojo la pose estimada por POSIT y en azul la pose suavizada por Kalman.}
+\label{fig: kalman}
+\end{figure}
+
+Se puede ver que para el caso en que la cámara se acerca de frente al marcador el filtro suaviza. El parámetro que se puede variar en este filtro es la potencia del ruido de proceso (la potencia del ruido en las observaciones se calculo a partir de datos empíricos). A mayor potencia se le da menos confianza al modelo, por lo que la pose filtrada se va a parecer más a la pose estimada por POSIT y se pierde el efecto de suavizado. En cambio cuando el ruido de potencia disminuye la pose filtrada se mueve muy lento. Esto se debe a que el modelo que se utilizó  es de posición constante, ante cambios bruscos el filtro reacciona de forma lenta. El valor de la potencia del ruido de proceso se ajustó utilizando el caso de uso de interactividad presentado en \ref{chap: casosuso}, en el que se puede variar este parámetro en tiempo real y ver como se comporta el filtro. 
+
+\section{Resumen}
+En este capítulo se presentó la teoría detrás del filtro de Kalman. Se explicó el modelo dinámico utilizado y el motivo de su elección. Se presentaron las ecuaciones utilizadas para la integración de la orientación obtenida por POSIT y la orientación obtenida por los sensores inerciales de dispositivos. 
+Finalmente se muestra cómo se comportó el filtro para suavizado.

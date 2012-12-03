@@ -1,31 +1,38 @@
-\chapter{Benchmark}
+\chapter{Herramientas de Benchmark}
 \label{chap: benchmark}
-Durante el desarrollo del proyecto se hizo presente la necesidad de contar con herramientas de medida del desempeño objetivas para la validación de los algoritmos que se utilizaron y desarrollaron. En particular se desea evaluar los algoritmos asociados a la detección y estimación de pose. Estos son LSD, filtrado de segmentos, determinación de correspondencias y Posit Coplanar. 
+\section{Introducción}
+Durante el desarrollo del proyecto se hizo presente la necesidad de contar con herramientas de medida del desempeño objetivas para la validación de los algoritmos que se utilizaron y desarrollaron. En particular se desea evaluar los algoritmos asociados a la detección de características y estimación de pose. Estos son LSD, filtrado de segmentos, determinación de correspondencias y Posit Coplanar. 
 
-El enfoque elegido para la validación de dichos algoritmos consiste en la generación de una ``verdad de piso'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en ese proyecto como \emph{Benchmark} o Comparativa. De esta forma se pueden generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
+El enfoque elegido para la validación de dichos algoritmos consiste en la generación de una ``verdad de piso'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en este proyecto como \emph{Benchmark} o Comparativa. De esta forma se pueden generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
+
+Debido a la naturaleza del proyecto fue necesario generar un entorno para la evaluación el cual incluye la generación de imágenes sintéticas asociadas a esa \emph{ground truth} en Blender. También fue necesario el desarrollo de un entorno en Matlab que permita una ejecución tipo batch para la generación de estas imágenes así como para la generación, análisis y despliegue de resultados en forma rápida y simple.
 
 \section{Generación de imágenes sintéticas: Blender}
-La generación de imágenes sintéticas consiste en producir una imagen 2D en base a una modelo 3D de una escena y una pose de la cámara respecto a esa escena o viceversa. Este proceso se denomina \emph{Rendering} y el mismo trata en el Capítulo \ref{chap: render} para la herramienta para dispositivos móviles \emph{ISGL3D}. 
+Para realizar el Benchmark se desarrolló un entorno de generación de imágenes sintéticas que utiliza herramientas gratuitas y de código abierto que permiten capacidades de \emph{scripting} y ejecución en forma ``batch'' de forma de serializar la producción de renders en un proceso automático. El proceso de generación de los renders fue realizada mediante el uso del software Blender.
 
-Para realizar el Benchmark se desarrolló un entorno de generación de imágenes sintéticas que utiliza herramientas gratuitas y de código abierto que permiten capacidades de \emph{scripting} y ejecución en forma ``batch'' de forma de serializar la producción de renders en un proceso automático. En el proceso de estos renders fue realizada mediante el uso del software Blender.
+La generación de imágenes sintéticas consiste en producir una imagen 2D en base a un modelo 3D de una escena y una pose de la cámara respecto a esa escena o viceversa. Este proceso se denomina \emph{Rendering}, o renderizado, y el mismo se trata en el Capítulo \ref{chap: render} para la herramienta para dispositivos móviles \emph{ISGL3D}. 
 
-Blender es un \emph{suite} de creación de contenidos gratiuito y de código abierto. Esta disponible para los principales sistemas operativos, Windows, Mac, Linux; bajo la Licencia Pública General GNU\cite{blender}. Algunas de sus prestaciones son modelado, \emph{shading}, animación, renderizado, e iteracción 3D. También presenta herramientas de \emph{scripting} mediante el uso del lenguaje \emph{Python} las cuales se explicarán mas adelante.
+Blender es un \emph{suite} de creación de contenidos gratiuito y de código abierto. Está disponible para los principales sistemas operativos, Windows, Mac, Linux; bajo la Licencia Pública General GNU\cite{blender}. Algunas de sus prestaciones son modelado, \emph{shading}, animación, renderizado, e interacción 3D. También presenta herramientas de \emph{scripting} mediante el uso del lenguaje \emph{Python} las cuales se explicarán más adelante. Se utilizó la versión de Blender 2.58 para el desarrollo siguiente ha sido utilizado satisfactoriamente con versiones más recientes como la 2.63.
 
 \subsection{Modelo 3D y escena}
-Para lograr hacer un render es necesario contar con una escena 3D y en particular con un modelo 3D del objeto de interés. Para realizar las tareas de detección se utiliza un marcador plano que se describe en el Capítulo \emph{ch:marcador}. 
+Para lograr hacer un render es necesario contar con una escena 3D y en particular con un modelo 3D del objeto de interés. Para realizar la detección de características se utiliza un marcador plano que se describe en el Capítulo \ref{ch:marcadores}.\\
 
-Se manejaron algunas alternativas para la generación del modelo 3D del marcador entre las cuales se encuentran, VTK, Paraview, Autodesk 3ds Max y el mismo programa utilizado por este proyecto para rendering en una PC, Blender. Finalmente debido a la simplicidad del marcador, y principalmente a que es un marcador plano, se utilizó un dibujo vectorial del marcador (formato svg) generado en Inkscape. Este dibujo vectorial puede ser importado a Blender y con el generar un modelo 3D que será un actor en la escena. Dentro de la interfaz de Blender se ajustó un factor de escala para que las medidas reales del marcador se correspondan con las unidades de Blender. En la Figura \ref{fig:blender_usrprsp} se muestra la vista de \emph{Perspectiva de usuario} en donde se reflejan algunos de los cambios que se realizan sobre la escena.
+Se manejaron algunas alternativas para la generación del modelo 3D del marcador entre las cuales se encuentran, VTK, Paraview, Autodesk 3ds Max y el mismo programa utilizado por este proyecto para rendering en un PC, Blender. Finalmente debido a la simplicidad del marcador, y principalmente a que es un marcador plano, se utilizó un dibujo vectorial del marcador (formato \emph{svg}) generado en Inkscape. Este dibujo vectorial puede ser importado a Blender y con él generar un modelo 3D que será un actor en la escena. Dentro de la interfaz de Blender se ajustó un factor de escala para que las medidas reales del marcador se correspondan con las unidades de Blender, por razones de facilidad en el manejo en Blender se estableció que la unidad de Blender corresponde a un centímetro en el mundo real. \\
+
+En la Figura \ref{fig:blender_usrprsp} se muestra la vista de \emph{Perspectiva de usuario} en donde se puede ver el modelo del marcador importado, la cámara en el centro de coordenadas de Blender y el sistema de coordenadas interno.
 \begin{figure}[h!]
   \centering
     \includegraphics[scale=0.5]{figs_benchmark/blender/blender_usrprsp.png}
   \caption{Vista de perspectiva de usuario para el modelo 3D del marcador y la cámara en la escena.}
   \label{fig:blender_usrprsp}
 \end{figure}
-Se busca construir una escena mínima y controlada en la cual solo actúa el marcador. Con este fin es que se decide por una escena que contenga únicamente el marcador y una cámara. No se añaden luces ya que el efecto de estas en el marcador para alguna pose puede resultar en artefactos de iluminación indeseados. La no inclusión de luces en las imagen esta ligada a que el modelo 3D del marcador es en realidad hueco en las zonas blancas y negro en las zonas negras por lo tanto el negro permanece negro y la parte hueca asume el color del fondo. En otro caso se podría utilizar algún tipo de iluminación de ambiente que sea pareja en todas las direcciones y lograr un efecto similar.\\
+Se busca construir una escena mínima y controlada en la cual sólo actúa el objeto marcador. Con este fin es que se decide por una escena que contenga únicamente el marcador y una cámara. No se añaden luces ya que el efecto de estas en el marcador para alguna pose puede resultar en artefactos de iluminación indeseados. La no inclusión de luces en las imagen está ligada a que el modelo 3D del marcador es en realidad hueco en las zonas blancas y negro en las zonas negras por lo tanto el negro permanece negro y la parte hueca asume el color del fondo. En otro caso se podría utilizar algún tipo de iluminación de ambiente que sea pareja en todas las direcciones y lograr un efecto similar.\\
 
-La escena conteniendo el modelo 3D del marcador se resume en el archivo \texttt{Marker.blend}.
+Blender utiliza el sistema de coordenadas que se ve en la Figura \ref{fig:blender_usrprsp} en donde los ejes $x$, $y$, $z$ se corresponden con los ejes de color rojo, verde y azul respectivamente y forman un sistema de coordenadas siguiendo la regla de la mano derecha, lo que se dice en lenguaje técnico: \emph{right handed}.
 
-\subsection{Ajuste de escena y parámetros}
+Finalmente, la escena conteniendo el modelo 3D del marcador se resume en el archivo: \textbf{Marker.blend}.
+
+\subsection{Ajustes de escena y parámetros: GUI}
 El software Blender permite el ajuste de la escena y los parámetros y características asociados al render, la cámara y el objeto mediante su interfaz gráfica. Estos tienen como resultado final la imagen renderizada. Los parámetros y ajustes que fueron realizados y resultan ser los más relevantes para la reproducción del proceso de renderizado del marcador se explican a continuación.
 
 \begin{itemize}
@@ -33,46 +40,46 @@ El software Blender permite el ajuste de la escena y los parámetros y caracterís
 \textbf{Mundo y fondo}: Los ajustes realizados al mundo y fondo se explicaron en cierta medida anteriormente. Al no utilizar iluminación en la escena es importante definir el color del fondo ya que los huecos del modelo 3D asumirán ese color. Los ajustes realizados se muestran en la Figura \ref{fig:blender_props}(a) y consisten principalmente en definir el fondo de color blanco.
 
  \item 
-\textbf{Parametros de Render}: Los principales parámetros ajustables en cuanto a las propiedades de render son el tamaño de imagen y el porcentaje de escala sobre el tamaño de imagen el cual por defecto en proyectos nuevos se ubica en $50\%$ y en este caso interesa que sea $100\%$. Estos ajustes se pueden ver en la Figura \ref{fig:blender_props}(b).
+\textbf{Parametros de Render}: Los principales parámetros ajustables en cuanto a las propiedades de render son el tamaño de imagen y el porcentaje de escala sobre el tamaño de imagen, el cual por defecto en proyectos nuevos se ubica en $50\%$ y en este caso interesa que sea $100\%$. Estos ajustes se pueden ver en la Figura \ref{fig:blender_props}(b).
 
  \item 
-\textbf{Parámetros de Cámara}: Sobre las propiedades ajustables de la cámara se encuentra un parámetro de interés como es el campo visual, \emph{field of view}, o $fov$. Adicionalmente el \emph{Shift} representa el corrimiento del centro de imagen de la misma y también se puede ajustar en \emph{near} y el \emph{far}. Los ajustes realizados se pueden ver en la Figura \ref{fig:blender_props}(c).
+\textbf{Parámetros de Cámara}: Sobre las propiedades ajustables de la cámara se encuentra un parámetro de interés como es el campo visual, \emph{field of view}, o $fov$. Adicionalmente el \emph{Shift} representa el corrimiento del centro de imagen de la misma y también se puede ajustar el \emph{near} y el \emph{far}. Los ajustes realizados se pueden ver en la Figura \ref{fig:blender_props}(c).
 
  \item 
-\textbf{Parámetros de Objeto}: Las propiedades ajustables de mayor interés sobre el objeto se refieren a su pose. La locación y rotación del objeto pueden ser asociadas a la pose del objeto respecto a la cámara si se asume una interacción del tipo cámara fija, objeto movil. Se aclara aquí que un ajuste idéntico se puede realizar sobre el objeto cámara. La cámara se fija para todos los casos en el origen de coordenadas de Blender con orientación nula en las tres direcciónes. Esto resulta en una cámara que mira en el eje $z$. Volviendo a los ajustes del objeto marcador, se presentan los ajustes de escala ya mencionados en el ajuste de unidades del modelo 3D y también un factor de importancia como es el orden y tipo de rotación \emph{XYZ Euler}. Todos los ajustes aquí descritos para el objeto marcadores se pueden ver en la Figura \ref{fig:blender_props}(d).
+\textbf{Parámetros de Objeto}: Las propiedades ajustables de mayor interés sobre el objeto se refieren a su pose. La locación y rotación del objeto pueden ser asociadas a la pose del objeto respecto a la cámara si se asume una interacción del tipo cámara fija, objeto movil. Se aclara aquí que un ajuste idéntico se puede realizar sobre el objeto cámara. La cámara se fija para todos los casos en el origen de coordenadas de Blender con orientación nula en las tres direcciónes. Esto resulta en una cámara alineada con el eje $z$ que mira hacia los $z$ negativos. Volviendo a los ajustes del objeto marcador, se presentan los ajustes de escala ya mencionados en el ajuste de unidades del modelo 3D y también un factor relevante como es el orden de las rotaciones respecto al tipo de rotación: \emph{XYZ Euler}. Todos los ajustes aquí descritos para el objeto marcador se pueden ver en la Figura \ref{fig:blender_props}(d).
 \end{itemize}
 Vale la pena observar que los ajustes de Render y Cámara constituyen una forma de establecer los \textbf{parámetros intrínsecos} de la cámara. Mientras que los ajustes de Objeto para la Cámara y el Marcador representan la \textbf{pose del objeto} en el modelo de vinculación adoptado. Se aclara que los \textbf{parámetros extrínsecos} de la cámara respecto a las coordenadas de Blender es nula en rotación y traslación.
 \begin{figure}[h!]
   \centering
   \subfigure[Ajustes de mundo y fondo]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_wrldprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_wrldprops.png}}
     \label{fig:blender_props_a}
   \subfigure[Ajustes de render]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_rndrprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_rndrprops.png}}
     \label{fig:blender_props_b}
   \subfigure[Ajustes de cámara]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_cameraprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_cameraprops.png}}
     \label{fig:blender_props_c}
   \subfigure[Pose del objeto]{
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_objprops.png}}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_objprops.png}}
     \label{fig:blender_props_d}
   \caption{Ajustes en la escena en Blender para realizar el render.}
   \label{fig:blender_props}
 \end{figure}
 
-\subsection{Python scripting}
-Python es un lenguaje de programación interpretado, interactivo y orientado a objetos. Incorpora módulos, excepciones, tipeo dinámico, tipos de datos de muy alto nivel y clases. Python logra combinar notáblemente poder con claridad en la sintaxis \cite{blender_python}. La mayoría de las áreas de Blender pueden ser programadas mediante \emph{scripts}, incluyendo Animación, Renderizado, Importación y Exportación, Creación de objetos y tareas repetitivas. Para la interacción con Blender se hace uso de una API ``ajustada a medida''.
+\subsection{Ajustes de parámetros: Python scripting}
+Python es un lenguaje de programación interpretado, interactivo y orientado a objetos. Incorpora módulos, excepciones, \emph{tipeo} dinámico, tipos de datos de muy alto nivel y clases. Python logra combinar notablemente poder con claridad en la sintaxis \cite{blender_python}. La mayoría de las áreas de Blender pueden ser programadas mediante \emph{scripts}, incluyendo Animación, Renderizado, Importación y Exportación, Creación de objetos y Tareas repetitivas. Para la interacción con Blender se hace uso de una API ``ajustada a medida''.
 
-La API de Blender para Python se encuentra empaquetada en el módulo \texttt{bpy}. Mediante este módulo se puede acceder a los objetos y sus propiedades de la escena. De esta forma se puede de forma programática ajustar las propiedades y parámetros explicados anteriormente. De esta forma mediante la interprete de comandos de Blender se puede prescindir de la interfaz gráfica de Blender. En la Figura \ref{blender_pyconsole} se muestra un \emph{screenshot} de la consola interactiva de Python en Blender.
+La API de Blender para Python se encuentra empaquetada en el módulo \texttt{bpy}. Mediante este módulo se puede acceder a los objetos y sus propiedades de la escena. De esta forma se puede de forma programática ajustar las propiedades y parámetros explicados anteriormente. Por lo tanto mediante él intérprete de comandos de Blender se puede prescindir de la interfaz gráfica de Blender. En la Figura \ref{blender_pyconsole} se muestra un \emph{screenshot} de la consola interactiva de Python en Blender.
 \begin{figure}[h!]
   \centering
-    \includegraphics[scale=0.5]{figs_benchmark/blender/blender_pyconsole.png}
+    \includegraphics[scale=0.4]{figs_benchmark/blender/blender_pyconsole.png}
   \caption{Consola interactiva de Python incrustada en Blender.}
   \label{fig:blender_pyconsole}
 \end{figure}
-
+A continuación se muestran las principales funcionalidades que se utilizaron en la manipulación de Blender mediante la consola interactiva. Estas se van ejecutando en serie hasta la última orden que realiza el renderizado y guarda la imagen.
 \begin{itemize}
- \item Obtener referencias a la escena y el marcador.
+ \item Obtener referencias a la escena y al marcador.
 \begin{verbatim}
 >>> scene = bpy.data.scenes["Scene"]
 >>> marker = bpy.data.objects["Marker"]
@@ -99,11 +106,83 @@ La API de Blender para Python se encuentra empaquetada en el módulo \texttt{bpy}
 >>> marker.location = [tx,ty,tz]
 \end{verbatim}
 
- \item Asignación de nombre de imagen renderizada y ejecución de renderizado para guardar la imagen.
+ \item Asignación de nombre de imagen y ejecución de renderizado para guardar la imagen.
 \begin{verbatim}
 >>> bpy.data.scenes["Scene"].render.filepath = str(fname)
 >>> bpy.ops.render.render( write_still=True ) 
 \end{verbatim}
 \end{itemize}
 
-\subsection{Ejecución de consola de comandos}
+En la Figura \ref{fig:blender_render} se muestra el resultado de esta secuencia de comandos para los valores parámetros de cámara y render: \texttt{width = 480}, \texttt{height = 360}, \texttt{fov = 45.5} y la pose del objeto como \texttt{(rx,ry,rz) = (0,30,0)} y \texttt{(tx,ty,tz) = (0,0,-100)}.
+\begin{figure}[h!]
+  \centering
+    \includegraphics[scale=1.2]{figs_benchmark/blender/blender_render.png}
+  \caption{Imagen del render realizado con Blender. El mismo resultado se puede lograr mediante interfaz gráfica o mediante la consola interactiva de Python de Blender.}
+  \label{fig:blender_render}
+\end{figure}
+
+\subsection{Ejecución por consola de comandos}
+La ejecución de Blender por consola de comandos es útil en situaciones en donde se quieren realizar acciones como el Renderizado remotamente sobre una computadora potente que actúe de servidor. También puede ser utilizado para realizar acciones repetitivas sobre alguna escena o modelo y esta es la utilidad que se le dio.
+
+Asumiendo que se tiene acceso a la aplicación Blender como el ejecutable \texttt{blender}, el mismo puede ser ejecutado desde consola por el comando:
+\begin{verbatim}
+> blender
+\end{verbatim}
+Esta orden da lugar a la ejecución de Blender con su interfaz gráfica. La opción \texttt{-b} o \texttt{-}\texttt{-background} permite la ejecución de Blender sin interfaz gráfica. Si se quiere utilizar este modo se debe especificar el nombre del archivo a cargar, en este caso \textbf{Marker.blend}:
+\begin{verbatim}
+> blender -b "Marker.blend"
+\end{verbatim}
+Esto no produce ningún resultado visible, solamente abre Blender sin interfaz grafica, carga el modelo y se cierra. Es una prueba del tipo \emph{Hello World} y un chequeo de sanidad para comprobar que todo anda bien, en otro caso se mostrará algún mensaje de error de Blender.
+
+Adicionalmente se pueden añadir las funcionalidades de \emph{scripting} en Python previamente explicadas se pueden agrupar en un \emph{script} para la ejecución mediante consola de comandos sin interfaz gráfica. La opción \texttt{-P} o \texttt{-}\texttt{-python} seguida del nombre del archivo del script permite la ejecución del mismo dentro de la ejecución de Blender.
+\begin{verbatim}
+> blender -b "Marker.blend" -P "moveMarker.py"
+\end{verbatim}
+La ejecución de la orden de arriba produce una imagen renderizada del marcador. El script \mbox{\textbf{moveMarker.py}} agrupa los comandos previamente explicados para su ejecución desde la consola interactiva integrada en Blender. Para que el script pueda hacer uso de lo módulos de Blender  se debe importar el módulo, \texttt{bpy}, al comienzo del script . También se importa el módulo \texttt{sys} para la posibilidad de tener un script de Python con argumentos de línea de comando.
+\begin{verbatim}
+import bpy
+import sys
+...
+\end{verbatim}
+Finalmente se pueden agregar argumentos de línea de comando sobre el script de Python dejando accesibles las variables de interés para el proceso de renderización serial. Por ejemplo:
+\begin{verbatim}
+> blender -b "Marker.blend" -P "moveMarker.py" -- <tx> <ty> <tz> 
+  <rx> <ry> <rz> <fov> <heigh> <width> <fname>
+\end{verbatim}
+En donde el \texttt{<fname>} determina el nombre de la imagen producto del renderizado y \texttt{-}\texttt{-} especifica que el script de Python contiene argumentos. El parseo de estos argumentos de Python se debe hacer dentro del script en el cual se deben realizar las asignaciones y las conversiones a tipos de datos apropiadas.
+
+\subsubsection{Comentarios sobre el script de Python}
+A continuación se realizan algunos comentarios respecto al desarrollo del script en Python para lograr coherencia entre los sistemas de coordenadas y dimensiones que se utilizan entre el algoritmo de estimación de pose y Blender.\\
+
+Debido a que el sistema de coordenadas que utiliza Blender difiere con el adoptado por el algoritmo de estimación de pose es que debe ajustar en algún punto los ejes de alguno de los dos sistemas para trabajar de forma coherente. Lo razonable y el enfoque que se eligió es el de ajustar los ejes que se van a utilizar en Blender dentro del script de Python. Por lo tanto se aplica una transformación sobre los valores de las rotaciones y traslaciones correspondientes a esta convención de ejes:
+\begin{eqnarray*}
+ x_{blender} = x_{posit} \\
+ y_{blender} = -y_{posit} \\
+ z_{blender} = -z_{posit}
+\end{eqnarray*}
+Esto se traduce en invertir el sentido de las rotaciones y el valor de las traslaciones de los ejes $z$ e $y$. \\
+
+Otra aclaración importante refiere a que las unidades de Blender fueron ajustadas para corresponder con centímetros mientras que a lo largo del proyecto las unidades utilizadas para las coordenadas del modelo 3D y del mundo son los milímetros. Por esto es que las traslaciones dentro del script son ajustadas para corresponder con centímetros.\\
+
+Con estos dos ajustes la realización de imágenes sintéticas con el entorno desarrollado es \emph{transparente} al usuario ya que si este es coherente con las convenciones tomadas para el algoritmo de estimación de pose no se tendrán que realizar reajustes.
+
+\section{Ejecución Batch: Matlab}
+Se generó un entorno de ejecución serial tipo batch en Matlab en donde se ejecuta Blender, en su modo de ejecución por consola de comandos con script de Python con argumentos , mediante el uso de la función de Matlab \texttt{system} la cual realiza una llamada al sistema.
+
+El entorno desarrollado para generación automática de juegos de imágenes sintéticas tipo batch, que utiliza Matlab como interfaz hacia el usuario, consiste en varios pasos:
+\begin{itemize}
+ \item 
+\textbf{Configuración de Cámara}: Se fijan los parámetros intrínsecos y extrínsecos de la cámara así como el tamaño de imagen.
+ \item 
+\textbf{Setup general}: Se definen las rutas a los archivos del modelo y script de Blender así como las rutas a las carpetas para las imágenes de salida y se genera esta estructura de carpetas en caso de ser necesario. Se establece el identificador sobre el juego de poses a renderizar. 
+ \item 
+\textbf{Generar Poses}: Se generara el juego de poses correspondiente al identificador del Setup. Las definiciones sobre los juegos de poses se realizan previamente. Por ejemplo un juego de poses puede consistir en variar el ángulo de rotación respecto del eje $x$ manteniendo todos las otras rotaciones fijas y la traslación en en un $z=1000mm$. Existe la posibilidad de agregar ruido al juego de poses.
+ \item 
+\textbf{Ejecución de Blender}: En base a la Cámara, el Setup y las Poses se ejecuta para cada pose una llamada al sistema con el comando de Blender de línea de comandos con script de Python y argumentos de línea. El valor de los argumentos se ajusta para cada ejecución de forma de lograr el resultado esperado. Se genera en la estructura de carpetas un juego de imágenes de salida que corresponden a una imagen sintética del marcador.
+
+\item
+\textbf{Registro}: Se guarda un archivo de texto con las poses utilizadas y otro con las configuraciones de las cámara.
+\end{itemize}
+
+\section{Resumen}
+En este capítulo se describió el proceso general para la generación de imágenes sintéticas para la validación de los algoritmos desarrollados y utilizados en el proyecto. Se explicó qué ajustes son de interés a realizar en Blender mediante su interfaz gráfica así como a través de la consola de comandos interactiva de Python. Se describió el proceso para realizar renders desde consola de comandos mediante la utilización de un script en Python y adicionalmente mediante la inclusión de argumentos de línea de comandos de forma de parametrizar el proceso. Finalmente se describió el entorno desarrollado en Matlab para automatizar este proceso.
