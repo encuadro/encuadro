@@ -4,7 +4,7 @@
 \section{Introuducción}
 En este Capítulo se trata con algunas de las herramientas y algoritmos de detección de características del tipo de primitivas geométricas como ser puntos, esquinas, bordes, líneas, segmentos de línea y arcos. 
 
-El objetivo principal es mostrar qué características se pueden detectar y con la utilización de qué algoritmos con el fin de su utilización en un algoritmo de estimación pose, tema que se desarrolla en los Capítulos \ref{chap: camypose} y, en forma más específica en el Capítulo \ref{ch:posit}. El tipo de características elegidas para su detección en la aplicación final están fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se debe ejecutar en tiempo real. También se desea que la característica ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
+El objetivo principal es mostrar qué características se pueden detectar y con la utilización de qué algoritmos con el fin de su utilización en un algoritmo de estimación pose, tema que se desarrolla en los Capítulos \ref{chap: camypose} y, en forma más específica en el Capítulo \ref{chap: posit}. El tipo de características elegidas para su detección en la aplicación final están fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se debe ejecutar en tiempo real. También se desea que la característica ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
 
 Se busca que las características detectadas, asociadas a objetos o elementos presentes en la escena, presenten estabilidad en su ubicación frente a cambios en la pose. En forma más específica, si se tiene una esquina a detectar en una escena, por ejemplo de una mesa, la esquina puede ser detectada frente a imágenes o ``fotos'' de la mesa desde distintas posiciones y que en todos los casos la esquina detectada corresponde con la esquina de la mesa en la foto. También se busca que las características sean robustas frente a cambios en las condiciones en que se adquiere la imagen. Estas condiciones podrían ser iluminación, presencia de ruido, oclusiones, etc.
 
@@ -253,14 +253,14 @@ En la Figura \ref{fig:resultado_hough} se muestran los resultados para el detect
   \subfigure[Detección de líneas de Houhj]{
     \includegraphics[scale=0.5]{figs_detection/hough/hough_lines.png}}
   \caption{Resultados para la detección de líneas por el Método de Hough para los parámetos $MinLength=15$ y $FillGap=8$.}
-  \label{fig:resultado_harris}
+  \label{fig:resultado_hough}
 \end{figure}
 
 \subsubsection{Aplicabilidad}
 Se comprobó la dificultad intrínseca del método asociada al ajuste de parámetros no pudiéndose obtener los resultados deseados en ningún caso.
 
   \subsection{Detector de segmentos de línea: LSD}
-El algoritmo Line Segment Detector (LSD) es capaz de detectar segmentos de línea rectos y uno de los componentes principales en este proyecto. Debido a su importancia es que se le dedica el Capítulo \ref{ch:LSD} a su desarrollo.
+El algoritmo Line Segment Detector (LSD) es capaz de detectar segmentos de línea rectos y uno de los componentes principales en este proyecto. Debido a su importancia es que se le dedica el Capítulo \ref{chap: lsd} a su desarrollo.
 
 \subsubsection{Ejemplo de interés}
 En la Figura \ref{fig:resultado_lsd_ipol} se muestran los resultados del algoritmo LSD para la imagen del marcador. Este ejemplo fue realizado mediante el uso del demo \emph{online} de IPOL para este algoritmo\cite{IpolLsd12}.
@@ -288,7 +288,7 @@ El algoritmo se aplica a la imagen de entrada en niveles de gris. En primer luga
 \textbf{Extracción de segmentos de línea}: El objetivo de esta etapa es el de ``partir'' la cadena contigua de píxeles obtenida mediante el detector de bordes en uno o más segmentos de línea rectos. Básicamente lo que se hace es recorrer la secuencia de píxeles e ir ajustando líneas a los píxeles utilizando el método de ajuste de líneas por mínimos cuadrados hasta que el error exceda cierto umbral. En el momento en que se excede ese umbral se genera un nuevo segmento de línea y así recursivamente se recorren todos lo píxeles de la cadena.
 
  \item 
-\textbf{Validación de líneas}: El método de validación de segmentos de línea está basado en el principio de Helmholtz el cual postula que para que una estructura sea perceptualmente significativa, la esperanza de que la misma (agrupado o Gestalt) ocurra de casualidad debe ser muy baja. Este es un efoque \emph{a contrario} en donde los objetos son detectados como \emph{outliers} sobre el modelo de fondo. En esta etapa se logra eliminar los falsos positivos controlando el número de falsas alarmas. Este enfoque en particular es el mismo que utiliza LSD, el cual se explica en detalle el Capítulo \ref{ch:lsd}. 
+\textbf{Validación de líneas}: El método de validación de segmentos de línea está basado en el principio de Helmholtz el cual postula que para que una estructura sea perceptualmente significativa, la esperanza de que la misma (agrupado o Gestalt) ocurra de casualidad debe ser muy baja. Este es un efoque \emph{a contrario} en donde los objetos son detectados como \emph{outliers} sobre el modelo de fondo. En esta etapa se logra eliminar los falsos positivos controlando el número de falsas alarmas. Este enfoque en particular es el mismo que utiliza LSD y se explica también en el Capítulo \ref{chap: lsd}. 
 
 Si la aplicación lo permite, esta validación puede ser eliminada o sustituida por otra, por ejemplo por un umbral de largo máximo de segmentos, acelerando aún más el algoritmo EDLines. En LSD esta etapa esta integrada con la etapa de detección de segmentos para cada iteración aunque podría ser desacoplada en cierta medida. De todas formas EDLines presenta esa ventaja de modularidad frente a LSD que puede llegar a ser útil.
 \end{itemize}
@@ -385,7 +385,7 @@ La inclusión de \emph{marcadores} en la escena ayuda al problema de extracción d
 
 Los marcadores planos se pueden obtener mediante la construcción en una geometría coplanar de una serie de primitivas identificables como esquinas, segmentos o líneas. Un único marcador plano puede contener por si solo todas las seis restricciones espaciales necesarias para definir un marco de coordenadas asociado a su pose.
 
-Como se explica en la sección \ref{ch:camaraypose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre puntos 3D en la escena en coordenadas del mundo y puntos en la imagen.
+Como se explica en el Capítulo \ref{chap: camypose} el problema de estimación de pose requiere de una serie de correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ entre puntos 3D en la escena en coordenadas del mundo y puntos en la imagen.
 
 En el primer lugar se explican brevemente algunos de los sistemas de Realidad Aumentada más populares basados en marcadores planos. En segundo lugar se propone el diseño de un marcador específico para la aplicación a este proyecto y se desarrollan las soluciones a los algoritmos de detección de dicho marcador mostrando algunos resultados parciales en el proceso. Por último se muestran algunos resultados de la detección.
 
@@ -524,10 +524,16 @@ En este caso se debe cumplir siempre la condición impuesta previamente en donde 
 
 
 \section{Detección}
-La etapa de detección del marcador se puede separar en tres grandes bloques; la detección de segmentos de línea, el filtrado de segmentos y la determinación de correspondencias (figura \ref{fig:detección_diagrama_marcador}). En esta sección se muestran algunos resultados para la detección de segmentos de línea por LSD y se desarrolla en profundidad los algoritmos desarrollados durante el proyecto para el filtrado de segmentos y determinación de correspondencias.
+La etapa de detección del marcador se puede separar en tres grandes bloques:
+\begin{itemize}
+ \item Detección de segmentos de línea.
+ \item Filtrado y agrupamiento de segmentos.
+ \item Determinación de correspondencias.
+\end{itemize}
+En esta sección se muestran algunos resultados para la detección de segmentos de línea por LSD y se centra en profundidad en los algoritmos desarrollados durante el proyecto para el filtrado de segmentos y determinación de correspondencias.
 
 \subsection{Detección de segmentos de línea}
-La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el capítulo \ref{ch:lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
+La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
 
 \begin{figure}[h!]
   \centering
@@ -560,7 +566,7 @@ Dos segmentos $\mathbf{s}_i$ y $\mathbf{s}_j$ son vecinos si se cumple que la di
 
 Una vez encontrado el conjunto de cuatro segmentos conexos estos se marcan como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $m$ segmentos de la lista de entrada. De esta forma se obtiene una lista de salida $\mathbf{S}$ de $n$ segmentos en donde $n$ es por construcción múltiplo de cuatro.\\
 
-En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostenía el marcador (ver figura \ref{fig:resultado_lsd)}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
+En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd)}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea detectados por LSD]{
