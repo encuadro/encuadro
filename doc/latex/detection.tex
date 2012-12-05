@@ -12,7 +12,7 @@ El capítulo comienza con algunos detectores clásicos de bordes y esquinas como s
 % \section{Típos de características}
 
 \section{Bordes y esquinas}
-Los detectores de bordes, en particular los detectores de bordes tipo escalón son una parte esencial de muchos sistemas de visión. El proceso de detección de bordes cumple la función de simplificar drásticamente la cantidad de información a procesar conservando aspectos estructurales utilizables para establecer los límites de cierto objeto en la imagen \cite{canny}. 
+Los detectores de bordes, en particular los detectores de bordes tipo escalón son una parte esencial de muchos sistemas de visión. El proceso de detección de bordes cumple la función de simplificar drásticamente la cantidad de información a procesar conservando aspectos estructurales utilizables para establecer los límites de cierto objeto en la imagen \cite{Canny:1986:ACA}. 
 
 Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. De forma más formal puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación está relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo. Hay implementaciones de detección de bordes que toman en cuenta el \textit{efecto rampa} y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
 \begin{figure}[h!]
@@ -23,7 +23,7 @@ Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre un
 \end{figure}
 	
 \subsection{Detector de bordes de Canny}
-El detector de bordes de Canny fue desarrollado en 1986 por John F. Canny\cite{canny} en el artículo \emph{``A Computational Approach to Edge Detection''} con el objetivo de descubrir el algoritmo de detección de bordes óptimo. En esta Sección se describe brevemente el algoritmo y se muestran algunos resultados de interés. El desarrollo está inspirado principalmente en el artículo del detector de bordes de Canny de Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Canny_edge_detector}}.\\
+El detector de bordes de Canny fue desarrollado en 1986 por John F. Canny \cite{Canny:1986:ACA} en el artículo \emph{``A Computational Approach to Edge Detection''} con el objetivo de descubrir el algoritmo de detección de bordes óptimo. En esta sección se describe brevemente el algoritmo y se muestran algunos resultados de interés. El desarrollo está inspirado principalmente en el artículo del detector de bordes de Canny de Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Canny_edge_detector}}.\\
 
 Las características buscadas por Canny para el detector de borde óptimo son:
 \begin{itemize}
@@ -31,7 +31,7 @@ Las características buscadas por Canny para el detector de borde óptimo son:
  \item \textbf{Buena localización}: Los bordes marcados deben estar lo más cercanos posibles a los bordes reales en la imagen.
  \item \textbf{Respuesta mínima}: Dado un borde en la imagen este no debe ser marcado más de una vez y de ser posible la presencia de ruido no debe crear falsos bordes.
 \end{itemize}
-En la Figura \ref{fig:resultado_canny_lena}(b) se muestra un ejemplo del detector de bordes de Canny para la imagen de Lena original\ref{fig:resultado_canny_lena}(a).
+En la Figura \ref{fig:resultado_canny_lena}(b) se muestra un ejemplo del detector de bordes de Canny para la imagen de Lena original \ref{fig:resultado_canny_lena}(a).
 
 \begin{figure}[h!]
   \centering
@@ -43,7 +43,7 @@ En la Figura \ref{fig:resultado_canny_lena}(b) se muestra un ejemplo del detecto
   \label{fig:resultado_canny_lena}
 \end{figure}
 
-El algoritmo consiste en cuatro etapas básicas las cuales se describen a continuación. A lo largo de estas etapas se ejemplifica mediante el uso del demo \emph{online} de Canny en IPOL\cite{ipol_canny} para la imagen de Lena. Estos resultados intermedio se encuentran en la Figura \ref{fig:resultado_canny_lena_inter}.
+El algoritmo consiste en cuatro etapas básicas las cuales se describen a continuación. A lo largo de estas etapas se ejemplifica mediante el uso del demo \emph{online} de Canny en IPOL \cite{ipol_canny} para la imagen de Lena. Estos resultados intermedios se encuentran en la Figura \ref{fig:resultado_canny_lena_inter}.
 \begin{itemize}
 
  \item 
@@ -182,11 +182,11 @@ Un valor propio es grande y el otro peque\~no: Se está en presencia de un borde.
 \item
 Ambos valores propios son peque\~nos: Se está en presencia de una regi\'on ``plana''.
 \end{itemize}
-En la Figura \ref{fig:Fundamento1} se muestra la clasificación de la región correspondiente a la matriz $A$ correspondiente a las tres zonas de arriba (imagen tomada de \cite{Harris88acombined}).
+En la Figura \ref{fig:Fundamento1} se muestra la clasificación de la región correspondiente a la matriz $A$ correspondiente a las tres zonas de arriba. 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.5]{figs_detection/harris/fundamento1.jpg}
-\caption{Clasificación de características según los valores propios}
+\caption{Clasificación de características según los valores propios. Tomada de \cite{Harris88acombined}.}
 \label{fig:Fundamento1}
 \end{figure}
 Debido a que el cálculo de los valores propios de una matriz es un proceso computacionalmente costoso, se define la función de respuesta $R$ que depende únicamente de los valores propios $\alpha$ y $\beta$ y almacena b\'asicamente la misma informaci\'on.
@@ -424,9 +424,9 @@ Este sistema tiene algunas desventajas o ``puntos débiles''. En primer lugar la 
 El sistema puede lidiar con condiciones de iluminación cambiantes, oclusiones y segmentos partidos hasta cierto punto. Otra mejora notable con respecto a \emph{ARToolKit} reside en el sistema de identificación de marcadores. El proceso de identificación de los marcadores entre sí es a su vez más veloz y robusto que el de \emph{ARToolKit}.
 
 \section{Marcador QR}
-El enfoque elegido para la detección de características utilizando marcadores parte del trabajo de fin de curso denominado Autoposicionamiento 3D de \emph{Matías Tailanián} y \emph{Santiago Paternain} para el curso \emph{Tratamiento de imágenes por computadora} de Facultad de Ingeniería, Universidad de la República\cite{tailanian}. La elección se basa principalmente en los buenos resultados obtenidos para dicho trabajo con un enfoque relativamente simple. El trabajo desarrolla, entre otras cosas, un diseño de marcador y un sistema de detección de marcadores basado en el detector de segmentos LSD\cite{grompone10} por su buena \emph{performance}. 
+El enfoque elegido para la detección de características utilizando marcadores parte del trabajo de fin de curso denominado Autoposicionamiento 3D de \emph{Matías Tailanián} y \emph{Santiago Paternain} para el curso \emph{Tratamiento de imágenes por computadora} de Facultad de Ingeniería, Universidad de la República\cite{tailanian}. La elección se basa principalmente en los buenos resultados obtenidos para dicho trabajo con un enfoque relativamente simple. El trabajo desarrolla, entre otras cosas, un diseño de marcador y un sistema de detección de marcadores basado en el detector de segmentos LSD \cite{GJMR08} por su buena \emph{performance}. 
 
-El marcador utilizado está basado en la estructura de detección incluida en los códigos \emph{QR} y se muestra en la figura \ref{fig:Marker}. Éste consiste en tres grupos idénticos de tres cuadrados concéntricos superpuestos en ``capas''. La primer capa contiene el cuadrado negro de mayor tamaño, en la segunda capa se ubica el cuadrado mediano en color blanco y en la última capa un cuadrado negro pequeño. De esta forma se logra un fuerte contraste en los lados de cada uno de los cuadrados facilitando la detección de bordes o líneas. El resultado de una detección de líneas para esta configuración produce para cada cuadrado la detección de sus lados. A diferencia de los códigos \emph{QR} la disposición espacial de los grupos de cuadrados es distinta para evitar ambigüedades en la identificación de los mismos entre sí. 
+El marcador utilizado está basado en la estructura de detección incluida en los códigos \emph{QR} y se muestra en la Figura \ref{fig:Marker}. Éste consiste en tres grupos idénticos de tres cuadrados concéntricos superpuestos en ``capas''. La primer capa contiene el cuadrado negro de mayor tamaño, en la segunda capa se ubica el cuadrado mediano en color blanco y en la última capa un cuadrado negro pequeño. De esta forma se logra un fuerte contraste en los lados de cada uno de los cuadrados facilitando la detección de bordes o líneas. El resultado de una detección de líneas para esta configuración produce para cada cuadrado la detección de sus lados. A diferencia de los códigos \emph{QR} la disposición espacial de los grupos de cuadrados es distinta para evitar ambigüedades en la identificación de los mismos entre sí. 
 % Estas dos características son esenciales para la extracción de los \emph{puntos fiduciales} de forma coherente, es decir, las correspondencias tienen que poder ser determinadas completamente bajo criterios razonables.
 \begin{figure}[h!]
 \centering
@@ -485,7 +485,7 @@ La disposición de los $QlSet$ es tal que la distancia indicada $d_{01}$ definida
 
 
 \subsection{Parámetros de diseño}
-Provisto el diseño del marcador descrito, quedan definidos ciertos parámetros \textbf{estructurales} que fueron de tomados fijos a lo largo del proyecto pero que podrían ser cambiados para trabajos futuros asociados. Estos parámetros son:
+Provisto el diseño del marcador descrito, quedan definidos ciertos parámetros \textbf{estructurales} que fueron tomados fijos a lo largo del proyecto pero que podrían ser cambiados para trabajos futuros asociados. Estos parámetros son:
 \begin{itemize}
 \item M: cantidad de conjuntos de cuadriláteros.
 \item N: cantidad de cuadriláteros por conjuntos de cuadriláteros.
@@ -579,13 +579,13 @@ La detección de falsos positivos se puede atribuir principalmente a la condición
 \label{fig:FilterError}
 \end{figure}
 
-El sobre-filtrado de segmentos tiende a ocurrir cuando no se cumple la condición de distancia entre segmentos vecinos cuando visualmente si lo son. Se debe principalmente a que se utiliza para el filtrado un valor de $d_{th}$ fijo que resulta en buenos resultados para la aplicación pero en ciertas circunstancias produce este problema. Esta medida de distancia se podría tomar relativa al largo del los segmentos a \emph{testear} de forma de generalizar el valor pero se debería analizar un poco más en detalle la posible implementación para que resulte en buenos resultados y no introduzca otra clase de errores.\\
+El sobre-filtrado de segmentos tiende a ocurrir cuando no se cumple la condición de distancia entre segmentos vecinos cuando visualmente si lo son. Se debe principalmente a que se utiliza para el filtrado un valor de $d_{th}$ fijo que conduce a buenos resultados para la aplicación pero en ciertas circunstancias produce este problema. Esta medida de distancia se podría tomar relativa al largo del los segmentos a \emph{testear} de forma de generalizar el valor pero se debería analizar un poco más en detalle la posible implementación para que resulte en buenos resultados y no introduzca otra clase de errores.\\
 
-El algoritmo de filtrado y agrupamiento de segmentos es sensible respecto a la elección del parámetro $d_{th}$. Si esta parámetro esta por debajo del valor óptimo la \emph{performance} del algoritmo se vera afectada fuertemente pues se corre el riesgo de sobre filtrar y no proporcionar suficientes segmentos para la correcta determinación de correspondencias. Por el contrario, si el parámetro esta por encima del valor óptimo, el filtrado tiende a proveer falsos positivos aun que este caso no llega a ser tan crítico como el primero para la aplicación. A modo de ejemplo, para una imagen de tamaño $480 \times 320$ con el marcador ocupando entre un $25\%$ y un $80\% $ el valor del parámetro que da mejores resultados es aproximadamente de $6$ o $7$ píxeles.
+El algoritmo de filtrado y agrupamiento de segmentos es sensible respecto a la elección del parámetro $d_{th}$. Si este parámetro está por debajo del valor óptimo la \emph{performance} del algoritmo se verá afectada fuertemente, pues se corre el riesgo de sobre filtrar y no proporcionar suficientes segmentos para la correcta determinación de correspondencias. Por el contrario, si el parámetro está por encima del valor óptimo, el filtrado tiende a proveer falsos positivos, aunque este caso no llega a ser tan crítico como el primero para la aplicación. A modo de ejemplo, para una imagen de tamaño $480 \times 320$ con el marcador ocupando entre un $25\%$ y un $80\% $ el valor del parámetro que da mejores resultados es aproximadamente de $6$ o $7$ píxeles.
 
 \subsection{Determinación de correspondencias}
 \label{sec:detection_correspondencias}
-Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcado (sec.: \ref{sec:detection_estructuras}), de forma de desarrollar un algoritmo modular, escalable y simple.
+Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador vistos en \ref{sec:detection_estructuras}, de forma de desarrollar un algoritmo modular, escalable y simple.
 
 Se toma como entrada la lista de segmentos filtrados y agrupados
 \begin{equation}
@@ -641,7 +641,7 @@ con $l = (0,1,2)$. Esta búsqueda se realiza hasta encontrar un total de tres $Ql
 
 Una vez obtenida la lista de tres $QlSet$, 
 $$QlSetList = \begin{pmatrix} QlSet[0] & QlSet[1] & QlSet[2] \end{pmatrix}$$
-ésta se ordena de forma que su disposición espacial se corresponda con la del marcador QR. Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, $\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i$. En este punto que es importante que la condición de distancia entre los centros de los $QlSet$ se cumpla, $d_{10} \gg d_{20}$, para una simple identificación. Bajo una transformación proyectiva del marcador, es posible que esta relación se modifique e incluso que deje de valer pero imponiendo la condición ``mucho mayor'' se asegura que el algoritmo funciona correctamente para condiciones razonables. Esto es, para proyecciones o poses que se encuentran dentro de las hipótesis uso de la aplicación.
+ésta se ordena de forma que su disposición espacial se corresponda con la del marcador QR. Para esto se calculan las distancias entre los centros de cada $QlSet$ y se toma el índice $i$ como el índice que produce el vector de menor distancia, $\mathbf{u}_i = \mathbf{c}_{i+1} -\mathbf{c}_i$. En este punto es importante que la condición de distancia entre los centros de los $QlSet$ se cumpla, $d_{10} \gg d_{20}$, para una simple identificación. Bajo una transformación proyectiva del marcador, es posible que esta relación se modifique e incluso que deje de valer, pero imponiendo la condición ``mucho mayor'' se asegura que el algoritmo funciona correctamente para condiciones razonables. Esto es, para proyecciones o poses que se encuentran dentro de las hipótesis de uso de la aplicación.
 
 Una vez seleccionado el vector $\mathbf{u}_i$, se tienen obtiene el juego de vectores $(\mathbf{u}_i,\mathbf{u}_{i+1},\mathbf{u}_{i+2})$ como se muestra en la figura \ref{fig:Centros}.
 \begin{figure}[h!]
@@ -700,7 +700,7 @@ Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ ne
 \end{figure}
 
 \subsection{Detección robusta}
-El algoritmo descripto al momento requiere que dentro de la lista de segmentos filtrados se encuentren todos los segmentos que componen el marcador pero este requerimiento representa un problema importante en cuanto a el desempeño del algoritmo. En caso de que esto no se cumpla no es posible proporcionar las correspondencias necesarias para la estimación de pose y no se tendrá una pose válida para ese cuadro o \emph{frame} para la aplicación. En aplicaciones en tiempo real en donde el procesamiento de la imagen es la mayor limitante, la fluidez visual dada por el \emph{frame rate} se ve notablemente perjudicada resultando en que el sistema sea incómodo e incluso inutilizable. Es por esto que en esta sección se desarrolla la extensión del algoritmo de determinación de correspondencias para una cantidad menor de segmentos detectados y filtrados que resulta en una mejor sustancial en la cantidad de \emph{frames} en los cuales es posible determinar correspondencias y obtener así una pose válida.\\
+El algoritmo descripto al momento requiere que dentro de la lista de segmentos filtrados se encuentren todos los segmentos que componen el marcador pero este requerimiento representa un problema importante en cuanto a el desempeño del algoritmo. En caso de que esto no se cumpla no es posible proporcionar las correspondencias necesarias para la estimación de pose y no se tendrá una pose válida para ese cuadro o \emph{frame} para la aplicación. En aplicaciones en tiempo real en donde el procesamiento de la imagen es la mayor limitante, la fluidez visual dada por el \emph{frame rate} se ve notablemente perjudicada resultando en que el sistema sea incómodo e incluso inutilizable. Es por esto que en esta sección se desarrolla la extensión del algoritmo de determinación de correspondencias para una cantidad menor de segmentos detectados y filtrados que resulta en una mejora sustancial en la cantidad de \emph{frames} en los cuales es posible determinar correspondencias y obtener así una pose válida.
 
 Se busca una determinación de correspondencias más robusta pero manteniendo las esencia del algoritmo desarrollado. Por esto se tienen dos aspectos a tomar en cuenta; la detección de $QlSet$'s se realiza basada en la búsqueda de cuadriláteros concéntricos por lo que se debe contar con un mínimo de dos cuadriláteros por $QlSet$ para permitir la diferenciación entre un conjunto de segmentos filtrados debido a que pertenecen al marcador y a otro conjunto que no pertenece pero si cumple con las condiciones, por ejemplo podría ser el marco de una obra o cualquier elemento en la escena que forme un cuadrilátero. Esto fija un límite de no menos de $24$ segmentos necesarios para el funcionamiento. El otro aspecto a tomar en cuenta se refiere a la forma en que se ordenan los $Ql$'s dentro de cada $QlSet$. Como ya se explicó el orden se basa en la medida del perímetro de los $Ql$'s ordenando de menor a mayor por lo que será necesario contar con, al menos, un $QlSet$ completo de forma de tener una referencia a la hora de identificar los $QlSet$'s incompletos hallados. Por lo tanto la extensión del algoritmo permite una correcta identificación de los vértices del marcador con un número mayor o igual a $28$ segmentos.\\
 
@@ -732,7 +732,7 @@ La elección del lenguaje y la filosofía de desarrollo comentada atrás permite \t
 
 El entorno de desarrollo (IDE) utilizado para la implementación fue Eclipse CDT para C/C++: \url{http://www.eclipse.org/cdt/} en un proyecto que utiliza un \emph{Makefile} para la compilación por lo que se podría utilizar otro entorno en caso de ser necesario.\\
 
-Adicionalmente de forma de facilitar la tareas de interfaz como el abrir/capturar, el guardado/despliegue de imágenes o video así como el dibujado de segmentos y puntos sobre las imágenes se utiliza la librería OpenCV. Se aclara que esta interfaz no esta de ninguna forma integrada con los algoritmos desarrollados pero fue de gran utilidad para la implementación de los mismos. Su utilización esta intrínsecamente ligada a la librería OpenCV pero esta es una muy popular librería multifplataforma para procesamiento de imágenes.
+Adicionalmente de forma de facilitar la tareas de interfaz como el abrir/capturar, el guardado/despliegue de imágenes o video así como el dibujado de segmentos y puntos sobre las imágenes se utiliza la librería OpenCV. Se aclara que esta interfaz no está de ninguna forma integrada con los algoritmos desarrollados pero fue de gran utilidad para la implementación de los mismos. Su utilización esta intrínsecamente ligada a la librería OpenCV pero esta es una muy popular librería multifplataforma para procesamiento de imágenes.
 
 \section{Resultados de Benchmark}
 En esta sección se presentan algunos resultados de \emph{Benchmark} para los algoritmos de asociados a la detección del marcador diseñado. En particular se estudian los límites para la detección de segmentos mediante LSD y el filtrado y agrupamiento de los mismos para juegos de imágenes sintéticas generadas utilizando las herramientas explicadas en el Capítulo \ref{chap: benchmark}.\\
@@ -744,7 +744,7 @@ Para la evaluación de los algoritmos se utilizaron algunos parámetros de Benchma
 
 Un juego de parámetros fue tomado fijo y se refiere a la cámara utilizada. 
 \begin{itemize}
- \item $width \times height$: Tamaño de imagen tomado $480x360$.
+ \item $width \times height$: Tamaño de imagen tomado $480\times360$.
  \item $fov$: Campo visual referido al ancho tomado $46.46°$
  \item $centro$: Centro de la cámara siempre ubicado en el medio de la imagen.
 \end{itemize}
@@ -759,7 +759,7 @@ Los valores que toman estos parámetros para las pruebas finales que corresponden
 \begin{itemize}
  \item $d_{th} = 5px$
  \item $s = 0.5$
- \item $width\times height = 480x360 px^2$
+ \item $width\times height = 480\times360 px$
 \end{itemize}
 La elección de estos parámetros fue \textbf{definitiva} para las pruebas de Benchamark a lo largo de todo el documento. Por más información sobre las herramientas de Benchmark y los parámetros ajustables para la generación de imágenes sintéticas referirse al Capítulo \ref{chap: benchmark}.
 
@@ -773,7 +773,7 @@ Se puede ver en la Figura \ref{fig:benchmark_segmentos_z} los casos límite sobre
   \subfigure[Resultado de LSD para $z= 1575 mm$]{
     \includegraphics[scale=0.48]{figs_detection/limitesDeteccion/Caso1-LSD196.png}}
   \subfigure[Resultado de LSD para $z= 1580 mm$]{
-    \includegraphics[scale=0.48]{figs_detection/limitesDeteccion/Caso1-LSD196.png}}
+    \includegraphics[scale=0.48]{figs_detection/limitesDeteccion/Caso1-LSD197.png}}
   \subfigure[Resultado de filtrado de segmentos para $z= 1575 mm$]{
     \includegraphics[scale=0.48]{figs_detection/limitesDeteccion/Caso1-LSDfilter196.png}}
   \caption{Límites para la profundidad máxima en el eje $z$ del marcador.}

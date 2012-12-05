@@ -160,7 +160,7 @@ y_0 \\
 1
 \end{array} \right)
 \]
-\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,1)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0y'_0,s'_0)$:\\
+\item \textbf{Matriz de parámetros intrínsecos $(I)$:} de las coordenadas homogéneas del punto \textbf{M} expresadas en el sistema de coordenadas de la cámara $(X_0,Y_0,Z_0,1)$, a las coordenadas homogéneas del punto \textbf{m} expresadas respecto del sistema de coordenadas normalizadas de la imagen $(x'_0,y'_0,s'_0)$:\\
 Se obtiene combinando las dos últimas transformaciones. Nótese que como ya se aclaró, depende únicamente de parámetros propios de la construcción de la cámara:
 \[
 I = 
@@ -265,8 +265,8 @@ y_0
 donde $r$ es la distancia radial $\sqrt{x_0^2 + y_0^2}$ y $L(r)$ es un factor de distorsión que depende únicamente del radio $r$. Si se desarrolla la ecuación anterior, y se expresa en píxeles, respecto del sistema de coordenadas normalizadas de la imagen; se obtiene lo siguiente:
 \[
 \begin{array}{c}
-\tilde{u_0}' = x_C' + L(r)(x_0' - x_C') \\
-\tilde{v_0}' = y_C' + L(r)(y_0' - y_C') 
+\tilde{x_0}' = x_C' + L(r)(x_0' - x_C') \\
+\tilde{y_0}' = y_C' + L(r)(y_0' - y_C') 
 \end{array}
 \]
 donde $(\tilde{x_0}',\tilde{y_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(x_0',y_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(x_C',y_C')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(x_0' - x_C')^2 +(y_0' - y_C')^2 }$.\\
@@ -279,7 +279,7 @@ La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. U
 \section{Métodos para la calibración de cámara}
 \label{sec:Metodos de calibracion}
 
-Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, sin embargo, los tres algoritmos basados en modelos planos más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.\\
+Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, sin embargo, los tres algoritmos basados en modelos planos más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.
 
 \begin{figure}[h!]
 \centering
@@ -288,7 +288,7 @@ Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los 
 \label{fig:damero}
 \end{figure}
 
-El método de Zhang es muy sencillo y flexible. Sólo requiere de la cámara a calibrar, una computadora y una imagen patrón (plana), de tipo damero a la que se le tomarán al menos dos fotografías desde orientaciones distintas. En la figura \ref{fig:damero} se ve una de las imágenes utilizadas para calibrar la cámara del \textit{iPad 2}. Ni las posiciones de la cámara en cada caso, ni el movimiento entre estas posiciones tienen por qué ser conocidos. Este método devuelve los parámetros intrínsecos de la cámara correspondientes al modelo \textit{pin-hole} visto anteriormente, sus parámetros extrínsecos para cada fotografía utilizada para la calibración y la distorsión radial de sus lentes.\\
+El método de Zhang es muy sencillo y flexible. Sólo requiere de la cámara a calibrar, una computadora y una imagen patrón (plana), de tipo damero a la que se le tomarán al menos dos fotografías desde orientaciones distintas. En la Figura \ref{fig:damero} se ve una de las imágenes utilizadas para calibrar la cámara del \textit{iPad 2}. Ni las posiciones de la cámara en cada caso, ni el movimiento entre estas posiciones tienen por qué ser conocidos. Este método devuelve los parámetros intrínsecos de la cámara correspondientes al modelo \textit{pin-hole} visto anteriormente, sus parámetros extrínsecos para cada fotografía utilizada para la calibración y la distorsión radial de sus lentes.
 
 Recuérdese que la relación entre un punto 3D \textbf{M} expresado respecto de los ejes de coordenadas del mundo y su proyección en el plano imagen \textbf{m}, expresada respecto de los ejes normalizados de la imagen, viene dada por:
 \[
@@ -341,7 +341,7 @@ V_0 \\
 \]
 donde $(U_0, V_0,W_0, 1 )^T$ denota las coordenadas homogéneas del punto \textbf{M} respecto de los ejes del mundo y $(x'_0,y'_0,1)^T$ representa las coordenadas homogéneas de su proyección en el plano imagen, \textbf{m}, respecto de los ejes normalizados de la imagen. Se le llamó $r_i$ a la i-ésima columna de la matriz rotación de los parámetros extrínsecos de la cámara.\\
 
-Dada una fotografía de la imagen patrón plana (figura \ref{fig:damero}), es posible estimar una homografía que relacione a los puntos de la imagen con sus correspondientes en la fotografía. Si se toma en cuenta que dicha homografía vale $H =(h_{1}, h_{2}, h_{3}) = I.(r_{1}, r_{2}, t)$, con $h_i$ la i-ésima columna de la matriz, y que las columnas $r_1$ y $r_2$ son ortonormales entre sí, realizando algo de matemática se llega a que:
+Dada una fotografía de la imagen patrón plana (Figura \ref{fig:damero}), es posible estimar una homografía que relacione a los puntos de la imagen con sus correspondientes en la fotografía. Si se toma en cuenta que dicha homografía vale $H =(h_{1}, h_{2}, h_{3}) = I.(r_{1}, r_{2}, t)$, con $h_i$ la i-ésima columna de la matriz, y que las columnas $r_1$ y $r_2$ son ortonormales entre sí, realizando algo de matemática se llega a que:
 \[
 \begin{array}{c}
 h_1^T.(I^{-1})^T.I^{-1}.h_2 =0 \\
@@ -388,15 +388,15 @@ v_{12}^T \\
 \right)
 .b = V.b = 0
 \]
-Utilizando $n$ fotografías distintas de la imagen patrón, y por lo tanto $n$ homografías distintas se obtiene una matriz V de tama\~no $2.n\times 6$. Es sabido que si $n\geq 3$, el sistema matricial anterior tendrá una solución $b$ única, que varía según cierto factor de escala. Sin embargo, si $n=2$, es posible imponer la condición $s=0$ y así también calcular al vector $b$ de forma única, sin mayores problemas.\\
+Utilizando $n$ fotografías distintas de la imagen patrón, y por lo tanto $n$ homografías distintas se obtiene una matriz V de tama\~no $2.n\times 6$. Es sabido que si $n\geq 3$, el sistema matricial anterior tendrá una solución $b$ única, que varía según cierto factor de escala. Sin embargo, si $n=2$, es posible imponer la condición $s=0$ y así también calcular al vector $b$ de forma única, sin mayores problemas.
 
-Una vez estimado $b$ es posible reconstruir la matriz de parámetros intrínsecos I, para luego utilizando I y las homografías H obtener los parámetros extrínsecos de la cámara para cada fotografía utilizada para la calibración.\\ 
+Una vez estimado $b$ es posible reconstruir la matriz de parámetros intrínsecos I, para luego utilizando I y las homografías H obtener los parámetros extrínsecos de la cámara para cada fotografía utilizada para la calibración.
 
 El artículo de Zhang afirma que la solución obtenida hasta el momento no es del todo buena, pues se obtuvo minimizando una distancia algebraica y eso no tiene mucho sentido. Lo que se hace entonces es, utilizando las $n$ fotografías tomadas para la calibración y los $k$ puntos seleccionados en cada una de ellas, minimizar la siguiente ecuación:
 \[
 \sum_{i=1}^{n} \sum_{j=1}^{k}  \norm{m_{ij} - \hat{m}(I, E_i, M_j)}^2
 \]
-donde $\hat{m}(I, E_i, M_j)$ es la proyección del punto $M_j$ en la imagen $i$ utilizando la homografíau $H_i= I.E_i$. El resultado de dicha minimización no lineal será el resultado final. Este método requiere de valores inicales para $I$ y para los $E_i|_{i=1..n}$; que serán los obtenidos en los cálculos anteriores. \\
+donde $\hat{m}(I, E_i, M_j)$ es la proyección del punto $M_j$ en la imagen $i$ utilizando la homografía $H_i= I.E_i$. El resultado de dicha minimización no lineal será el resultado final. Este método requiere de valores iniciales para $I$ y para los $E_i|_{i=1..n}$; que serán los obtenidos en los cálculos anteriores. 
 
 Finalmente se realiza una estimación de la distorsión radial utilizando un modelo muy similar al visto en la sección \ref{sec:distorsion}. 
 
@@ -473,7 +473,7 @@ Existen varios algoritmos de estimación de pose, a continuación se presentan alg
 
 \subsection{\textit{DLT} (\textit{D}irect \textit{L}inear \textit{T}ransform)}
 \label{subsec: DLT}
-Este método sirve para calcular la matriz \textbf{H} en la cual están implícitos los parámetros intrínsecos y extrínsecos. Si se conocen los parámetros intrínsecos se pueden despejar la matriz \textbf{E} con la información de la pose. 
+Este método sirve para calcular la matriz \textbf{H} en la cual están implícitos los parámetros intrínsecos y extrínsecos. Si se conocen los parámetros intrínsecos se puede despejar la matriz \textbf{E} con la información de la pose. 
 
 Como se vio anteriormente
 
@@ -581,10 +581,10 @@ Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo 
 Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
 Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
 
-La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{ch: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
+La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{chap: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
-Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los \textit{quaternions}. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
+Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los cuaternios o \textit{quaternions} inglés. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
 
 \subsection{Representación matricial}
 Esta representación es la que se introdujo en \ref{sec:Matriz de proyección}. En esta matriz las filas corresponden a los versores del sistema de coordenadas de la cámara expresados en las coordenadas del mundo. Se puede expresar como

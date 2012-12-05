@@ -2,20 +2,21 @@
 \label{chap: lsd}
 
 \section{Introducción}
-LSD es un algoritmo de detección de segmentos publicado recientemente \cite{GJMR12}. Es temporalmente lineal, tiene precisión inferior a un píxel y no requiere de un ajuste previo de parámetros, como casi todos los demás algoritmos de idéntica función. Puede ser considerado el estado del arte en cuanto a detección de segmentos en imágenes digitales. Como cualquier otro algoritmo de detección de segmentos, LSD basa su estudio en la búsqueda de contornos angostos dentro de la imagen. Estos son regiones en donde el nivel de brillo de la imagen cambia notoriamente entre píxeles vecinos, lo cual puede ser detectado mediante el módulo del gradiente de la misma.\\ 
+LSD es un algoritmo de detección de segmentos publicado recientemente \cite{GJMR12}. Es temporalmente lineal, tiene precisión inferior a un píxel y no requiere de un ajuste previo de parámetros, como casi todos los demás algoritmos de idéntica función. Puede ser considerado el estado del arte en cuanto a detección de segmentos en imágenes digitales. Como cualquier otro algoritmo de detección de segmentos, LSD basa su estudio en la búsqueda de contornos angostos dentro de la imagen. Estos son regiones en donde el nivel de brillo de la imagen cambia notoriamente entre píxeles vecinos, lo cual puede ser detectado mediante el módulo del gradiente de la misma.
 
-Se genera en primer lugar, un campo de orientaciones asociadas a cada uno de los píxeles denominado por los autores \textit{level-line orientation field}. Dicho campo se obtiene de calcular las orientaciones ortogonales a los ángulos asociados al gradiente del la imagen. Luego, LSD puede verse como una composición de tres pasos:\\
+Se genera en primer lugar, un campo de orientaciones asociadas a cada uno de los píxeles denominado por los autores \textit{level-line orientation field}. Dicho campo se obtiene de calcular las orientaciones ortogonales a los ángulos asociados al gradiente del la imagen. Luego, LSD puede verse como una composición de tres pasos:
 \begin{itemize}
 \item[(1)] División de la imagen en las llamadas \textit{line-support regions}, que son grupos conexos de píxeles con idéntica orientación, a menos de cierta tolerancia. 
 \item[(2)] Búsqueda del segmento que mejor aproxime cada  \textit{line-support region}: aproximación de las regiones por rectángulos.
 \item[(3)] Validación o no de cada segmento detectado en el punto anterior. 
 \end{itemize}
-Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman \cite{burns86}, y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel \cite{desolneux00}. \\
+
+Los puntos (1) y (2) están basados en el algoritmo de detección de segmentos de Burns, Hanson y Riseman \cite{burns86}, y el punto (3) es una adaptación del método \textit{a contrario} de Desolneux, Moisan y Morel \cite{desolneux00}. 
 
 En el presente capítulo se estudiará a fondo el algoritmo y se presentarán y justificarán algunos cambios que hubo que hacerle a la imlpementación del mismo con la que se contaba, versión 1.6 descargada de \cite{IpolLsd12}, para mejorar su desempe\~no en el tiempo real.\\
 
 \section{\textit{Line-support regions}}
-El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual orientación, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``\textit{region growing}''; cada región comienza por un píxel y cierto ángulo asociado, que en este caso coincide con el de este primer píxel. Luego, se testean sus ocho vecinos y los que cuenten con un ángulo similar al de la región son incluídos en la misma. En cada iteración el ángulo asociado a la región es calculado como el promedio de las orientaciones de cada píxel dentro de la \textit{line-support region}; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.\\
+El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con igual orientación, a menos de cierta tolerancia $\tau$, llamadas \textit{line-support regions}. El método para realizar tal división es del tipo ``\textit{region growing}''; cada región comienza por un píxel y cierto ángulo asociado, que en este caso coincide con el de este primer píxel. Luego, se testean sus ocho vecinos y los que cuenten con un ángulo similar al de la región son incluídos en la misma. En cada iteración el ángulo asociado a la región es calculado como el promedio de las orientaciones de cada píxel dentro de la \textit{line-support region}; la iteración termina cuando ya no se pueden agregar más píxeles a la misma.
 
 \begin{figure}[h!]
 \centering
@@ -24,7 +25,7 @@ El primer paso de LSD es el dividir la imagen en regiones conexas de píxeles con
 \label{fig: lsd_1}
 \end{figure}
 
-Los píxels agregados a una región son marcados de manera que no vuelvan a ser testeados. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. \\
+Los píxels agregados a una región son marcados de manera que no vuelvan a ser testeados. Para mejorar el desempe\~no del algoritmo, las regiones comienzan a evaluarse por los píxeles con gradientes de mayor amplitud ya que estos representan mejor los bordes. 
 
 Existen algunos casos puntuales en los que el proceso de búsqueda de \textit{line-support regions} puede arrojar errores. Por ejemplo, cuando se tienen dos segmentos que se juntan y que son colineales a no ser por la tolerancia $\tau$ descripta anteriormente, se detectarán ambos segmentos como uno solo; ver Figura \ref{fig: lsd_2}. Este potencial problema es heredado del algoritmo de Burns, Hanson y Riseman.
 
@@ -133,7 +134,7 @@ Como en este proyecto en particular se trabaja con marcadores formados por cuadr
 
  \subsection{Algoritmo en precisión simple}
 
-Originalmente, LSD fue implementado en precisión doble o \textit{double} (en general 64 bits por valor). Sin embargo, el \textit{ipad 2} (dispositivo para el cual se optimizó el algoritmo), cuenta con un procesador \textit{ ARM Cortex-A9}, cuyo bus de datos es de 32 bits. Se decidió entonces probar cambiar al algoritmo a precisión simple o \textit{float} (32 bits por valor) y los resultados fueron realmente buenos. No sólo el algoritmo bajó su tiempo de ejecución, sino que además no existen cambios notorios en el desempe\~no del mismo.
+Originalmente, LSD fue implementado en precisión doble o \textit{double} (en general 64 bits por valor). Sin embargo, el \textit{iPad 2} (dispositivo para el cual se optimizó el algoritmo), cuenta con un procesador \textit{ ARM Cortex-A9}, cuyo bus de datos es de 32 bits. Se decidió entonces probar cambiar al algoritmo a precisión simple o \textit{float} (32 bits por valor) y los resultados fueron realmente buenos. No sólo el algoritmo bajó su tiempo de ejecución, sino que además no existen cambios notorios en el desempe\~no del mismo.
 
 \subsection{Resultados}
 
@@ -257,7 +258,7 @@ Tiempo medio de procesamiento		& \textbf{189,8ms}		& \textbf{90,8ms} \\ \hline
 \end{itemize}
 
 \section{Resumen}
-En el presente capítulo se vió en detalle LSD, un algoritmo de detección de segmentos en imágenes que puede ser considerado el estado del arte en su rubro. Luego se afirmó que, si bien sus autores sostienen que el algoritmo es temporalmente lineal, lo que haría viable su uso en tiempo real; la implementación disponible del mismo, realizada por los propios autores, no está optimizada para tal caso y por eso hubo que hacerle algunos prque\~nos cambios al código. Dichos cambios lograron mejoras importantes en cuanto al tiempo de procesamiento, manteniendo prácticamente invariado su desempe\~no.\\
+En el presente capítulo se vió en detalle LSD, un algoritmo de detección de segmentos en imágenes que puede ser considerado el estado del arte en su rubro. Luego se afirmó que, si bien sus autores sostienen que el algoritmo es temporalmente lineal, lo que haría viable su uso en tiempo real; la implementación disponible del mismo, realizada por los propios autores, no está optimizada para tal caso y por eso hubo que hacerle algunos peque\~nos cambios al código. Dichos cambios lograron mejoras importantes en cuanto al tiempo de procesamiento, manteniendo prácticamente invariado su desempe\~no.\\
 
 Los resultados expuestos en las Tablas \ref{tab:gaussian_double} y \ref{tab:gaussian_float} pueden interpretarse como que la decisión de cambiar la precisión de la implementación del algoritmo de \textit{double} a \textit{float} fue una idea acertada. Por su parte, la lectura de las Tablas \ref{tab:lsd_double1}, \ref{tab:lsd_double2}, \ref{tab:lsd_float1} y \ref{tab:lsd_float2} sugiere que las mejoras en los tiempos de LSD optimizado para el tiempo real, respecto del original, son del órden de:
 
@@ -267,10 +268,10 @@ $$
 \textbf{50\% para imágenes naturales genéricas, con muchos segmentos.}
 \end{array}
 $$
-Cabe aclarar sin embargo, que si bien los resultados cualitativos\footnote{Se entiende por resultados cualitativos a la ejecución de LSD en tiempo real en el \textit{iPad}, imposibles de ilustrar en el presente texto. Ver Sección \ref{sec: casoUso1}.} sugieren resultados similares, los resultados cuantitativos fueron logrados con tan sólo las dos imágenes presentadas anteriormente.\\
+Cabe aclarar sin embargo, que si bien los resultados cualitativos\footnote{Se entiende por resultados cualitativos a la ejecución de LSD en tiempo real en el \textit{iPad 2}, imposibles de ilustrar en el presente texto. Ver Sección \ref{sec: casoUso1}.} sugieren resultados similares, los resultados cuantitativos fueron logrados con tan sólo las dos imágenes presentadas anteriormente.\\
 
 
-Finalmente, en las Figuras \ref{fig: lsd_10} y \ref{fig: lsd_11} se muestan los resultados luego de haber procesado a las Figuras \ref{fig: lsd_8} y \ref{fig: lsd_9} con LSD, primero con la implementación original y luego con la optimizada. Se puede ver, en primer lugar, la gran diferencia que existe entre la cantidad de segmentos detectados en una y otra imagen. Además, se concluye que el desempe\~no de ambas implementaciones es muy similar para el caso de la imagen \textit{zebras.png} e idéntico para el caso del marcador.\\
+Finalmente, en las Figuras \ref{fig: lsd_10} y \ref{fig: lsd_11} se muestran los resultados luego de haber procesado a las Figuras \ref{fig: lsd_8} y \ref{fig: lsd_9} con LSD, primero con la implementación original y luego con la optimizada. Se puede ver, en primer lugar, la gran diferencia que existe entre la cantidad de segmentos detectados en una y otra imagen. Además, se concluye que el desempe\~no de ambas implementaciones es muy similar para el caso de la imagen \textit{zebras.png} e idéntico para el caso del marcador.\\
 
 \begin{figure}[h!]
 \centering

@@ -60,7 +60,7 @@ y^{'}_i = y_0 + s(Y_i - Y_0)
 
 \subsection{Ecuaciones para calcular la proyección perspectiva}\label{sec:classicPosit3}
 
-Como se mencionó anteriormente la pose queda determinada si se conocen los vectores \textbf{i},\textbf{j} y la coordenada \textbf{$Z_0$} del vector de traslación. La relación entre las coordenadas de los puntos $M_i$  en el sistema de coordenadas del objeto y el sistema de coordenadas de la cámara es
+Como se mencionó anteriormente la pose queda determinada si se conocen los vectores \textbf{i}, \textbf{j} y la coordenada \textbf{$Z_0$} del vector de traslación. La relación entre las coordenadas de los puntos $M_i$  en el sistema de coordenadas del objeto y el sistema de coordenadas de la cámara es
 \begin{equation}\label{posit_eq1}
  \left(\begin{array}{ccc}
  X_i \\
@@ -92,7 +92,7 @@ x_i = \frac{\textbf{M}_0\textbf{M}_i\cdot\frac{f}{Z_0}\textbf{i}+x_0}{\textbf{M}
 \end{equation*}
 Lo mismo se tiene para $y_i$.
 
-Por lo tanto la condición necesaria para que la pose definida por \textbf{i},\textbf{j}, $x_0$, $y_0$ y $Z_0$ sea la pose exacta se puede expresar en las siguientes ecuaciones: 
+Por lo tanto la condición necesaria para que la pose definida por \textbf{i}, \textbf{j}, $x_0$, $y_0$ y $Z_0$ sea la pose exacta se puede expresar en las siguientes ecuaciones: 
 \begin{equation}\label{posit_eq2}
 \textbf{$M_0M_i$}\frac{f}{Z_0} \textbf{i}=x_i(1+\epsilon_i)-x_0
 \end{equation}
@@ -142,7 +142,7 @@ Si se escribe la Ecuación \ref{posit_eq10} para los $n$ puntos del modelo, se ti
  \textbf{A}\textbf{J} = y^{'} - y_0
  \end{split}
  \end{equation}
-\textbf{A} es una matriz $n\times3$ con las coordenadas de los puntos del modelo $M_i$ en el marco de coordenadas del objeto. Si se tienen mas de 4 puntos y no son coplanares, la matriz \textbf{A} es de rango 3, y las soluciones al sistema están dadas por
+\textbf{A} es una matriz $n\times3$ con las coordenadas de los puntos del modelo $M_i$ en el marco de coordenadas del objeto. Si se tienen más de 4 puntos y no son coplanares, la matriz \textbf{A} es de rango 3, y las soluciones al sistema están dadas por
  \begin{equation}\label{posit_eq12}
  \begin{split}
  \textbf{I} = \textbf{B}\left(x^{'} - x_0\right)\\
@@ -180,7 +180,7 @@ Para entender cual es el problema de trabajar con puntos coplanares se explica l
 \label{fig: posit_2}
 \end{figure}
 
-Si los puntos son coplanares, los vectores $M_0M_1$, $M_0M_2$ y $M_0M_3$ son todos coplanares y los planos perpendiculares que pasan por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$, se intersectan todos un una línea o en dos líneas paralelas por lo tanto hay infinitas soluciones para el vector \textbf{I}. En este caso el sistema de ecuaciones en \ref{posit_eq11} queda de rango 2. El vector solución que se obtiene al realizar la pseudo inversa de \textbf{A} es el que está a menor distancia de los planos, en la Figura \ref{fig: posit_2} es el vector $\textbf{I}_{0}$. Esta solución no es la solución al problema de los vectores de rotación, las soluciones se pueden expresar como
+Si los puntos son coplanares, los vectores $M_0M_1$, $M_0M_2$ y $M_0M_3$ son todos coplanares y los planos perpendiculares que pasan por los puntos ${H_x}_1$, ${H_x}_2$ y ${H_x}_3$, se intersectan todos en una línea o en dos líneas paralelas por lo tanto hay infinitas soluciones para el vector \textbf{I}. En este caso el sistema de ecuaciones en \ref{posit_eq11} queda de rango 2. El vector solución que se obtiene al realizar la pseudo inversa de \textbf{A} es el que está a menor distancia de los planos, en la Figura \ref{fig: posit_2} es el vector $\textbf{I}_{0}$. Esta solución no es la solución al problema de los vectores de rotación, las soluciones se pueden expresar como
 \begin{equation}\label{posit_eq15}
 \begin{split}
 \textbf{I} = \textbf{I}_{0} + \lambda \textbf{u}\\
@@ -195,7 +195,7 @@ A = U \Sigma V^{T}
 \end{equation}
 donde $U \in \Re^{n\times n}$ es ortogonal, $\Sigma \in \Re^{n \times 3}$ es diagonal, con los valores singulares en la diagonal y $V \in \Re^{3 \times 3}$ es ortogonal. Como la matriz \textbf{A} es de rango 2, los dos primeros vectores columna de la matriz V corresponden a la base de todos los puntos que pertenecen al plano del modelo, mientras que el último vector de \textbf{V} es la base del núcleo de \textbf{A}, o sea el vector \textbf{u}. El cálculo \textbf{u} se realiza junto al cálculo de la matriz \textbf{B}, ya que para ambos es necesario hacer la descomposición \textit{SVD} de \textbf{A}. 
 
-Para calcular los valores de $\lambda$ y $\mu$ se utilizan las condiciones de que \textbf{I} y \textbf{J} tienen que ser perpendiculares entre sí y del mismo largo. Como tienen que se perpendiculares se tiene que 
+Para calcular los valores de $\lambda$ y $\mu$ se utilizan las condiciones de que \textbf{I} y \textbf{J} tienen que ser perpendiculares entre sí y del mismo largo. Como tienen que ser perpendiculares se tiene que 
 $$
 \textbf{I}\cdot\textbf{J} = (\textbf{I}_{0} + \lambda \textbf{u})\cdot(\textbf{J}_{0}+ \mu \textbf{u}) = 0
 $$
@@ -251,7 +251,7 @@ Por lo tanto se toman las soluciones $(\textbf{I}_1, \textbf{J}_1)$ y $(\textbf{
 
 En el caso en que las dos soluciones sean válidas para todas las iteraciones, el número de poses posibles sería $2^n$ a lo largo de $n$ iteraciones. En la práctica se manejan menos soluciones posibles. Se diferencian dos casos:
 \begin{itemize}
-\item[$\bullet$] Si se tiene que sólo una de las dos primeras poses calculadas es válida, en las siguientes iteraciones se el da mismo comportamiento, por lo que hay solo un camino a seguir. Figura \ref{fig: posit_4}.
+\item[$\bullet$] Si se tiene que sólo una de las dos primeras poses calculadas es válida, en las siguientes iteraciones se da mismo comportamiento, por lo que hay solo un camino a seguir. Figura \ref{fig: posit_4}.
 
 \item[$\bullet$] Si se tiene que las dos primeras poses calculadas son válidas, se abren dos posibles ramas. En la segunda iteración cada rama da lugar a dos nuevas poses, pero en este caso se toma la pose que da menor error de reproyección. Figura \ref{fig: posit_5}.
 
@@ -330,7 +330,7 @@ En el término de la derecha de la Ecuación \ref{posit_eq24} se tiene la proyecci
 $$ p_i = s(M_0M_i\cdot \textbf{i} + X_0 , M_0M_i\cdot \textbf{j} + Y_0).$$
 Por otro lado, en el término de la izquierda de \ref{posit_eq24} se tienen las coordenadas del punto $p^{'}_i$ 
 $$ p^{'}_i = (1 + \epsilon_i)(x_i, y_i).$$
-que es la proyección SOP de la intersección de la línea de vista del punto $m_i$ con el plano $G''$, esto esta demostrado en \cite{David02softposit}. La pose encontrada es correcta cuando ambos lados de la Ecuación \ref{posit_eq24} son iguales. Por lo tanto la ecuación que se busca minimizar es la siguiente:
+que es la proyección SOP de la intersección de la línea de vista del punto $m_i$ con el plano $G''$, esto esta demostrado en \cite{Daniel03simultaneouspose}. La pose encontrada es correcta cuando ambos lados de la Ecuación \ref{posit_eq24} son iguales. Por lo tanto la ecuación que se busca minimizar es la siguiente:
 \begin{equation}\label{posit_eq27}
 E = \sum _i \left( \left( \textbf{Q}_1 \cdot M_0M_i - (1+ \epsilon_i)x_i \right) ^2 + \left( \textbf{Q}_2 \cdot M_0M_i - (1+ \epsilon_i)y_i \right) ^2 \right)
 \end{equation}
@@ -490,7 +490,7 @@ Se puede ver que los dos algoritmos se comportan de manera similar, en la mayorí
                 \includegraphics[scale=0.6]{figs_posit/zoom}
                 \label{fig:posit_11}}
                 
-         \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver mas de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
+         \caption{En \subref{fig:posit_10} se puede ver un barrido de rotaciones respecto al eje $y$, solo hay error cuando el ángulo de rotación es peque\~no. En \subref{fig:posit_11} se puede ver más de cerca el comportamiento en torno a cero, se grafican los limites aproximados para los cuales el algoritmo presenta problemas.}
          \label{fig:posit_9}
 \end{figure}
 En la Figura \ref{fig:posit_10} se puede ver que el algoritmo no presenta problemas para posiciones de la cámara que corresponden a imágenes del marcador muy deformadas por la perspectiva, ángulos cercanos a $90^\circ$. Este límite está dado por el filtro de correspondencias visto en \ref{ch:marcadores}.
