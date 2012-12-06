@@ -7,8 +7,7 @@
 %\usepackage{times}  % Fuente de letras
 \usepackage{amsmath,amssymb,mathrsfs,mathptmx}  % Matemticas varias
 \usepackage{hyperref} % Para escribir URLs
-\usepackage[]{algorithm2e}
-\usepackage{verbatim}
+
 
 
 % --- Arreglos varios para la inclusion de imgenes
@@ -16,7 +15,6 @@
 %\usepackage[dvips]{graphicx}
 \usepackage{graphicx}
 \usepackage{epstopdf}
-
 \usepackage{float}
 \usepackage{subfigure}
 %\usepackage{subfig}
@@ -24,6 +22,8 @@
 \usepackage[usenames,dvipsnames]{color}
 \DeclareGraphicsExtensions{.png,.jpg,.pdf,.mps,.gif,.bmp, .eps}
 
+
+	
 
 \usepackage{multirow}
 \usepackage{multicol}
@@ -69,7 +69,7 @@
 
 \begin{document}
 % Esto es para que se muestren todas las referencias aunque no se citen:
-%\nocite{*}
+\nocite{*}
 
 \renewcommand{\tablename}{Tabla}
 \renewcommand{\theenumi}{\Roman{enumi}}
@@ -85,33 +85,16 @@
 \newcommand{\highlVerde}[1]{\colorbox{green}{#1}}
 \newcommand{\highlRojo}[1]{\colorbox{red}{#1}}
 
-%--- Para indicar la norma de algo
-\providecommand{\norm}[1]{\lVert#1\rVert}
-
-\include{caratula}
-\include{agradecimiento}
+%
 \tableofcontents
 
 
-\include{intro}
-\include{alcance}
-\include{hwysw}
-\include{navident}
-\include{detection}
-\include{lsd}
-\include{camaraypose}
-\include{posit}
-\include{kalman}
-\include{render}
-\include{casosuso}
-\include{implementacion}
-\include{benchmark}
-\include{costos}
-\include{conclusiones}
-\include{trabajofuturo}
+\include{agradecimiento}
 
 % Ejemplo de como hacer una cita:
-%\cite{Hartley2004}.
+%\cite{Daniel03simultaneouspose}.
+
+
 
 \bibliographystyle{unsrt}   
 \bibliography{encuadro}  
