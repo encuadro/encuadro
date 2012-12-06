@@ -70,7 +70,7 @@ Por identificación de obras se entiende al proceso mediante el cual la aplicació
 
 \subsection{Realidad Aumentada}
 
-El proceso mediante el cual se logra la realidad aumentada puede verse en el diagrama de bloques de la Figura \ref{fig: bloques_ra}. Resulta muy importante aclarar que cada uno de estos bloques es perfectamente intercambiable por otro de idéntica función, tan sólo ajustando las interfaces entre ellos.\\
+El proceso mediante el cual se logra la realidad aumentada puede verse en el diagrama de bloques de la Figura \ref{fig: bloques_ra}. 
 
 \begin{figure}[h!]
 \centering
@@ -79,7 +79,9 @@ El proceso mediante el cual se logra la realidad aumentada puede verse en el dia
 \label{fig: bloques_ra}
 \end{figure}
 
-En el diagrama de bloques de la Figura \ref{fig: bloques_ra}, primero la cámara toma una imagen, que luego es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores; que luego son utilizados por un algún algoritmo de estimación de pose, que busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta. Es de interés para este proyecto el utilizar en particular la detección de segmentos como método para la extracción de características de las imágenes adquiridas. Con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la realidad aumentada incorporada.\\
+El primer bloque corresponde a la cámara que captura una imagen. En el segundo bloque dicha imagen es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores. El tercer bloque corresponde a la estimación de pose, busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta.  En el cuarto bloque con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la realidad aumentada incorporada.
+
+Debe notarse que en ninguna etapa se mencionó ningún algoritmo en particular, ya sea para la detección de características como para la estimación de pose. Tampoco se menciona nada en particular para la etapa de rendereo. Esto se debe a que las etapas se concibieron de forma genérica, de manera ser libres de utilizar cualquier algoritmo de detección de características con cualquier algoritmo de estimación de pose. Las interfases entre los bloque están pensadas de forma de poder cambiar un bloque sin generar problemas en los demás bloques.  \\
 
 Para este proyecto se dise\~nó un marcador formado por tres grupos de cuadrados concéntricos, a partir del cual se extraen los segmentos necesarios para la estimación de la pose del dispositivo. El bloque de detección de características está compuesto por los bloques del diagrama de la Figura \ref{fig: bloques_correspondencias}.\\
 \begin{figure}[h!]
