@@ -53,7 +53,15 @@ La información que se obtiene de la etapa de estimación de pose son la orientaci
 Para implementar el filtro de Kalman es necesario contar con un modelo físico que modele la evolución de los estados. Como el dispositivo es controlado por una persona, no se puede asumir nada en cuanto al movimiento que va a realizar esta persona. 
 Por lo tanto se toma un modelo de posición constante y se asume que los movimientos que se realizan son peque\~nos. La matriz de evolución de estados \textbf{F} se toma como la matriz identidad. 
 
-La matriz de covarianza del ruido de proceso $\mathbf{Q}$ se toma como una matriz diagonal constante ya que, por cómo se definió el modelo se deduce que el ruido del proceso para cada estado es independiente.
+La matriz de covarianza del ruido de proceso $\mathbf{Q}$ se toma como una matriz diagonal constante ya que, por cómo se definió el modelo se deduce que el ruido del proceso para cada estado es independiente. 
+\[
+\textbf{Q} = \left(\begin{array}{ccc}
+\sigma_w^2 & 0 & 0 \\
+0 & \sigma_w^2 & 0 \\
+0 & 0 & \sigma_w^2
+\end{array} \right)
+\]
+El parámetro $\sigma_w^2$ se utiliza para ajustar la respuesta del filtro. 
 
 En este caso las observaciones que se tienen son los ángulos de Euler obtenidos en la etapa de estimación de pose $\psi_{Ck}$, $\theta_{Ck}$ y $\phi_{Ck}$. Estos tienen el mismo significado físico que los estados, por lo tanto la matriz de medición \textbf{H} se toma como la matriz identidad. 
 
@@ -85,12 +93,7 @@ Con estos parámetros se implementó el filtro de Kalman para suavizado. El modelo
 \psi_{k-1}\\
 \theta_{k-1}\\
 \phi_{k-1}
-\end{array}\right) + 
-\left(\begin{array}{ccc}
-1 & 0 & 0\\
-0 & 1 & 0\\
-0 & 0 & 1\\
-\end{array}\right)
+\end{array}\right) + \mathbf{w}_k
 \\
 \\
 \left(\begin{array}{c}
@@ -108,16 +111,14 @@ Con estos parámetros se implementó el filtro de Kalman para suavizado. El modelo
 \theta_{k}\\
 \phi_{k}
 \end{array}\right) + 
- \left(\begin{array}{ccc}
-4.962496 & 4.314506 & -0.045967 \\
-4.314506 & 7.023549 & 0.074892 \\
--0.045967 & -0.074892 & 0.001062
-\end{array} \right)
+\mathbf{v_k}
 \end{array} \right.
 \]
+ 
+Donde $\mathbf{w}_k$ es el vector de ruido de proceso de $3\times1$ cuya matriz de covarianza es \textbf{Q} y $\mathbf{v}_k$ es el vector de ruido de observación también de $3\times1$ cuya matriz de covarianza es \textbf{R}.
 
 \section{Kalman con sensores}
-Para hacer la integración de sensores se tomaron los mismos estados, la misma matriz de evolución de estados y el mismo error de proceso que en caso de suavizado. Como observaciones se tienen los ángulos de Euler calculados por POSIT $\left(\psi_C,\theta_C,\phi_C\right)$ y los ángulos de Euler a la salida de los sensores inerciales  $\left(\psi_S,\theta_S,\phi_S\right)$. El modelo en variables de estado queda:
+Para hacer la integración de sensores se tomaron los mismos estados, la misma matriz de evolución de estados, el mismo error de proceso y la misma matriz de covarianza \textbf{Q} que en caso de suavizado. Como observaciones se tienen los ángulos de Euler calculados por POSIT $\left(\psi_C,\theta_C,\phi_C\right)$ y los ángulos de Euler a la salida de los sensores inerciales  $\left(\psi_S,\theta_S,\phi_S\right)$. El modelo en variables de estado queda:
 
 \[
 \left\lbrace\begin{array}{l}
@@ -136,11 +137,7 @@ Para hacer la integración de sensores se tomaron los mismos estados, la misma ma
 \theta_{k-1}\\
 \phi_{k-1}
 \end{array}\right) + 
-\left(\begin{array}{ccc}
-1 & 0 & 0\\
-0 & 1 & 0\\
-0 & 0 & 1\\
-\end{array}\right)
+\mathbf{w}_k
 \\
 \\
 \left(\begin{array}{c}
@@ -164,17 +161,22 @@ Para hacer la integración de sensores se tomaron los mismos estados, la misma ma
 \theta_{k}\\
 \phi_{k}
 \end{array}\right)+
-\left(\begin{array}{cccccc}
+\mathbf{v}_k
+\end{array} \right.
+\]  
+
+El vector de ruido de observación $\mathbf{v}_k$ es de $6\times1$. La matriz de covarianza del error de observación es una matriz de bloques diagonal compuesta por la matriz de covarianza del error de medición de POSIT y por la matriz de covarianza del error de medición de los sensores. Se tiene entonces 
+\[
+textbf{R} = \left(\begin{array}{cccccc}
 4.962496 & 4.314506 & -0.045967 & 0 & 0 & 0 \\
 4.314506 & 7.023549 & 0.074892 & 0 & 0 & 0  \\
 -0.045967 & -0.074892 & 0.001062 & 0 & 0 & 0 \\
 0 & 0 & 0 & 1 & 0 & 0\\ 
 0 & 0 & 0 & 0 & 1 & 0\\ 
 0 & 0 & 0 & 0 & 0 & 1\\ 
-\end{array} \right)
-\end{array} \right.
-\]  
-La matriz de error de medición es una matriz de bloques diagonal compuesta por la matriz de covarianza del error de medición de POSIT y por la matriz de covarianza del error de medición de los sensores. Es razonable tomar la matriz covarianza como diagonal ya que esto implica que el error de medición de  POSIT es independiente de el de los sensores. Para los sensores no se contó con ninguna estadística que permitiera calcular la matriz de covarianza, lo que es un aspecto a mejorar.  
+\end{array} \right)\]
+
+Es razonable tomar la matriz covarianza como diagonal ya que esto implica que el error de medición de  POSIT es independiente de el de los sensores. Para los sensores no se contó con ninguna estadística que permitiera calcular la matriz de covarianza, lo que es un aspecto a mejorar.  
 %\section{Kalman robusto}
 
 \section{Resultados}
