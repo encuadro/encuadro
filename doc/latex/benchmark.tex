@@ -3,7 +3,7 @@
 \section{Introducción}
 Durante el desarrollo del proyecto se hizo presente la necesidad de contar con herramientas de medida del desempeño objetivas para la validación de los algoritmos que se utilizaron y desarrollaron. En particular se desea evaluar los algoritmos asociados a la detección de características y estimación de pose. Estos son LSD, filtrado de segmentos, determinación de correspondencias y Posit Coplanar. 
 
-El enfoque elegido para la validación de dichos algoritmos consiste en la generación de una ``verdad de piso'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en este proyecto como \emph{Benchmark} o Comparativa. De esta forma se pueden generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
+El enfoque elegido para la validación de dichos algoritmos consiste en la generación de un conjunto de ``datos de referencia'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en este proyecto como \emph{Benchmark} o Comparativa. De esta forma se puede generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
 
 Debido a la naturaleza del proyecto fue necesario generar un entorno para la evaluación el cual incluye la generación de imágenes sintéticas asociadas a esa \emph{ground truth} en Blender. También fue necesario el desarrollo de un entorno en Matlab que permita una ejecución tipo batch para la generación de estas imágenes así como para la generación, análisis y despliegue de resultados en forma rápida y simple.
 
@@ -12,7 +12,7 @@ Para realizar el Benchmark se desarrolló un entorno de generación de imágenes si
 
 La generación de imágenes sintéticas consiste en producir una imagen 2D en base a un modelo 3D de una escena y una pose de la cámara respecto a esa escena o viceversa. Este proceso se denomina \emph{Rendering}, o renderizado, y el mismo se trata en el Capítulo \ref{chap: render} para la herramienta para dispositivos móviles \emph{ISGL3D}. 
 
-Blender es un \emph{suite} de creación de contenidos gratiuito y de código abierto. Está disponible para los principales sistemas operativos, Windows, Mac, Linux; bajo la Licencia Pública General GNU\cite{blender}. Algunas de sus prestaciones son modelado, \emph{shading}, animación, renderizado, e interacción 3D. También presenta herramientas de \emph{scripting} mediante el uso del lenguaje \emph{Python} las cuales se explicarán más adelante. Se utilizó la versión de Blender 2.58 para el desarrollo siguiente ha sido utilizado satisfactoriamente con versiones más recientes como la 2.63.
+Blender es un \emph{suite} de creación de contenidos gratuito y de código abierto. Está disponible para los principales sistemas operativos, Windows, Mac, Linux; bajo la Licencia Pública General GNU\cite{blender}. Algunas de sus prestaciones son modelado, \emph{shading}, animación, renderizado, e interacción 3D. También presenta herramientas de \emph{scripting} mediante el uso del lenguaje \emph{Python} las cuales se explicarán más adelante. Se utilizó la versión de Blender 2.58 para el desarrollo siguiente ha sido utilizado satisfactoriamente con versiones más recientes como la 2.63.
 
 \subsection{Modelo 3D y escena}
 Para lograr hacer un render es necesario contar con una escena 3D y en particular con un modelo 3D del objeto de interés. Para realizar la detección de características se utiliza un marcador plano que se describe en el Capítulo \ref{ch:marcadores}.\\
@@ -30,7 +30,8 @@ Se busca construir una escena mínima y controlada en la cual sólo actúa el objet
 
 Blender utiliza el sistema de coordenadas que se ve en la Figura \ref{fig:blender_usrprsp} en donde los ejes $x$, $y$, $z$ se corresponden con los ejes de color rojo, verde y azul respectivamente y forman un sistema de coordenadas siguiendo la regla de la mano derecha, lo que se dice en lenguaje técnico: \emph{right handed}.
 
-Finalmente, la escena conteniendo el modelo 3D del marcador se resume en el archivo: \textbf{Marker.blend}.
+Finalmente, la escena conteniendo el modelo 3D del marcador se resume en el archivo: \\
+\textbf{Marker.blend}.
 
 \subsection{Ajustes de escena y parámetros: GUI}
 El software Blender permite el ajuste de la escena y los parámetros y características asociados al render, la cámara y el objeto mediante su interfaz gráfica. Estos tienen como resultado final la imagen renderizada. Los parámetros y ajustes que fueron realizados y resultan ser los más relevantes para la reproducción del proceso de renderizado del marcador se explican a continuación.
@@ -48,7 +49,6 @@ El software Blender permite el ajuste de la escena y los parámetros y caracterís
  \item 
 \textbf{Parámetros de Objeto}: Las propiedades ajustables de mayor interés sobre el objeto se refieren a su pose. La locación y rotación del objeto pueden ser asociadas a la pose del objeto respecto a la cámara si se asume una interacción del tipo cámara fija, objeto movil. Se aclara aquí que un ajuste idéntico se puede realizar sobre el objeto cámara. La cámara se fija para todos los casos en el origen de coordenadas de Blender con orientación nula en las tres direcciónes. Esto resulta en una cámara alineada con el eje $z$ que mira hacia los $z$ negativos. Volviendo a los ajustes del objeto marcador, se presentan los ajustes de escala ya mencionados en el ajuste de unidades del modelo 3D y también un factor relevante como es el orden de las rotaciones respecto al tipo de rotación: \emph{XYZ Euler}. Todos los ajustes aquí descritos para el objeto marcador se pueden ver en la Figura \ref{fig:blender_props}(d).
 \end{itemize}
-Vale la pena observar que los ajustes de Render y Cámara constituyen una forma de establecer los \textbf{parámetros intrínsecos} de la cámara. Mientras que los ajustes de Objeto para la Cámara y el Marcador representan la \textbf{pose del objeto} en el modelo de vinculación adoptado. Se aclara que los \textbf{parámetros extrínsecos} de la cámara respecto a las coordenadas de Blender es nula en rotación y traslación.
 \begin{figure}[h!]
   \centering
   \subfigure[Ajustes de mundo y fondo]{
@@ -66,6 +66,8 @@ Vale la pena observar que los ajustes de Render y Cámara constituyen una forma d
   \caption{Ajustes en la escena en Blender para realizar el render.}
   \label{fig:blender_props}
 \end{figure}
+
+Vale la pena observar que los ajustes de Render y Cámara constituyen una forma de establecer los \textbf{parámetros intrínsecos} de la cámara. Mientras que los ajustes de Objeto para la Cámara y el Marcador representan la \textbf{pose del objeto} en el modelo de vinculación adoptado. Se aclara que los \textbf{parámetros extrínsecos} de la cámara respecto a las coordenadas de Blender es nula en rotación y traslación.
 
 \subsection{Ajustes de parámetros: Python scripting}
 Python es un lenguaje de programación interpretado, interactivo y orientado a objetos. Incorpora módulos, excepciones, \emph{tipeo} dinámico, tipos de datos de muy alto nivel y clases. Python logra combinar notablemente poder con claridad en la sintaxis \cite{blender_python}. La mayoría de las áreas de Blender pueden ser programadas mediante \emph{scripts}, incluyendo Animación, Renderizado, Importación y Exportación, Creación de objetos y Tareas repetitivas. Para la interacción con Blender se hace uso de una API ``ajustada a medida''.
