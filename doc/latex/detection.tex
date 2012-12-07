@@ -415,7 +415,7 @@ Si se utiliza un único marcador la cantidad de puntos necesarios para la estimac
 \subsection{ARToolKit}
 \emph{ARToolKit} es un muy popular sistema de marcadores planos para Realidad Aumentada e Interacción Hombre-Computador. Su popularidad reside ser de los primeros proyectos en utilizar la Realidad Aumentada en dispositivos móviles y también debido a que es un proyecto de código abierto. 
 
-Los marcadores bitonales consisten en un cuadrado con borde negro y un patrón en el interior. La primer etapa del proceso de reconocimiento consisten en detectar los bordes negros. Esto se realiza buscando grupos conexos de píxeles (\emph{blobs}) que están por debajo de un determinado umbral. Posteriormente se extrae el contorno de cada grupo esos grupos que están rodeados por cuatro líneas rectas son marcados como marcadores potenciales. Las cuatro esquinas de cada marcador potencial son utilizados para calcular la homografía y así remover la distorsión perspectiva. Con el marcador en una vista canónica, se procede a identificar el patrón interno muestreando en una grilla, de por lo general $16\times 16$ o $32\times 32$, los valores de gris. Con esto se construye un vector característico y se compara por correlación con una librería de vectores de característicos logrando la identificación del mismo.
+Los marcadores bitonales consisten en un cuadrado con borde negro y un patrón en el interior. La primer etapa del proceso de reconocimiento consisten en detectar los bordes negros. Esto se realiza buscando grupos conexos de píxeles (\emph{blobs}) que están por debajo de un determinado umbral. Posteriormente se extrae el contorno de cada grupo, esos grupos que están rodeados por cuatro líneas rectas son marcados como marcadores potenciales. Las cuatro esquinas de cada marcador potencial son utilizados para calcular la homografía y así remover la distorsión perspectiva. Con el marcador en una vista canónica, se procede a identificar el patrón interno muestreando en una grilla, de por lo general $16\times 16$ o $32\times 32$, los valores de gris. Con esto se construye un vector característico y se compara por correlación con una librería de vectores de característicos logrando la identificación del mismo.
 
 Este sistema tiene algunas desventajas o ``puntos débiles''. En primer lugar la detección es basada en un umbral por lo que las condiciones de iluminación pueden afectar fuertemente la efectividad de la misma. Dado que el código esta disponible este se puede modificar para realizar \emph{threshold} local o adaptivo por ejemplo. Otras desventajas están relacionadas con el proceso de identificación del marcador frente a la librería.
 
@@ -454,7 +454,7 @@ Un marcador proveerá un numero de $4\times M \times N $ vértices y por lo tanto 
 \subsection{Diseño}
 En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo QR basado en cuadriláteros y más específicamente en tres conjuntos de tres cuadrados dispuestos en como se muestra en la figura \ref{fig:Marker}.\\
 
-Los tres cuadriláteros correspondientes a un mismo conjunto de cuadriláteros tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $Ql[0]$ tiene lado $l$ mientras que $Ql[1]$ y $Ql[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $QlSet$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el área de Procesamiento de Imágenes para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los vértices $v_{j_{1}}$ de cada cuadrilátero $Ql[j]$ como,
+Los tres cuadriláteros correspondientes a un mismo conjunto de cuadriláteros tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $Ql[0]$ tiene lado $l$ mientras que $Ql[1]$ y $Ql[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $QlSet$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el área de Procesamiento de Imágenes para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas se puede fijar un orden a los vértices $v_{j_{1}}$ de cada cuadrilátero $Ql[j]$ como,
 \begin{align*}
 v_{j_{0}} = (a/2,a/2) && v_{j_{2}} = (-a/2,-a/2)  \\
 v_{j_{1}} = (a/2,-a/2)&& v_{j_{3}} = (-a/2,a/2)
@@ -498,7 +498,7 @@ El criterio de elección de $M$ y $N$ parte del diseño los códigos QR como ya fue
 
 La elección de \emph{cuadrados} como parámetro de geometría se basa en la necesidad de tener igual resolución en los dos ejes del marcador. De esta forma se asegura una distancia límite en donde, en un caso ideal enfrentado al marcador, la detección de segmentos de línea falla simultáneamente en los segmentos verticales como en los horizontales. De otra forma se tendría una dirección que limita más que la otra desaprovechando resolución.
 
-La disposición espacial de los conjuntos de cuadriláteros esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros como se muestra en la figura \ref{fig:MarkerDetail}.\\
+La disposición espacial de los conjuntos de cuadriláteros esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros como se muestra en la Figura \ref{fig:MarkerDetail}.\\
 
 Por otro lado se tiene otro juego de parámetros \textbf{dinámicos} que concluyen con el diseño del marcador. Estos parámetros conservan la estructura intrínseca del marcador permitiendo versatilidad en la aplicación y sin la necesidad de modificación alguna de los algoritmos desarrollados. Estos son:
 \begin{itemize}
@@ -526,8 +526,9 @@ La etapa de detección del marcador se puede separar en tres grandes bloques:
 En esta sección se muestran algunos resultados para la detección de segmentos de línea por LSD y se centra en profundidad en los algoritmos desarrollados durante el proyecto para el filtrado de segmentos y determinación de correspondencias.
 
 \subsection{Detección de segmentos de línea}
-La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el Capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
+La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el Capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino. 
 
+En la Figura \ref{fig:resultado_lsd} se muestra un resultado para la detección de segmentos de línea por LSD.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: imagen conteniendo al marcador]{
@@ -547,7 +548,7 @@ Se parte de una lista de $m$ segmentos de línea,
                \mathbf{s}_0 & \mathbf{s}_1 & \dots & \mathbf{s}_{m-1} 
               \end{pmatrix}^t
 \end{equation}
-y se recorre en $i$ en busca de segmentos vecinos. La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos. En una primera etapa $\mathbf{s}_j$ y en una segunda etapa $\mathbf{s}_k$, de forma que se forme una ``U'' como se muestra en la figura \ref{fig:SegmentosRectas}. La tercer etapa de búsqueda consiste en completar ese conjunto con un cuarto segmento $\mathbf{s}_l$ que cierre la ``U''.
+y se recorre en $i$ en busca de segmentos vecinos. La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos. En una primera etapa $\mathbf{s}_j$ y en una segunda etapa $\mathbf{s}_k$, de forma que se forme una ``U'' como se muestra en la Figura \ref{fig:SegmentosRectas}. La tercer etapa de búsqueda consiste en completar ese conjunto con un cuarto segmento $\mathbf{s}_l$ que cierre la ``U''.
 
 Dos segmentos $\mathbf{s}_i$ y $\mathbf{s}_j$ son vecinos si se cumple que la distancia euclídea entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$, $\mathbf{q}_i\leftrightarrow \mathbf{q}_j$, $\mathbf{p}_i\leftrightarrow \mathbf{q}_j$ o $\mathbf{q}_i\leftrightarrow \mathbf{p}_j$. En la primera etapa de la búsqueda se testean todas las posibilidades mientras que en la segunda etapa se testean solo los puntos del segmento que no fueron utilizados. Por ejemplo, si se encontró la correspondencia $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$ se busca el $k$-ésimo segmento $\mathbf{s}_k$ que cumple que la distancia euclidiana $d_{ij}$ es menor a cierto umbral para alguna de las combinaciones $\mathbf{q}_i\leftrightarrow \mathbf{p}_k$ y $\mathbf{q}_i\leftrightarrow \mathbf{q}_k$. En la tercer etapa la chequeo se realiza de forma aún más restringida probando para el segmento $\mathbf{s}_l$ correspondencia simultánea entre sus puntos y solamente un punto cada uno de los segmentos $\mathbf{s}_j$ y $\mathbf{s}_k$ .\\
 \begin{figure}[h!]
@@ -559,7 +560,7 @@ Dos segmentos $\mathbf{s}_i$ y $\mathbf{s}_j$ son vecinos si se cumple que la di
 
 Una vez encontrado el conjunto de cuatro segmentos conexos estos se marcan como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $m$ segmentos de la lista de entrada. De esta forma se obtiene una lista de salida $\mathbf{S}$ de $n$ segmentos en donde $n$ es por construcción múltiplo de cuatro.\\
 
-En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
+En la Figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea detectados por LSD]{
@@ -572,7 +573,7 @@ En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos par
 
 El algoritmo descrito es simple y provee resultados aceptables en general pero es propenso a tanto a detectar \emph{falsos positivos} como al \emph{sobre-filtrado} algunos conjuntos. 
 
-La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ más cercanos de cada segmento. Como se explicará en le Sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
+La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la Figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ más cercanos de cada segmento. Como se explicará en le Sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/FilterError.eps}
@@ -586,7 +587,7 @@ El algoritmo de filtrado y agrupamiento de segmentos es sensible respecto a la e
 
 \subsection{Determinación de correspondencias}
 \label{sec:detection_correspondencias}
-Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador vistos en \ref{sec:detection_estructuras}, de forma de desarrollar un algoritmo modular, escalable y simple.
+Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador vistos en la Sección \ref{sec:detection_estructuras}, de forma de desarrollar un algoritmo modular, escalable y simple.
 
 Se toma como entrada la lista de segmentos filtrados y agrupados
 \begin{equation}
@@ -610,7 +611,7 @@ Si  $\mathbf{r}_i$ es la recta que pasa por los puntos $\mathbf{p}_i$ y $\mathbf
 \mathbf{v}_{i+2} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+2} \nonumber\\
 \mathbf{v}_{i+3} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+1} \nonumber
 \end{eqnarray}
-resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario partiendo de ${v}_i$.
+resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la Figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario partiendo de ${v}_i$.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/Vertices.eps}
@@ -669,7 +670,7 @@ o de lo contrario se ordena como,
  QlSet[2]\longleftarrow & QlSet[i]
 \end{eqnarray*}
 
-Por ultimo se construye un marcador QR que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en la Ecuación \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre el sistema de coordenadas local al $QlSet$ y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
+Por ultimo se construye un marcador QR que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en la Ecuación \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre el sistema de coordenadas local al $QlSet$ y según su signo ordenarlos como se muestra en la Figura \ref{fig:VerticesProyectados}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/VerticesProyectados.eps}
@@ -689,7 +690,7 @@ Por último, a partir del marcador ordenado, se extrae una lista de vértices que 
   }}}
 \end{algorithm}
 
-Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose las cuales se muestran en la figura \ref{fig:resultado_points}. Se puede ver que el algoritmo de determinación de correspondencias funciona correctamente por lo que los ``falsos'' cuadriláteros que sobreviven al filtrado de segmentos no son un problema.
+Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose las cuales se muestran en la Figura \ref{fig:resultado_points}. Se puede ver que el algoritmo de determinación de correspondencias funciona correctamente por lo que los ``falsos'' cuadriláteros que sobreviven al filtrado de segmentos no son un problema.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea filtrados y agrupados]{
@@ -713,7 +714,7 @@ Una vez completada la lista de tres $QlSet$, con al menos uno de ellos detectado
 
 Al momento de proporcionar la lista de vértices ordenados $\mathbf{m}_i$ y correspondientes con los del modelo $\mathbf{M}_i$, se introducen valores inválidos para los $Ql$'s marcados como inválidos. Por último se realiza un recorte de las dos listas de puntos en base a estos valores inválidos, se recorre la lista de puntos en la imagen $\mathbf{m}_i$ y se extraen de la lista de puntos en la imagen y de los puntos del modelo los puntos inválidos obteniendo un juego de al menos $28$ correspondencias $\mathbf{m}_i' \leftrightarrow \mathbf{M}'_i$ para el algoritmo de estimación de pose.\\
 
-En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que falla el filtrado de segmentos para uno de los cuadriláteros mientras que en la figura \ref{fig:resultado_inc_points}(b) se puede ver como el algoritmo de determinación de correspondencias provee $32$ correspondencias ordenadas correctamente, diferenciando en el $QlSet$ incompleto los vértices.
+En la Figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que falla el filtrado de segmentos para uno de los cuadriláteros mientras que en la figura \ref{fig:resultado_inc_points}(b) se puede ver como el algoritmo de determinación de correspondencias provee $32$ correspondencias ordenadas correctamente, diferenciando en el $QlSet$ incompleto los vértices.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea filtrados y agrupados]{
@@ -729,7 +730,7 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 \section{Comentarios sobre la implementación de los algoritmos}
 Los algoritmos desarrollados en el presente capítulo fueron implementados en Lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento.\\
 
-La elección del lenguaje y la filosofía de desarrollo comentada atrás permite \textbf{portabilidad} en el uso de los mismos para aplicaciones mas allá del proyecto y es un ejercicio de aprendizaje necesario. El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
+La elección del lenguaje y la filosofía de desarrollo comentada atrás permite \textbf{portabilidad} en el uso de los mismos para aplicaciones más allá del proyecto y es un ejercicio de aprendizaje necesario. El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
 
 El entorno de desarrollo (IDE) utilizado para la implementación fue Eclipse CDT para C/C++: \url{http://www.eclipse.org/cdt/} en un proyecto que utiliza un \emph{Makefile} para la compilación por lo que se podría utilizar otro entorno en caso de ser necesario.\\
 
@@ -738,7 +739,7 @@ Adicionalmente de forma de facilitar la tareas de interfaz como el abrir/captura
 \section{Resultados de Benchmark}
 En esta sección se presentan algunos resultados de \emph{Benchmark} para los algoritmos de asociados a la detección del marcador diseñado. En particular se estudian los límites para la detección de segmentos mediante LSD y el filtrado y agrupamiento de los mismos para juegos de imágenes sintéticas generadas utilizando las herramientas explicadas en el Capítulo \ref{chap: benchmark}.\\
 
-Se analizan los casos que presentaron limitaciones mas significativas como, la profundidad máxima del marcador respecto al eje $z$, la rotación máxima permitida sobre el eje $x$ y lo mismo para la rotación sobre el eje $y$. Mediante este análisis se obtienen cotas \emph{pseudo-teóricas} para establecer las limitaciones prácticas de uso de los algoritmos.\\
+Se analizan los casos que presentaron limitaciones más significativas como, la profundidad máxima del marcador respecto al eje $z$, la rotación máxima permitida sobre el eje $x$ y lo mismo para la rotación sobre el eje $y$. Mediante este análisis se obtienen cotas \emph{pseudo-teóricas} para establecer las limitaciones prácticas de uso de los algoritmos.\\
 
 \subsection{Elección de parámetros para Benchamark}
 Para la evaluación de los algoritmos se utilizaron algunos parámetros de Benchmark fijos y otros modificables llevando a una elección definitiva de parámetros.\\
@@ -762,7 +763,7 @@ Los valores que toman estos parámetros para las pruebas finales que corresponden
  \item $s = 0.5$
  \item $width\times height = 480\times360 px$
 \end{itemize}
-La elección de estos parámetros fue \textbf{definitiva} para las pruebas de Benchamark a lo largo de todo el documento. Por más información sobre las herramientas de Benchmark y los parámetros ajustables para la generación de imágenes sintéticas referirse al Capítulo \ref{chap: benchmark}.
+La elección de estos parámetros fue \textbf{definitiva} para las pruebas de Benchmark a lo largo de todo el documento. Por más información sobre las herramientas de Benchmark y los parámetros ajustables para la generación de imágenes sintéticas referirse al Capítulo \ref{chap: benchmark}.
 
 \newpage
 \subsection{Límite en profundidad: Eje z}
@@ -818,6 +819,19 @@ Se puede ver en las Figuras \ref{fig:benchmark_segmentos_ry}(a) y \ref{fig:bench
   \caption{Límites para la rotación máxima y mínima sobre el eje $y$.}
   \label{fig:benchmark_segmentos_ry}
 \end{figure}
+
+Las pruebas para los límites se resumen en la Tabla \ref{tab:limites}.
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|} \hline
+		& Límite inferior & Límite superior & Limita 	\\ \hline
+Profundidad $z$ & $-$		  & $1575mm$	    & LSD	\\ \hline
+Rotación en $x$ & $-50°$	  & $54°$	    & LSD	\\ \hline
+Rotación en $y$ & $-44°$	  & $52°$	    & Filtrado	\\ \hline
+\end{tabular}
+\caption{Resumen de límites impuestos por los algoritmos de filtrado de segmentos y LSD para imágenes sintéticas.}
+\label{tab:limites}
+\end{table}
 
 \section{Resumen}
 En este capítulo se comentaron algunos sistemas de Realidad Aumentada basados en marcadores planos como ARToolKit y ARTag. Se desarrolló el diseño del Marcador QR utilizado para el proyecto y se definieron juegos de parámetros que permiten flexibilidad en la aplicación de los mismos. Se desarrollaron los algoritmos para detección de los marcadores diseñados basados en un esquema de, en primer lugar, filtrado y agrupamiento de segmentos y en segundo lugar determinación de correspondencias de sus esquinas. Se vió que algunos de los parámetros de diseño del marcador pueden ser modificados sin necesidad de modificar los algoritmos desarrollados. Finalmente se obtuvieron resultados de benchmark para los algoritmos de LSD y filtrado de segmentos mediante el uso de imágenes sintéticas generadas con las herramientas de Benchmark. Se establecieron límites \emph{pseudo-teóricos} para la profundidad del marcador, las rotaciones respecto al eje $x$ y respecto al eje $y$. Es importante destacar que estos límites son cotas raramente alcanzables por la aplicación final ya que se utilizaron para eso imágenes sintéticas sin ningún tipo de ruido, cambios de iluminación ni distorsión de cámara.
