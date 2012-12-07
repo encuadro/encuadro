@@ -1,7 +1,7 @@
 \chapter{Navegación e Identificación}
 \label{chap: navident}
 \section{Introducción}
-Como se dijo en el Capítulo \ref{chap: alcance} las tres partes del recorrido son \textit{Navegación, Identificación} y \textit{Realidad aumentada}. En este capítulo se presentan las alternativas investigadas y finalmente implementadas para poder lograr un grado de completitud en la aplicación. Para el caso de las alternativas implementadas se aporta mayor detalle sobre la resolución. 
+Como se plantea en el Capítulo \ref{chap: alcance} las tres partes del recorrido son \textit{Navegación, Identificación} y \textit{Realidad aumentada}. En este capítulo se presentan las alternativas investigadas y finalmente implementadas para poder lograr un grado de completitud en la aplicación. Para el caso de las alternativas implementadas se aporta mayor detalle sobre la resolución. 
 
 \section{Navegación}
 \subsection{Distintos métodos de Navegación.}
@@ -9,12 +9,12 @@ Como se comentó en el Capítulo \ref{chap: alcance}, se estudiaron distintas alte
 
 \subsection{Navegación con GPS}
 \label{sec:Navegación con GPS}
-La tecnología GPS (\textit{Global Positioning System}) es altamente usada como sistema asesor para vehículos y sistemas de información geográfica y basa su funcionamiento en el procesamiento de se\~nales RF. Algunas bibliografías afirman que su precisión supera los 3m en el $95\%$ de los casos \cite{avellone10}. La clave de este sistema de posicionamiento radica en que las se\~nales de RF son ondas electromagénicas y viajan a la velocidad de la luz. Entonces mediante el uso de tres satélites o más y osciladores que permitan medir tiempos con muy buena precisión, es posible estimar la posición de la que son recibidas las se\~nales de RF. Sin embargo, resulta imposible utilizar esta tecnología en lugares cerrados o muy edificados. Se decidió entonces que esta no era la herramienta indicada para el problema en cuestión. 
+La tecnología GPS (\textit{Global Positioning System}) es altamente usada como sistema asesor para vehículos y sistemas de información geográfica y basa su funcionamiento en el procesamiento de se\~nales RF. Algunas bibliografías afirman que su precisión supera los 3m en el $95\%$ de los casos \cite{avellone10}. La clave de este sistema de posicionamiento radica en que las se\~nales de RF son ondas electromagénicas y viajan a la velocidad de la luz. Entonces mediante el uso de tres satélites o más y osciladores que permitan medir tiempos con muy buena precisión, es posible estimar la posición de la que son recibidas las se\~nales de RF. Sin embargo, resulta imposible utilizar esta tecnología en lugares cerrados o muy edificados. Se decidió entonces que esta no era la herramienta indicada para el problema de localización. 
 
 
 \subsection{Navegación con \textit{access points}}
 \label{sec:Navegación con access points}
-Existen otros sistemas de localización que están comenzando a utilizarse para ambientes cerrados y que utilizan algunas ideas del sistema GPS. A estos sistemas se los conococe como \textit{Indoor Positioning System} o IPS y existen distintas variantes ya sea procesando se\~nales RF, ondas sonoras o luz. La localización interior con estándares IEEE 802.11 (WiFi), se obtiene mediante el procesamiento de se\~nales RF y la idea es, una vez conocida la posición de los transmisores WiFi (\textit{Access Points}) presentes en una sala, se miden las distintas se\~nales recibidas por un dispositivo móvil (provenientes de cada uno de los APs). De esta manera, se logra ubicar al móvil dentro de la sala. Es posible utilizar diferentes medidas, como por ejemplo, la potencia de las se\~nales recibidas,  el tiempo de propagación de cada una de ellas o incluso sus ángulos de incidencia.
+Existen otros sistemas de localización que están comenzando a utilizarse para ambientes cerrados y que utilizan algunas ideas del sistema GPS. A estos sistemas se los conococe como \textit{Indoor Positioning System} o IPS y existen distintas variantes ya sea procesando se\~nales RF, ondas sonoras o luz. Una de las posibilidades es utilizar \textit{GPS Indoor} pero esta opción resulta bastante cara. La localización interior con estándares IEEE 802.11 (WiFi), se obtiene mediante el procesamiento de se\~nales RF y la idea es, una vez conocida la posición de los transmisores WiFi (\textit{Access Points}) presentes en una sala, se miden las distintas se\~nales recibidas por un dispositivo móvil (provenientes de cada uno de los APs). De esta manera, se logra ubicar al móvil dentro de la sala. Es posible utilizar diferentes medidas, como por ejemplo, la potencia de las se\~nales recibidas,  el tiempo de propagación de cada una de ellas o incluso sus ángulos de incidencia.
 
 Debido a su gran complejidad, esta alternativa se descartó, ya que la idea no era centrar el proyecto en la navegación de interiores, sino usarla simplemente como una herramienta para la completitud de la aplicación final.
 
@@ -25,15 +25,15 @@ Debido a su gran complejidad, esta alternativa se descartó, ya que la idea no er
 La navegación con códigos QR quizá es bastante sencilla de implementar. Simplemente se tiene que tener un código QR ubicado en forma estratégica en cada zona con la que se quiere asociar y el usuario puede recorrer el museo libremente e ir decodificando los códigos en la medida que los ve.
 
 \subsubsection{Identificadores QR: una realidad cotidiana.}
-El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión móvil a internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automovolística japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
+El uso de los identificadores QR (Quick Response), es cada vez más generalizado. Últimamente, debido al incremento significativo del uso de \textit{smart devices}, el hecho de poder contar con una cámara, cierto poder de procesamiento y por lo general hasta una conexión móvil a internet, hace que sea cada vez más frecuente encontrar aplicaciones con el poder de reconocer QRs. Comenzaron utilizándose en la industria automotriz japonesa como una solución para el trazado en la línea de producción, pero su campo de aplicación se ha diversificado y hoy en día se pueden encontrar también como identificatorios de entradas deportivas, tickets de avión, localización geográfica, vínculos a páginas web y en algunos casos también como tarjetas personales. 
 \subsubsection{?`Qué son los QR?}
-Los QRs son una extensión de los códigos de barras, creados por la compa\~nía japonesa \textit{Denso Wave} en 1994 \cite{furht11}. Incorporan una segunda dimensión lo cual es una gran ventaja ya que pueden almacenar mucho más información y que puede ser accedida a gran velocidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.
+Los QRs, creados por la compa\~nía japonesa \textit{Denso Wave} en 1994 \cite{Denso}, son una extensión de los códigos de barra. Incorporan una segunda dimensión lo cual es una gran ventaja ya que pueden almacenar mucho más información y que puede ser accedida a gran velocidad. Existen distintos tipos de QR, con distintas capacidades de almacenamiento que dependen de la versión, el tipo de datos almacenados y del tipo de corrección de errores. En su versión 40 con detección de errores de nivel L, se pueden almacenar alrededor de 4300 caracteres alfanuméricos o 7000 dígitos (frente a los 20-30 dígitos del código de barras) lo cual lo hace muy flexible para cualquier tipo de aplicación de identificación.
 
 En la Figura \ref{fig: qroverview} se pueden ver las distintas partes que componen un QR, como por ejemplo el bloque de control, compuesto por las tres esquinas idénticas que dan información de la posición, la información de alineamiento y el patrón de sincronismo; así como también la indicación de versión, formato y la corrección de errores. Fuera de toda esa información, que podría verse como el encabezado, haciendo analogía con los paquetes de las redes de datos, se encuentran los datos propiamente dichos, que podrían verse como el cuerpo del paquete.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_navident/qrcode_overview4.png}
-\caption{Las distintas componentes de un QR. Fuente (poner fuente).}
+\caption{Las distintas componentes de un QR. Tomada de: \cite{qrcompo}.}
 \label{fig: qroverview}
 \end{figure}
 %fuente http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
@@ -45,9 +45,9 @@ Es fácil darse cuenta que la codificación resulta mucho más sencilla que la deco
 
 Debido a que el centro del presente proyecto no fue la codificación y decodificación de QRs, y que además ya existen distintas librerías que resuelven muy bien este problema, se optó por investigar varias de ellas e incorporar la más adecuada a la aplicación.
 
-Entre todas las librerías que resuelven la decodificación, las llamadas ZXing y ZBar son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossin'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.
+Entre todas las librerías que resuelven la decodificación, las librerías \textbf{ZXing} y \textbf{ZBar} \cite{zxing} \cite{zbar} son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossing'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.
 
-Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Se trabajó sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector y finalmente se optó por utilizar esta librería para los fines de la aplicación. El lector del código de ejemplo consta de una clase \textit{ReaderSampleViewController} que hereda de \textit{UIViewController} y que implementa un protocolo llamado \textit{ZBarReaderDelegate}. Al presionarse el botón de detección se crea una instancia de la clase \textit{ReaderSampleViewController} y se presenta la vista previa de la cámara. Luego el protocolo se encarga de la captura y procesamiento del QR almacenando como resultado la información embebida en este en la variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
+Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Luego de haber trabajado sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector se optó por utilizar esta librería para los fines de la aplicación. En este código de ejemplo, al presionarse un botón da la posibilidad de escanear directamente y guardar el contenido del QR en una variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
 %fuente http://code.google.com/p/zxing/
 
 
@@ -62,7 +62,7 @@ $
 \includegraphics[scale=0.3]{figs_navident/qrArtist3.png} & \includegraphics[scale=0.2]{figs_navident/qrArtist5.png}
 \end{array}
 $
-\caption{Ejemplo de un QRs creativos. Fuente: \url{http://www.qrcartist.com/}.}
+\caption{Ejemplo de un QRs creativos. Tomada de: \cite{qrart}.}
 \label{fig: qrArt}
 \end{figure}
 %fuente http://www.qrcartist.com/
@@ -98,7 +98,7 @@ Dado un valor inicial para $\sigma$, se le realiza a la imagen un n\'umero $s$ d
 \label{fig:SIFT_1}
 \end{figure}
 
-Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transicion entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver Figura \ref{fig:SIFT_2}. 
+Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, se buscan para cada ``piso'' de la misma extremos locales quienes se transformar\'an en candidatos a puntos clave. Para una $D(x,y,\sigma)$ determinada y en una octava determinada, un punto $(x_0,y_0)$ ser\'a un m\'aximo (m\'inimo) relativo si es mayor (menor) a sus 8 puntos vecinos dentro de su nivel y a sus 9 puntos vecinos de cada uno de los niveles inferior y superior. Si el punto se encuentra en una $D(x,y,\sigma)$ de transición entre 2 octavas, se buscan los puntos vecinos correspondientes del nivel superior (inferior). Ver Figura \ref{fig:SIFT_2}. 
 
 \begin{figure}[h!]
 \centering
@@ -111,7 +111,7 @@ Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, s
 \subsubsection{Localizaci\'on exacta de puntos clave.}
 La b\'usqueda de extremos en las diferencias de Gaussianas produce m\'ultilpes candidatos entre los que se encuentran puntos con poco contraste;  los cuales no son estables a cambios de iluminaci\'on y al ruido. Para quitarlos se procede de la siguente manera.
 
-Primero se realiza una expansi\'on de Taylor de grado 2 entorno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
+Primero se realiza una expansi\'on de Taylor de orden 2 entorno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
 \begin{equation}
 D(\chi) = D + \frac{\partial D^T}{\partial \chi} \chi + \frac{1}{2}{\chi}^T\frac{\partial^2D}{\partial {\chi}^2} \chi
 \label{eq:1}
