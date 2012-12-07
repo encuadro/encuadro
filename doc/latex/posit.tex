@@ -587,7 +587,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.2]{figs_posit/posit_8b}
+\includegraphics[scale=0.17]{figs_posit/posit_8b}
 \caption{Posiciones que se utilizaron para las imágenes de prueba.}
 \label{fig:posit_16}
 \end{figure}
@@ -595,10 +595,10 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \begin{figure}[H]
         \centering
         \subfigure[]{
-                \includegraphics[scale=0.4]{figs_posit/histDistEuclCopl}
+                \includegraphics[scale=0.35]{figs_posit/histDistEuclCopl}
 				\label{fig:posit_18}}
         \subfigure[]{
-                \includegraphics[scale=0.4]{figs_posit/histDistEuclComp}
+                \includegraphics[scale=0.35]{figs_posit/histDistEuclComp}
                 \label{fig:posit_19}}
                 
          \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes de prueba. \subref{fig:posit_18}, POSIT moderno. \subref{fig:posit_19}, POSIT clásico}
@@ -619,7 +619,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.2]{figs_posit/posit_9b}
+\includegraphics[scale=0.16]{figs_posit/posit_9b}
 \caption{Posiciones que se utilizaron para las imágenes sintéticas}
 \label{fig:posit_20}
 \end{figure}
@@ -628,10 +628,10 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 
         \centering
         \subfigure[]{
-                \includegraphics[scale=0.4]{figs_posit/histDistEuclCoplSint}
+                \includegraphics[scale=0.35]{figs_posit/histDistEuclCoplSint}
 				\label{fig:posit_22}}
         \subfigure[]{
-                \includegraphics[scale=0.4]{figs_posit/histDistEuclCompSint}
+                \includegraphics[scale=0.35]{figs_posit/histDistEuclCompSint}
                 \label{fig:posit_23}}
                 
          \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes sintéticas. \subref{fig:posit_22}, POSIT moderno. \subref{fig:posit_23}, POSIT clásico}
@@ -703,8 +703,23 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 En general se puede ver que el error de proyección y la varianza son un poco menores para el caso de POSIT coplanar moderno.  Esto justifica la elección del POSIT coplanar moderno. 
 
 \section{Resumen}
+
 En este capítulo se presentó la teoría detrás del algoritmo POSIT. Se explicaron las diferentes versiones que se utilizaron, se vio que para marcadores coplanares hay ambigüedad en la estimación de la pose lo que genera errores. Se presentó una variante del POSIT coplanar moderno que minimiza una función de costo para estimar la pose, a diferencia de la versión clásica que resuelve la estimación utilizando mínimos cuadrados. También se explicó el algoritmo SoftPOSIT que estima las pose para conjuntos de puntos para los cuales no se saben las correspondencias. Este algoritmo requiere de una pose inicial para realizar la búsqueda. 
 
-Se realizó un estudio detallado del desempe\~no de los las dos versiones de POSIT coplanar y se compararon los resultados obtenidos, se vio que las dos versiones funcionan de manera similar.
+Se realizó un estudio detallado del desempe\~no de los las dos versiones de POSIT coplanar y se compararon los resultados obtenidos, se vio que las dos versiones funcionan de manera similar. En la Figura \ref{fig:posit_Repr} se ven algunos ejemplos que muestran como quedan los puntos reproyectados sobre el marcador. Se muestra por un lado la imagen original y a su lado, se muestra el resultado obtenido de filtrado de segmentos más estimación de pose. Como anexo a la documentación se incluye un video donde se muestra la reproyección un tiempo real.
+
+\begin{figure}\label{fig:posit_Repr}
+        \centering
+        \subfigure[]{
+                \includegraphics[scale=0.3]{figs_posit/Repr1}
+				\label{fig:posit_Repr1}}
+        \subfigure[]{
+                \includegraphics[scale=0.3]{figs_posit/Repr2}
+                \label{fig:posit_Repr2}} 
+       \subfigure[]{
+                \includegraphics[scale=0.3]{figs_posit/Repr3}
+				\label{fig:posit_Repr3}}
+         \caption{Ejemplos de reproyección de puntos sobre el marcador. En color magenta se se ven los puntos detectados a la salida el filtro de correspondencias, en color cyan de ven los puntos reproyectados por POSIT coplanar moderno y en negro se ven los puntos reproyectados por POSIT coplanar clásico. }
+\end{figure}
 
 
