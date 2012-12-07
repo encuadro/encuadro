@@ -587,7 +587,11 @@ Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo 
 Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
 Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo (POSIT Clásico) y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
 
-La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD \ref{chap: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
+La variante de SoftPOSIT de líneas se eligió ya que el detector de características que se usa es el LSD \ref{chap: lsd} y se tenía la intuición de que la estimación de líneas sería mas robusta que la basada en puntos. Para esta variante no se contó con una implementación, fue implementada pero sin éxito. Sin embargo en busca de esta implementación se desarrolló una versión propia de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
+
+decir que se tenia la intuición de que la estimación de pose basad en lineas iba a ser mas precisa que la basada en puntos, por eso se queria elegir este.
+
+Como no se contaba con una implementación, se impleemntó pero sin éxito
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los cuaternios o \textit{quaternions} inglés. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
@@ -645,7 +649,7 @@ Cuando se trabaja con matrices de rotaciones y ángulos de Euler es necesario sab
 
 
 \subsubsection{Cálculo de los ángulos de Euler}
-Si se tiene la matriz \textbf{R} es posible realizar la descomposición y obtener los ángulos de Euler. De $\textbf{R}_{31}$ se obtiene el valor de $\theta$
+Si se tiene la matriz \textbf{R} es posible realizar la descomposición y obtener los ángulos de Euler \cite{Euler}. De $\textbf{R}_{31}$ se obtiene el valor de $\theta$
 $$ \theta = -\arcsin(\textbf{R}_{31}).$$
 Como $\sin(\theta)=\sin(\pi -\theta)$, puede haber dos posibles valores de $\theta$(si $\textbf{R}_{31}\neq \pm 1$)
 \begin{equation}\label{eq_1}
