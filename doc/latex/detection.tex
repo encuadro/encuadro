@@ -728,9 +728,7 @@ En la Figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
 
 \section{Comentarios sobre la implementación de los algoritmos}
-Los algoritmos desarrollados en el presente capítulo fueron implementados en Lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento.\\
-
-La elección del lenguaje y la filosofía de desarrollo comentada atrás permite \textbf{portabilidad} en el uso de los mismos para aplicaciones más allá del proyecto y es un ejercicio de aprendizaje necesario. El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
+El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
 
 El entorno de desarrollo (IDE) utilizado para la implementación fue Eclipse CDT para C/C++: \url{http://www.eclipse.org/cdt/} en un proyecto que utiliza un \emph{Makefile} para la compilación por lo que se podría utilizar otro entorno en caso de ser necesario.\\
 

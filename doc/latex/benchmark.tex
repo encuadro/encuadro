@@ -1,20 +1,20 @@
-\chapter{Herramientas de Benchmark}
+\section{Herramientas de Benchmark}
 \label{chap: benchmark}
-\section{Introducción}
+\subsection{Introducción}
 Durante el desarrollo del proyecto se hizo presente la necesidad de contar con herramientas de medida del desempeño objetivas para la validación de los algoritmos que se utilizaron y desarrollaron. En particular se desea evaluar los algoritmos asociados a la detección de características y estimación de pose. Estos son LSD, filtrado de segmentos, determinación de correspondencias y Posit Coplanar. 
 
 El enfoque elegido para la validación de dichos algoritmos consiste en la generación de un conjunto de ``datos de referencia'' o \emph{ground truth} de forma de poder comparar la detección y resultados obtenidos con los valores reales o verdaderos de los mismos. Este proceso es lo que se denomina en este proyecto como \emph{Benchmark} o Comparativa. De esta forma se puede generar un número suficiente de datos de salida de forma de obtener algunas estadísticas de interés para la evaluación de los algoritmos.
 
 Debido a la naturaleza del proyecto fue necesario generar un entorno para la evaluación el cual incluye la generación de imágenes sintéticas asociadas a esa \emph{ground truth} en Blender. También fue necesario el desarrollo de un entorno en Matlab que permita una ejecución tipo batch para la generación de estas imágenes así como para la generación, análisis y despliegue de resultados en forma rápida y simple.
 
-\section{Generación de imágenes sintéticas: Blender}
+\subsection{Generación de imágenes sintéticas: Blender}
 Para realizar el Benchmark se desarrolló un entorno de generación de imágenes sintéticas que utiliza herramientas gratuitas y de código abierto que permiten capacidades de \emph{scripting} y ejecución en forma ``batch'' de forma de serializar la producción de renders en un proceso automático. El proceso de generación de los renders fue realizada mediante el uso del software Blender.
 
 La generación de imágenes sintéticas consiste en producir una imagen 2D en base a un modelo 3D de una escena y una pose de la cámara respecto a esa escena o viceversa. Este proceso se denomina \emph{Rendering}, o renderizado, y el mismo se trata en el Capítulo \ref{chap: render} para la herramienta para dispositivos móviles \emph{ISGL3D}. 
 
 Blender es un \emph{suite} de creación de contenidos gratuito y de código abierto. Está disponible para los principales sistemas operativos, Windows, Mac, Linux; bajo la Licencia Pública General GNU\cite{blender}. Algunas de sus prestaciones son modelado, \emph{shading}, animación, renderizado, e interacción 3D. También presenta herramientas de \emph{scripting} mediante el uso del lenguaje \emph{Python} las cuales se explicarán más adelante. Se utilizó la versión de Blender 2.58 para el desarrollo siguiente ha sido utilizado satisfactoriamente con versiones más recientes como la 2.63.
 
-\subsection{Modelo 3D y escena}
+\subsubsection{Modelo 3D y escena}
 Para lograr hacer un render es necesario contar con una escena 3D y en particular con un modelo 3D del objeto de interés. Para realizar la detección de características se utiliza un marcador plano que se describe en el Capítulo \ref{ch:marcadores}.\\
 
 Se manejaron algunas alternativas para la generación del modelo 3D del marcador entre las cuales se encuentran, VTK, Paraview, Autodesk 3ds Max y el mismo programa utilizado por este proyecto para rendering en un PC, Blender. Finalmente debido a la simplicidad del marcador, y principalmente a que es un marcador plano, se utilizó un dibujo vectorial del marcador (formato \emph{svg}) generado en Inkscape. Este dibujo vectorial puede ser importado a Blender y con él generar un modelo 3D que será un actor en la escena. Dentro de la interfaz de Blender se ajustó un factor de escala para que las medidas reales del marcador se correspondan con las unidades de Blender, por razones de facilidad en el manejo en Blender se estableció que la unidad de Blender corresponde a un centímetro en el mundo real. \\
@@ -33,7 +33,7 @@ Blender utiliza el sistema de coordenadas que se ve en la Figura \ref{fig:blende
 Finalmente, la escena conteniendo el modelo 3D del marcador se resume en el archivo: \\
 \textbf{Marker.blend}.
 
-\subsection{Ajustes de escena y parámetros: GUI}
+\subsubsection{Ajustes de escena y parámetros: GUI}
 El software Blender permite el ajuste de la escena y los parámetros y características asociados al render, la cámara y el objeto mediante su interfaz gráfica. Estos tienen como resultado final la imagen renderizada. Los parámetros y ajustes que fueron realizados y resultan ser los más relevantes para la reproducción del proceso de renderizado del marcador se explican a continuación.
 
 \begin{itemize}
@@ -69,7 +69,7 @@ El software Blender permite el ajuste de la escena y los parámetros y caracterís
 
 Vale la pena observar que los ajustes de Render y Cámara constituyen una forma de establecer los \textbf{parámetros intrínsecos} de la cámara. Mientras que los ajustes de Objeto para la Cámara y el Marcador representan la \textbf{pose del objeto} en el modelo de vinculación adoptado. Se aclara que los \textbf{parámetros extrínsecos} de la cámara respecto a las coordenadas de Blender es nula en rotación y traslación.
 
-\subsection{Ajustes de parámetros: Python scripting}
+\subsubsection{Ajustes de parámetros: Python scripting}
 Python es un lenguaje de programación interpretado, interactivo y orientado a objetos. Incorpora módulos, excepciones, \emph{tipeo} dinámico, tipos de datos de muy alto nivel y clases. Python logra combinar notablemente poder con claridad en la sintaxis \cite{blender_python}. La mayoría de las áreas de Blender pueden ser programadas mediante \emph{scripts}, incluyendo Animación, Renderizado, Importación y Exportación, Creación de objetos y Tareas repetitivas. Para la interacción con Blender se hace uso de una API ``ajustada a medida''.
 
 La API de Blender para Python se encuentra empaquetada en el módulo \texttt{bpy}. Mediante este módulo se puede acceder a los objetos y sus propiedades de la escena. De esta forma se puede de forma programática ajustar las propiedades y parámetros explicados anteriormente. Por lo tanto mediante él intérprete de comandos de Blender se puede prescindir de la interfaz gráfica de Blender. En la Figura \ref{fig:blender_pyconsole} se muestra un \emph{screenshot} de la consola interactiva de Python en Blender.
@@ -123,7 +123,7 @@ En la Figura \ref{fig:blender_render} se muestra el resultado de esta secuencia 
   \label{fig:blender_render}
 \end{figure}
 
-\subsection{Ejecución por consola de comandos}
+\subsubsection{Ejecución por consola de comandos}
 La ejecución de Blender por consola de comandos es útil en situaciones en donde se quieren realizar acciones como el Renderizado remotamente sobre una computadora potente que actúe de servidor. También puede ser utilizado para realizar acciones repetitivas sobre alguna escena o modelo y esta es la utilidad que se le dio.
 
 Asumiendo que se tiene acceso a la aplicación Blender como el ejecutable \texttt{blender}, el mismo puede ser ejecutado desde consola por el comando:
@@ -168,7 +168,7 @@ Otra aclaración importante refiere a que las unidades de Blender fueron ajustada
 
 Con estos dos ajustes la realización de imágenes sintéticas con el entorno desarrollado es \emph{transparente} al usuario ya que si este es coherente con las convenciones tomadas para el algoritmo de estimación de pose no se tendrán que realizar reajustes.
 
-\section{Ejecución Batch: Matlab}
+\subsection{Ejecución Batch: Matlab}
 Se generó un entorno de ejecución serial tipo batch en Matlab en donde se ejecuta Blender, en su modo de ejecución por consola de comandos con script de Python con argumentos , mediante el uso de la función de Matlab \texttt{system} la cual realiza una llamada al sistema.
 
 El entorno desarrollado para generación automática de juegos de imágenes sintéticas tipo batch, que utiliza Matlab como interfaz hacia el usuario, consiste en varios pasos:
@@ -186,5 +186,5 @@ El entorno desarrollado para generación automática de juegos de imágenes sintéti
 \textbf{Registro}: Se guarda un archivo de texto con las poses utilizadas y otro con las configuraciones de las cámara.
 \end{itemize}
 
-\section{Resumen}
+\subsection{Resumen}
 En este capítulo se describió el proceso general para la generación de imágenes sintéticas para la validación de los algoritmos desarrollados y utilizados en el proyecto. Se explicó qué ajustes son de interés a realizar en Blender mediante su interfaz gráfica así como a través de la consola de comandos interactiva de Python. Se describió el proceso para realizar renders desde consola de comandos mediante la utilización de un script en Python y adicionalmente mediante la inclusión de argumentos de línea de comandos de forma de parametrizar el proceso. Finalmente se describió el entorno desarrollado en Matlab para automatizar este proceso.
