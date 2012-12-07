@@ -10,7 +10,7 @@ Probablemente, la realidad aumentada sea el mayor atractivo del proyecto por ser
 
 \textit{La realidad aumentada (AR del inglés \textit{Augmented Reality}) es un término que denota la visión de un entorno físico del mundo real, cuyos elementos se combinan con elementos virtuales generados por computadora, para la creación de una realidad mixta en tiempo real.}\\
 
-Cuando se genera una imagen por medio de realidad aumentada, conviven en ella elementos reales con elementos virtuales. Es básicamente un juego de percepciones. En la Figura \ref{fig: arIntro} se muestra un ejemplo de realidad aumentada desarrollado durante este proyecto. Se puede ver en ella, un cubo virtual sobre la esquina superior izquierda de ``Hombre de Vitruvio'' de Leonardo da Vinci, de manera coherente con la posición del dispositivo respecto de la obra. Si en esta figura no se viera el fondo, cualquiera podría pensar que el cubo es real y que efectivamente forma parte de lo que es la obra o la escena en general. Eso es lo que busca la realidad aumentada. \\
+Cuando se genera una imagen por medio de realidad aumentada, conviven en ella elementos reales con elementos virtuales. Es básicamente un juego de percepciones. En la Figura \ref{fig: arIntro} se muestra un ejemplo de realidad aumentada desarrollado durante este proyecto. Se puede ver en ella, un cubo virtual sobre la esquina superior izquierda de ``Hombre de Vitruvio'' de Leonardo da Vinci, de manera coherente con la posición del dispositivo respecto de la obra. Si en esta figura tan sólo se viera a través del dispositivo, cualquiera podría pensar que el cubo es real y que efectivamente forma parte de la escena. Eso es lo que busca la realidad aumentada. \\
 
 \begin{figure}[H]
 \centering
@@ -19,7 +19,7 @@ Cuando se genera una imagen por medio de realidad aumentada, conviven en ella el
 \label{fig: arIntro}
 \end{figure}
 
-Para entender cómo se genera la realidad aumentada, primero hay que entender el llamado ``problema directo''; esto es, cómo se proyecta una escena del mundo real en una cámara. En la Figura \ref{fig:intro_def1} se ve cual es el proceso de captura de una imagen. Se comienza por el objeto que se quiere capturar $(1)$, luego se ubica la cámara de manera de obtener la imagen deseada $(2)$, finalmente se captura la imagen $(3)$. 
+Para entender cómo se genera la realidad aumentada, primero hay que entender el llamado ``problema directo''; esto es, cómo se proyecta una escena del mundo real en una cámara. En la Figura \ref{fig:intro_def1} se ve cuál es el proceso de captura de una imagen. Se comienza por el objeto que se quiere capturar $(1)$, luego se ubica la cámara de manera de obtener la imagen deseada $(2)$, finalmente se captura la imagen $(3)$. 
 
 \begin{figure}[H]
 \centering
@@ -28,7 +28,7 @@ Para entender cómo se genera la realidad aumentada, primero hay que entender el 
 \label{fig:intro_def1}
 \end{figure}
 
-Luego, la realidad aumentada requiere de la resolución del ``problema inverso'', esto es, dado un objeto y una imagen del mismo, encontrar la posición exacta en la que estaba la cámara, respecto de un eje de coordenadas determinado, cuando se capturó esa imagen. En la Figura \ref{fig:intro_def2} se puede ver gráficamente este problema.  Para un objeto se quiere encontrar la posición de la cámara en el mundo (pose de la cámara) que proyecte sobre el plano imagen el rectángulo verde del medio, formado así la fotografía. La pose que resuelve este problema es $P2$.\\
+Luego, la realidad aumentada requiere de la resolución del ``problema inverso'', esto es, dado un objeto y una imagen del mismo, encontrar la posición exacta en la que estaba la cámara, respecto de un eje de coordenadas determinado, cuando se capturó esa imagen. En la Figura \ref{fig:intro_def2} se puede ver gráficamente este problema.  Para un cierto objeto, se quiere encontrar la posición de la cámara en el mundo (pose de la cámara) que proyecte sobre el plano imagen el rectángulo verde del medio, formado así la fotografía en cuestión. La pose que resuelve este problema es $P2$.\\
 
 \begin{figure}[H]
 \centering
@@ -37,7 +37,7 @@ Luego, la realidad aumentada requiere de la resolución del ``problema inverso'',
 \label{fig:intro_def2}
 \end{figure}
 
-Una vez conocida la pose de la cámara, se procede a introducir un objeto virtual en la escena; en este caso un hombre 3D formado tan sólo por líneas y círculos. Ver Figura \ref{fig:intro_def3}. Se obtiene así una fusión entre el mundo real y el virtual. Un caso particular de lo anterior es introducir objetos virtuales 2D. Por ejemplo, es posible proyectar un video sobre el plano imagen, también de manera consistente con la pose de la cámara.\\
+Una vez conocida la pose de la cámara, se procede a introducir un objeto virtual en la escena; en este caso un hombre 3D muy simple. Ver Figura \ref{fig:intro_def3}. Se obtiene así una fusión entre el mundo real y el virtual. Un caso particular de lo anterior es introducir objetos virtuales 2D. Por ejemplo, es posible proyectar un video sobre el plano imagen, también de manera consistente con la pose de la cámara.\\
 
 \begin{figure}[H]
 \centering
@@ -46,4 +46,4 @@ Una vez conocida la pose de la cámara, se procede a introducir un objeto virtual
 \label{fig:intro_def3}
 \end{figure}
 
-A lo largo de la presente documentación se dará al lector un panorama de lo que fue el proyecto en su conjunto, haciendo incapié en el estudio y la implementación de la realidad aumentada. Se espera que este proyecto sirva como iniciativa para futuros trabajos vinculados a esta rama de la ingeniería.
+A lo largo de la presente documentación se dará al lector un panorama de lo que fue el proyecto en su conjunto, haciendo hincapié en el estudio y la implementación de la realidad aumentada. Se espera que este proyecto sirva como iniciativa para futuros trabajos vinculados a esta rama de la ingeniería.
