@@ -27,21 +27,22 @@ Para entender el problema de cómo se genera la realidad aumentada primero hay qu
 \label{fig:intro_def1}
 \end{figure}
 
-Para poder realizar la realidad se necesita resolver el problema inverso, esto es, dado un objeto y una imagen del mismo, se debe encontrar la pose en la que estaba la cámara cuando se capturó esa imagen. En la Figura \ref{fig:intro_def2} se puede ver gráficamente este problema.  Esquemáticamente el problema se puede explicar así: Se parte de un objeto y una imagen inicial, se prueban las poses $P1$ y $P3$ y se tiene que la imagen obtenida no coincide con la imagen inicial, se sigue probando. Finalmente se prueba la pose $P2$ y la imagen obtenida coincide con la inicial. Por lo tanto $P2$ es la pose de la cámara.
+Para poder realizar la realidad aumentada se necesita resolver el problema inverso, esto es, dado un objeto y una imagen del mismo, se debe encontrar la pose en la que estaba la cámara cuando se capturó esa imagen. En la Figura \ref{fig:intro_def2} se puede ver gráficamente este problema.  Para un objeto se quiere encontrar la pose que proyecte sobre el plano imagen el rectángulo del medio, la pose que resuelve este problema es la pose $P2$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.37]{figs_intro/def2b}
+\caption{Problema inverso a capturar una imagen: calcular la pose de la cámara dados un objeto y una imagen. En verde se ve la proyección de la pose que se busca.}
+\label{fig:intro_def2}
+\end{figure}
 
 Una vez conocida la pose se procede a introducir un objeto virtual en la escena, esto se puede ver en la Figura \ref{fig:intro_def3}. Se tiene un modelo el objeto virtual ("hombre de líneas") que se utiliza para simular la existencia del mismo frente a la cámara. Con la información de este modelo la y la pose de la cámara se proyecta el objeto en la imagen, obteniéndose así fusión entre el mundo real y el virtual.
 
 \begin{figure}[H]
 \centering
-\subfigure[]{
-\includegraphics[scale=0.222]{figs_intro/def2b}
-\label{fig:intro_def2}
-	}
-\subfigure[]{
-\includegraphics[scale=0.222]{figs_intro/def3b}
+\includegraphics[scale=0.37]{figs_intro/def3b}
+\caption{En líneas punteadas se ve el modelo a proyectar, en la imagen se tiene la composición de las proyecciones del objeto real y virtual. }
 \label{fig:intro_def3}
-}
-\caption{\subref{fig:intro_def2}:Problema inverso a capturar una imagen: calcular la pose de la cámara dados un objeto y una imagen. En verde se ve la proyección de la pose que se busca. \subref{fig:intro_def2}:Pasos necesarios para realizar la realidad aumentada. En líneas punteadas se ve el modelo que se usa para proyectar sobre la  imagen. }
 \end{figure}
 
 A lo largo de la presente documentación dará al lector un panorama de lo que fue el proyecto en su conjunto, esperando que sirva como iniciativa para futuros trabajos vinculados a esta rama de la ingeniería.
