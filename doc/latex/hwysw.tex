@@ -133,37 +133,38 @@ Este lenguaje cuenta con algunas particularidades en cuanto a la invocación de m
 
 Sin embargo, los algoritmos desarrollados y utilizados en el proyecto para los módulos de detección de características, filtrado y agrupamiento de segmentos, determinación de correspondencias y estimación de pose; se encuentran escritos en lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento. Se hace énfasis en que estos módulos constituyen el núcleo de la solución al problema de realidad aumentada planteado inicialmente. \\
 
-Es directo incorporar código escrito en lenguaje C a Objective-C ya que como se dijo el primero está contenido en el segundo. Esto refuerza tanto la elección de la plataforma como del lenguaje ya que es posible sacar provecho de todas las funcionalidades y librerías de alto nivel proporcionadas por Objective-C y a la vez poder implementar algoritmos de bajo nivel en C.
+Es directo incorporar código escrito en lenguaje C a Objective-C ya que como se dijo el primero está contenido en el segundo. Esto refuerza tanto la elección de la plataforma como del lenguaje ya que es posible sacar provecho de todas las funcionalidades y librerías de alto nivel proporcionadas por Objective-C y a la vez poder implementar algoritmos de procesamiento en C (o incluso C++).
 
 La elección del lenguaje y la filosofía de desarrollo comentada anteriormente permite \textbf{portabilidad} en el uso de los mismos para aplicaciones más allá del proyecto y significó también un ejercicio de aprendizaje muy interesante.
 
 \subsection{Lenguaje C}
-Al comienzo del proyecto se realizó en curso breve de introducción al lenguaje C alojado en: \url{http://iie.fing.edu.uy/rosaluna/wiki/Ipol:main}. De este curso se abarcaron principalmente los siguientes temas:
-\begin{itemize}
- \item 
-Módulo 1: Introducción al lenguaje C.
- \item 
-Módulo 2: Punteros, arreglos y estructuras. Memoria dinámica.
- \item 
-Módulo 3: Diseño de un filtro FIR.
- \item 
-Módulo 4: Herramientas de programación.
-\begin{itemize}
- \item Entornos de desarrollo: e.g. Netbeans.
- \item Makefile: make.
- \item Debugger: gdb/ddd.
- \item Profiler: valgrind/kcachegrind.
- \item Documentación: doxygen.
- \item Generación de makefiles multiplataforma: cmake.
-\end{itemize}
- \item 
-Módulo 5: Lenguaje C aplicado al procesamiento de imágenes.
-\end{itemize}
+%Al comienzo del proyecto se realizó en curso breve de introducción al lenguaje C alojado en: \url{http://iie.fing.edu.uy/rosaluna/wiki/Ipol:main}. De este curso se abarcaron principalmente los siguientes temas:
+%\begin{itemize}
+% \item 
+%Módulo 1: Introducción al lenguaje C.
+% \item 
+%Módulo 2: Punteros, arreglos y estructuras. Memoria dinámica.
+% \item 
+%Módulo 3: Diseño de un filtro FIR.
+% \item 
+%Módulo 4: Herramientas de programación.
+%\begin{itemize}
+% \item Entornos de desarrollo: e.g. Netbeans.
+% \item Makefile: make.
+% \item Debugger: gdb/ddd.
+% \item Profiler: valgrind/kcachegrind.
+% \item Documentación: doxygen.
+% \item Generación de makefiles multiplataforma: cmake.
+%\end{itemize}
+% \item 
+%Módulo 5: Lenguaje C aplicado al procesamiento de imágenes.
+%\end{itemize}
 
-La utilización del lenguaje C no es casual en este proyecto. Dicho lenguaje tiene varias ventajas sobre otros lenguajes posibles, en particular para procesamiento de imágenes. En primer lugar, al ser un lenguaje de bajo nivel el código y algoritmos desarrollados pueden ser optimizados hasta el detalle. Por otro lado, la disponibilidad de algoritmos y librerías existentes en C/C++ orientadas a procesamiento de imágenes es superior a la de otros lenguajes. Algunas librerías importantes son OpenCV, ITK e ImageMagik ya que son ampliamente utilizadas y cuentan con una gran comunidad de desarrolladores y/o de empresas que las respaldan. También existen repositorios públicos y comunidades como IPOL que se rigen bajo el modelo de Acceso Abierto e Investigación Reproducible y brindan documentación y desarrollos de algoritmos en C/C++ para procesamiento de imágenes.\\
+La utilización del lenguaje C no es casual en este proyecto. Dicho lenguaje tiene varias ventajas sobre otros lenguajes posibles, en particular para procesamiento de imágenes. En primer lugar, al ser un lenguaje de bajo nivel el código y algoritmos desarrollados pueden ser optimizados hasta el detalle para la plataforma en la cual se trabaje. Por otro lado, la disponibilidad de algoritmos y librerías existentes en C/C++ orientadas a procesamiento de imágenes es superior a la de otros lenguajes. Algunas librerías importantes son OpenCV, ITK e ImageMagik ya que son ampliamente utilizadas y cuentan con una gran comunidad de desarrolladores y/o de empresas que las respaldan. También existen repositorios públicos y comunidades como IPOL que se rigen bajo el modelo de Acceso Abierto e Investigación Reproducible y brindan documentación y desarrollos de algoritmos en C/C++ para procesamiento de imágenes.\\
 
 Sin ir más lejos, la implementación del algoritmo LSD utilizada en el presente proyecto, fue tomada de su publicación en IPOL, mientras que el autor de los artículos utilizados para la implementación del algoritmo de estimación de pose POSIT provee en su página el código fuente en C y en Matlab de algunas de las versiones del mismo.\\
 
+Por otro lado, resulta no menor aclarar que al realizar todo el procesamiento en C también se deja la puerta abierta a portar todo lo implementado a Android, ya que el C y C++ pueden ser integrados con java usando una tecnología denominada NDK.\\
 
 \section{Resumen}
 En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se conoce el poder de procesamiento de los \textit{SoCs} que componen estas plataformas que integran CPU ARMv7 en varias versiones y GPU SGX con distintas capacidades. Se vio un análisis comparativo entre las tres familias de dispositivos, y dentro de las mismas, en detalle los modelos de plataformas que fueron utilizados. 
