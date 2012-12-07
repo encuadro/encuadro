@@ -300,9 +300,9 @@ bool corners, segments, reproyected;
     //    }
     //    else if (cantidadToques ==2) {_cubito1.position = iv3(distanciaMarcador[0]/2,-distanciaMarcador[1]/2,0); cantidadToques =0;}
     
-    if (cantidadToques ==0){_cubito1.position = iv3(190,-0,0); cantidadToques =1;
+    if (cantidadToques ==0){_cubito1.position = iv3(190,0,0); cantidadToques =1;
     }
-    else if (cantidadToques ==1) {_cubito1.position = iv3(0,100,0); cantidadToques =2;
+    else if (cantidadToques ==1) {_cubito1.position = iv3(0,-100,0); cantidadToques =2;
     }
     else if (cantidadToques ==2) {_cubito1.position = iv3(0,0,0); cantidadToques =0;}
 }

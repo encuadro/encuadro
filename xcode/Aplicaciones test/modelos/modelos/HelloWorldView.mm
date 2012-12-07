@@ -39,11 +39,13 @@ Isgl3dNode * _container;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado01.pod"];
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"chihuahua1.pod"];
         [podImporter buildSceneObjects];
-        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado02.pod"];
+        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihuahua1.pod"];
         [podImporter2 buildSceneObjects];
         Isgl3dPODImporter * podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado03.pod"];
+        
+        printf("1\n");
         
 		//_model = [_container createSkeletonNode];
 //        _model2 = [_container createSkeletonNode];
@@ -80,14 +82,17 @@ Isgl3dNode * _container;
 		[_mesh startAnimation];
         
         [podImporter printPODInfo];
-        
+        printf("2\n");
         [podImporter2 addMeshesToScene:_model2];
         [podImporter3 addMeshesToScene:_model3];
+        printf("3\n");
         
-        Isgl3dNode * node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter materialWithName:@"material_0"]];
+        Isgl3dSkeletonNode * node = [_container createSkeletonNode];
+        [podImporter addBonesToSkeleton:node];
+//        Isgl3dNode * node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter materialWithName:@"Material"]];
 		node.position = iv3(0, -60, -150);
         [podImporter addMeshesToScene:node];
-        
+            printf("4\n");
         node.scaleX=1.5;
         node.scaleY=1.5;
         node.scaleZ=1.5;
@@ -132,6 +137,7 @@ Isgl3dNode * _container;
 		// Schedule updates
 		
 		//[self schedule:@selector(tick:)];
+            printf("5\n");
 	}
 
 	return self;

@@ -94,19 +94,19 @@ bool dibujar;
         dibujar=YES;
         
         // Create the primitive
-		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
-        Isgl3dCube* planeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:1 nx:40 ny:40];
+//		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+//        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
+//        Isgl3dCube* planeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:1 nx:40 ny:40];
         
        
 		
 		
         
         //_cubito1 = [self.scene createNodeWithMesh:planeMesh andMaterial:material];
-        _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
-        _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
-        
-        _cubito1.alpha=0.5;
+//        _cubito2 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+//        _cubito3 = [self.scene createNodeWithMesh:cubeMesh andMaterial:material];
+//        
+//        _cubito1.alpha=0.5;
         
        
         
@@ -151,55 +151,55 @@ bool dibujar;
     //NSLog(@"tick\n");
     if (self.traslacion != nil & rotacion!=nil)
     {
-        Matriz.sxx = rotacion[0][0];
-        Matriz.sxy = rotacion[0][1];
-        Matriz.sxz = rotacion[0][2];
-        Matriz.tx = self.traslacion[0];
-        
-        Matriz.syx = rotacion[1][0];
-        Matriz.syy = rotacion[1][1];
-        Matriz.syz = rotacion[1][2];
-        Matriz.ty = self.traslacion[1];
-        
-        Matriz.szx = rotacion[2][0];
-        Matriz.szy = rotacion[2][1];
-        Matriz.szz = rotacion[2][2];
-        Matriz.tz = self.traslacion[2];
-        
-        Matriz.swx = 0;
-        Matriz.swy = 0;
-        Matriz.swz = 0;
-        Matriz.tw = 1;
-        
-        angles = im4ToEulerAngles(&Matriz);
-        if (verbose){
-            printf("\nisgl3d solucion\n");
-            printf("psi1: %f\ntheta1: %f\nphi1: %f\n",angles.x,angles.y,angles.z);
-        }
-        
-        /*project CoplanarPosit*/
-        float a[3],b[3];
-        b[0]=puntoModelo3D1[0];
-        b[1]=puntoModelo3D1[1];
-        b[2]=puntoModelo3D1[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D1,a,self.traslacion);
-        //        objectProy[i][0]=intrinsic[0][2]+intrinsic[0][0]*b[0]/b[2];
-        //        objectProy[i][1]=intrinsic[1][2]+intrinsic[1][1]*b[1]/b[2];
-        
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D2[0];
-        b[1]=puntoModelo3D2[1];
-        b[2]=puntoModelo3D2[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D2,a,self.traslacion);
-        
-        /*project CoplanarPosit*/
-        b[0]=puntoModelo3D3[0];
-        b[1]=puntoModelo3D3[1];
-        b[2]=puntoModelo3D3[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
-        VEC_SUM(punto3D3,a,self.traslacion);
+//        Matriz.sxx = rotacion[0][0];
+//        Matriz.sxy = rotacion[0][1];
+//        Matriz.sxz = rotacion[0][2];
+//        Matriz.tx = self.traslacion[0];
+//        
+//        Matriz.syx = rotacion[1][0];
+//        Matriz.syy = rotacion[1][1];
+//        Matriz.syz = rotacion[1][2];
+//        Matriz.ty = self.traslacion[1];
+//        
+//        Matriz.szx = rotacion[2][0];
+//        Matriz.szy = rotacion[2][1];
+//        Matriz.szz = rotacion[2][2];
+//        Matriz.tz = self.traslacion[2];
+//        
+//        Matriz.swx = 0;
+//        Matriz.swy = 0;
+//        Matriz.swz = 0;
+//        Matriz.tw = 1;
+//        
+//        angles = im4ToEulerAngles(&Matriz);
+//        if (verbose){
+//            printf("\nisgl3d solucion\n");
+//            printf("psi1: %f\ntheta1: %f\nphi1: %f\n",angles.x,angles.y,angles.z);
+//        }
+//        
+//        /*project CoplanarPosit*/
+//        float a[3],b[3];
+//        b[0]=puntoModelo3D1[0];
+//        b[1]=puntoModelo3D1[1];
+//        b[2]=puntoModelo3D1[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D1,a,self.traslacion);
+//        //        objectProy[i][0]=intrinsic[0][2]+intrinsic[0][0]*b[0]/b[2];
+//        //        objectProy[i][1]=intrinsic[1][2]+intrinsic[1][1]*b[1]/b[2];
+//        
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D2[0];
+//        b[1]=puntoModelo3D2[1];
+//        b[2]=puntoModelo3D2[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D2,a,self.traslacion);
+//        
+//        /*project CoplanarPosit*/
+//        b[0]=puntoModelo3D3[0];
+//        b[1]=puntoModelo3D3[1];
+//        b[2]=puntoModelo3D3[2];
+//        MAT_DOT_VEC_3X3(a, rotacion, b);
+//        VEC_SUM(punto3D3,a,self.traslacion);
         
         /*project CoplanarPosit*/
         //        b[0]=puntoModelo3D4[0];
