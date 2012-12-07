@@ -11,7 +11,7 @@ En el presente capítulo se introducen algunos conceptos básicos para el desarrol
 %\subsubsection{IPOL}
 %\subsubsection{ITK e ImageMagik}
 
-\section{Elección de plataforma}
+\section{Hardware: Elección de plataforma}
 La elección de la plataforma para desarrollar fue una de las primeras decisiones que se tuvo que tomar más allá del proceso natural inicial de investigación del proyecto. Esto es debido a que existen muchos factores que se ven afectados en función de la plataforma que van desde el aprendizaje del lenguaje de programación y del entorno de desarrollo hasta la adquisición de plataformas y/o máquinas para desarrollar. Así entonces las dos grandes posibilidades que se tenían al comienzo y que determinaban estos factores eran plataformas que tuvieran los sistemas operativos \emph{Android} o \emph{iOS} (en ningún momento se consideró desarrollar sobre plataformas con \emph{Symbian} dado que está planificado que deje de tener soporte para 2016 y tampoco sobre plataformas con \emph{Windows Phone 8} dado que no había sido lanzado en el momento de la decisión). Uno de los aspectos desfavorables que se veía de trabajar sobre \emph{Android} era la multiplicidad de plataformas existentes, de distintas características de procesamiento, cámara y sensores entre otras cosas con respecto a las plataformas que utilizan \emph{iOS}. Por otra parte luego de un proceso de investigación se vio que el conjunto de herramientas existentes y el estado de maduración del desarrollo de aplicaciones para \emph{iOS} hacían de este sistema operativo un camino más seguro para comenzar en un área que era desconocida. \emph{Android} es un sistema operativo que viene en pleno crecimiento y que a nivel masivo es una buena alternativa desarrollar en él, pero para los fines de investigación y de desarrollo de software que tenía el presente proyecto se vio que era mejor desarrollar sobre \emph{iOS}, presente en plataformas de Apple.
 
 Al trabajar con Apple entonces se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres familias de dispositivos en los que se puede desarrollar: \textit{iPhone}, \textit{iPad} y \textit{iPod Touch}. Para familia existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de los dispositivos al mercado y se describen resumidamente las principales características.
@@ -94,7 +94,7 @@ efectos del presente proyecto.
 %http://www.edaboard.com/thread75452.html
 
 
-\subsubsection{Algunas características a detallar.}
+\subsubsection{Algunas características a detallar}
 Hay algunos comentarios respecto de la Tabla \ref{tab: compHWiOS} que es bueno destacar. Es importante decir que se eligieron esos cuatro dispositivos pues pareció de interés conocer al menos una plataforma de cada familia y dentro de las mismas se eligieron las que fueron utilizadas para desarrollar.
 
 Uno de los puntos a evaluar es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. \textit{System on Chip} es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria \cite{SoC}.  \\
@@ -122,6 +122,36 @@ Para poder desarrollar aplicaciones sobre dispositivos móviles de la firma Apple
 Una de las grandes innovaciones de estas plataformas móviles es el hecho de poder desarrollar aplicaciones y correrlas en el propio dispositivo (por supuesto también sucede lo mismo en el mundo Android). Para poder lograr esto, es necesario como se ha dicho, contar con una máquina que corra Mac OS X y contar con el IDE apropiado llamado \textbf{Xcode}. Este entorno de desarrollo y su lenguaje se explican en la Sección \ref{sec: objc}.
 
 \section{Software}
+Los algoritmos desarrollados y utilizados en el proyecto para los módulos de detección de características, filtrado y agrupamiento de segmentes, determinación de correspondencias y estimación de pose; se encuentran en Lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento. Se hace énfasis en que estos módulos constituyen el núcleo de la solución al problema de Realidad Aumentada planteado incialmente. La elección del lenguaje y la filosofía de desarrollo comentada anteriormente permite \textbf{portabilidad} en el uso de los mismos para aplicaciones más allá del proyecto y significó también un ejercicio de aprendizaje muy interesante. \\
+
+Al comienzo del proyecto se realizó en curso breve de introducción al Lenguaje C alojado en: \url{http://iie.fing.edu.uy/rosaluna/wiki/Ipol:main}. De este curso se abarcaron principalmente los siguientes temas:
+\begin{itemize}
+ \item 
+Módulo 1: Introducción al lenguaje C.
+ \item 
+Módulo 2: Punteros, arreglos y estructuras. Memoria dinámica.
+ \item 
+Módulo 3: Diseño de un filtro FIR.
+ \item 
+Módulo 4: Herramientas de programación.
+\begin{itemize}
+ \item Entornos de desarrollo: e.g. Netbeans.
+ \item Makefile: make.
+ \item Debugger: gdb/ddd.
+ \item Profiler: valgrind/kcachegrind.
+ \item Documentación: doxygen.
+ \item Generación de makefiles multiplataforma: cmake.
+\end{itemize}
+ \item 
+Módulo 5: Lenguaje C aplicado al procesamiento de imágenes.
+\end{itemize}
+
+\subsection{Sobre la implementación de los algoritmos}
+El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
+
+El entorno de desarrollo (IDE) utilizado para la implementación fue Eclipse CDT para C/C++: \url{http://www.eclipse.org/cdt/} en un proyecto que utiliza un \emph{Makefile} para la compilación por lo que se podría utilizar otro entorno en caso de ser necesario.\\
+
+Adicionalmente de forma de facilitar la tareas de interfaz como el abrir/capturar, el guardado/despliegue de imágenes o video así como el dibujado de segmentos y puntos sobre las imágenes se utiliza la librería OpenCV. Se aclara que esta interfaz no está de ninguna forma integrada con los algoritmos desarrollados pero fue de gran utilidad para la implementación de los mismos. Su utilización esta intrínsecamente ligada a la librería OpenCV pero esta es una muy popular librería multifplataforma para procesamiento de imágenes.
 
 \subsection{Objective-C}
 \label{sec: objc}

@@ -1,9 +1,10 @@
 \chapter{Herramientas}
 \label{chap: herramientas}
  
-\section{Herramientas de Benchmark}
+\input{benchmark}
 
-\section{Plataformas de Apple Inc.}
+\newpage
+\section{Herramientas de Hardware y Software de Apple Inc.}
 
 \subsection{\textit{SoC}, CPU y GPU de plataformas Apple Inc.}
 Uno de los puntos a evaluar de las plataformas de Apple Inc. es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. \textit{System on Chip} es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria \cite{SoC}.  \\
@@ -167,6 +168,7 @@ Luego de elegir el tipo de datos a ser recolectados según lo que se busque anali
 
 En el presente proyecto se hizo uso principalmente del \textbf{Time Profiler} que permite analizar tiempos y del \textbf{Memory Leak} que permite hacer un análisis de la reserva de memoria no liberada. Con los mismos fue posible optimizar tiempos en determinados métodos del procesamiento, así como también eliminar problemas de memoria no liberada que generaban la interrupción abrupta de la aplicación luego de llegado un cierto nivel de reserva. Esta interrupción abrupta es una forma de proteger la memoria del dispositivo y evitar que se vea afectada cierta memoria útil a otros efectos. El resto de las herramientas de \textit{Instruments} fueron probadas pero no utilizadas en detalle para resolver problemas particulares.
 
+\newpage
 \section{Herramientas de Productividad}
 Además de las herramientas mencionadas propias del entorno de desarrollo fueron utilizadas algunas herramientas más generales de desarrollo de software en lo que respecta al control de versiones de código. A continuación se describen brevemente ciertos detalles de las mismas.
 \subsection{GIT}
@@ -178,5 +180,5 @@ GoogleCode es un sitio que ofrece Google para \textit{hosting} de proyectos, for
 \subsection{Github}
 Github es otro sitio que ofrece \textit{hosting} para proyectos \textit{open-source}. Cuenta con muchas herramientas de gran utilidad y se ha vuelto uno de los sitios más populares. También utiliza el software Git y entre otras cosas permite navegar dentro de la estructura de archivos \textit{online}, ofrece un historial para cada archivo, permite identificar qué colaborador realizó determinados cambios e incluso realizar modificaciones de archivos \textit{online}, sin necesidad de hacer actualizaciones desde terminal.\\
 
-Para el presente proyecto comenzó utilizándose GoogleCode pero luego se decidió migrar todo el respositorio a Github por contar con mayores facilidades de gestión.
+Para el presente proyecto comenzó utilizándose GoogleCode pero luego se decidió migrar todo el respositorio a Github por contar con mayores facilidades de gestión. Todo el código generado en este proyecto, así como la documentación es \textit{open source} y se puede bajar del repositorio git ubicado en: \url{https://github.com/encuadro/encuadro}.
 
