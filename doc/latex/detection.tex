@@ -4,17 +4,17 @@
 \section{Introducción}
 En este capítulo se trata con algunas de las herramientas y algoritmos de detección de características del tipo de primitivas geométricas como ser puntos, esquinas, bordes, líneas, segmentos de línea y arcos. 
 
-El objetivo principal es mostrar qué características se pueden detectar y con la utilización de qué algoritmos con el fin de su utilización en un algoritmo de estimación pose, tema que se desarrolla en los Capítulos \ref{chap: camypose} y, en forma más específica en el Capítulo \ref{chap: posit}. El tipo de características elegidas para su detección en la aplicación final están fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se debe ejecutar en tiempo real. También se desea que la característica ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
+El objetivo principal es mostrar qué características se pueden detectar y determinar qué algoritmos son adecuados para su posterior utilización para la estimación de pose, tema que se desarrolla en los Capítulos \ref{chap: camypose} y en forma más específica en el Capítulo \ref{chap: posit}. El tipo de características elegidas para su detección en la aplicación final están fuertemente ligadas con el desempeño del algoritmo que realiza dicha detección. Existe un requerimiento de tiempo ya que la aplicación final se debe ejecutar en tiempo real. También se desea que la característica seleccionada ofrezca la posibilidad de ser procesada posteriormente mediante algoritmos relativamente simples.
 
-Se busca que las características detectadas, asociadas a objetos o elementos presentes en la escena, presenten estabilidad en su ubicación frente a cambios en la pose. En forma más específica, si se tiene una esquina a detectar en una escena, por ejemplo de una mesa, la esquina puede ser detectada frente a imágenes o ``fotos'' de la mesa desde distintas posiciones y que en todos los casos la esquina detectada corresponde con la esquina de la mesa en la foto. También se busca que las características sean robustas frente a cambios en las condiciones en que se adquiere la imagen. Estas condiciones podrían ser iluminación, presencia de ruido, oclusiones, etc.
+Se busca que las características detectadas, asociadas a objetos o elementos presentes en la escena, presenten estabilidad en su ubicación frente a cambios en la pose. En forma más específica, si se tiene una esquina a detectar en una escena, por ejemplo de una mesa, la esquina puede ser detectada en imágenes o ``fotos'' de la mesa desde distintas posiciones y que en todos los casos la esquina detectada corresponde con la esquina de la mesa en la foto. También se busca que las características sean robustas frente a cambios en las condiciones en que se adquiere la imagen. Estas condiciones podrían ser iluminación, presencia de ruido, oclusiones, etc.
 
-El capítulo comienza con algunos detectores clásicos de bordes y esquinas como son Canny y Harris. Posteriormente se desarrollan algunos detectores de líneas, segmentos de línea y algunas estructuras más complejas, como el Método de la Transformada de Hough, LSD, EDLines y ORT. A lo largo de todo el capítulo se presentan resultados de estos algoritmos 
+El capítulo comienza con la revisión de algunos detectores clásicos de bordes y esquinas como son Canny y Harris. Posteriormente se desarrollan algunos detectores de líneas, segmentos de línea y algunas estructuras más complejas, como el Método de la Transformada de Hough, LSD, EDLines y ORT. A lo largo de todo el capítulo se presentan resultados de estos algoritmos.
 % \section{Típos de características}
 
 \section{Bordes y esquinas}
 Los detectores de bordes, en particular los detectores de bordes tipo escalón son una parte esencial de muchos sistemas de visión. El proceso de detección de bordes cumple la función de simplificar drásticamente la cantidad de información a procesar conservando aspectos estructurales utilizables para establecer los límites de cierto objeto en la imagen \cite{Canny:1986:ACA}. 
 
-Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. De forma más formal puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación está relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo. Hay implementaciones de detección de bordes que toman en cuenta el \textit{efecto rampa} y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
+Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. Más formalmente puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación está relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo\cite{operador_gradiente}. Hay implementaciones de detección de bordes que toman en cuenta el \textit{efecto rampa} y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
 \begin{figure}[h!]
   \centering
     \includegraphics[scale=0.8]{figs_detection/rampa.png}
@@ -23,7 +23,7 @@ Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre un
 \end{figure}
 	
 \subsection{Detector de bordes de Canny}
-El detector de bordes de Canny fue desarrollado en 1986 por John F. Canny \cite{Canny:1986:ACA} en el artículo \emph{``A Computational Approach to Edge Detection''} con el objetivo de descubrir el algoritmo de detección de bordes óptimo. En esta sección se describe brevemente el algoritmo y se muestran algunos resultados de interés. El desarrollo está inspirado principalmente en el artículo del detector de bordes de Canny de Wikipedia\footnote{\url{http://en.wikipedia.org/wiki/Canny_edge_detector}}.\\
+El detector de bordes de Canny fue desarrollado en 1986 por John F. Canny \cite{Canny:1986:ACA} en el artículo \emph{``A Computational Approach to Edge Detection''} con el objetivo de descubrir el algoritmo de detección de bordes óptimo. En esta sección se describe brevemente el algoritmo y se muestran algunos resultados de interés. La presentación de este algoritmo está inspirada principalmente en el artículo del detector de bordes de Canny de Wikipedia \cite{canny_wiki}.\\ %\footnote{\url{http://en.wikipedia.org/wiki/Canny_edge_detector}}.
 
 Las características buscadas por Canny para el detector de borde óptimo son:
 \begin{itemize}
@@ -58,7 +58,7 @@ El algoritmo consiste en cuatro etapas básicas las cuales se describen a continu
 Finalmente el ángulo de dirección del borde es redondeado a uno de los cuatro ángulos ($0$, $45$, $90$ o $135$ grados).
 
  \item 
-\textbf{Supresión de no-máximos}: Dados los estimadores del gradiente de la imagen se realiza una búsqueda para determinar si el módulo del gradiente asume un rol de máximo local. De esta etapa se obtiene un conjunto puntos en forma de imagen binaria llamados ``thin edges'' como se puede ver en la Figura \ref{fig:resultado_canny_lena_inter}(c). Estos proporcionan información de dirección para realizar el umbralizado con histéresis.  
+\textbf{Supresión de no-máximos}: Dados los estimadores del gradiente de la imagen se realiza una búsqueda para determinar si el módulo del gradiente asume un rol de máximo local. De esta etapa se obtiene un conjunto puntos en forma de imagen binaria llamados \emph{``thin edges''} como se puede ver en la Figura \ref{fig:resultado_canny_lena_inter}(c). Estos proporcionan información de dirección para realizar el umbralizado con histéresis.  
 
 La búsqueda de máximos se realiza observando el ángulo del punto y el módulo de él y sus vecinos. Por ejemplo, si el ángulo del gradiente pertenece al conjunto de los de cero grados (el borde es vertical) se observa el módulo de sus vecinos horizontales. Si el módulo del gradiente del punto es mayor a los de estos entonces el punto asume un rol de máximo local. Los otros casos son análogos.
 
@@ -66,7 +66,7 @@ La búsqueda de máximos se realiza observando el ángulo del punto y el módulo de 
 \textbf{Umbrales con histéresis}: El umbralizado con histéresis requiere de dos umbrales, uno bajo y uno alto. El umbral alto asegura que se marcan bordes de los cuales se puede estar suficientemente seguros de que son borde (Figura \ref{fig:resultado_canny_lena_inter}(d)). Luego en base a los bordes correspondientes a umbrales altos se aplica el umbral bajo recorriendo los caminos de dirección obtenidos previamente. Una vez finalizado el proceso se tiene una imagen binaria en donde cada píxel es marcado como borde o no (Figura \ref{fig:resultado_canny_lena_inter}(e)).
 \end{itemize}
 
-El algoritmo consiste en una serie de parámetros que ya fueron mencionados pero que vale la pena resaltar. En primer lugar el parámetro $\sigma$, la desviación estandar, del filtro Gaussiano utilizado en la etapa de reducción de ruido. Este parámetro afecta notablemente el desempeño del algoritmo y debe ser ajustado según la aplicación ya que aporta un compromiso entre el detalle para bordes más fino y la cantidad de falsos bordes producto del ruido. Por otro lado en la etapa de umbralizado con histéresis se tienen dos parámetros más, los valores de los dos umbrales; alto y bajo. En estos dos parámetros residen los típicos problemas de los umbrales y no hay un enfoque genérico que lo solucione, si el umbral alto es muy alto se puede perder información importante y por otro lado si el umbral bajo es muy bajo se producirán más falsos bordes debido a ruido. 
+El algoritmo consiste en una serie de parámetros que ya fueron mencionados pero que vale la pena resaltar. En primer lugar el parámetro $\sigma$, la desviación estandar del filtro Gaussiano utilizado en la etapa de reducción de ruido. Este parámetro afecta notablemente el desempeño del algoritmo y debe ser ajustado según la aplicación ya que aporta un compromiso entre el detalle para bordes más fino y la cantidad de falsos bordes producto del ruido. Por otro lado en la etapa de umbralizado con histéresis se tienen dos parámetros más, los valores de los dos umbrales; alto y bajo. En estos dos parámetros residen los típicos problemas de los umbrales y no hay un enfoque genérico que lo solucione, si el umbral alto es muy alto se puede perder información importante y por otro lado si el umbral bajo es muy bajo se producirán más falsos bordes debido a ruido. 
 \begin{figure}[h!]
   \centering
   \subfigure[Reducción de ruido: Blur]{
@@ -103,7 +103,7 @@ Se puede ver que con $\sigma = 0.5$ la presencia de ruido afecta notablemente la
 
 
 \subsection{Detector de bordes y esquinas de Harris}
-El detector de bordes y esquinas de \textbf{Harris} es un método desarrollado por Chris Harris et al. en 1988 en el artículo \emph{``A combined corner and edge detector''}\cite{Harris88acombined}. 
+El detector de bordes y esquinas de Harris es un método desarrollado por Chris Harris et al. en 1988 en el artículo \emph{``A combined corner and edge detector''}\cite{Harris88acombined}. 
 
 % Se considera una ventana en el píxel $(x,y)$ en donde se define la suma
 % cuadrada ponderada de los elementos de la ventana como
@@ -170,7 +170,7 @@ A =
 \end{array} 
 \right)
 \]
-donde los par\'entesis angulares denotan el promediado ponderado que puede ser como se explica anteriormente Gaussiano.\\
+donde los par\'entesis angulares denotan el promediado ponderado que puede ser, como se explica anteriormente, Gaussiano.\\
 
 Por construcci\'on, es f\'acil ver que grandes variaciones en $E(x,y)$ ocasionadas por cambios en ambas direcciones $(i,j)$ estar\'an indicando la existencia de una esquina, mientras que grandes variaciones en $E(x,y)$ ocasionadas por cambios en una sola de direcci\'on indicar\'an la existencia de un borde. Es posible entonces limitar el estudio a la matriz A y sus valores propios.\\
 Sean $\alpha$ y $\beta$ los valores propios de A. Se concluye por lo anterior que si:
@@ -217,12 +217,12 @@ En la Figura \ref{fig:resultado_harris} se muestran los resultados para el detec
 Se puede ver que los resultados son buenos para ambos casos y particularmente buenos si se desean detectar las esquinas del marcador.
 
 \subsubsection{Aplicabilidad}
-Se pudo ver que el detector de Harris resultó en una detección razonable para el ejemplo tratado aunque su funcionamiento en general no es tan bueno. Bajo otras condiciones menos controladas puede ser inestable y poco robusto.
+Se pudo ver que el detector de Harris resultó en una detección razonable para el ejemplo tratado aunque su funcionamiento en general puede no ser tan bueno. Bajo otras condiciones menos controladas como para la detección de esquinas naturales, no generadas por la presencia de un marcador, puede ser inestable y poco robusto requiriendo de algún tipo de validación \emph{a posteriori}.
 
 Una desventaja importante que tiene la detección de características tipo esquinas es que si se desea saber qué esquinas se unen entre sí mediante los lados del marcador sin ambiguedad se debe obtener más información que permita conectarlas. Por lo tanto un buen complemento puede ser el gradiente o una detección de bordes. La detección de líneas o segmentos ya contiene esta información y por lo tanto parece más apropiada.
 
 \section{Líneas y segmentos de línea}
-Las líneas o segmentos de línea son elementos que contienen una estructura más definida en comparación con los bordes. Esta estructura definida produce a su vez que la detección de este tipo de elementos sea más estable y menos sensible al ruido que la detección de bordes. Como se verá en a lo largo de la sección, los detectores de líneas que se presentan tienen en común que utilizan al inicio de la detección las herramientas de gradientes y operadores gradientes o directamente la detección de bordes en sí misma para realizar el objetivo de detección de líneas.
+Las líneas o segmentos de línea son elementos que contienen una estructura más definida en comparación con los bordes. Esta estructura definida produce a su vez que la detección de este tipo de elementos sea más estable y menos sensible al ruido que la detección de bordes o esquinas. Como se verá en a lo largo de la sección, los detectores de líneas que se presentan tienen en común que utilizan al inicio de la detección las herramientas de gradientes y operadores gradientes o directamente la detección de bordes en sí misma para realizar el objetivo de detección de líneas.
 
 En esta sección de explican brevemente algunos detectores de líneas y segmentos de línea. En primer lugar se menciona un detector de líneas clásico y popular como es el detector de Hough y se explica su funcionamiento así como sus principales desventajas que hacen que este método sea descartado para su desarrollo en el proyecto. En segundo lugar se menciona y se hace referencia al capítulo en donde será tratado el detector de segmentos de línea, uno de los pilares principales de este proyecto, el LSD. También se muestran otros detectores que fueron tomados en consideración pero por diferentes razones (explicadas en su secciones correspondientes) no fueron utilizados como son el ORT y EDLines.
 
@@ -250,9 +250,9 @@ En la Figura \ref{fig:resultado_hough} se muestran los resultados para el detect
   \centering
   \subfigure[El plano de Hough]{
     \includegraphics[scale=0.47]{figs_detection/hough/hough_transform.png}}
-  \subfigure[Detección de líneas de Houhj]{
+  \subfigure[Detección de líneas de Hough]{
     \includegraphics[scale=0.5]{figs_detection/hough/hough_lines.png}}
-  \caption{Resultados para la detección de líneas por el Método de Hough para los parámetos $MinLength=15$ y $FillGap=8$.}
+  \caption{Resultados para la detección de líneas por el Método de Hough para los parámetos: Tamaño mínimo de segmentos $=15$, Máximo hueco $=8$, Número de máximos $=100$ y Threshold en \texttt{houghpeaks} $=ceil(0.05*max(H(:)))$ }
   \label{fig:resultado_hough}
 \end{figure}
 
@@ -263,13 +263,14 @@ Se comprobó la dificultad intrínseca del método asociada al ajuste de parámetros
 El algoritmo Line Segment Detector (LSD) es capaz de detectar segmentos de línea rectos y uno de los componentes principales en este proyecto. Debido a su importancia es que se le dedica el Capítulo \ref{chap: lsd} a su desarrollo.
 
 \subsubsection{Ejemplo de interés}
-En la Figura \ref{fig:resultado_lsd_ipol} se muestran los resultados del algoritmo LSD para la imagen del marcador. Este ejemplo fue realizado mediante el uso del demo \emph{online} de IPOL para este algoritmo\cite{IpolLsd12}.
 \begin{figure}[h!]
   \centering
     \includegraphics[scale=0.5]{figs_detection/lsd/lsd.png}
   \caption{Resultados de LSD para la imagen del marcador.}
   \label{fig:resultado_lsd_ipol}
 \end{figure}
+En la Figura \ref{fig:resultado_lsd_ipol} se muestran los resultados del algoritmo LSD para la imagen del marcador. Este ejemplo fue realizado mediante el uso del demo \emph{online} de IPOL para este algoritmo\cite{IpolLsd12}.
+
 Se puede observar que el algoritmo logra detectar con éxito todas las estructuras de segmento de línea presentes en la imagen y en particular las que corresponden al marcador, los lados de los cuadriláteros.
 
 El algoritmo produjo un número de $169$ segmentos de línea detectados en un tiempo de ejecución de $130ms$ sobre el servidor que aloja la aplicación. La misma ejecución realizada en el marco de este proyecto sobre una PC con procesador Intel Core 2 Duo de $2Ghz$ tomó un tiempo de aproximadamente $40ms$.
@@ -288,13 +289,13 @@ El algoritmo se aplica a la imagen de entrada en niveles de gris. En primer luga
 \textbf{Extracción de segmentos de línea}: El objetivo de esta etapa es el de ``partir'' la cadena contigua de píxeles obtenida mediante el detector de bordes en uno o más segmentos de línea rectos. Básicamente lo que se hace es recorrer la secuencia de píxeles e ir ajustando líneas a los píxeles utilizando el método de ajuste de líneas por mínimos cuadrados hasta que el error exceda cierto umbral. En el momento en que se excede ese umbral se genera un nuevo segmento de línea y así recursivamente se recorren todos lo píxeles de la cadena.
 
  \item 
-\textbf{Validación de líneas}: El método de validación de segmentos de línea está basado en el principio de Helmholtz el cual postula que para que una estructura sea perceptualmente significativa, la esperanza de que la misma (agrupado o Gestalt) ocurra de casualidad debe ser muy baja. Este es un efoque \emph{a contrario} en donde los objetos son detectados como \emph{outliers} sobre el modelo de fondo. En esta etapa se logra eliminar los falsos positivos controlando el número de falsas alarmas. Este enfoque en particular es el mismo que utiliza LSD y se explica también en el Capítulo \ref{chap: lsd}. 
+\textbf{Validación de líneas}: El método de validación de segmentos de línea está basado en el principio de Helmholtz el cual postula que para que una estructura sea perceptualmente significativa, la esperanza de que la misma (agrupado o Gestalt) ocurra de casualidad debe ser muy baja. Este es un efoque \emph{a contrario} en donde los objetos son detectados como \emph{outliers} sobre el modelo de fondo. En esta etapa se logra eliminar los falsos positivos controlando el número de falsas alarmas. Este enfoque en particular es el propuesto originalmente por LSD y se explica también en el Capítulo \ref{chap: lsd}. 
 
 Si la aplicación lo permite, esta validación puede ser eliminada o sustituida por otra, por ejemplo por un umbral de largo máximo de segmentos, acelerando aún más el algoritmo EDLines. En LSD esta etapa esta integrada con la etapa de detección de segmentos para cada iteración aunque podría ser desacoplada en cierta medida. De todas formas EDLines presenta esa ventaja de modularidad frente a LSD que puede llegar a ser útil.
 \end{itemize}
 
 \subsection{Ejemplos de interés}
-En la Figura \ref{fig:resultado_edlines}(a) se muestra la imagen de entrada junto con los segmentos detectados por EDLines para la imagen del marcador. En la Figura \ref{fig:resultado_edlines}(b) se muestra únicamente los segmentos de salida de EDlines numerados.
+En la Figura \ref{fig:resultado_edlines}(a) se muestra la imagen de entrada junto con los segmentos detectados por EDLines para la imagen del marcador. En la Figura \ref{fig:resultado_edlines}(b) se muestra únicamente los segmentos de salida de EDLines numerados.
 \begin{figure}[h!]
   \centering
   \subfigure[Imagen de entrada y segmentos]{
@@ -304,7 +305,7 @@ En la Figura \ref{fig:resultado_edlines}(a) se muestra la imagen de entrada junt
   \caption{Resultados de EDLines para la imagen del marcador.}
   \label{fig:resultado_edlines}
 \end{figure}
-El tiempo de ejecución declarado para esta imagen por la aplicación \emph{on-line} es de $30ms$ en su servidor pero alega que para una PC Intel con CPU de $2Ghz$ el mismo sería de $10ms$. Suponiendo una detección en el tiempo declarado para una PC este sería dos veces más veloz que el de LSD para la misma imagen. Se detectaron $178$ segmentos y se puede ver que los resultados son muy similares a los que produce LSD que detecta $169$ segmentos para la misma imagen (Figura \ref{fig:resultado_lsd_ipol}).
+El tiempo de ejecución declarado para esta imagen por la aplicación \emph{online} es de $30ms$ en su servidor pero alega que para una PC Intel con CPU de $2Ghz$ el mismo sería de $10ms$. Suponiendo una detección en el tiempo declarado para una PC este sería dos veces más veloz que el de LSD para la misma imagen. Se detectaron $178$ segmentos y se puede ver que los resultados son muy similares a los que produce LSD que detecta $169$ segmentos para la misma imagen (Figura \ref{fig:resultado_lsd_ipol}).
 
 \subsubsection{Aplicabilidad}
 El algoritmo EDLines se encuentra disponible para descarga como una librería compilada para Windows o Linux. También se puede probar en forma de demo \emph{online} desde la página web del laboratorio Computer Vision \& Pattern Recognition de la Universidad de Anadolu de Turquía en donde también explica en forma resumida su funcionamiento\cite{edlines_demo}.\\
@@ -312,7 +313,7 @@ El algoritmo EDLines se encuentra disponible para descarga como una librería com
 El código fuente por su parte no está disponible para la descarga de ningún tipo en contraste con el LSD. Esto es un factor determinante para la utilización del algoritmo en el proyecto ya que se tiene que poder compilar para la plataforma de desarrollo utilizada, en este caso sería para el sistema operativo iOS. Una implementación del algoritmo en lenguaje C/C++ no fue considerada como parte del alcance de este proyecto pero sí puede ser considerada como trabajo a futuro si se desea seguir con el enfoque de segmentos de línea para detección.
 
   \subsection{Detector de segmentos de línea y arcos: ORT}
-El Object Recongnition Toolkit (ORT) provee una serie de herramientas para la detección de segmentos de línea, arcos y también puntos e incluso estructuras más complejas como polígonos. El código está disponible para su descarga en la página del curso ``CSE 576 Computer Vision'' de la Univeristy of Washington de Estados Unidos de América\cite{ort_curso} como también desde un repositorio SVN público de Juan Cadelino se puede encontrar otra distribución del código con documentación incluída\cite{ort_juanc}.
+El Object Recongnition Toolkit (ORT) provee una serie de herramientas para la detección de segmentos de línea, arcos y también puntos e incluso estructuras más complejas como polígonos. El código está disponible para su descarga en la página del curso ``CSE 576 Computer Vision'' de la Univeristy of Washington de Estados Unidos de América\cite{ort_curso} como también desde un repositorio SVN público se puede encontrar otra distribución del código con documentación incluída\cite{ort_juanc}.
 
 El ORT consiste en un número de herramientas para ejecución en cascada desde consola de comandos que resultan en la detección de las características deseadas. Cada una de las herramientas corresponde a un algoritmo, estos son \textbf{Fex}\cite{fex}, \textbf{Lpeg}\cite{lpeg} e \textbf{Ipeg}. 
 
@@ -374,7 +375,7 @@ El código fuente de estas herramientas está disponible para la descarga pero est
 Un estudio más detallado del código fuente y la posibilidad de reutilizarlo dentro del marco de la aplicación queda como trabajo a futuro ya que ORT provee algunas herramientas interesantes y de más alto nivel que el detector de segmentos elegido LSD.
 
 \section{Resumen}
-En este capítulo se introdujo el tema de detección de características orientado a primitivas. Se hizo énfasis en el tipo de características de esquinas, bordes, líneas y segmentos de línea recorriendo algunos algoritmos de detección clásicos y otros más actuales. Se realizó mediante el uso de un mismo ejemplo conteniendo un marcador algunas de las propiedades que interesan al proyecto concluyendo que el uso de segmentos de línea es el más apropiado por la naturaleza del marcador elegido. Se observó que todos los algoritmos de líneas y segmentos de línea analizados tienen en común utilizan algún tipo de detección de bordes o gradientes asociados a bordes al comienzo de la detección. Se compararon los detectores de segmentos de línea obteniendo buenos resultados para los tres presentados, LSD, EDLines y ORT; eligiendo por diferentes razones LSD. A lo largo del análisis se establecieron pautas para realizar como trabajo a futuro en cuanto a los detectores de segmentos de línea, si es que se desea continuar con esta línea de trabajo.
+En este capítulo se introdujo el tema de detección de características orientado a primitivas. Se hizo énfasis en el tipo de características de esquinas, bordes, líneas y segmentos de línea recorriendo algunos algoritmos de detección clásicos y otros más actuales. Se realizó mediante el uso de un mismo ejemplo conteniendo un marcador algunas de las propiedades que interesan al proyecto concluyendo que el uso de segmentos de línea es el más apropiado por la naturaleza del marcador elegido. Se observó que todos los algoritmos de líneas y segmentos de línea analizados tienen en común la utilización de algún tipo de detección de bordes o gradientes asociados a bordes al comienzo de la detección. Se compararon los detectores de segmentos de línea obteniendo buenos resultados para los tres presentados, LSD, EDLines y ORT; eligiendo por diferentes razones LSD. A lo largo del análisis se establecieron pautas para realizar como trabajo a futuro en cuanto a los detectores de segmentos de línea, si es que se desea continuar con esta línea de trabajo.
 
 
 
@@ -414,7 +415,7 @@ Si se utiliza un único marcador la cantidad de puntos necesarios para la estimac
 \subsection{ARToolKit}
 \emph{ARToolKit} es un muy popular sistema de marcadores planos para Realidad Aumentada e Interacción Hombre-Computador. Su popularidad reside ser de los primeros proyectos en utilizar la Realidad Aumentada en dispositivos móviles y también debido a que es un proyecto de código abierto. 
 
-Los marcadores bitonales consisten en un cuadrado con borde negro y un patrón en el interior. La primer etapa del proceso de reconocimiento consisten en detectar los bordes negros. Esto se realiza buscando grupos conexos de píxeles (\emph{blobs}) que están por debajo de un determinado umbral. Posteriormente se extrae el contorno de cada grupo esos grupos que están rodeados por cuatro líneas rectas son marcados como marcadores potenciales. Las cuatro esquinas de cada marcador potencial son utilizados para calcular la homografía y así remover la distorsión perspectiva. Con el marcador en una vista canónica, se procede a identificar el patrón interno muestreando en una grilla, de por lo general $16\times 16$ o $32\times 32$, los valores de gris. Con esto se construye un vector característico y se compara por correlación con una librería de vectores de característicos logrando la identificación del mismo.
+Los marcadores bitonales consisten en un cuadrado con borde negro y un patrón en el interior. La primer etapa del proceso de reconocimiento consisten en detectar los bordes negros. Esto se realiza buscando grupos conexos de píxeles (\emph{blobs}) que están por debajo de un determinado umbral. Posteriormente se extrae el contorno de cada grupo, esos grupos que están rodeados por cuatro líneas rectas son marcados como marcadores potenciales. Las cuatro esquinas de cada marcador potencial son utilizados para calcular la homografía y así remover la distorsión perspectiva. Con el marcador en una vista canónica, se procede a identificar el patrón interno muestreando en una grilla, de por lo general $16\times 16$ o $32\times 32$, los valores de gris. Con esto se construye un vector característico y se compara por correlación con una librería de vectores de característicos logrando la identificación del mismo.
 
 Este sistema tiene algunas desventajas o ``puntos débiles''. En primer lugar la detección es basada en un umbral por lo que las condiciones de iluminación pueden afectar fuertemente la efectividad de la misma. Dado que el código esta disponible este se puede modificar para realizar \emph{threshold} local o adaptivo por ejemplo. Otras desventajas están relacionadas con el proceso de identificación del marcador frente a la librería.
 
@@ -453,7 +454,7 @@ Un marcador proveerá un numero de $4\times M \times N $ vértices y por lo tanto 
 \subsection{Diseño}
 En base a las estructuras previamente definidas es que se describe el diseño del marcador. Como ya se explicó se toma un marcador tipo QR basado en cuadriláteros y más específicamente en tres conjuntos de tres cuadrados dispuestos en como se muestra en la figura \ref{fig:Marker}.\\
 
-Los tres cuadriláteros correspondientes a un mismo conjunto de cuadriláteros tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $Ql[0]$ tiene lado $l$ mientras que $Ql[1]$ y $Ql[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $QlSet$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el área de Procesamiento de Imágenes para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas de puede fijar un orden a los vértices $v_{j_{1}}$ de cada cuadrilátero $Ql[j]$ como,
+Los tres cuadriláteros correspondientes a un mismo conjunto de cuadriláteros tienen idéntica alineación e idéntico centro. Los diferencia un factor de escala, esto es, $Ql[0]$ tiene lado $l$ mientras que $Ql[1]$ y $Ql[2]$ tienen lado $2l$ y $3l$ respectivamente. Esto se puede ver en la figura \ref{fig:QlSetDetail}. Adicionalmente se define un sistema de coordenadas con centro en el centro del $QlSet$ y ejes definidos como $\textbf{x}$ horizontal a la derecha e $\textbf{y}$ vertical hacia abajo. Esta convención en las direcciones de los ejes es muy utilizada en el área de Procesamiento de Imágenes para definir las direcciones de los ejes de una imagen. Definido el sistema de coordenadas se puede fijar un orden a los vértices $v_{j_{1}}$ de cada cuadrilátero $Ql[j]$ como,
 \begin{align*}
 v_{j_{0}} = (a/2,a/2) && v_{j_{2}} = (-a/2,-a/2)  \\
 v_{j_{1}} = (a/2,-a/2)&& v_{j_{3}} = (-a/2,a/2)
@@ -497,7 +498,7 @@ El criterio de elección de $M$ y $N$ parte del diseño los códigos QR como ya fue
 
 La elección de \emph{cuadrados} como parámetro de geometría se basa en la necesidad de tener igual resolución en los dos ejes del marcador. De esta forma se asegura una distancia límite en donde, en un caso ideal enfrentado al marcador, la detección de segmentos de línea falla simultáneamente en los segmentos verticales como en los horizontales. De otra forma se tendría una dirección que limita más que la otra desaprovechando resolución.
 
-La disposición espacial de los conjuntos de cuadriláteros esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros como se muestra en la figura \ref{fig:MarkerDetail}.\\
+La disposición espacial de los conjuntos de cuadriláteros esta en primer lugar limitada a un plano y en segundo lugar es tal que se puede definir ejes de coordenadas ortogonales mediante los centros como se muestra en la Figura \ref{fig:MarkerDetail}.\\
 
 Por otro lado se tiene otro juego de parámetros \textbf{dinámicos} que concluyen con el diseño del marcador. Estos parámetros conservan la estructura intrínseca del marcador permitiendo versatilidad en la aplicación y sin la necesidad de modificación alguna de los algoritmos desarrollados. Estos son:
 \begin{itemize}
@@ -525,8 +526,9 @@ La etapa de detección del marcador se puede separar en tres grandes bloques:
 En esta sección se muestran algunos resultados para la detección de segmentos de línea por LSD y se centra en profundidad en los algoritmos desarrollados durante el proyecto para el filtrado de segmentos y determinación de correspondencias.
 
 \subsection{Detección de segmentos de línea}
-La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el Capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino.
+La detección de segmentos de línea se realiza mediante el uso del algoritmo LSD el cual se detalla en el Capítulo \ref{chap: lsd}. En forma resumida, dicho algoritmo toma como entrada una imagen en escala de grises de tamaño $W\times H$ y devuelve una lista de segmentos en forma de pares de puntos de origen y destino. 
 
+En la Figura \ref{fig:resultado_lsd} se muestra un resultado para la detección de segmentos de línea por LSD.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: imagen conteniendo al marcador]{
@@ -546,7 +548,7 @@ Se parte de una lista de $m$ segmentos de línea,
                \mathbf{s}_0 & \mathbf{s}_1 & \dots & \mathbf{s}_{m-1} 
               \end{pmatrix}^t
 \end{equation}
-y se recorre en $i$ en busca de segmentos vecinos. La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos. En una primera etapa $\mathbf{s}_j$ y en una segunda etapa $\mathbf{s}_k$, de forma que se forme una ``U'' como se muestra en la figura \ref{fig:SegmentosRectas}. La tercer etapa de búsqueda consiste en completar ese conjunto con un cuarto segmento $\mathbf{s}_l$ que cierre la ``U''.
+y se recorre en $i$ en busca de segmentos vecinos. La estrategia utilizada consiste en buscar, para el $i$-ésimo segmento $\mathbf{s}_i$, dos segmentos vecinos. En una primera etapa $\mathbf{s}_j$ y en una segunda etapa $\mathbf{s}_k$, de forma que se forme una ``U'' como se muestra en la Figura \ref{fig:SegmentosRectas}. La tercer etapa de búsqueda consiste en completar ese conjunto con un cuarto segmento $\mathbf{s}_l$ que cierre la ``U''.
 
 Dos segmentos $\mathbf{s}_i$ y $\mathbf{s}_j$ son vecinos si se cumple que la distancia euclídea entre puntos, $d_{ij}$, es menor a un cierto umbral para alguna de las combinaciones $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$, $\mathbf{q}_i\leftrightarrow \mathbf{q}_j$, $\mathbf{p}_i\leftrightarrow \mathbf{q}_j$ o $\mathbf{q}_i\leftrightarrow \mathbf{p}_j$. En la primera etapa de la búsqueda se testean todas las posibilidades mientras que en la segunda etapa se testean solo los puntos del segmento que no fueron utilizados. Por ejemplo, si se encontró la correspondencia $\mathbf{p}_i\leftrightarrow \mathbf{p}_j$ se busca el $k$-ésimo segmento $\mathbf{s}_k$ que cumple que la distancia euclidiana $d_{ij}$ es menor a cierto umbral para alguna de las combinaciones $\mathbf{q}_i\leftrightarrow \mathbf{p}_k$ y $\mathbf{q}_i\leftrightarrow \mathbf{q}_k$. En la tercer etapa la chequeo se realiza de forma aún más restringida probando para el segmento $\mathbf{s}_l$ correspondencia simultánea entre sus puntos y solamente un punto cada uno de los segmentos $\mathbf{s}_j$ y $\mathbf{s}_k$ .\\
 \begin{figure}[h!]
@@ -558,7 +560,7 @@ Dos segmentos $\mathbf{s}_i$ y $\mathbf{s}_j$ son vecinos si se cumple que la di
 
 Una vez encontrado el conjunto de cuatro segmentos conexos estos se marcan como utilizados, se guardan en una lista de salida y se continúa con el segmento $i+1$ hasta recorrer los $m$ segmentos de la lista de entrada. De esta forma se obtiene una lista de salida $\mathbf{S}$ de $n$ segmentos en donde $n$ es por construcción múltiplo de cuatro.\\
 
-En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
+En la Figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos para el algoritmo tomando como entrada la lista de segmentos de LSD. Se puede ver que los lados de los cuadrados del marcador son detectados correctamente pero también hay otras detecciones presentes. Por ejemplo el rectángulo negro correspondiente a un trozo de cinta negra que sostiene el marcador (ver Figura \ref{fig:resultado_lsd}(a)). También sobreviven otro tipo de elementos indeseados que se explican a continuación.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea detectados por LSD]{
@@ -571,7 +573,7 @@ En la figura \ref{fig:resultado_lsdfilt} se muestran lo resultados obtenidos par
 
 El algoritmo descrito es simple y provee resultados aceptables en general pero es propenso a tanto a detectar \emph{falsos positivos} como al \emph{sobre-filtrado} algunos conjuntos. 
 
-La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ más cercanos de cada segmento. Como se explicará en le Sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
+La detección de falsos positivos se puede atribuir principalmente a la condición de vecindad utilizada en donde un caso como el que se muestra en la Figura \ref{fig:FilterError} de un conjunto de segmentos paralelos cercanos y de tamaño similar ``sobrevive'' al filtrado de segmentos. De forma de evitar estos  falsos positivos, se podría considerar implementar un condición de vecindad que tome en cuenta el punto de  intersección entre los segmentos y la distancia de este punto a los puntos $\mathbf{p}$, $\mathbf{q}$ más cercanos de cada segmento. Como se explicará en le Sección \ref{sec:detection_correspondencias}, debido a que el algoritmo de determinación de correspondencias realiza la intersección entre estos segmentos se puede chequear alguna condición sobre los segmentos o su intersección y en ese momento filtrar estos casos.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/FilterError.eps}
@@ -585,7 +587,7 @@ El algoritmo de filtrado y agrupamiento de segmentos es sensible respecto a la e
 
 \subsection{Determinación de correspondencias}
 \label{sec:detection_correspondencias}
-Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador vistos en \ref{sec:detection_estructuras}, de forma de desarrollar un algoritmo modular, escalable y simple.
+Se detalla a continuación el algoritmo de determinación de correspondencias a partir de grupos de cuatro segmentos de línea conexos. Para ese algoritmo se hace uso de los elementos estructurales del marcador vistos en la Sección \ref{sec:detection_estructuras}, de forma de desarrollar un algoritmo modular, escalable y simple.
 
 Se toma como entrada la lista de segmentos filtrados y agrupados
 \begin{equation}
@@ -609,7 +611,7 @@ Si  $\mathbf{r}_i$ es la recta que pasa por los puntos $\mathbf{p}_i$ y $\mathbf
 \mathbf{v}_{i+2} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+2} \nonumber\\
 \mathbf{v}_{i+3} = & \mathbf{r}_{i+3}\cap \mathbf{r}_{i+1} \nonumber
 \end{eqnarray}
-resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario partiendo de ${v}_i$.
+resultando en dos posibles configuraciones de vértices. Las dos configuraciones se muestran en la Figura \ref{fig:Vertices} en donde una de ellas tiene sentido horario y la otra antihorario partiendo de ${v}_i$.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/Vertices.eps}
@@ -668,7 +670,7 @@ o de lo contrario se ordena como,
  QlSet[2]\longleftarrow & QlSet[i]
 \end{eqnarray*}
 
-Por ultimo se construye un marcador QR que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en la Ecuación \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre el sistema de coordenadas local al $QlSet$ y según su signo ordenarlos como se muestra en la figura \ref{fig:VerticesProyectados}.
+Por ultimo se construye un marcador QR que contiene la lista de tres $QlSet$ ordenados según lo indicado permitiendo la definición de un centro de coordenadas como el centro $\mathbf{c}_0$ del $QlSet[0]$ y ejes de coordenadas definidos en la Ecuación \ref{ec:detection_ejes}. Los ejes de este sistema de coordenadas permiten, para cada $Ql$ de cada $QlSet$, proyectar los vértices sobre el sistema de coordenadas local al $QlSet$ y según su signo ordenarlos como se muestra en la Figura \ref{fig:VerticesProyectados}.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.8]{figs_detection/VerticesProyectados.eps}
@@ -688,7 +690,7 @@ Por último, a partir del marcador ordenado, se extrae una lista de vértices que 
   }}}
 \end{algorithm}
 
-Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose las cuales se muestran en la figura \ref{fig:resultado_points}. Se puede ver que el algoritmo de determinación de correspondencias funciona correctamente por lo que los ``falsos'' cuadriláteros que sobreviven al filtrado de segmentos no son un problema.
+Se determinan las correspondencias $\mathbf{M}_i\leftrightarrow \mathbf{m}_i$ necesarias para la estimación de pose las cuales se muestran en la Figura \ref{fig:resultado_points}. Se puede ver que el algoritmo de determinación de correspondencias funciona correctamente por lo que los ``falsos'' cuadriláteros que sobreviven al filtrado de segmentos no son un problema.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea filtrados y agrupados]{
@@ -712,7 +714,7 @@ Una vez completada la lista de tres $QlSet$, con al menos uno de ellos detectado
 
 Al momento de proporcionar la lista de vértices ordenados $\mathbf{m}_i$ y correspondientes con los del modelo $\mathbf{M}_i$, se introducen valores inválidos para los $Ql$'s marcados como inválidos. Por último se realiza un recorte de las dos listas de puntos en base a estos valores inválidos, se recorre la lista de puntos en la imagen $\mathbf{m}_i$ y se extraen de la lista de puntos en la imagen y de los puntos del modelo los puntos inválidos obteniendo un juego de al menos $28$ correspondencias $\mathbf{m}_i' \leftrightarrow \mathbf{M}'_i$ para el algoritmo de estimación de pose.\\
 
-En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que falla el filtrado de segmentos para uno de los cuadriláteros mientras que en la figura \ref{fig:resultado_inc_points}(b) se puede ver como el algoritmo de determinación de correspondencias provee $32$ correspondencias ordenadas correctamente, diferenciando en el $QlSet$ incompleto los vértices.
+En la Figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que falla el filtrado de segmentos para uno de los cuadriláteros mientras que en la figura \ref{fig:resultado_inc_points}(b) se puede ver como el algoritmo de determinación de correspondencias provee $32$ correspondencias ordenadas correctamente, diferenciando en el $QlSet$ incompleto los vértices.
 \begin{figure}[h!]
   \centering
   \subfigure[Entrada: segmentos de línea filtrados y agrupados]{
@@ -726,9 +728,7 @@ En la figura \ref{fig:resultado_inc_points}(a) se muestran imagen en la que fall
 % La detección de segmentos puede fallar debido a que las dimensiones del marcador en el plano de imagen sean pequeñas y que la detección de segmentos deje de ser estable. También debido a oclusiones o ``segmentos'' partidos. Por otro lado debido a la simplicidad del algoritmo de filtrado y agrupamiento de segmentos, en particular debido simplicidad de la condición de vecindad, el algoritmo es propopenso a fallas por ejemplo filtrando un conjunto de cuatro segmentos cuando en la detección de segmentos se puede ver que estan allí. puede fallar.
 
 \section{Comentarios sobre la implementación de los algoritmos}
-Los algoritmos desarrollados en el presente capítulo fueron implementados en Lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento.\\
-
-La elección del lenguaje y la filosofía de desarrollo comentada atrás permite \textbf{portabilidad} en el uso de los mismos para aplicaciones mas allá del proyecto y es un ejercicio de aprendizaje necesario. El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
+El algoritmo de filtrado y agrupamiento se implementó en los archivos \texttt{segments.c} y \texttt{segments.h} mientras que el de determinación de correspondencias se implementó en los archivos \texttt{marker.c} y \texttt{marker.h}.\\
 
 El entorno de desarrollo (IDE) utilizado para la implementación fue Eclipse CDT para C/C++: \url{http://www.eclipse.org/cdt/} en un proyecto que utiliza un \emph{Makefile} para la compilación por lo que se podría utilizar otro entorno en caso de ser necesario.\\
 
@@ -737,7 +737,7 @@ Adicionalmente de forma de facilitar la tareas de interfaz como el abrir/captura
 \section{Resultados de Benchmark}
 En esta sección se presentan algunos resultados de \emph{Benchmark} para los algoritmos de asociados a la detección del marcador diseñado. En particular se estudian los límites para la detección de segmentos mediante LSD y el filtrado y agrupamiento de los mismos para juegos de imágenes sintéticas generadas utilizando las herramientas explicadas en el Capítulo \ref{chap: benchmark}.\\
 
-Se analizan los casos que presentaron limitaciones mas significativas como, la profundidad máxima del marcador respecto al eje $z$, la rotación máxima permitida sobre el eje $x$ y lo mismo para la rotación sobre el eje $y$. Mediante este análisis se obtienen cotas \emph{pseudo-teóricas} para establecer las limitaciones prácticas de uso de los algoritmos.\\
+Se analizan los casos que presentaron limitaciones más significativas como, la profundidad máxima del marcador respecto al eje $z$, la rotación máxima permitida sobre el eje $x$ y lo mismo para la rotación sobre el eje $y$. Mediante este análisis se obtienen cotas \emph{pseudo-teóricas} para establecer las limitaciones prácticas de uso de los algoritmos.\\
 
 \subsection{Elección de parámetros para Benchamark}
 Para la evaluación de los algoritmos se utilizaron algunos parámetros de Benchmark fijos y otros modificables llevando a una elección definitiva de parámetros.\\
@@ -761,7 +761,7 @@ Los valores que toman estos parámetros para las pruebas finales que corresponden
  \item $s = 0.5$
  \item $width\times height = 480\times360 px$
 \end{itemize}
-La elección de estos parámetros fue \textbf{definitiva} para las pruebas de Benchamark a lo largo de todo el documento. Por más información sobre las herramientas de Benchmark y los parámetros ajustables para la generación de imágenes sintéticas referirse al Capítulo \ref{chap: benchmark}.
+La elección de estos parámetros fue \textbf{definitiva} para las pruebas de Benchmark a lo largo de todo el documento. Por más información sobre las herramientas de Benchmark y los parámetros ajustables para la generación de imágenes sintéticas referirse al Capítulo \ref{chap: benchmark}.
 
 \newpage
 \subsection{Límite en profundidad: Eje z}
@@ -817,6 +817,19 @@ Se puede ver en las Figuras \ref{fig:benchmark_segmentos_ry}(a) y \ref{fig:bench
   \caption{Límites para la rotación máxima y mínima sobre el eje $y$.}
   \label{fig:benchmark_segmentos_ry}
 \end{figure}
+
+Las pruebas para los límites se resumen en la Tabla \ref{tab:limites}.
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|c|} \hline
+		& Límite inferior & Límite superior & Limita 	\\ \hline
+Profundidad $z$ & $-$		  & $1575mm$	    & LSD	\\ \hline
+Rotación en $x$ & $-50°$	  & $54°$	    & LSD	\\ \hline
+Rotación en $y$ & $-44°$	  & $52°$	    & Filtrado	\\ \hline
+\end{tabular}
+\caption{Resumen de límites impuestos por los algoritmos de filtrado de segmentos y LSD para imágenes sintéticas.}
+\label{tab:limites}
+\end{table}
 
 \section{Resumen}
 En este capítulo se comentaron algunos sistemas de Realidad Aumentada basados en marcadores planos como ARToolKit y ARTag. Se desarrolló el diseño del Marcador QR utilizado para el proyecto y se definieron juegos de parámetros que permiten flexibilidad en la aplicación de los mismos. Se desarrollaron los algoritmos para detección de los marcadores diseñados basados en un esquema de, en primer lugar, filtrado y agrupamiento de segmentos y en segundo lugar determinación de correspondencias de sus esquinas. Se vió que algunos de los parámetros de diseño del marcador pueden ser modificados sin necesidad de modificar los algoritmos desarrollados. Finalmente se obtuvieron resultados de benchmark para los algoritmos de LSD y filtrado de segmentos mediante el uso de imágenes sintéticas generadas con las herramientas de Benchmark. Se establecieron límites \emph{pseudo-teóricos} para la profundidad del marcador, las rotaciones respecto al eje $x$ y respecto al eje $y$. Es importante destacar que estos límites son cotas raramente alcanzables por la aplicación final ya que se utilizaron para eso imágenes sintéticas sin ningún tipo de ruido, cambios de iluminación ni distorsión de cámara.

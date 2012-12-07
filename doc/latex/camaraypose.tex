@@ -11,7 +11,7 @@
 
 Se le llama ``estimación de pose'' al proceso mediante el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama ``ejes del mundo''. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.  Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.
 
-Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
+Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura interna ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
 
 En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle en particular, el método de Zhang. 
 
@@ -27,9 +27,9 @@ Finalmente se presentan las diferentes maneras que hay para representar los ángu
 %En este capítulo se presentan las técnicas realizadas para implementar la realidad aumentada
 
 % ------------------------------------------------------ CALIBRACION DE CAMARA: MODELO PIN-HOLE -------------------------------------------------------
-\section{Modelo de cámara \textit{pin-hole} \cite{garciaocon07}}
+\section{Modelo de cámara \textit{pin-hole}}
 \label{sec:Calibracion de camara}
-
+El desarrollo teórico de esta sección esta fuertemente basado en  \cite{garciaocon07}.\\
 
 \subsection{Fundamentos y definiciones}
 \label{sec:Fundamentos y definiciones}
@@ -58,7 +58,7 @@ entonces:
 \[
 H = I.E
 \]
-donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsecos y $E$ corresponde a la matriz asociada a los parámetros extrínsecos. Ambos juegos de parámetros acarrean información muy valiosa:  \\
+donde $I$ corresponde a la matriz proyección asociada a los parámetros intrínsecos y $E$ corresponde a la matriz asociada a los parámetros extrínsecos. Ambos juegos de parámetros contienen información muy valiosa:  \\
 
 \begin{itemize}
 \item \textbf{Parámetros extrínsecos:} pose de la cámara.
@@ -246,7 +246,7 @@ P_0
 % ------------------------------------------------------ DISTORSION INTRODUCIDA POR LAS LENTES -------------------------------------------------------
 \section{Distorsión introducida por las lentes}
 \label{sec:distorsion}
-Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras no son del todo buenas, la distorsión introducida por estas se hace notar. Dado el punto \textbf{M} de coordenadas $(X_0,Y_0,Z_0)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre su proyección ideal en el plano imagen $(x_0,y_0)$ y su proyección real $(\tilde{x_0},\tilde{y_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
+Hasta el momento se asumió que el modelo lineal presentado para la proyección de cualquier punto del mundo en el plano imagen de la cámara es lo suficientemente preciso en todos los casos. Sin embargo, en casos reales, y cuando las lentes de las cámaras no son del todo buenas, la distorsión introducida por estas resulta significativa. Dado el punto \textbf{M} de coordenadas $(X_0,Y_0,Z_0)$ respecto de los ejes de la cámara, se le llama distorsión a la diferencia entre su proyección ideal en el plano imagen $(x_0,y_0)$ y su proyección real $(\tilde{x_0},\tilde{y_0})$. La más común de todas, es la denominada ``distorsión radial'', ya que su magnitud depende del radio medido desde el punto principal del plano imagen, hasta las coordenadas del punto en cuestión.\\
 
 La forma de solucionar el presente problema es realizar una corrección de la distorsión, modelando a la misma de la siguiente manera:\\
 \[
@@ -271,7 +271,7 @@ donde $r$ es la distancia radial $\sqrt{x_0^2 + y_0^2}$ y $L(r)$ es un factor de
 \]
 donde $(\tilde{x_0}',\tilde{y_0}')$ son las coordenadas reales de la proyección medidas en píxeles, $(x_0',y_0')$ son las coordenadas ideales de la proyección medidas también en píxeles y $(x_C',y_C')$ son las coordenadas del punto principal. Véase que en este caso $r=\sqrt{(x_0' - x_C')^2 +(y_0' - y_C')^2 }$.\\
 
-La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. Una aproximación a la función arbitraria $L(r)$ puede ser una expansión de Taylor: $L(r) = 1 + k_1r + k_2r^2 + k_3r^3 + ...$. Finalmente, a la hora de calcular los parámetros intrínsecos de una cámara, también deben ser estimados sus coeficientes de distorsión radial $\{k_1,k_2,k_3,k_4,...\}$.\\
+La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. Una aproximación a la función arbitraria $L(r)$ puede ser una expansión de Taylor: $L(r) = 1 + k_1r + k_2r^2 + k_3r^3 + ...+k_nr^n+o(n)$. Finalmente, a la hora de calcular los parámetros intrínsecos de una cámara, también deben ser estimados sus coeficientes de distorsión radial $\{k_1,k_2,k_3,k_4,...\}$.\\
 
 
 % ------------------------------------------------------ METODOS PARA CALIBRAR UNA CAMARA -------------------------------------------------------
@@ -279,16 +279,20 @@ La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. U
 \section{Métodos para la calibración de cámara}
 \label{sec:Metodos de calibracion}
 
-Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, sin embargo, los tres algoritmos basados en modelos planos más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y un método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.
+Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, sin embargo, los tres algoritmos basados en modelos planos más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y el método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.
 
 \begin{figure}[h!]
 \centering
-\includegraphics[scale=0.2]{figs_camaraypose/damero}
-\caption{Imagen de un damero, utilizada para calibrar la cámara del \textit{iPad} durante el proyecto.}
+$$
+\begin{array}{cc}
+\includegraphics[scale=0.2]{figs_camaraypose/damero} & \includegraphics[scale=0.2]{figs_camaraypose/dameroJuani}
+\end{array}
+$$
+\caption{Dos dameros distintos, utilizados para calibrar los distintos dispositivos utilizados durante el proyecto.}
 \label{fig:damero}
 \end{figure}
 
-El método de Zhang es muy sencillo y flexible. Sólo requiere de la cámara a calibrar, una computadora y una imagen patrón (plana), de tipo damero a la que se le tomarán al menos dos fotografías desde orientaciones distintas. En la Figura \ref{fig:damero} se ve una de las imágenes utilizadas para calibrar la cámara del \textit{iPad 2}. Ni las posiciones de la cámara en cada caso, ni el movimiento entre estas posiciones tienen por qué ser conocidos. Este método devuelve los parámetros intrínsecos de la cámara correspondientes al modelo \textit{pin-hole} visto anteriormente, sus parámetros extrínsecos para cada fotografía utilizada para la calibración y la distorsión radial de sus lentes.
+El método de Zhang es muy sencillo y flexible. Sólo requiere de la cámara a calibrar, una computadora y una imagen patrón (plana), de tipo damero a la que se le tomarán al menos dos fotografías desde orientaciones distintas. En la Figura \ref{fig:damero} se muestran los dos dameros utilizados para calibrar las cámaras de los distintos dispositivos con los que se trabajó durante el proyecto. Ni las posiciones de la cámara en cada caso, ni el movimiento entre estas posiciones tienen por qué ser conocidos. Este método devuelve los parámetros intrínsecos de la cámara correspondientes al modelo \textit{pin-hole} visto anteriormente, sus parámetros extrínsecos para cada fotografía utilizada para la calibración y la distorsión radial de sus lentes.
 
 Recuérdese que la relación entre un punto 3D \textbf{M} expresado respecto de los ejes de coordenadas del mundo y su proyección en el plano imagen \textbf{m}, expresada respecto de los ejes normalizados de la imagen, viene dada por:
 \[
@@ -348,7 +352,7 @@ h_1^T.(I^{-1})^T.I^{-1}.h_2 =0 \\
 h_1^T.(I^{-1})^T.I^{-1}.h_1 =h_2^T.(I^{-1})^T.I^{-1}.h_2 \\
 \end{array}
 \]
-Las anteriores son las únicas dos relaciones básicas entre parámetros intrínsecos que se pueden obtener a partir de una única homografía. Esto es porque una homografía tiene 8 grados de libartad y existen 6 parámetros extrínsecos (3 para la traslación y 3 para la rotación).\\
+Las anteriores son las únicas dos relaciones básicas entre parámetros intrínsecos que se pueden obtener a partir de una única homografía. Esto es porque una homografía tiene 8 grados de libertad y existen 6 parámetros extrínsecos (3 para la traslación y 3 para la rotación).\\
 
 Si se define la matriz $B$ como sigue:
 \[
@@ -400,6 +404,8 @@ donde $\hat{m}(I, E_i, M_j)$ es la proyección del punto $M_j$ en la imagen $i$ u
 
 Finalmente se realiza una estimación de la distorsión radial utilizando un modelo muy similar al visto en la sección \ref{sec:distorsion}. 
 
+% ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 \section{Calibración de cámaras utilizadas}
 A lo largo del proyecto se utilizaron diferentes dispositivos, se utilizó un \textit{iPad 2}, un \textit{iPhone 4} y un \textit{iPod Touch $4^{ta}$ generación}. Todas las cámaras fueron calibradas con el método de Zhang. La distorsión radial no se tomó en cuenta para ningún  caso, aún así los resultados obtenidos buenos. 
 Se recuerda que la matriz de parámetros intrínsecos se expresa como 
@@ -412,7 +418,7 @@ d_x\cdot f & s & x'_C \\
 \]
 A continuación se muestran las calibraciones, todos los valores están expresados en píxeles.
 \subsection{Calibración \textit{iPod Touch $4^{ta}$ generación}}
-Se realizaron dos calibraciones, la primera calibración que se realizó fue para imágenes de $640\times480$, la matriz obtenida fue:
+Se realizaron dos calibraciones con dos conjuntos de imágenes distintas. La primera calibración que se realizó fue para imágenes de $640\times480$, y la matriz obtenida fue:
 
 \[
 I  = 
@@ -469,7 +475,7 @@ I  =
 \section{Problema de estimación de pose}\label{sec:Problema de estimación de pose}
 Como se mencionó en \ref{sec:Fundamentos y definiciones} la matriz de parámetros extrínsecos \textit{E} representa a la pose de la cámara. El problema de estimación de pose consiste en determinar esta matriz dadas $n$ correspondencias entre puntos $M_i$ en el mundo 3D y puntos $m_i$ en la imagen. 
 
-Existen varios algoritmos de estimación de pose, a continuación se presentan algunos. 
+Existen varios algoritmos de estimación de pose, a continuación se presentan algunos. Por más información consultar \cite{Lepetit05b}.
 
 \subsection{\textit{DLT} (\textit{D}irect \textit{L}inear \textit{T}ransform)}
 \label{subsec: DLT}
@@ -558,7 +564,7 @@ En la bibliografía \cite{Fischler} y \cite{Haralick} se encuentran varios método
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.55]{figs_camaraypose/pnp}
-\caption{Geometría del problema P3P. Se busca calcular la distancia entre el centro óptico $O$ y los puntos del modelo 3D}
+\caption{Geometría del problema P3P. Se busca calcular la distancia entre el centro óptico $O$ y los puntos del modelo 3D.}
 \label{fig:pnp}
 \end{figure}
 
@@ -579,9 +585,9 @@ Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo 
 
  \subsection{POSIT}
 Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
-Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
+Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo (POSIT Clásico) y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
 
-La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD\ ref{chap: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
+La variante de SoftPOSIT de líneas fue el principal argumento para tomar la decisión ya que el detector de características que se usa es el LSD \ref{chap: lsd}. Esta variante fue implementada sin éxito, pero en busca de esta implementación se desarrolló una versión de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los cuaternios o \textit{quaternions} inglés. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
@@ -714,9 +720,9 @@ La gran desventaja que presenta la representación de la rotación mediante ángulo
 -1 & 0 & 0
 \end{array}\right)
 \]
-Esto es una rotación entorno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi$
+Esto es una rotación entorno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi$.
 
-Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y por otra parte también se hace otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final, partiendo de los ejes alineados para una y otra rotacioón del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque está más arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que está por debajo de $z$ en la jerarquía. 
+Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y por otra parte también se hace otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final, partiendo de los ejes alineados para una y otra rotación del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque está más arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que está por debajo de $z$ en la jerarquía. 
 
 \begin{figure}
         \centering

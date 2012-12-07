@@ -1,4 +1,4 @@
-\chapter{Conlusiones y trabajo a futuro}
+\chapter{Conclusiones y trabajo a futuro}
 
 \section{Introducci\'on}
 
@@ -6,9 +6,9 @@ En el presente capítulo se analiza al proyecto en su conjunto, primero desde el 
 
 \section{Conclusiones generales}
 
-En l\'ineas generales, se puede decir que el presente proyecto resultó exitoso. En primer lugar, porque se cree que se cumplieron con todos los objetivos originales. Al día de hoy se cuenta con una documentación de toda la investigación realizada que brinda herramientas y un registro de la experiencia a todo aquel que busque continuar con esta línea de investigación. Además, se logró implementar varios casos de uso que solucionan diferentes problemas en los que se puede aplicar realidad aumentada. Finalmente, se implementó el mencionado recorrido interactivo para el museo, que cuenta con los bloques de \textit{navegación}, \textit{reconocimiento de obra} y \textit{realidad aumentada} que se explican en el Capítulo \ref{chap: alcance}.\\
+En l\'ineas generales, se puede decir que el presente proyecto resultó exitoso. En primer lugar, porque se considera que se cumplieron con todos los objetivos originales. Al día de hoy se cuenta con una documentación de toda la investigación realizada que brinda herramientas y un registro de la experiencia a todo aquel que busque continuar con esta línea de investigación. Se destaca la importancia de contar con implementaciones de algoritmos disponibles en código abierto, ya que implementar todos los algoritmos hubiera sido una tarea demasiado extensa y hubiera limitado la capacidad de resolver el problema completo. También es bueno resaltar el tiempo invertido en analizar el estado del arte de los algoritmos de detección de características, identificación y estimación de pose. Se logró un nivel de comprensión de los mismos que permitió incluso proponer modificaciones que lograron optimizar su performance. Por otra parte, se logró implementar varios casos de uso que solucionan diferentes problemas en los que se puede aplicar realidad aumentada. Finalmente, se implementó el mencionado recorrido interactivo para el museo, que cuenta con los bloques de \textit{navegación}, \textit{reconocimiento de obra} y \textit{realidad aumentada} que se explican en el Capítulo \ref{chap: alcance}.\\
 
-En segundo lugar, se destaca el hecho de haber logrado desarrollar una aplicación completa que funcione correctamente. Se cree que el desempe\~no de la misma es muy bueno, y en particular, si bien la realidad aumentada puede mejorar, conforma.\\
+En segundo lugar, se destaca el hecho de haber logrado desarrollar una aplicación completa que funcione correctamente. Se cree que el desempe\~no de la misma es muy bueno, y en particular, si bien la realidad aumentada puede mejorar, es suficiente para la misma.\\
 
 En cuanto al funcionamiento del grupo de trabajo, se cree que fue excelente. Se adquirió una dinámica de subgrupos de trabajo que resultaron muy eficientes. Se respetó mucho la división de tareas y el trabajo se mantuvo perfectamente equilibrado, con integrantes proactivos en todo momento.
 
@@ -37,7 +37,7 @@ El bloque de detecci\'on de catacter\'isticas se expande en la Figura \ref{fig: 
 
 Se vio en capítulos anteriores que la detección de segmentos se realizó utilizando LSD. Se está conforme tanto con el desempe\~no del algoritmo como con la optimización que se le hizo para tiempo real. Sin embargo, se cree que la implementación se puede optimizar aún más.\\
 
-En lo que respecta a los algoritmos de filtrado y agrupación de segmentos, determinación de esquinas y correspondencias, se puede afirmar que funcionan correctamente. De cualquier manera, se cree que para ciertas aplicaciones en particular se podría utilizar un marcador más sencillo, con una geometría más simple de detectar; lo que simplificaría los algoritmos de detección.
+En lo que respecta a los algoritmos de filtrado y agrupación de segmentos, determinación de esquinas y correspondencias, se puede afirmar que funcionan correctamente. De cualquier manera, se cree que para ciertas aplicaciones en particular se podría utilizar un marcador más sencillo, con una geometría más simple de detectar; lo que simplificaría los algoritmos de detección y aumentaría la aplicabilidad a otros casos de uso.
 
 \subsection{Estimaci\'on de pose}
 
@@ -67,7 +67,7 @@ Se cree que la implementaci\'on del servidor en la aplicaci\'on final estuvo bie
 
 Un trabajo a futuro importante es, en primer lugar, implementar de manera prolija tanto la interacci\'on entre la aplicaci\'on y el servidor, como la forma de almacenar los datos en este. En segundo lugar, realizar la aplicaci\'on de usuario que sirva para agregar o quitar informaci\'on de la base de datos y finalmente, independizar completamente a la aplicaci\'on de los cuadros almacenados en la base de datos.\\
 
-Actualmente, se esta trabajando en coordinación con un proyecto de fin de estudios en la carrera Tecnólogo Informático del Centro Universitario Paysandú, que tiene como objetivo realizar los cambios descriptos en el párrafo anterior.
+Actualmente, se esta trabajando en coordinación con un proyecto de fin de estudios en la carrera Tecnólogo Informático de Paysandú, que tiene como objetivo realizar los cambios descriptos en el párrafo anterior.
 \subsection{Sobre la realidad aumentada}
 
 Lo expuesto en la Sección \ref{sec: concluespe} sugiere, en primer lugar, probar diferentes marcadores y hacer un estudio detallado del desempe\~no de la realidad aumentada con cada uno de ellos para diferentes aplicaciones particulares.
@@ -78,4 +78,4 @@ De forma alternativa, se puede profundizar en la integraci\'on de los sensores i
 
 \subsection{Sobre la plataforma}
 
-Como trabajo a futuro también se considera la migración de todo lo desarrollado, a dispositivos que funcionen con \textit{Android} como sistema operativo. Estos dispositivos son de uso más masivo que los dispositivos \textit{Apple}, tienen en muchos casos prestaciones similares, y en general son más acccesibles.
+Como trabajo a futuro también se considera la migración de todo lo desarrollado, a dispositivos que funcionen con \textit{Android} como sistema operativo. Dado que gran parte del desarrollo fue en lenguaje C, en particular todos los algoritmos de procesamiento de imágenes, es fácilmente portable a Android, que si bien se basa en Java, cuenta con una herramienta llamada NDK que permite reutilizar código de C/C++. Una motivación importante para considerar esta migración a Android es que estos dispositivos son de uso más masivo que los dispositivos \textit{Apple} y en algunos casos tienen prestaciones similares y con precios más acccesibles.
