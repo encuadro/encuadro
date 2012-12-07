@@ -1,0 +1,182 @@
+\chapter{Herramientas}
+\label{chap: herramientas}
+ 
+\section{Herramientas de Benchmark}
+
+\section{Plataformas de Apple Inc.}
+
+\subsection{\textit{SoC}, CPU y GPU de plataformas Apple Inc.}
+Uno de los puntos a evaluar de las plataformas de Apple Inc. es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. \textit{System on Chip} es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria \cite{SoC}.  \\
+%Microcontroller and System-on-a-chip
+%Seminar on Embedded Systems Architecture
+%Peter Thoman (peter.thoman@uibk.ac.at)
+%University of Innsbruck 2009-12-03
+
+En la Figura \ref{fig: soc} se ilustran los dos tipos de \textit{SoC} de los dispositivos de la Tabla \ref{tab: compHWiOS}: Apple A4 y Apple A5. Algunos dispositivos que no figuran en la tabla como el \textit{iPhone 5} o el \textit{iPad 4} usan \textit{SoCs} más recientes como el Apple A6 o Apple A6x respectivamente. La familia de \textit{SoCs} Apple Ax, es la que la mencionada firma utiliza en todas sus plataformas, inclusive en el \textit{Apple TV} y es manufacturada por Samsung. Estos \textit{SoCs} se caracterizan por utilizar CPUs de arquitectura ARM, en su mayoría ARMv7 y GPUs de PowerVR de la línea SGX. \\
+
+
+\begin{figure}[h!]
+\centering
+$
+\begin{array}{cc}
+\includegraphics[scale=0.33]{figs_apend1/applea4.png} & \includegraphics[scale=0.3]{figs_apend1/applea5.png} \\
+\end{array}
+$
+\caption{\textit{System on Chip}: SoC.}
+\label{fig: soc}
+\end{figure}
+
+La arquitectura ARM incorpora algunas características de la arquitectura RISC (\textit{Reduced Instruction Set Computer}) como el hecho que las operaciones sean llevadas a cabo sobre un conjunto de registros a tales efectos y no sobre la memoria directamente. Otra característica que tiene de RISC es que tiene un modo simple de direccionamiento donde las direcciones son también guardadas sobre registros destinados a tales efectos \cite{ARM}. La mayoría de los procesadores están hechos con un ancho de palabra de 32-bit salvo el reciente ARMv8 que incorpora la posibilidad de utilizar ambos anchos de palabra: 32-bit o 64-bit. Por más información sobre esta arquitectura referirse a la web de la empresa \cite{ARMWEb}.\\
+%http://www.arm.com/products/processors/cortex-a/index.php
+
+Por su parte las GPU utilizadas en los \textit{SoCs} de la serie Apple Ax, son GPUs de PowerVR, una división de la firma Imagination Technologies que desarrolla hardware y software para \textit{rendering} 2D y 3D, procesamiento de imágenes y codificación \cite{ImtecWEb}. La función que tiene la GPU es asignar a cada pixel de la pantalla su color para cada cuadro. En particular, estas GPU implementan un concepto innovador de \textit{renderizado} que mejora notoriamente la performance de los gráficos: \textit{Tile-Bassed Deferred Rendering} (TBDR) \cite{powervr}. Este concepto aprovecha la independencia de áreas alejadas de la pantalla y de la correlación de píxeles cercanos y divide la pantalla en \textit{tiles} o baldozas. A cada \textit{tile} se le asocia un procesamiento paralelo y con esto se mejora notablemente la performance respecto al método tradicional: \textit{Immediate mode renderers} (IMRs), que procesa la pantalla completa. Las imágenes \textit{renderizadas} están construidas por triángulos (polígonos), por lo que uno de los indicadores fundamentales para evaluar la performance de una GPU es la cantidad de triángulos (polígonos) que es capaz de procesar por segundo. En \cite{gpubench} se puede ver un análsis interesante que compara entre otros, a los dos tipos de GPU que se presentaron en la Tabla \ref{tab: compHWiOS}: SGX535 y SGX543MP2. En dicho análisis se muestra por ejemplo que en el mejor de los casos la GPU SGX535 fue capaz de procesar 8.69 millones de triángulos por segundo frente a los 29 millones procesados por la GPU SGX543MP2.\\
+%http://www.imgtec.com/powervr/powervr-graphics-technology.asp
+
+
+\subsection{Sistemas Operativos}
+Para poder desarrollar aplicaciones sobre dispositivos móviles de la firma Apple Inc. es necesario contar con computadoras que corran el sistema operativo \textbf{Mac OS X}. Esto puede ser llevado a cabo, ya sea adquiriendo plataformas de desarrollo de la mencionada firma o creando máquinas virtuales que corran dicho sistema operativo. Para la segunda opción (la más económica pero con ciertas dificultades de performance), es necesario que la computadora cuente con virtualización de hardware. Se comenzó trabajando de esta manera hasta el momento de adquirir plataformas de desarrollo que contaran con Mac OS X en forma nativa.
+
+Mac OS X refiere a la versión número 10 (en números romanos) de una serie de sistemas operativos que comenzaron a desarrollarse en la década de los 80 (Mac OS 1 data del a\~no 1984). En los últimos 28 a\~nos se han ido sucediendo nuevas versiones que han ido mejorando características en la estructura de datos con la incorporación de la jerarquía de archivos en Mac OS 3 por ejemplo, en la búsqueda de archivos, con la simultaneidad de tareas, multiplicidad de usuarios o incluso con el énfasis en la interfaz de usuario por mencionar algunas características importantes en la evolución de esta familia de sistemas operativos. Dentro de Mac OS X existen distintas versiones, siendo la más actual la Versión 10.8: Mountain Lion lanzada durante 2012.
+
+Por su parte todas las plataformas móviles de Apple Inc. corren otro dispositivo de código cerrado: \textbf{iOS}. Originalmente llamado así por ser el sistema operativo utilizado por la plataforma \textit{iPhone}, este sistema operativo está también en las plataformas \textit{iPad}, \textit{iPod Touch} y \textit{Apple TV} en todas sus versiones. La versión más reciente de este SO es el iOS 6.1.
+
+Una de las grandes innovaciones de estas plataformas es el hecho de poder desarrollar aplicaciones y correrlas en el propio dispositivo (por supuesto también sucede lo mismo en el mundo Android). Para poder lograr esto, es necesario como se ha dicho, contar con una máquina que corra Mac OS X y contar con el IDE apropiado llamado \textbf{Xcode}. Este entorno de desarrollo y su lenguaje se explican en la Sección \ref{sec: objc}.
+
+\subsection{Objective-C}
+\label{sec: objc}
+%http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjectiveC/Introduction/introObjectiveC.html
+El lenguaje que fue elegido por Apple Inc. para desarrollar sobre plataformas móviles es Objective-C. Este lenguaje fue desarrollado en la década de 1980 como un superconjunto de C orientado a objetos. Se trata entonces de una extensión del standard ANSI C que incorpora un modelo orientado a objetos basado en \textbf{Smalltalk} \cite{objCapple}. Una de las diferencias sustanciales del modelo orientado a objetos de Objective-C respecto a otros lenguajes como Java o C++, es la manera en que se invocan los métodos (procedimientos) de las instancias de clases. En objective-C esta invocación se da enviando mensajes, algo que se hereda de Smalltalk. Así entonces para invocar un método se procede con el siguiente código por ejemplo:
+\begin{verbatim}
+[receiver message];
+\end{verbatim}
+Donde $receiver$ es un objeto que recibe un mensaje (acción) $message$ a realizar. Esta acción puede tener parámetros asociados, como por ejemplo el siguiente código real:
+\begin{verbatim}
+[myRectangle setWidth:20.0];
+\end{verbatim}
+Esta diferencia conceptual de utilizar mensajes se representa en el hecho de que en tiempo de compilación estos mensajes no son más que una etiqueta y no están asociados al bloque de código como es el caso de Java o C++. Entonces es factible que suceda el hecho de que ese mensaje o método no esté implementado por esa clase y recién en tiempo de ejecución es que sucede el error al sustituirse esa etiqueta por un código inexistente, pues un objeto recibe un mensaje para realizar un método que no está dentro de su repertorio. Para esto es que en la documentación de Apple Inc. se recomienda utilizar ciertos trucos para garantizar que el objeto que reciba el mensaje sea capaz de responder correctamente, como por ejemplo consultando primero si es capaz de realizar dicha acción y luego en caso de poder, realizar dicha acción.
+
+Otro detalle a destacar es que este lenguaje, al igual que Java, también soporta la herencia múltiple. Esto es, dado un conjunto de métodos que son comunes a un conjunto de clases pero que no llegan a tener un lazo tan fuerte como para estar jerárquicamente relacionadas con una superclase común, se puede generar una clase abstracta cuyos métodos sean implementados por más de una clase sin necesidad de generar ese vínculo fuerte que es la herencia. Así como en Java existen las interfaces, que hacen esto posible, en Objective-C existen los protocolos. Existen protocolos formales e informales y con métodos obligatorios de implementar y otros opcionales. Una clase que implemente un protocolo dado tiene que tener dentro de su encabezado declarado el nombre del protocolo. Esto es:
+\begin{verbatim}
+@interface ClassName : ItsSuperclass < protocol list >
+\end{verbatim}
+Hay otras particularidades del lenguaje pero que no van más allá de la sintaxis como los métodos de clase y los métodos de instancia, como los métodos \textit{get} y \textit{set} para acceder y configurar atributos (propiedades) de los objetos, como la notación de \textit{import} en lugar de \textit{include} para quienes están acostumbrados a C, y así varios detalles más. Sin embargo más allá de estas y otras diferencias y particularidades resulta un lenguaje relativamente ágil y dentro de todo sencillo de aprender para quien tiene ya un conocimiento de otros lenguajes orientados a objetos. 
+\subsection{Xcode: Herramientas y Librerías}
+Como se dijo anteriormente el entorno de desarrollo de aplicaciones típico es Xcode, el cual es gratuito y permite compilar código C, C++, Objective-C, Objective-C++, Java y AppleScript. Xcode integra en una sola interfaz todo lo que involucra código, dise\~no de interfaz de usuario (\textbf{Interface Builder}) y \textit{debugging}. También viene con un conjunto herramientas útiles para evaluar la \textit{performance} de la aplicación en distintos aspectos que se llama \textbf{Instruments}. Por otra se tiene el iOS SDK que cuenta con un conjunto importante de \textit{Frameworks} entre los cuales se encuentran \textbf{Cocoa} y \textbf{Cocoa Touch} que proveen las herramientas necesarias para desarrollar  aplicaciones para Mac OS X e iOS respectivamente \cite{iOSframeworks}. \\
+%http://developer.apple.com/library/ios/#documentation/Miscellaneous/Conceptual/iPhoneOSTechOverview/Introduction/Introduction.html#//apple_ref/doc/uid/TP40007898-CH1-SW1
+%http://developer.apple.com/library/ios/navigation/#section=Frameworks&topic=EventKitUI
+%Las aplicaciones que corren sobre los distintos dispositivos como \textit{iPhone}, \textit{iPod Touch}, \textit{iPad} o \textit{AppleTV} están desarrolladas en Objective-C sobre librerías o \textit{Frameworks} de iOS que se pueden separar en cuatro grandes capas según el nivel de abstracción: Cocoa Touch, Media, Core Services y Core OS.
+El SDK de iOS se puede clasificar en cuatro grandes capas según el nivel de abstracción: Cocoa Touch, Media, Core Services y Core OS como se muestra en la Figura \ref{fig: capas}.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_apend1/iOSLayers.png}
+\caption{Capas del SDK de iOS}
+\label{fig: capas}
+\end{figure}
+%http://developer.apple.com/library/ios/#DOCUMENTATION/AudioVideo/Conceptual/AVFoundationPG/Articles/00_Introduction.html#//apple_ref/doc/uid/TP40010188
+Así entonces, dentro de cada capa existen distintos \textit{Frameworks} según la funcionalidad. A continuación se explica el rol que cumple cada capa, los distintos \textit{Frameworks} que tiene cada una y para qué sirven.
+\subsubsection{Cocoa Touch Layer}
+Cocoa Touch es la capa de más alto nivel del SDK de iOS y es la encargada de proveer al desarrollador de ciertos \textit{Frameworks} que permitan lograr distintas tecnologías como la posibilidad de multitarea, el ingreso de órdenes a la aplicación a través de la pantalla táctil, notificaciones y alertas, preservación del estado de la aplicación al salir de la misma, reconocimiento de gestos en la pantalla y otro tipo de funcionalidades de alto nivel. Permiten al desarrollador, sin tener que involucrarse demasiado a bajo nivel, el acceso a determinados servicios que ya están resueltos en forma bastante modular.
+Cocoa Touch está basado en la arquitectura \textbf{Modelo-Vista-Controlador}, en el que se separa en tres áreas distintas el modelo de la información, la interfaz de usuario y el conjunto de reglas que negocian la presentación de la información en base a la interacción con el usuario. Así pues, el usuario y una aplicación se podrían considerar dos sistemas que interaccionan. Por su parte el usuario tiene como entrada la vista de la aplicación y como salida tiene su respuesta a esta entrada, generando efectos sobre el control de la aplicación. Por otro lado la aplicación tiene como entrada las órdenes dadas por el usuario que tienen efectos sobre el modelo de la información y este sobre la vista, quien resulta ser la salida de la aplicación. Esta interacción se puede ilustrar con la Figura \ref{fig: mvc}.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_apend1/mvc3.png}
+\caption{Interacción entre las tres partes del MVC}
+\label{fig: mvc}
+\end{figure}
+%http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjectiveC/Introduction/introObjectiveC.html 
+Como se dijo, dentro de Cocoa Touch, existen distintos \textit{Framewokrs} enfocados en permitirle al desarrollador resolver en alto nivel distintos aspectos. Los mismos son los siguientes:
+\begin{itemize}
+\item[(1)] Address Book UI Framework
+\item[(2)] Event Kit UI Framework
+\item[(3)] Game Kit Framework
+\item[(4)] iAd Framework
+\item[(5)] Map Kit Framework
+\item[(6)] Message UI Framework
+\item[(7)] Twitter Framework
+\item[(8)] UIKit Framework
+\end{itemize}
+Varias de estas librerías no fueron utilizadas en el presente proyecto dada su función específica. Sin embargo hay una en particular que tiene bastante importancia y que permite la mayoría de las funcionalidades básicas que toda aplicación tiene. Se trata del \textbf{UIKit}, encargado de gestionar la aplicación, su interfaz de usuario y gráficos, encargado soportar eventos frente al toque de la pantalla, de manejar sensores como el acelerómetro y giroscopio, y de tener acceso a la cámara y galería de fotos entre lo más importante a destacar. El soporte de la multitarea y de \textbf{Storyboards} también está a cargo de este \textit{Framework}.
+
+Hay funcionalidades que han ido cambiando con las distintas versiones de iOS. Una de ellas y quizá una que ha generado bastantes diferencias respecto a versiones anteriores a iOS 5, es esta última, el Storyboard, una herramienta muy útil de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una contraparte de interfaz de usuario. Con una biblioteca de objetos disponibles, listos para ser usados, mediante el uso de Storyboard se hace accesible con algunas horas de dedicación implementar aplicaciones sencillas. Esta herramienta vino para sustituir los archivos \textit{.nib} que permitían dise\~nar la interfaz pero no tantas funcionalidades programáticas como el Storyboard. En particular éste último permite agregar la funcionalidad de \textit{segues}, encargados de vincular un \textit{ViewController} con otro. Este tipo de diferencias vinieron con la idea de evitar la necesidad de implementar ciertos bloques de código en forma repetitiva. Un Storyboard luce como en la Figura \ref{fig: story_hwysw}.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.3]{figs_apend1/story.png}
+\caption{Ejemplo de Storyboard.}
+\label{fig: story_hwysw}
+\end{figure}
+
+Si bien se podría extender bastante más la explicación sobre los detalles de Cocoa Touch, a los efectos del presente proyecto, no es de tanta relevancia excederse en este punto. 
+\subsubsection{Media Layer}
+\textit{Media Layer} es la capa encargada de gestionar correctamente elementos multimedia y es posible distinguir tres grandes grupos que engloban distintos \textit{Frameworks}: Gráficos, Audio y Video. 
+
+Dentro de las tecnologías más destacadas está todo lo vinculado a \textbf{gráficos} 2D y 3D, dentro de lo que se puede incluir algunos \textit{Frameworks} bastante utilizados en el presente proyecto, tales como: \textbf{Core Graphics}, muy utilizado para dibujos 2D, \textbf{Quartz Core}, quien contiene las herramientas necesarias para interactuar con otro \textit{Framework} para animación de vistas, de una capa de más bajo nivel como \textit{Core Animation}, que es comentado en la Sección \ref{sec: coreserv}. También es parte de lo vinculado a gráficos, el \textit{Framework} \textbf{Core Image}, conteniendo lo vinculado a procesamiento de imágenes a través filtros que utilizan directamente la lu unidad de procesamiento de gráficos (GPU) y otros dos \textit{Frameworks} bastante importantes en lo que respecta a \textit{rendering} como \textbf{Open GL ES} y \textbf{GLKit} (utilizado por el motor de juegos \textit{Isgl3d} entre otros).
+
+Por otra parte hay otra gran familia de \textit{Frameworks} dentro de Media Layer que apunta a resolver todo lo vinculado al manejo de audio, ya sea de grabación como procesamiento y reproducción de alta calidad. Existen algunos SDK como \textbf{iSpeech} o \textbf{Dragon Mobile} que resuelven de manera similar al proyecto Siri, el procesamiento de la voz humana reconociendo palabras e interpretando, que utilizan algunos de los \textit{Frameworks} de procesamiento de audio de esta familia. 
+
+En cuanto a lo vinculado al manejo de video, como parte de esta capa, se tienen dos \textit{Framework} importantes con distintos niveles de abstracción: \textbf{MediaPlayer} y \textbf{AVFoundation} \cite{avFoundation}. También existen otros \textit{Frameworks} fuera de esta capa que son capaces de manejar video como la clase UIImagePickerController (muy utilizada en el proyecto) del mencionado UIKit. En la Figura \ref{fig: avfound} se esquematiza el nivel de abstracción de los \textit{Frameworks} de las distintas capas que son capaces de manejar multimedia.
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_apend1/avFoundation.png}
+\caption{Frameworks de las distintas capas para manejo de video}
+\label{fig: avfound}
+\end{figure}
+Con MediaPlayer es posible reproducir audio y video muy fácilmente en determinada área de la pantalla ya sea desde un URL o de un archivo, es posible mostrar o no los elementos de control del video así como también controlar, volumen y tama\~no de la pantalla. Por su parte, con \textit{AVFoundation} es posible capturar con la cámara, reproducir, editar y procesar audio y video. Es posible implementar ciertos protocolos que hace de esto algo relativamente sencillo. 
+
+
+\subsubsection{Core Services}
+\label{sec: coreserv}
+Core Services es la capa de más bajo nivel de iOS y contiene los elementos fundamentales sobre los que se construyen las capas superiores. Es posible que al comenzar a programar para iOS no se tenga mucha interacción con esta capa pero sin embargo existen algunos conceptos importantes de esta capa que sí vale la pena mencionar dado que en el presente proyecto se tuvieron que entender y discutir. Una de ellas es la \textit{Automatic Reference Counting} o \textbf{ARC}. Esta funcionalidad compete a la reserva y liberación de memoria por parte de los objetos. La idea básica es lograr que el uso de memoria sea el mínimo posible, logrando que los objetos existan en la medida que son necesarios y que su memoria sea liberada ni bien sea posible. 
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_apend1/mrr.png}
+\caption{Ciclo de vida de objetos, Manual-Retain-Release.}
+\label{fig: manualRR}
+\end{figure}
+Típicamente, al crear una instancia de un objeto se incrementa un contador y al liberar se decrementa y entonces se tiene cierto control sobre la reserva y liberación de memoria en base al contador. Sin embargo, la liberación de memoria reservada por objetos queda bajo la responsabilidad del desarrollador y en casos de un código complejo puede llegar a ser habitual olvidarse de la liberación de memoria.	 Lo anterior refiere a una gestión manual de la reserva y liberación conocido como \textit{manual retain-release} se puede ver esquemáticamente en la Figura \ref{fig: manualRR}. Para no tener que enfrentar este tema y poder instanciar clases sin tener presente la posterior liberación de memoria se utiliza ARC. Esta funcionalidad evalúa el ciclo de vida de los objetos y agrega código en tiempo de compilación en caso de considerarlo necesario. Es bueno aclarar que esto refiere a memoria reservada pura y exclusivamente por objetos, es decir mediante \textit{alloc}. En caso de tratarse de memoria reservada para variables de lenguaje C (\textit{malloc}), es necesario proceder de igual manera que en dicho lenguaje, liberando la memoria mediante un \textit{free} \cite{ARC} \cite{ARC2}. 
+
+Además del ARC, Core Services permite el manejo de archivos XML y manejo de base de datos SQL así como también la protección de datos cuando el dispositivo está bloqueado entre otros servicios importantes. Tiene varios \textit{Frameworks} como \textbf{Core Media} que logran un nivel aún más bajo que AVFoundation para el manejo de multimedia, \textbf{Quick Look} para las vistas previas de archivos, \textbf{Social} que viene a suplantar el \textit{Framework} para la utilización de Twitter que existe en iOS 5 y extiende la gestión para otras redes sociales, \textbf{Core Motion} para el manejo de sensores como el acelerómetro y el giroscopio, \textbf{Core Telephony} para el manejo de la información de red del dispositivo como elemento de la red de telefonía, \textbf{CFNetwork} para el manejo de protocolos de red como http, https, ftp y resolución de servidores DNS, entre otros \textit{Frameworks} importantes dentro de la capa.
+%manual reference counting http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/MemoryMgmt/Articles/MemoryMgmt.html#//apple_ref/doc/uid/10000011i
+% ARC http://developer.apple.com/library/ios/#releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html#//apple_ref/doc/uid/TP40011226
+\subsubsection{Core OS}
+Con esta capa de iOS en general es difícil que el desarrollador tenga que involucrarse directamente dado que es la de más bajo nivel. Salvo que se esté frente a una aplicación que requiera aspectos de seguridad o comunicación con HW externo, esta capa solamente existe para ser la base sobre la cual se desarrollan los \textit{Frameworks} de las capas de más alto nivel. Los distintos \textit{Frameworks} que tiene están enfocados en resolver temas de procesamiento basados en el hardware de iOS, en comunicarse con dispositivos externos basados en iOS y de garantizar la seguridad de los datos de una aplicación.
+
+
+\subsubsection{Simulador}
+Uno de los detalles más importantes del entorno de desarrollo es la capacidad de simular lo que se programa antes de probarlo en un dispositivo. Esto es útil por cuestiones de seguridad e incluso permite programar sin la necesidad de contar con una plataforma. Esto existe para \textit{Xcode} y es necesario decir que funciona muy bien, generando una representación bastante fiel de lo que sucede en el dispositivo real. La única crítica que se le podría hacer es el hecho de no contar con cámara y para el caso de aplicaciones de realidad aumentada esto es algo bastante importante. Sin embargo, sin ser eso, el simulador cuenta con conexión a internet, pantalla multitáctil, con información de GPS ingresada por el programador, acceso a la galería de fotos, capacidad de procesamiento y todas las funcionalidades que un dispositivo real tiene. 
+\subsubsection{Instruments}
+%https://developer.apple.com/library/ios/#documentation/DeveloperTools/Conceptual/InstrumentsUserGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004652
+Dentro de las herramientas que vienen con el entorno de desarrollo viene \textit{Instruments}, un conjunto de herramientas que permiten analizar la \textit{performance} de una aplicación para iOS o para Mac OS X desde distintos puntos de vista. Resulta muy útil pues muchas veces sucede que una aplicación compila y se ejecuta correctamente y sin embargo puede que el desarrollador no esté conforme en cuanto a los tiempos de procesamiento o el uso de memoria consumido.
+
+Para poder hacer uso del \textit{Instruments}, es necesario correr la aplicación en modo \textit{Profile}. Eso despliega una ventana como la de la Figura \ref{fig: instru}. Allí es posible elegir dentro de cada una de las posibilidades que ofrece \textit{Instruments}, si se quiere analizar tiempos, memoria, recursos de CPU, \textit{multithreading} entre otros tipos de datos de interés que es posible recoger de la aplicación. También es posible elegir la plataforma, ya sea iOS, simulador iOS o Mac OS X \cite{instruments}.\\
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_apend1/instrumentsWindow.png}
+\caption{Distintas opciones de \textit{Instruments}.}
+\label{fig: instru}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.6]{figs_apend1/instruments_tracing.png}
+\caption{Trazado y análisis de datos recogidos.}
+\label{fig: instru2}
+\end{figure}
+
+Luego de elegir el tipo de datos a ser recolectados según lo que se busque analizar, se despliega una ventana como se ve en la Figura \ref{fig: instru2}. Allí es necesario registrar durante varios segundos los datos mientras se corre la aplicación y luego de terminado el registro, \textit{Instruments} dedica un tiempo a analizar los datos recolectados. En el detalle inferior, se desglozan los procesos que corre la aplicación en forma de árbol. Cuando se desea medir tiempos por ejemplo, esto resulta muy útil porque entre otras cosas se puede analizar qué porcentaje del tiempo de la aplicación es consumido por un método en particular. Esto es posible simplemente buscando dentro del árbol mencionado, al método y leyendo el valor asignado de tiempo. Para el caso de análisis de memoria también es posible identificar fácilmente en qué parte del código se está dando algún problema de reserva de memoria no liberada.
+
+En el presente proyecto se hizo uso principalmente del \textbf{Time Profiler} que permite analizar tiempos y del \textbf{Memory Leak} que permite hacer un análisis de la reserva de memoria no liberada. Con los mismos fue posible optimizar tiempos en determinados métodos del procesamiento, así como también eliminar problemas de memoria no liberada que generaban la interrupción abrupta de la aplicación luego de llegado un cierto nivel de reserva. Esta interrupción abrupta es una forma de proteger la memoria del dispositivo y evitar que se vea afectada cierta memoria útil a otros efectos. El resto de las herramientas de \textit{Instruments} fueron probadas pero no utilizadas en detalle para resolver problemas particulares.
+
+\section{Herramientas de Productividad}
+Además de las herramientas mencionadas propias del entorno de desarrollo fueron utilizadas algunas herramientas más generales de desarrollo de software en lo que respecta al control de versiones de código. A continuación se describen brevemente ciertos detalles de las mismas.
+\subsection{GIT}
+GIT es un software para gestionar código que fue desarrollado por Linus Torvalds. Entre algunos de los tantos proyectos que es gestionado por esta herramienta se encuentra el Kernel de Linux. Se basa en la idea de desarrollo colaborativo en el que existen diversas fuentes que aportan al código y es necesario llevar un control de las distintas versiones. Así entonces lo que se hace es generar un repositorio remoto donde se aloja todo el código y generar una copia local donde es posible realizar modificaciones y actualizar ese repositorio remoto. El repositorio tiene una estructura de archivos y mediante distintos comandos en terminal es posible hacer las actualizaciones. Otro aspecto a considerar es que es posible que existan distintas líneas de desarrollo simultáneas que pueden ser independientes o no. Es posible entonces crear, borrar o \textit{converger} (\textit{merge}) distintas líneas de desarrollo. Existen numerosas empresas que hacen uso de esta herramienta en su desarrollo como Facebook, Twitter o RedHat entre otros. Más información sobre este software se puede encontrar en \cite{GitWEb}.
+
+\subsection{GoogleCode}
+GoogleCode es un sitio que ofrece Google para \textit{hosting} de proyectos, foros de discusión sobre temas de desarrollo y una API para quienes desarrollan sobre recursos de Google. Una de las características principales es que es \textit{open-source} y que ofrece la opción de utilizar distintos software para la gestión de código como Subversion, Mercurial y Git. También ofrece otras funcionalidades como una página \textit{wiki} y la posibilidad de vincular directamente el código con esta página. 
+
+\subsection{Github}
+Github es otro sitio que ofrece \textit{hosting} para proyectos \textit{open-source}. Cuenta con muchas herramientas de gran utilidad y se ha vuelto uno de los sitios más populares. También utiliza el software Git y entre otras cosas permite navegar dentro de la estructura de archivos \textit{online}, ofrece un historial para cada archivo, permite identificar qué colaborador realizó determinados cambios e incluso realizar modificaciones de archivos \textit{online}, sin necesidad de hacer actualizaciones desde terminal.\\
+
+Para el presente proyecto comenzó utilizándose GoogleCode pero luego se decidió migrar todo el respositorio a Github por contar con mayores facilidades de gestión.
+
