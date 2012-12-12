@@ -18,7 +18,18 @@ Isgl3dSkeletonNode * _model;
 Isgl3dSkeletonNode * _model2;
 Isgl3dSkeletonNode * _model3;
 Isgl3dNode * _container;
+Isgl3dKeyframeMesh * _mesh;
 
+Isgl3dPODImporter * podImporter;
+Isgl3dPODImporter * podImporter2;
+Isgl3dPODImporter * podImporter3;
+Isgl3dGLMesh* _artigasMesh;
+Isgl3dGLMesh* _artigasMesh2;
+Isgl3dGLMesh* _artigasMesh3;
+
+
+int i;
+double k;
 
 - (id) init {
 	
@@ -29,104 +40,79 @@ Isgl3dNode * _container;
         /* Create a container node as a parent for all scene objects.*/
         _container = [self.scene createNode];
         
-        // Create the primitive
-        //		Isgl3dTextureMaterial * material = [Isgl3dTextureMaterial materialWithTextureFile:@"red_checker.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-        //        Isgl3dCube* cubeMesh = [Isgl3dCube  meshWithGeometry:60 height:60 depth:60 nx:40 ny:40];
-        //        _cubito1 = [_container createNodeWithMesh:cubeMesh andMaterial:material];
-        //        _cubito1.position = iv3(0,0,0);
-        
-        
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"chihuahua1.pod"];
+        podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas1.pod"];
         [podImporter buildSceneObjects];
-        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihuahua1.pod"];
+        podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"artigas2.pod"];
         [podImporter2 buildSceneObjects];
-        Isgl3dPODImporter * podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas_animado03.pod"];
-        
+        podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas3.pod"];
+         [podImporter3 buildSceneObjects];
         printf("1\n");
+
         
-		//_model = [_container createSkeletonNode];
-//        _model2 = [_container createSkeletonNode];
-//        _model3 = [_container createSkeletonNode];
-        
-        Isgl3dGLMesh* _artigasMesh = [podImporter meshAtIndex:0 ];
-        Isgl3dGLMesh* _artigasMesh2 = [podImporter2 meshAtIndex:0 ];
-        
-//        _model.scaleX=1.5;
-//        _model.scaleY=1.5;
-//        _model.scaleZ=1.5;
-        
-        _model2.scaleX=1.5;
-        _model2.scaleY=1.5;
-        _model2.scaleZ=1.5;
-        
-        _model3.scaleX=1.5;
-        _model3.scaleY=1.5;
-        _model3.scaleZ=1.5;
-        //  _model.rotationX = 90;
+        _artigasMesh = [podImporter meshAtIndex:0 ];
+        _artigasMesh2 = [podImporter2 meshAtIndex:0 ];
+        _artigasMesh3 = [podImporter3 meshAtIndex:0 ];
+
         
 
-        Isgl3dKeyframeMesh * _mesh = [Isgl3dKeyframeMesh keyframeMeshWithMesh:_artigasMesh];
-       [_mesh addKeyframeMesh:_artigasMesh2];
+        _mesh = [Isgl3dKeyframeMesh keyframeMeshWithMesh:_artigasMesh2];
+        [_mesh addKeyframeMesh:_artigasMesh3];
+        [_mesh addKeyframeMesh:_artigasMesh];
         
         [_mesh addKeyframeAnimationData:0 duration:1.0f];
-		[_mesh addKeyframeAnimationData:0 duration:2.0f];
-		[_mesh addKeyframeAnimationData:1 duration:1.0f];
-		[_mesh addKeyframeAnimationData:1 duration:2.0f];
+        [_mesh addKeyframeAnimationData:1 duration:1.0f];
+		[_mesh addKeyframeAnimationData:2 duration:1.0f];
+		[_mesh addKeyframeAnimationData:2 duration:2.0f];
+        [_mesh addKeyframeAnimationData:1 duration:1.0f];
+        [_mesh addKeyframeAnimationData:0 duration:2.0f];
+	
+
 		
         
-        
 		// Start the automatic mesh animation
-		[_mesh startAnimation];
+		//[_mesh startAnimation];
         
-        [podImporter printPODInfo];
-        printf("2\n");
-        [podImporter2 addMeshesToScene:_model2];
-        [podImporter3 addMeshesToScene:_model3];
-        printf("3\n");
         
-        Isgl3dSkeletonNode * node = [_container createSkeletonNode];
-        [podImporter addBonesToSkeleton:node];
-//        Isgl3dNode * node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter materialWithName:@"Material"]];
-		node.position = iv3(0, -60, -150);
-        [podImporter addMeshesToScene:node];
-            printf("4\n");
+        Isgl3dNode * node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter2 materialWithName:@"material_0"]];
+		node.position = iv3(0, -60, -120);
+        [podImporter2 addMeshesToScene:node];
+        
+ 
         node.scaleX=1.5;
         node.scaleY=1.5;
         node.scaleZ=1.5;
-		
-        //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
-        //		[_animationController start];
-        
-        //_model.position = iv3(-90, -60, -150);
-        
-        _model2.position = iv3(0, -60, -150);
-//        _model2.rotationY = 90;
-        
-        _model3.position = iv3(90, -60, -150);
-//        _model.rotationY = -30;
 
-        self.camera.position=iv3(0,0,100);
+        Isgl3dNode * node2 = [_container createNodeWithMesh:_artigasMesh2 andMaterial:[podImporter2 materialWithName:@"material_0"]];
+		node2.position = iv3(0, -60, -120);
+        node2.alpha =0.0;
+        node2.scaleX=1.5;
+        node2.scaleY=1.5;
+        node2.scaleZ=1.5;
+
+        node2.interactive =YES;
+        [node2 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+
+
+        self.camera.position=iv3(0,0,75);
+        
+/*------------------------------------------ LUCES -----------------------------------------*/
         
         Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
 		[self.scene addChild:light];
         light.position = iv3(-2, 2, 0);
         
-        //light.renderLight = YES;
         
 //        Isgl3dShadowCastingLight * light2  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
 //		[self.scene addChild:light2];
 //        light2.position = iv3(2, 2, 0);
         
-        //light2.renderLight = YES;
         
         Isgl3dShadowCastingLight * light3  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
 		[self.scene addChild:light3];
         light3.position = iv3(-2, -2, 0);
-        
-        //light3.renderLight = YES;
         
         
         Isgl3dShadowCastingLight * light4  = [Isgl3dLight lightWithHexColor:@"777777" diffuseColor:@"777777" specularColor:@"7777777" attenuation:0.00];
@@ -137,7 +123,7 @@ Isgl3dNode * _container;
 		// Schedule updates
 		
 		//[self schedule:@selector(tick:)];
-            printf("5\n");
+        
 	}
 
 	return self;
@@ -153,47 +139,26 @@ Isgl3dNode * _container;
 	//_3dText.rotationY += 2;
 }
 
-- (Isgl3dGLMesh *) createNewMeshFromPODMesh:(Isgl3dGLMesh *)podMesh {
-	
-	// This simply creates a new mesh from the original pod data but modifies the vertex postions
-	// For this test we simply map the vertices down onto a sphere using their normal vector data
-	Isgl3dGLMesh * mesh = [[Isgl3dGLMesh alloc] init];
-	[mesh setVertices:podMesh.vertexData withVertexDataSize:podMesh.vertexDataSize andIndices:podMesh.indices withIndexDataSize:podMesh.indexDataSize
-  andNumberOfElements:podMesh.numberOfElements andVBOData:podMesh.vboData];
+-(void) objectTouched:(Isgl3dEvent3D *)event {
+    
+    i=0;
+   
 
-    
-	Isgl3dGLVBOData * vboData = mesh.vboData;
-	unsigned int stride = vboData.stride;
-	unsigned int positionOffsetX = vboData.positionOffset;
-	unsigned int positionOffsetY = vboData.positionOffset + sizeof(float);
-	unsigned int positionOffsetZ = vboData.positionOffset + 2 * sizeof(float);
-	unsigned int normalOffsetX = vboData.normalOffset;
-	unsigned int normalOffsetY = vboData.normalOffset + sizeof(float);
-	unsigned int normalOffsetZ = vboData.normalOffset + 2 * sizeof(float);
-	unsigned int numberOfVertices = mesh.numberOfVertices;
-	
+    [self schedule:@selector(stop)];
 
+}
+
+- (void) stop{
+
+    k = ((double)i)/60;
+
+    if(k<1) [_mesh interpolateMesh1:0 andMesh2:1 withFactor:k];
+    if(1<=k && k<2) [_mesh interpolateMesh1:1 andMesh2:2 withFactor:fmod(k, 1.0)];
     
-	// Get raw vertex data array from mesh
-	unsigned char * vertexData = mesh.vertexData;
-    
-	// Create some "dummy" data, here just use the normal data to map all the vertices onto a shere
-	float nx, ny, nz;
-	float length;
-	float radius = 20.0f;
-	for (unsigned int i = 0; i < numberOfVertices; i++) {
-		nx = *((float*)&vertexData[stride * i + normalOffsetX]);
-		ny = *((float*)&vertexData[stride * i + normalOffsetY]);
-		nz = *((float*)&vertexData[stride * i + normalOffsetZ]);
-		length = sqrt(nx*nx + ny*ny + nz*nz);
-		
-		
-		*((float*)&vertexData[stride * i + positionOffsetX]) = radius * nx / length;
-		*((float*)&vertexData[stride * i + positionOffsetY]) = radius * ny / length;
-		*((float*)&vertexData[stride * i + positionOffsetZ]) = radius * nz / length;
-	}
-	
-	return [mesh autorelease];
+    if(4<=k && k<5) [_mesh interpolateMesh1:2 andMesh2:1 withFactor:fmod(k, 1.0)];
+    if(5<=k && k<6) [_mesh interpolateMesh1:1 andMesh2:0 withFactor:fmod(k, 1.0)];
+    if(k==6) [self unschedule];
+    i++;
 }
 
 @end

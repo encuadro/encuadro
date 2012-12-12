@@ -167,6 +167,7 @@
 		[[Isgl3dScheduler sharedInstance] schedule:self selector:@selector(update:) isPaused:NO];
 		
 		_isAnimating = YES;
+        
 	}
 }
 
@@ -182,7 +183,8 @@
 - (void) update:(float)dt {
 	// Check that interpolation is needed (not if both meshes to be used are the same)
 	BOOL interpolationNecessary = NO;
-	
+ 
+
 	// Update current frame duration
 	_currentFrameDuration += dt;
 	
@@ -199,7 +201,7 @@
 		currentFrameData = IA_GET_PTR(Isgl3dKeyframeAnimationData *, _animationData, _currentFrameIndex);
 		interpolationNecessary = YES;
 	}
-	
+
 	// Get next frame animation data
 	unsigned int nextFrameIndex = _currentFrameIndex + 1;
 	if (nextFrameIndex >= _nFrames) {
@@ -214,10 +216,10 @@
 		
 		// Interpolation factor
 		float f = _currentFrameDuration / currentFrameData->duration;
-		
-		[self interpolateMesh1:currentFrameData->meshIndex andMesh2:nextFrameData->meshIndex withFactor:f];
+        [self interpolateMesh1:currentFrameData->meshIndex andMesh2:nextFrameData->meshIndex withFactor:f];
 		
 		_isFirstRender = NO;
+     
 	}
 }
 
