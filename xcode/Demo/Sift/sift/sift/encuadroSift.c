@@ -520,8 +520,8 @@ int main(int argc, const char * argv[])
     {
         if(strcmp(argv[2],"generar")==0){
         
-            printf("Generando descriptores...\n");
-            escribirDescriptor("/Users/pablofloresguridi/Desktop/descriptores.txt", descriptors, nKeyPoints*128);
+            printf("encuadroSift: ¡Descriptores generados en descriptores.txt!\n");
+            escribirDescriptor("descriptores.txt", descriptors, nKeyPoints*128);
         }
         else{
         image_out = buscarBaseDeDatos_ala(nKeyPoints, descriptors,argv[2]);
