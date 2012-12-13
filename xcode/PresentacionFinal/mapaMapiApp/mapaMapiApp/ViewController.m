@@ -20,6 +20,9 @@
 @synthesize context = _context;
 @synthesize videoView = _videoView;
 
+@synthesize imagenViewMaya = _imagenViewMaya;
+@synthesize imagenViewAzteca = _imagenViewAzteca;
+@synthesize imagenViewZapoteca = _imagenViewZapoteca;
 @synthesize audioPlayer = _audioPlayer;
 
 
@@ -119,31 +122,7 @@ int cantidad;
     
     [self procesamiento];
     
-    ////PRUEBA SINCRONISMO VIDEO-AUDIO
-    
-    if ((self.audioPlayer.currentTime>=5)&audioYvideo) {
-        audioYvideo=false;
-        NSLog(@"deplegarvideo");
-        //[self.audioPlayer stop];
-        [theMovie play];
-//        [[MPMusicPlayerController applicationMusicPlayer] setVolume:0];
-//        self.audioPlayer.volume=1.0;
-    }
-    
-    
-    
-//    timer=timer+1;
-//    if (timer>=30) {
-//        timer=0;
-//        NSLog(@"deplegarvideo");
-//        [self play];
-//        [theMovie stop];
-//       // [self desplegarVideo];
-//        
-//        
-//    }
-    ////////////
-    
+    [self sincronismo];
     
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
     
@@ -165,6 +144,73 @@ int cantidad;
   
 }
 
+-(void)doVolumeFadeMainIn
+{
+    if (self.audioPlayer.volume < 1.0) {
+        self.audioPlayer.volume = self.audioPlayer.volume + 0.1;
+        [self performSelector:@selector(doVolumeFadeMainIn) withObject:nil afterDelay:0.2];
+        
+    } 
+}
+
+-(void)doVolumeFadeMainOut
+{
+    if (self.audioPlayer.volume > 0.1) {
+        self.audioPlayer.volume = self.audioPlayer.volume - 0.1;
+        [self performSelector:@selector(doVolumeFadeMainOut) withObject:nil afterDelay:0.2];
+        
+    }else{
+        fadeVolOut=false;
+    }
+}
+
+
+
+
+
+- (void) sincronismo
+{
+    // Si 0 < T < 5     ----> SOLO AUDIO
+    
+    
+    // Si 5 < T < 15     ----> SOLO VIDEO
+    if ((self.audioPlayer.currentTime>=5)&audioYvideo) {
+        
+        if (fadeVolOut) {
+            [self doVolumeFadeMainOut];
+        }else{
+            audioYvideo=false;
+            NSLog(@"deplegarvideo");
+            //[self.audioPlayer stop];
+            theMovie.view.hidden=NO;
+            [theMovie play];
+            //[[MPMusicPlayerController applicationMusicPlayer] setVolume:0];
+            self.audioPlayer.volume=0;
+        }
+        
+        
+    }
+    
+    // Si 15 < T < 20     ----> AUDIO + MAYA
+    if ((self.audioPlayer.currentTime>=15)&!audioYvideo) {
+        [self doVolumeFadeMainIn];
+        theMovie.view.hidden=YES;
+        [theMovie stop];
+        self.audioPlayer.volume=1.0;
+        self.imagenViewMaya.hidden=NO;
+    }
+    
+    // Si 20 < T < 25     ----> AUDIO + MAYA + AZTECA
+    if ((self.audioPlayer.currentTime>=20)&!audioYvideo) {
+        self.imagenViewAzteca.hidden=NO;
+    }
+    
+    // Si 25 < T          ----> AUDIO + MAYA + AZTECA + ZAPOTECA
+    if ((self.audioPlayer.currentTime>=25)&!audioYvideo) {
+        self.imagenViewZapoteca.hidden=NO;
+    }
+
+}
 
 - (void) AVFoundationSettings
 {
@@ -451,11 +497,31 @@ int cantidad;
 
 -(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux
 {
-    CALayer *layer = theMovie.view.layer;
+    CALayer *layerVideo = theMovie.view.layer;
+    CALayer *layerMaya = self.imagenViewMaya.layer;
+    CALayer *layerAzteca = self.imagenViewAzteca.layer;
+    CALayer *layerZapoteca = self.imagenViewZapoteca.layer;
     
-    layer.frame = CGRectMake(0,0,60,60);
-    layer.anchorPoint = CGPointMake(0.0,0.0);
-    layer.zPosition = 0;
+    //VIDEO LAYER
+    layerVideo.frame = CGRectMake(0,0,60,60);
+    layerVideo.anchorPoint = CGPointMake(0.0,0.0);
+    layerVideo.zPosition = 0;
+    
+    
+    //IMAGEN MAYA LAYER
+    layerMaya.frame = CGRectMake(0,100,60,60);
+    layerMaya.anchorPoint = CGPointMake(0.0,0.0);
+    layerMaya.zPosition = 0;
+    
+    //IMAGEN AZTECA LAYER
+    layerAzteca.frame = CGRectMake(190,0,60,60);
+    layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
+    layerAzteca.zPosition = 0;
+    
+    //IMAGEN ZAPOTECA LAYER
+    layerZapoteca.frame = CGRectMake(0,50,60,60);
+    layerZapoteca.anchorPoint = CGPointMake(0.0,0.0);
+    layerZapoteca.zPosition = 0;
     
     
     CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
@@ -471,7 +537,28 @@ int cantidad;
     rotationAndPerspectiveTransform.m44 = 1;
     
     theMovie.view.layer.transform=rotationAndPerspectiveTransform;
+    self.imagenViewMaya.layer.transform=rotationAndPerspectiveTransform;
+    self.imagenViewAzteca.layer.transform=rotationAndPerspectiveTransform;
+    self.imagenViewAzteca.layer.transform=rotationAndPerspectiveTransform;
+
+    
+    
 }
+-(void) deplegarImagen{
+    
+    UIImage *imageMaya = [UIImage imageNamed:@"mayas-temple.jpg"];
+    UIImage *imageAzteca = [UIImage imageNamed:@"El-Tajín. ciudad azteca.jpg"];
+    UIImage *imageZapoteca = [UIImage imageNamed:@"Urna_funeraria_zapoteca_(M._América_Inv.85-1-127)_01.jpg"];
+    
+    self.imagenViewMaya.image=imageMaya;
+    self.imagenViewAzteca.image=imageAzteca;
+    self.imagenViewZapoteca.image=imageZapoteca;
+    self.imagenViewMaya.hidden=YES;
+    self.imagenViewAzteca.hidden=YES;
+    self.imagenViewZapoteca.hidden=YES;
+
+}
+
 
 -(void) desplegarVideo{
     
@@ -489,6 +576,7 @@ int cantidad;
     theMovie.scalingMode=MPMovieScalingModeFill;
     
     [self.view addSubview:theMovie.view];
+    theMovie.view.hidden=YES;
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
@@ -600,6 +688,7 @@ int cantidad;
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self reservarMemoria];
+    fadeVolOut=true;
     audioYvideo=true;
     timer=0;
     UIAlertView *alertWithOkButton;
@@ -620,13 +709,15 @@ int cantidad;
         hSize=768;
     }
     [self AVFoundationSettings];
+    [self deplegarImagen];
     
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    [self desplegarVideo];
     [self play];
+    [self desplegarVideo];
+    
 
 }
 

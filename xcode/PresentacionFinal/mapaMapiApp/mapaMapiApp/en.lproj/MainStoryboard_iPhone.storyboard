@@ -13,21 +13,49 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yvt-9s-8Cg"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vaJ-QA-gde">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="JT9-0S-GyV"/>
+                                    <constraint firstAttribute="height" constant="128" id="bS2-vr-oud"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uua-01-aa1">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="afx-C6-nEG"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="InV-ir-55V">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="8n6-E1-Fe1"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="InV-ir-55V" secondAttribute="bottom" constant="43" id="1Pt-3B-uXX"/>
+                            <constraint firstItem="vaJ-QA-gde" firstAttribute="top" secondItem="3" secondAttribute="top" constant="178" id="477-fP-26g"/>
                             <constraint firstItem="yvt-9s-8Cg" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="Bq5-UC-Uh5"/>
+                            <constraint firstAttribute="bottom" secondItem="uua-01-aa1" secondAttribute="bottom" constant="136" id="DbM-rg-Ref"/>
                             <constraint firstItem="yvt-9s-8Cg" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="Es6-EI-tcf"/>
                             <constraint firstItem="yvt-9s-8Cg" firstAttribute="bottom" secondItem="3" secondAttribute="bottom" type="default" id="F5V-N7-jRw"/>
+                            <constraint firstItem="vaJ-QA-gde" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="32" id="FlV-l3-9kN"/>
+                            <constraint firstItem="uua-01-aa1" firstAttribute="leading" secondItem="vaJ-QA-gde" secondAttribute="leading" type="default" id="FyK-oj-NvY"/>
+                            <constraint firstItem="InV-ir-55V" firstAttribute="leading" secondItem="uua-01-aa1" secondAttribute="leading" type="default" id="dXP-Vb-wiA"/>
+                            <constraint firstItem="InV-ir-55V" firstAttribute="trailing" secondItem="uua-01-aa1" secondAttribute="trailing" type="default" id="kzN-ps-3Oy"/>
                             <constraint firstItem="yvt-9s-8Cg" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="wV5-w6-y1a"/>
+                            <constraint firstItem="uua-01-aa1" firstAttribute="trailing" secondItem="vaJ-QA-gde" secondAttribute="trailing" type="default" id="xWW-LR-sSO"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="imagenViewAzteca" destination="vaJ-QA-gde" id="H1h-ig-fS8"/>
+                        <outlet property="imagenViewMaya" destination="uua-01-aa1" id="IIz-Bz-E5E"/>
+                        <outlet property="imagenViewZapoteca" destination="InV-ir-55V" id="ZeU-jv-Tgl"/>
                         <outlet property="videoView" destination="yvt-9s-8Cg" id="Eef-zx-sEd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="38" y="23"/>
         </scene>
     </scenes>
     <classes>
@@ -37,7 +65,9 @@
         <class className="ViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="imagenViewAzteca" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imagenViewMaya" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imagenViewZapoteca" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="videoView" candidateClass="UIImageView"/>
             </relationships>
         </class>

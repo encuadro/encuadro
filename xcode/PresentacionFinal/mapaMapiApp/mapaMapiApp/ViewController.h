@@ -20,6 +20,7 @@
 //#import "kalman.h"
 #import "vvector.h"
 
+bool fadeVolOut;
 bool audioYvideo;
 int click;
 bool iPhone;
@@ -37,6 +38,9 @@ int wSize,hSize;
 @property(nonatomic, retain) AVCaptureVideoDataOutput * frameOutput;
 @property(nonatomic, retain) CIContext* context;
 @property (readwrite, retain) IBOutlet UIImageView* videoView;
+@property (readwrite, retain) IBOutlet UIImageView* imagenViewMaya;
+@property (readwrite, retain) IBOutlet UIImageView* imagenViewAzteca;
+@property (readwrite, retain) IBOutlet UIImageView* imagenViewZapoteca;
 
 //audio
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
