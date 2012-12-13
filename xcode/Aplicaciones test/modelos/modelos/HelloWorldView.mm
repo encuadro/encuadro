@@ -23,10 +23,14 @@ Isgl3dKeyframeMesh * _mesh;
 Isgl3dPODImporter * podImporter;
 Isgl3dPODImporter * podImporter2;
 Isgl3dPODImporter * podImporter3;
+Isgl3dPODImporter * podImporter4;
+Isgl3dPODImporter * podImporter5;
 Isgl3dGLMesh* _artigasMesh;
 Isgl3dGLMesh* _artigasMesh2;
 Isgl3dGLMesh* _artigasMesh3;
-
+Isgl3dGLMesh* _artigasMesh4;
+Isgl3dGLMesh* _artigasMesh5;
+Isgl3dNode * node;
 
 int i;
 double k;
@@ -48,25 +52,39 @@ double k;
         podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"artigas2.pod"];
         [podImporter2 buildSceneObjects];
         podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas3.pod"];
-         [podImporter3 buildSceneObjects];
-        printf("1\n");
+        [podImporter3 buildSceneObjects];
+        podImporter4 = [Isgl3dPODImporter podImporterWithFile:@"artigas6.pod"];
+        [podImporter4 buildSceneObjects];
+        podImporter5 = [Isgl3dPODImporter podImporterWithFile:@"artigas5.pod"];
+        [podImporter5 buildSceneObjects];
+       
 
         
         _artigasMesh = [podImporter meshAtIndex:0 ];
         _artigasMesh2 = [podImporter2 meshAtIndex:0 ];
         _artigasMesh3 = [podImporter3 meshAtIndex:0 ];
+        _artigasMesh4 = [podImporter4 meshAtIndex:0 ];
+        _artigasMesh5 = [podImporter5 meshAtIndex:0 ];
 
         
 
         _mesh = [Isgl3dKeyframeMesh keyframeMeshWithMesh:_artigasMesh2];
-        [_mesh addKeyframeMesh:_artigasMesh3];
+         [_mesh addKeyframeMesh:_artigasMesh5];
+        [_mesh addKeyframeMesh:_artigasMesh4];
         [_mesh addKeyframeMesh:_artigasMesh];
+        [_mesh addKeyframeMesh:_artigasMesh3];
+        
+//        [_mesh addKeyframeAnimationData:0 duration:1.0f];
+//        [_mesh addKeyframeAnimationData:1 duration:1.0f];
+//		[_mesh addKeyframeAnimationData:2 duration:2.0f];
+//		[_mesh addKeyframeAnimationData:3 duration:2.0f];
+//        [_mesh addKeyframeAnimationData:4 duration:1.0f];
+//        [_mesh addKeyframeAnimationData:0 duration:2.0f];
         
         [_mesh addKeyframeAnimationData:0 duration:1.0f];
-        [_mesh addKeyframeAnimationData:1 duration:1.0f];
-		[_mesh addKeyframeAnimationData:2 duration:1.0f];
-		[_mesh addKeyframeAnimationData:2 duration:2.0f];
-        [_mesh addKeyframeAnimationData:1 duration:1.0f];
+        [_mesh addKeyframeAnimationData:4 duration:1.0f];
+		[_mesh addKeyframeAnimationData:3 duration:2.0f];
+        [_mesh addKeyframeAnimationData:4 duration:1.0f];
         [_mesh addKeyframeAnimationData:0 duration:2.0f];
 	
 
@@ -76,10 +94,10 @@ double k;
 		//[_mesh startAnimation];
         
         
-        Isgl3dNode * node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter2 materialWithName:@"material_0"]];
+        node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter2 materialWithName:@"material_0"]];
 		node.position = iv3(0, -60, -120);
         [podImporter2 addMeshesToScene:node];
-        
+       // node.rotationY=-90;
  
         node.scaleX=1.5;
         node.scaleY=1.5;
@@ -136,13 +154,14 @@ double k;
 
 - (void) tick:(float)dt {
 	// Rotate the text around the y axis
-	//_3dText.rotationY += 2;
+	node.rotationY += 1;
 }
 
 -(void) objectTouched:(Isgl3dEvent3D *)event {
     
     i=0;
    
+
 
     [self schedule:@selector(stop)];
 
@@ -152,12 +171,24 @@ double k;
 
     k = ((double)i)/60;
 
-    if(k<1) [_mesh interpolateMesh1:0 andMesh2:1 withFactor:k];
-    if(1<=k && k<2) [_mesh interpolateMesh1:1 andMesh2:2 withFactor:fmod(k, 1.0)];
+    /*Levantando la mano*/
     
-    if(4<=k && k<5) [_mesh interpolateMesh1:2 andMesh2:1 withFactor:fmod(k, 1.0)];
-    if(5<=k && k<6) [_mesh interpolateMesh1:1 andMesh2:0 withFactor:fmod(k, 1.0)];
+    if(k<0.5) [_mesh interpolateMesh1:0 andMesh2:1 withFactor:2*k];
+    if(0.5<=k && k<1) [_mesh interpolateMesh1:1 andMesh2:2 withFactor:fmod(2*k, 1.0)];
+    if(1<=k && k<2) [_mesh interpolateMesh1:2 andMesh2:3 withFactor:fmod(k, 1.0)];
+    
+    if(4<=k && k<5) [_mesh interpolateMesh1:3 andMesh2:4 withFactor:fmod(k, 1.0)];
+    if(5<=k && k<6) [_mesh interpolateMesh1:4 andMesh2:0 withFactor:fmod(k, 1.0)];
     if(k==6) [self unschedule];
+    
+    /*Sin levantar la mano*/
+    
+//    if(k<1) [_mesh interpolateMesh1:0 andMesh2:4 withFactor:k];
+//    if(1<=k && k<2) [_mesh interpolateMesh1:4 andMesh2:3 withFactor:fmod(k, 1.0)];
+//    
+//    if(4<=k && k<5) [_mesh interpolateMesh1:3 andMesh2:4 withFactor:fmod(k, 1.0)];
+//    if(5<=k && k<6) [_mesh interpolateMesh1:4 andMesh2:0 withFactor:fmod(k, 1.0)];
+//    if(k==6) [self unschedule];
     i++;
 }
 
