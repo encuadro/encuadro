@@ -45,8 +45,8 @@ vl_sift_pix     *fdata = 0 ;
     int* descriptors2 = 0;
     
     [dir resignFirstResponder];
-    const char* direccion = [dir.text UTF8String];
-    //const char* direccion = "marker_0004.pgm";
+    //const char* direccion = [dir.text UTF8String];
+    const char* direccion = "marker_0004.pgm";
 
     /*---------------------------------------------------Levantamos la imagen PNG y obtenemos los pixels--------------------------------------------*/
     
