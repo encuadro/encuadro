@@ -1,7 +1,7 @@
 \chapter{Hardware y Software}
 \label{chap: hwysw}
 \section{Introducción}
-En el presente capítulo se introducen algunos conceptos básicos para el desarrollo sobre plataformas móviles. En particular se describe el hardware que fue utilizado, el lenguaje de programación y el entorno de desarrollo que permitieron incorporar procesamiento sobre los dispositivos. En lo que respecta al hardware esto es todo lo que se comenta sobre el mismo y a nivel de software simplemente se introducen algunos conceptos básicos. En el Apéndice \ref{chap: herramientas} se hace un desarrollo más extensivo de las características del hardware de Apple Inc., de los sistemas operativos que emplean, del lenguaje de programación y entorno de desarrollo así como del conjunto de librerías existentes escritas en Objective-C y su aplicación.
+En el presente capítulo se introducen algunos conceptos básicos para el desarrollo sobre plataformas móviles. En particular se describe el \textit{hardware} que fue utilizado, el lenguaje de programación y el entorno de desarrollo que permitieron incorporar procesamiento sobre los dispositivos. En lo que respecta al \textit{hardware}, esto es todo lo que se comenta sobre el mismo y a nivel de \textit{software} simplemente se introducen algunos conceptos básicos. En el Apéndice \ref{chap: herramientas} se hace un desarrollo más extensivo de las características del \textit{hardware} de Apple Inc., de los sistemas operativos que emplean, del lenguaje de programación y entorno de desarrollo así como del conjunto de librerías existentes escritas en Objective-C y su aplicación.
 %\section{Software de procesamiento de imágenes}
 %Software de procesamiento de imágenes
 %\subsection{Lenguaje C}
@@ -13,12 +13,12 @@ En el presente capítulo se introducen algunos conceptos básicos para el desarrol
 
 \section{Hardware}
 \subsection{Elección de plataforma}
-La elección de la plataforma para desarrollar fue una de las primeras decisiones que se tuvo que tomar más allá del proceso natural inicial de investigación del proyecto. Esto es debido a que existen muchos factores que se ven afectados en función de la plataforma que van desde el aprendizaje del lenguaje de programación y del entorno de desarrollo hasta la adquisición de plataformas y/o máquinas para desarrollar. Así entonces las dos grandes posibilidades que se tenían al comienzo y que determinaban estos factores eran plataformas que tuvieran los sistemas operativos \emph{Android} o \emph{iOS} (en ningún momento se consideró desarrollar sobre plataformas con \emph{Symbian} dado que está planificado que deje de tener soporte para 2016 y tampoco sobre plataformas con \emph{Windows Phone 8} dado que no había sido lanzado en el momento de la decisión). Uno de los aspectos desfavorables que se veía de trabajar sobre \emph{Android} era la multiplicidad de plataformas existentes, de distintas características de procesamiento, cámara y sensores entre otras cosas con respecto a las plataformas que utilizan \emph{iOS}. Por otra parte luego de un proceso de investigación se vio que el conjunto de herramientas existentes y el estado de maduración del desarrollo de aplicaciones para \emph{iOS} hacían de este sistema operativo un camino más seguro para comenzar en un área que era desconocida. \emph{Android} es un sistema operativo que viene en pleno crecimiento y que a nivel masivo es una buena alternativa desarrollar en él, pero para los fines de investigación y de desarrollo de software que tenía el presente proyecto se vio que era mejor desarrollar sobre \emph{iOS}, presente en plataformas de Apple.
+La elección de la plataforma para desarrollar fue una de las primeras decisiones que se tuvo que tomar más allá del proceso natural inicial de investigación del proyecto. Esto es debido a que existen muchos factores que se ven afectados en función de la plataforma que van desde el aprendizaje del lenguaje de programación y del entorno de desarrollo hasta la adquisición de plataformas y/o máquinas para desarrollar. Así entonces, las dos grandes posibilidades que se tenían al comienzo y que determinaban estos factores eran plataformas que tuvieran los sistemas operativos \emph{Android} o \emph{iOS} (en ningún momento se consideró desarrollar sobre plataformas con \emph{Symbian} dado que está planificado que deje de tener soporte para 2016 y tampoco sobre plataformas con \emph{Windows Phone 8} dado que no había sido lanzado en el momento de la decisión). Uno de los aspectos desfavorables que se veía de trabajar sobre \emph{Android} era la multiplicidad de plataformas existentes, de distintas características de procesamiento, cámara y sensores entre otras cosas con respecto a las plataformas que utilizan \emph{iOS}. Por otra parte, luego de un proceso de investigación se vio que el conjunto de herramientas existentes y el estado de maduración del desarrollo de aplicaciones para \emph{iOS} hacían de este sistema operativo un camino más seguro para comenzar en un área que era desconocida. \emph{Android} es un sistema operativo que viene en pleno crecimiento y que a nivel masivo es una buena alternativa desarrollar en él, pero para los fines de investigación y de desarrollo de \textit{software} que tenía el presente proyecto se vio que era mejor desarrollar sobre \emph{iOS}, presente en plataformas de Apple.
 
-Al trabajar con Apple entonces se cuenta con la ventaja de contar con pocas variantes en cuanto al Hardware utilizado. Básicamente existen tres familias de dispositivos en los que se puede desarrollar: \textit{iPhone}, \textit{iPad} y \textit{iPod Touch}. Para familia existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de los dispositivos al mercado y se describen resumidamente las principales características.
+Al trabajar con Apple entonces se cuenta con la ventaja de contar con pocas variantes en cuanto al \textit{hardware} utilizado. Básicamente, existen tres familias de dispositivos en los que se puede desarrollar: \textit{iPhone}, \textit{iPad} y \textit{iPod Touch}. Para cada familia existen distintos modelos que hacen que algunas características importantes como la capacidad de procesamiento, la resolución de cámara o el tama\~no de la pantalla entre otras, puedan verse afectadas. A continuación se presenta brevemente cómo fue el surgimiento de cada uno de los dispositivos al mercado y se describen resumidamente las principales características.
 
 \subsection{Comparación de plataformas con iOS: iPhone, iPad, iPod Touch}
-Sin dudas el \textit{iPhone} fue uno de los saltos más grandes en el mundo tecnológico en los últimos a\~nos. Logró llenar el hueco que los \textit{PDAs (Personal Digital Assistant)} de la década de los 90 no habían sabido completar y comenzó a desplazar al invento que revolucionó el mercado de los contenidos de música, el \textit{iPod}. Gracias a su pantalla táctil capacitiva de alta sensibilidad logró reunir todas las funcionalidades agregando solamente un gran botón y algunos extra para controlar volumen o desbloquar el dispositivo. 
+Sin dudas el \textit{iPhone} fue uno de los saltos más grandes en el mundo tecnológico en los últimos a\~nos. Logró llenar el hueco que los \textit{PDAs (Personal Digital Assistant)} de la década de los 90 no habían sabido completar y comenzó a desplazar al invento que revolucionó el mercado de los contenidos de música, el \textit{iPod}. Gracias a su pantalla táctil capacitiva de alta sensibilidad logró reunir todas las funcionalidades agregando solamente un gran botón y algunos extra para controlar volumen o desbloquear el dispositivo. 
 
 La primera generación del \textit{iPhone} fue lanzada por Apple en Junio de 2007 en Estados Unidos, luego de una gran inversión de la operadora AT\&T que exigía exclusividad de venta dentro de dicho país durante los siguientes cuatro a\~nos. La misma soportaba tecnología GSM cuatribanda y se lanzó en dos variantes de 4GB y 8GB de ROM. El segundo modelo lanzó como novedad el soporte de tecnología 3G cuatribanda y GPS asistido. Luego le siguieron el \textit{iPhone 3GS, 4, 4S} y el \textit{5}, siendo este último, la sexta y última generación disponible al momento de la redacción de este trabajo.
 
@@ -50,7 +50,7 @@ La primera generación del \textit{iPhone} fue lanzada por Apple en Junio de 2007
 
 %GPU SGX
 %http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/OpenGLESPlatforms/OpenGLESPlatforms.html
-Por su parte tanto el \textit{iPad} como el \textit{iPod Touch} también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los 
+Por su parte, tanto el \textit{iPad} como el \textit{iPod Touch} también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los 
 efectos del presente proyecto.\\
 
 
@@ -95,9 +95,9 @@ efectos del presente proyecto.\\
 \normalsize
 %http://www.edaboard.com/thread75452.html
 
-Hay algunos comentarios respecto de la Tabla \ref{tab: compHWiOS} que es bueno destacar. Es importante decir que se eligieron esos cuatro dispositivos pues pareció de interés conocer al menos una plataforma de cada familia y dentro de las mismas se eligieron las que fueron utilizadas para desarrollar.
+Hay algunos comentarios respecto de la Tabla \ref{tab: compHWiOS} que es bueno destacar. Es importante decir que se eligieron esos cuatro dispositivos, pues pareció de interés conocer al menos una plataforma de cada familia; y dentro de las mismas se eligieron las que fueron utilizadas para desarrollar.
 
-Uno de los puntos a evaluar es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. \textit{System on Chip} es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria \cite{SoC}.  \\
+Uno de los puntos a evaluar es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. ``\textit{System on Chip}'' es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces, un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria \cite{SoC}.  \\
 %Microcontroller and System-on-a-chip
 %Seminar on Embedded Systems Architecture
 %Peter Thoman (peter.thoman@uibk.ac.at)
@@ -129,46 +129,43 @@ Una de las grandes innovaciones de estas plataformas móviles es el hecho de pode
 %http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjectiveC/Introduction/introObjectiveC.html
 El lenguaje que fue elegido por Apple Inc. para desarrollar sobre plataformas móviles es Objective-C. Este lenguaje fue desarrollado en la década de 1980 como un superconjunto de C orientado a objetos. Se trata entonces de una extensión del standard ANSI C que incorpora un modelo orientado a objetos basado en \textbf{Smalltalk} \cite{objCapple}. \\
 
-Este lenguaje cuenta con algunas particularidades en cuanto a la invocación de métodos (procedimientos) y algunas otras características que no van más allá de la sintaxis como los métodos de clase y los métodos de instancia, como los métodos \textit{get} y \textit{set} para acceder y configurar atributos (propiedades) de los objetos, como la notación de \textit{import} en lugar de \textit{include} para quienes están acostumbrados a C, y así varios detalles más. Sin embargo más allá de estas y otras diferencias y particularidades resulta un lenguaje relativamente ágil y dentro de todo sencillo de aprender para quien tiene ya un conocimiento de otros lenguajes orientados a objetos.\\
+Este lenguaje cuenta con algunas particularidades en cuanto a la invocación de métodos (procedimientos) y algunas otras características que no van más allá de la sintaxis; como los métodos de clase y los métodos de instancia, como los métodos \textit{get} y \textit{set} para acceder y configurar atributos (propiedades) de los objetos, como la notación de \textit{import} en lugar de \textit{include} para quienes están acostumbrados a C, y así varios detalles más. Sin embargo, más allá de estas y otras diferencias y particularidades resulta un lenguaje relativamente ágil y dentro de todo sencillo de aprender para quien tiene ya un conocimiento de otros lenguajes orientados a objetos.\\
 
 Sin embargo, los algoritmos desarrollados y utilizados en el proyecto para los módulos de detección de características, filtrado y agrupamiento de segmentos, determinación de correspondencias y estimación de pose; se encuentran escritos en lenguaje C y están autocontenidos en el mismo código fuente sin la utilización de librerías externas para su funcionamiento. Se hace énfasis en que estos módulos constituyen el núcleo de la solución al problema de realidad aumentada planteado inicialmente. \\
 
-Es directo incorporar código escrito en lenguaje C a Objective-C ya que como se dijo el primero está contenido en el segundo. Esto refuerza tanto la elección de la plataforma como del lenguaje ya que es posible sacar provecho de todas las funcionalidades y librerías de alto nivel proporcionadas por Objective-C y a la vez poder implementar algoritmos de bajo nivel en C.
+Es directo incorporar código escrito en lenguaje C a Objective-C ya que como se dijo el primero está contenido en el segundo. Esto refuerza tanto la elección de la plataforma como del lenguaje ya que es posible sacar provecho de todas las funcionalidades y librerías de alto nivel proporcionadas por Objective-C y a la vez poder implementar algoritmos de procesamiento en C (o incluso C++).
 
 La elección del lenguaje y la filosofía de desarrollo comentada anteriormente permite \textbf{portabilidad} en el uso de los mismos para aplicaciones más allá del proyecto y significó también un ejercicio de aprendizaje muy interesante.
 
 \subsection{Lenguaje C}
-Al comienzo del proyecto se realizó en curso breve de introducción al lenguaje C alojado en: \url{http://iie.fing.edu.uy/rosaluna/wiki/Ipol:main}. De este curso se abarcaron principalmente los siguientes temas:
-\begin{itemize}
- \item 
-Módulo 1: Introducción al lenguaje C.
- \item 
-Módulo 2: Punteros, arreglos y estructuras. Memoria dinámica.
- \item 
-Módulo 3: Diseño de un filtro FIR.
- \item 
-Módulo 4: Herramientas de programación.
-\begin{itemize}
- \item Entornos de desarrollo: e.g. Netbeans.
- \item Makefile: make.
- \item Debugger: gdb/ddd.
- \item Profiler: valgrind/kcachegrind.
- \item Documentación: doxygen.
- \item Generación de makefiles multiplataforma: cmake.
-\end{itemize}
- \item 
-Módulo 5: Lenguaje C aplicado al procesamiento de imágenes.
-\end{itemize}
+%Al comienzo del proyecto se realizó en curso breve de introducción al lenguaje C alojado en: \url{http://iie.fing.edu.uy/rosaluna/wiki/Ipol:main}. De este curso se abarcaron principalmente los siguientes temas:
+%\begin{itemize}
+% \item 
+%Módulo 1: Introducción al lenguaje C.
+% \item 
+%Módulo 2: Punteros, arreglos y estructuras. Memoria dinámica.
+% \item 
+%Módulo 3: Diseño de un filtro FIR.
+% \item 
+%Módulo 4: Herramientas de programación.
+%\begin{itemize}
+% \item Entornos de desarrollo: e.g. Netbeans.
+% \item Makefile: make.
+% \item Debugger: gdb/ddd.
+% \item Profiler: valgrind/kcachegrind.
+% \item Documentación: doxygen.
+% \item Generación de makefiles multiplataforma: cmake.
+%\end{itemize}
+% \item 
+%Módulo 5: Lenguaje C aplicado al procesamiento de imágenes.
+%\end{itemize}
 
-La utilización del lenguaje C no es casual en este proyecto. Dicho lenguaje tiene varias ventajas sobre otros lenguajes posibles en particular para procesamiento de imágenes. En primer lugar al ser un lenguaje de bajo nivel el código y algoritmos desarrollados pueden ser optimizados hasta el detalle. Por otro lado la disponibilidad de algoritmos y librerías existentes en C/C++ orientadas a procesamiento de imágenes es superior a la de otros lenguajes. Algunas librerías importantes son OpenCV, ITK e ImageMagik ya que son ampliamente utilizadas y cuentan con una gran comunidad de desarrolladores y/o de empresas que las respaldan. También existen repositorios públicos y comunidades como IPOL que se rigen bajo el modelo de Acceso Abierto e Investigación Reproducible y brindan documentación y desarrollos de algoritmos en C/C++ para procesamiento de imágenes.\\
+La utilización del lenguaje C no es casual en este proyecto. Dicho lenguaje tiene varias ventajas sobre otros lenguajes posibles, en particular para procesamiento de imágenes. En primer lugar, al ser un lenguaje de bajo nivel el código y algoritmos desarrollados pueden ser optimizados hasta el detalle para la plataforma en la cual se trabaje. Por otro lado, la disponibilidad de algoritmos y librerías existentes en C/C++ orientadas a procesamiento de imágenes es superior a la de otros lenguajes. Algunas librerías importantes son OpenCV, ITK e ImageMagik ya que son ampliamente utilizadas y cuentan con una gran comunidad de desarrolladores y/o de empresas que las respaldan. También existen repositorios públicos y comunidades como IPOL que se rigen bajo el modelo de Acceso Abierto e Investigación Reproducible y brindan documentación y desarrollos de algoritmos en C/C++ para procesamiento de imágenes.\\
 
-Sin ir mas lejos el algoritmo LSD fue tomado de su publicación en IPOL mientras que el autor de los artículos utilizados para la implementación del algoritmo de estimación de pose POSIT provee en su página el código fuente en C y en Matlab de algunas de las versiones del mismo.\\
+Sin ir más lejos, la implementación del algoritmo LSD utilizada en el presente proyecto, fue tomada de su publicación en IPOL, mientras que el autor de los artículos utilizados para la implementación del algoritmo de estimación de pose POSIT provee en su página el código fuente en C y en Matlab de algunas de las versiones del mismo.\\
 
-Un factor fundamental en la elección de la plataforma es la capacidad para embeber código en C/C++ en forma directa en las plataformas móviles elegidas. A continuación se comentan brevemente algunas características del lenguaje que hace esto posible: Objetive-C.
-
- 
-
+Por otro lado, resulta no menor aclarar que al realizar todo el procesamiento en C también se deja la puerta abierta a portar todo lo implementado a Android, ya que el C y C++ pueden ser integrados con java usando una tecnología denominada NDK.\\
 
 \section{Resumen}
-En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se conoce el poder de procesamiento de los \textit{SoCs} que componen estas plataformas que integran CPU ARMv7 en varias versiones y GPU SGX con distintas capacidades. Se vio un análisis comparativo entre las tres familias de dispositivos y dentro de las mismas en detalle los modelos de plataformas que fueron utilizados. 
-Se explicaron algunas características generales de desarrollar sobre plataformas con iOS, así como también del lenguaje de programación Objective-C, superconjunto de C y que es el utilizado para desarrollar en los dispositivos mencionados. En caso de querer profundizar sobre los distintos \textit{frameworks} del SDK de iOS, herramientas de \textit{debugging} y herramientas generales de desarrollo, se sugiere el Apéndice \ref{chap: herramientas}.
+En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se conoce el poder de procesamiento de los \textit{SoCs} que componen estas plataformas que integran CPU ARMv7 en varias versiones y GPU SGX con distintas capacidades. Se vio un análisis comparativo entre las tres familias de dispositivos, y dentro de las mismas, en detalle los modelos de plataformas que fueron utilizados. 
+Se explicaron algunas características generales de desarrollar sobre plataformas con iOS, así como también del lenguaje de programación Objective-C, superconjunto de C y que es el utilizado para desarrollar en los dispositivos mencionados. En caso de querer profundizar sobre los distintos \textit{frameworks} del SDK de iOS, herramientas de \textit{debugging} y herramientas generales de desarrollo, se sugiere leer el Apéndice \ref{chap: herramientas}.

@@ -7,6 +7,7 @@
 //
 
 #import "isgl3d.h"
+#import "math.h"
 
 @interface HelloWorldView : Isgl3dBasic3DView {
 	float _angle;

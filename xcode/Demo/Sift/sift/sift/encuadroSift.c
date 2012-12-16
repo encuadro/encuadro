@@ -425,6 +425,34 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
     }
 }
 
+void escribirDescriptor(char* nombre, int* descriptor, long int largo)
+{
+    FILE *archivo;
+    
+    //    char* direccion[200]="/Users/juanignaciobraun/encuadro/benchmark/iPod/640x480/Caso1/Scale0.6/threshold16/Caso1-PuntosFiltro57.txt";
+    archivo=fopen(nombre, "w");
+    
+    long int i=0;
+    
+    if (archivo==NULL)
+    {
+        printf("Could not open file!");
+    }
+    else
+    {
+        fprintf(archivo,"%ld\n \n",largo);
+        
+        for (i=0;i<largo;i++)
+        {
+            fprintf(archivo,"%d\n",*descriptor);
+            descriptor++;
+            
+        }
+        
+        fclose(archivo);
+    }
+    
+}
 
 
 
@@ -490,9 +518,16 @@ int main(int argc, const char * argv[])
     }
     else if (argc ==3)
     {
+        if(strcmp(argv[2],"generar")==0){
+        
+            printf("encuadroSift: ¡Descriptores generados en descriptores.txt!\n");
+            escribirDescriptor("descriptores.txt", descriptors, nKeyPoints*128);
+        }
+        else{
         image_out = buscarBaseDeDatos_ala(nKeyPoints, descriptors,argv[2]);
         printf("%s",image_out);
-    
+        }
+        
     }
    
 

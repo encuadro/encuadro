@@ -12,12 +12,20 @@ Probablemente, la realidad aumentada sea el mayor atractivo del proyecto por ser
 
 Cuando se genera una imagen por medio de realidad aumentada, conviven en ella elementos reales con elementos virtuales. Es básicamente un juego de percepciones. En la Figura \ref{fig: arIntro} se muestra un ejemplo de realidad aumentada desarrollado durante este proyecto. Se puede ver en ella, un cubo virtual sobre la esquina superior izquierda de ``Hombre de Vitruvio'' de Leonardo da Vinci, de manera coherente con la posición del dispositivo respecto de la obra. Si en esta figura tan sólo se viera a través del dispositivo, cualquiera podría pensar que el cubo es real y que efectivamente forma parte de la escena. Eso es lo que busca la realidad aumentada. \\
 
+Por otro lado, en la Figura \ref{fig: jumpar} se puede ver otra aplicación del mismo concepto. La imagen corresponde a una aplicación de realidad aumentada orientada a la publicidad desarrollada por Brandh, Dsense Technologies y imagineer::labs. La misma consiste en el reconocimiento de una imagen de una noticia en un diario y el despliegue sobre la imagen, de un video asociado a la noticia de manera coherente. Un video con este ejemplo se puede ver en \cite{jumpar}.
+
 \begin{figure}[H]
-\centering
-\includegraphics[scale=0.1]{figs_intro/arIntro.png}
-\caption{Ejemplo de realidad aumentada. Se ubica un cubo virtual en la esquina superior izquierda de una réplica de la obra ``Hombre de Vitruvio'' de Leonardo da Vinci.}
-\label{fig: arIntro}
-\end{figure}
+        \centering
+        \subfigure[]{
+                  \includegraphics[scale=0.1]{figs_intro/arIntro.png}
+				\label{fig: arIntro}}
+        \subfigure[]{
+               \includegraphics[scale=0.3]{figs_intro/jumpar2}
+              \label{fig: jumpar}}
+                \caption{Ejemplo de realidad aumentada. En \subref{fig: arIntro} se ubica un cubo virtual en la esquina superior izquierda de una réplica de la obra ``Hombre de Vitruvio'' de Leonardo da Vinci. En \subref{fig: jumpar} se reproduce un video sobre una noticia en un diario.}
+       \label{fig:intro_fig1}
+ \end{figure}
+
 
 Para entender cómo se genera la realidad aumentada, primero hay que entender el llamado ``problema directo''; esto es, cómo se proyecta una escena del mundo real en una cámara. En la Figura \ref{fig:intro_def1} se ve cuál es el proceso de captura de una imagen. Se comienza por el objeto que se quiere capturar $(1)$, luego se ubica la cámara de manera de obtener la imagen deseada $(2)$, finalmente se captura la imagen $(3)$. 
 
@@ -28,21 +36,26 @@ Para entender cómo se genera la realidad aumentada, primero hay que entender el 
 \label{fig:intro_def1}
 \end{figure}
 
-Luego, la realidad aumentada requiere de la resolución del ``problema inverso'', esto es, dado un objeto y una imagen del mismo, encontrar la posición exacta en la que estaba la cámara, respecto de un eje de coordenadas determinado, cuando se capturó esa imagen. En la Figura \ref{fig:intro_def2} se puede ver gráficamente este problema.  Para un cierto objeto, se quiere encontrar la posición de la cámara en el mundo (pose de la cámara) que proyecte sobre el plano imagen el rectángulo verde del medio, formado así la fotografía en cuestión. La pose que resuelve este problema es $P2$.\\
+Luego, la realidad aumentada requiere de la resolución del ``problema inverso'', esto es, dado un objeto y una imagen del mismo, encontrar la posición exacta en la que estaba la cámara, respecto de un eje de coordenadas determinado, cuando se capturó esa imagen. En la Figura \ref{fig:intro_def2} se puede ver gráficamente este problema.  Para un cierto objeto, se quiere encontrar la posición de la cámara en el mundo (pose de la cámara) que proyecte sobre el plano imagen el rectángulo verde del medio (Figura \ref{fig:def2b}), formado así la fotografía en cuestión (Figura \ref{fig:def2a}). La pose que resuelve este problema es $P2$.\\
+\begin{figure}[H]
+        \centering
+        \subfigure[]{
+                  \includegraphics[scale=0.18]{figs_intro/def2a}
+				\label{fig:def2a}}
+        \subfigure[]{
+               \includegraphics[scale=0.3]{figs_intro/def2b}
+              \label{fig:def2b}}
+                \caption{Problema inverso: calcular la posición exacta de la cámara, respecto de cierto sistema de coordenadas (pose de la cámara), dados un objeto y una imagen. En \subref{fig:def2a} se ve la imagen inicial para la cual se quiere estimar la pose, en \subref{fig:def2b} se ve cuál es la pose correcta entre varias posibles. }
+       \label{fig:intro_def2}
+ \end{figure}
+
+Una vez conocida la pose de la cámara, se procede a introducir un objeto virtual en la escena, en este caso un hombre 3D muy simple. Se hace de manera tal que aparezca de pie sobre el objeto origial, y para eso es necesario ubicarlo de forma correcta en la escena. Como se muestra en la Figura \ref{fig:intro_def3}. Se obtiene así una fusión entre el mundo real y el virtual. Un caso particular de lo anterior es introducir objetos virtuales 2D. Por ejemplo, como se muestra en la Figura \ref{fig: jumpar}, es posible proyectar un video sobre el plano imagen, también de manera consistente con la pose de la cámara.\\
+
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.32]{figs_intro/def2b}
-\caption{Problema inverso: calcular la posición exacta de la cámara, respecto de cierto sistema de coordenadas, dados un objeto y una imagen. En verde se ve la proyección del objeto que efectivamente forma la imagen.}
-\label{fig:intro_def2}
-\end{figure}
-
-Una vez conocida la pose de la cámara, se procede a introducir un objeto virtual en la escena; en este caso un hombre 3D muy simple. Ver Figura \ref{fig:intro_def3}. Se obtiene así una fusión entre el mundo real y el virtual. Un caso particular de lo anterior es introducir objetos virtuales 2D. Por ejemplo, es posible proyectar un video sobre el plano imagen, también de manera consistente con la pose de la cámara.\\
-
-\begin{figure}[H]
-\centering
-\includegraphics[scale=0.32]{figs_intro/def3b}
-\caption{En líneas punteadas se ve el modelo a proyectar, en la imagen se tiene la composición de las proyecciones del objeto real y virtual. }
+\includegraphics[scale=0.35]{figs_intro/def3b}
+\caption{En color rojo se ve el modelo del hombre 3D a proyectar, en la imagen se tiene la composición de las proyecciones del objeto real y el objeto virtual. }
 \label{fig:intro_def3}
 \end{figure}
 

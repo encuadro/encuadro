@@ -258,96 +258,96 @@ double* luminancia;
         [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
         
         
-        if (verbose){
-            printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);
-        }
-        
-        
-        if (errorMarkerDetection>=0) {
-            
-            cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
-            
-            /* eleccion de algoritmo de pose*/
-            if (PosJuani){
-                CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-                //                    for(int i=0;i<3;i++){
-                //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-                //                        Transa[i]=Tras[i];
-                //                    }
-                
-            }
-            else {
-                for (int k=0;k<36;k++)
-                {
-                    imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
-                    imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
-                }
-                Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
-            }
-        }
-        
-        if (verbose){
-            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-            printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-            printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
-        }
-        
-        /************************************************POSIT COPLANAR*/
-        /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
-        /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
-        //
-        //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
-        //            free(imagePointsCambiados);
-        // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
-        
-        
-        
-        
-        /************************************************SPINCALC*/
-        /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
-        
-        
-        
-        /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
-        
-        
-        rotacion[0]=Rotmodern[0][0];
-        rotacion[1]=Rotmodern[0][1];
-        rotacion[2]=Rotmodern[0][2];
-        rotacion[3]=Rotmodern[1][0];
-        rotacion[4]=Rotmodern[1][1];
-        rotacion[5]=Rotmodern[1][2];
-        rotacion[6]=Rotmodern[2][0];
-        rotacion[7]=Rotmodern[2][1];
-        rotacion[8]=Rotmodern[2][2];
-        
-        
-        double angles1[3],angles2[3];
-        Matrix2Euler(Rotmodern,angles1,angles2);
-        //            self.isgl3DView.eulerAngles = angles1;
-        
-        if (verbose){
-            printf("\nPrimera solucion\n");
-            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-            printf("\nSegunda solicion\n");
-            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
-        }
-        
-        [self.isgl3DView setRotacion:rotacion];
-        [self.isgl3DView setTraslacion:Tras];
-//        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
-        
-        //self.traslacion = traslacion;
-        
-        /*************FIN DEL PROCESAMIENTO********************************************/
-        /******************************************************************************/
-        //    bandera = false;
-        
+//        if (verbose){
+//            printf("Tamano: %d\n", listSize);
+//            printf("Tamano filtrada: %d\n", listFiltradaSize);
+//        }
+//        
+//        
+//        if (errorMarkerDetection>=0) {
+//            
+//            cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
+//            
+//            /* eleccion de algoritmo de pose*/
+//            if (PosJuani){
+//                CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
+//                //                    for(int i=0;i<3;i++){
+//                //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
+//                //                        Transa[i]=Tras[i];
+//                //                    }
+//                
+//            }
+//            else {
+//                for (int k=0;k<36;k++)
+//                {
+//                    imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
+//                    imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
+//                }
+//                Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
+//            }
+//        }
+//        
+//        if (verbose){
+//            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
+//            printf("\nRotacion: \n");
+//            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+//            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+//            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
+//            printf("Traslacion: \n");
+//            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+//        }
+//        
+//        /************************************************POSIT COPLANAR*/
+//        /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
+//        /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
+//        //
+//        //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
+//        //            free(imagePointsCambiados);
+//        // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
+//        
+//        
+//        
+//        
+//        /************************************************SPINCALC*/
+//        /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
+//        
+//        
+//        
+//        /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
+//        
+//        
+//        rotacion[0]=Rotmodern[0][0];
+//        rotacion[1]=Rotmodern[0][1];
+//        rotacion[2]=Rotmodern[0][2];
+//        rotacion[3]=Rotmodern[1][0];
+//        rotacion[4]=Rotmodern[1][1];
+//        rotacion[5]=Rotmodern[1][2];
+//        rotacion[6]=Rotmodern[2][0];
+//        rotacion[7]=Rotmodern[2][1];
+//        rotacion[8]=Rotmodern[2][2];
+//        
+//        
+//        double angles1[3],angles2[3];
+//        Matrix2Euler(Rotmodern,angles1,angles2);
+//        //            self.isgl3DView.eulerAngles = angles1;
+//        
+//        if (verbose){
+//            printf("\nPrimera solucion\n");
+//            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+//            printf("\nSegunda solicion\n");
+//            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+//        }
+//        
+//        [self.isgl3DView setRotacion:rotacion];
+//        [self.isgl3DView setTraslacion:Tras];
+////        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+//        
+//        //self.traslacion = traslacion;
+//        
+//        /*************FIN DEL PROCESAMIENTO********************************************/
+//        /******************************************************************************/
+//        //    bandera = false;
+//        
     }
     
 }
