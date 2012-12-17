@@ -13,7 +13,7 @@ extern "C"{
 #import "isgl3d.h"
 #include "vvector.h"
 #import <AVFoundation/AVFoundation.h>
-#import "claseDibujar.h"
+
     
 #ifdef __cplusplus
 }
@@ -41,13 +41,14 @@ bool fin;
 }
 @property (nonatomic) float* eulerAngles;
 @property (nonatomic) float* traslacion;
+@property (nonatomic) float** rotacion;
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 
 - (bool) getSegments;
 - (bool) getCorners;
 - (bool) getReproyected;
-- (void) setRotacion:(float*) rot;
+//- (void) setRotacion:(float*) rot;
 
 @end
 

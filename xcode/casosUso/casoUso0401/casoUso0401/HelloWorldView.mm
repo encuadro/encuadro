@@ -46,13 +46,14 @@
 @synthesize traslacion = _traslacion;
 @synthesize eulerAngles = _eulerAngles;
 @synthesize audioPlayer = _audioPlayer;
+@synthesize rotacion = _rotacion;
 
 float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,0,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
 Isgl3dVector3 angles;
-float rotacion[3][3];
+//float rotacion[3][3];
 
 
 NSString *estring;
@@ -74,21 +75,7 @@ bool corners, segments, reproyected;
     return reproyected;
 }
 
-- (void) setRotacion:(float*) rot
-{
-    rotacion[0][0] = rot[0];
-    rotacion[0][1] = rot[1];
-    rotacion[0][2] = rot[2];
-    
-    rotacion[1][0] = rot[3];
-    rotacion[1][1] = rot[4];
-    rotacion[1][2] = rot[5];
-    
-    rotacion[2][0] = rot[6];
-    rotacion[2][1] = rot[7];
-    rotacion[2][2] = rot[8];
-    
-}
+
 - (id) init {
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
@@ -112,32 +99,35 @@ bool corners, segments, reproyected;
         
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-
-        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"monkey.pod"];
-       // Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"sofa.pod"];
-  
-		_model = [_container createSkeletonNode];
-		//_model2 = [_container createSkeletonNode];
-  
-        _model.scaleX=50;
-        _model.scaleY=50;
-        _model.scaleZ=50;
-       // _model.rotationZ = 90;
+        Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:@"sofa.pod"];
+        Isgl3dPODImporter * podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"chihuahua.pod"];
         
-//        _model2.scaleX=15;
-//        _model2.scaleY=15;
-//        _model2.scaleZ=15;
-    
+        
+        
+        _model = [_container createSkeletonNode];
+		_model2 = [_container createSkeletonNode];
+        
+        _model.scaleX=15;
+        _model.scaleY=15;
+        _model.scaleZ=15;
+        _model.rotationZ = 90;
+        
+        _model2.scaleX=3;
+        _model2.scaleY=3;
+        _model2.scaleZ=3;
+
+        
+        [podImporter printPODInfo];
+        
         
 		[podImporter addMeshesToScene:_model];
-
-        [podImporter printPODInfo];
-       // [podImporter2 addMeshesToScene:_model2];;
+        [podImporter2 addMeshesToScene:_model2];;
 		
-
+        //		_animationController = [[Isgl3dAnimationController alloc] initWithSkeleton:_model andNumberOfFrames:[podImporter numberOfFrames]];
+        //		[_animationController start];
         
-        _model.position = iv3(380, -280, 0);
-     //   _model2.position = iv3(190,-100,0);
+        _model.position = iv3(190, -50, 0);
+        _model2.position = iv3(0,-50,0);
         
         Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
 		[self.scene addChild:light];
@@ -165,37 +155,37 @@ bool corners, segments, reproyected;
         //light4.renderLight = YES;
         
         
-        /*--------------|INTRODUCIMOS EL MODELO|------------------*/
+        /*--------------|LOS BOTONES LOCOS|------------------*/
         
         /* Generamos el boton para dibujar los segmentos detectados */
         
-        Isgl3dTextureMaterial * segmentsMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_segments.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * segmentsButton = [Isgl3dGLUIButton buttonWithMaterial:segmentsMaterial width:14.4 height:9.8];
-		[self.scene addChild:segmentsButton];
-        
-        [segmentsButton setX:30 andY:20];
-        segmentsButton.interactive = YES;
-        [segmentsButton addEvent3DListener:self method:@selector(segmentsTouched:) forEventType:TOUCH_EVENT];
+        //        Isgl3dTextureMaterial * segmentsMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_segments.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+        //		Isgl3dGLUIButton * segmentsButton = [Isgl3dGLUIButton buttonWithMaterial:segmentsMaterial width:14.4 height:9.8];
+        //		[self.scene addChild:segmentsButton];
+        //
+        //        [segmentsButton setX:30 andY:20];
+        //        segmentsButton.interactive = YES;
+        //        [segmentsButton addEvent3DListener:self method:@selector(segmentsTouched:) forEventType:TOUCH_EVENT];
         
         /* Generamos el boton para dibujar las esquinas detectadas */
         
-        Isgl3dTextureMaterial * cornersMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * cornersButton = [Isgl3dGLUIButton buttonWithMaterial:cornersMaterial width:14.4 height:9.8];
-		[self.scene addChild:cornersButton];
-        
-        [cornersButton setX:30 andY:10];
-        cornersButton.interactive = YES;
-        [cornersButton addEvent3DListener:self method:@selector(cornersTouched:) forEventType:TOUCH_EVENT];
+        //        Isgl3dTextureMaterial * cornersMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"detected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+        //		Isgl3dGLUIButton * cornersButton = [Isgl3dGLUIButton buttonWithMaterial:cornersMaterial width:14.4 height:9.8];
+        //		[self.scene addChild:cornersButton];
+        //
+        //        [cornersButton setX:30 andY:10];
+        //        cornersButton.interactive = YES;
+        //        [cornersButton addEvent3DListener:self method:@selector(cornersTouched:) forEventType:TOUCH_EVENT];
         
         /* Generamos el boton para dibujar las esquinas reproyectadas */
         
-        Isgl3dTextureMaterial * reproyectedMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"reproyected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
-		Isgl3dGLUIButton * reproyectedButton = [Isgl3dGLUIButton buttonWithMaterial:reproyectedMaterial width:14.4 height:9.8];
-		[self.scene addChild:reproyectedButton];
-        
-        [reproyectedButton setX:30 andY:0];
-        reproyectedButton.interactive = YES;
-        [reproyectedButton addEvent3DListener:self method:@selector(reproyectedTouched:) forEventType:TOUCH_EVENT];
+        //        Isgl3dTextureMaterial * reproyectedMaterial = [Isgl3dTextureMaterial materialWithTextureFile:@"reproyected_points.png" shininess:0.9 precision:Isgl3dTexturePrecisionMedium repeatX:NO repeatY:NO];
+        //		Isgl3dGLUIButton * reproyectedButton = [Isgl3dGLUIButton buttonWithMaterial:reproyectedMaterial width:14.4 height:9.8];
+        //		[self.scene addChild:reproyectedButton];
+        //
+        //        [reproyectedButton setX:30 andY:0];
+        //        reproyectedButton.interactive = YES;
+        //        [reproyectedButton addEvent3DListener:self method:@selector(reproyectedTouched:) forEventType:TOUCH_EVENT];
         
         
         self.camera.position = iv3(0,0,0.01);
@@ -218,21 +208,21 @@ bool corners, segments, reproyected;
 - (void) tick:(float)dt {
 	// Rotate the text around the y axis
     //NSLog(@"tick\n");
-    if (self.traslacion != nil & rotacion!=nil)
+    if (self.traslacion != nil & _rotacion!=nil)
     {
-        Matriz.sxx = rotacion[0][0];
-        Matriz.sxy = rotacion[0][1];
-        Matriz.sxz = rotacion[0][2];
+        Matriz.sxx = _rotacion[0][0];
+        Matriz.sxy = _rotacion[0][1];
+        Matriz.sxz = _rotacion[0][2];
         Matriz.tx = self.traslacion[0];
         
-        Matriz.syx = rotacion[1][0];
-        Matriz.syy = rotacion[1][1];
-        Matriz.syz = rotacion[1][2];
+        Matriz.syx = _rotacion[1][0];
+        Matriz.syy = _rotacion[1][1];
+        Matriz.syz = _rotacion[1][2];
         Matriz.ty = self.traslacion[1];
         
-        Matriz.szx = rotacion[2][0];
-        Matriz.szy = rotacion[2][1];
-        Matriz.szz = rotacion[2][2];
+        Matriz.szx = _rotacion[2][0];
+        Matriz.szy = _rotacion[2][1];
+        Matriz.szz = _rotacion[2][2];
         Matriz.tz = self.traslacion[2];
         
         Matriz.swx = 0;
@@ -251,22 +241,8 @@ bool corners, segments, reproyected;
         b[0]=puntoModelo3D1[0];
         b[1]=puntoModelo3D1[1];
         b[2]=puntoModelo3D1[2];
-        MAT_DOT_VEC_3X3(a, rotacion, b);
+        MAT_DOT_VEC_3X3(a, _rotacion, b);
         VEC_SUM(punto3D1,a,self.traslacion);
-        
-        //        /*project CoplanarPosit*/
-        //        b[0]=puntoModelo3D2[0];
-        //        b[1]=puntoModelo3D2[1];
-        //        b[2]=puntoModelo3D2[2];
-        //        MAT_DOT_VEC_3X3(a, rotacion, b);
-        //        VEC_SUM(punto3D2,a,self.traslacion);
-        //
-        //        /*project CoplanarPosit*/
-        //        b[0]=puntoModelo3D3[0];
-        //        b[1]=puntoModelo3D3[1];
-        //        b[2]=puntoModelo3D3[2];
-        //        MAT_DOT_VEC_3X3(a, rotacion, b);
-        //        VEC_SUM(punto3D3,a,self.traslacion);
         
         if (punto3D1[0] < INFINITY)
         {

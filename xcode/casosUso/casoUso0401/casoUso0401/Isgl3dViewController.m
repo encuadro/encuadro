@@ -1,15 +1,14 @@
 //
 //  Isgl3dViewController.m
-//  casoUso0401
+//  ARtigas
 //
-//  Created by Pablo Flores Guridi on 18/10/12.
+//  Created by Pablo Flores Guridi on 13/12/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
-
 #import "Isgl3dViewController.h"
 #import "isgl3d.h"
-#import "claseDibujar.h"
+
 
 
 @interface Isgl3dViewController()
@@ -38,7 +37,7 @@
 
 
 /*para DIBUJAR*/
-claseDibujar *cgvista;
+//claseDibujar *cgvista;
 float **reproyectados;
 float aux[3];
 float intrinsecos[3][3] = {{589.141,    0,          240},
@@ -96,8 +95,8 @@ float density_th = 0.0; //0.7  /* Minimal density of region points in rectangle.
 int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
                            modulus.                                       */
 /*Up to here */
-image_float luminancia_sub;
-image_float image;
+//image_float luminancia_sub;
+//image_float image;
 int cantidad;
 
 /*Kalman variables*/
@@ -111,7 +110,8 @@ float** measureMatrix;
 float** errorMatrix;
 float** kalmanGain;
 float* states;
-kalman_state_3 state;
+
+kalman_state_n state;
 
 
 - (CIContext* ) context
@@ -168,57 +168,6 @@ kalman_state_3 state;
 {
     self.videoView.image = imagen;
     
-    
-    
-    if (cgvista.dealloc==0)
-    {
-        [cgvista removeFromSuperview];
-        cgvista.dealloc=1;
-    }
-    /*-------------------------------| Clase dibujar | ----------------------------------*/
-    if ([self.isgl3DView getSegments] || [self.isgl3DView getCorners] || [self.isgl3DView getReproyected])
-    {
-        
-        cgvista.cantidadSegmentos = listFiltradaSize;
-        cgvista.segments = [self.isgl3DView getSegments];
-        cgvista.corners = [self.isgl3DView getCorners];
-        cgvista.reproyected = [self.isgl3DView getReproyected];
-        
-        
-        if ( [self.isgl3DView getSegments]) cgvista.segmentos = listFiltrada;
-        if ( [self.isgl3DView getCorners]) cgvista.esquinas = imagePoints;
-        
-        
-        if ( [self.isgl3DView getReproyected])
-        {
-            for (int i=0;i<NumberOfPoints;i++)
-                
-            {
-                
-                
-                MAT_DOT_VEC_3X3(aux, Rotmodern, object[i]);
-                VEC_SUM(reproyectados[i],aux,Tras);
-                MAT_DOT_VEC_3X3(reproyectados[i], intrinsecos, reproyectados[i]);
-                
-            }
-            cgvista.esquinasReproyectadas = reproyectados;
-        }
-        
-        
-        
-        [self.videoView addSubview:cgvista];
-        
-        cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
-        
-        cgvista.bounds=CGRectMake(0, 0, 1024, 768);
-        
-        [cgvista setNeedsDisplay];
-        
-        cgvista.dealloc=0;
-        
-    }
-    /*-------------------------------| Clase dibujar | ----------------------------------*/
-    
 }
 
 
@@ -239,24 +188,27 @@ kalman_state_3 state;
         cantidad =width*height;
         for(int pixelNr=0;pixelNr<cantidad;pixelNr++) luminancia[pixelNr] = 0.30*pixels[pixelNr*4+2] + 0.59*pixels[pixelNr*4+1] + 0.11*pixels[pixelNr*4];
         /*Ahora luminancia es la imagen en nivel de grises*/
-        //NSLog(@"rgb2gray out\n");
         
         /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
-        image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+        
+
+        
+        //image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
         //NSLog(@"gaussian_sampler in\n");
-        luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
+        //luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
         //NSLog(@"gaussian_sampler out\n");
         
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
-        listSize =0;
         // NSLog(@"LSD in\n");
-        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+        list = lsd_encuadro(&listSize, luminancia, width, height);
+        
+        //list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
         // NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
-        free( (void *) image );
-        free_image_float(luminancia_sub);
+        //free( (void *) image );
+        //free_image_float(luminancia_sub);
         
         
         /*-------------------------------------|FILTRADO|-------------------------------------*/
@@ -279,26 +231,13 @@ kalman_state_3 state;
         if (errorMarkerDetection>=0) {
             
             cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
-            
-            /* eleccion de algoritmo de pose*/
-            if (PosJuani){
-                CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-                //                    for(int i=0;i<3;i++){
-                //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-                //                        Transa[i]=Tras[i];
-                //                    }
-                
-            }
-            else {
-                for (int k=0;k<36;k++)
-                {
-                    imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
-                    imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
-                }
-                Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
-            }
-            
+           
+
+            CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
+    
+                        
             if (kalman){
+                
                 Matrix2Euler(Rotmodern, angles1, angles2);
                 if(false){
                     if(init){
@@ -346,18 +285,10 @@ kalman_state_3 state;
                         measureNoise[2][0]=-0.0459669868120827;
                         measureNoise[2][1]=-0.0748919339531972;
                         measureNoise[2][2]=0.00106230567668207;
-                        //                        measureNoise[0][0]=1;
-                        //                        measureNoise[0][1]=0;
-                        //                        measureNoise[0][2]=0;
-                        //                        measureNoise[1][0]=0;
-                        //                        measureNoise[1][1]=1;
-                        //                        measureNoise[1][2]=0;
-                        //                        measureNoise[2][0]=0;
-                        //                        measureNoise[2][1]=0;
-                        //                        measureNoise[2][2]=1;
-                        SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
+          
+                        SCALE_MATRIX_3X3(measureNoise, 10, measureNoise);
                         
-                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
+                        state = kalman_init_3x3(processNoise, measureNoise, errorMatrix, kalmanGain, angles1);
                         
                         xState = kalman_init(1, 0.2, 1, Tras[0]);
                         yState = kalman_init(1, 0.2, 1, Tras[1]);
@@ -377,69 +308,20 @@ kalman_state_3 state;
                     Tras[1]=yState.x;
                     Tras[2]=zState.x;
                     
-                    //                    VEC_PRINT(angles1);
-                    //                    VEC_PRINT(Tras);
                     
                 }
                 Euler2Matrix(angles1, Rotmodern);
-                // printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
             
             
             
         }
-        
-        
-        
-        
-        //            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-        //            printf("\nRotacion: \n");
-        //            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-        //            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-        //            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-        //            printf("Traslacion: \n");
-        //            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
-        
-        
-        /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
-        /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
-        /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
-        //
-        //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
-        //            free(imagePointsCambiados);
-        // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
-        
-        
-        
-        
-        /************************************************SPINCALC*/
-        /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
-        
+
         
         
         /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
         
-        
-        rotacion[0]=Rotmodern[0][0];
-        rotacion[1]=Rotmodern[0][1];
-        rotacion[2]=Rotmodern[0][2];
-        rotacion[3]=Rotmodern[1][0];
-        rotacion[4]=Rotmodern[1][1];
-        rotacion[5]=Rotmodern[1][2];
-        rotacion[6]=Rotmodern[2][0];
-        rotacion[7]=Rotmodern[2][1];
-        rotacion[8]=Rotmodern[2][2];
-        
-        
-        
-        
-        //            printf("\nPrimera solucion\n");
-        //            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-        //            printf("\nSegunda solicion\n");
-        //            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
-        
-        
-        [self.isgl3DView setRotacion:rotacion];
+        self.isgl3DView.rotacion=Rotmodern;
         [self.isgl3DView setTraslacion:Tras];
         
         
@@ -493,13 +375,13 @@ kalman_state_3 state;
     }
     
     luminancia = (float *) malloc(360*480*sizeof(float));
-    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
+   // cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
     
     /* READ MARKER MODEL */
     
     
     
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR2" ofType:@"txt"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
     
     FILE *filePuntos;
     

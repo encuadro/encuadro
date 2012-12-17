@@ -1,8 +1,8 @@
 //
 //  Isgl3dViewController.h
-//  casoUso0401
+//  ARtigas
 //
-//  Created by Pablo Flores Guridi on 18/10/12.
+//  Created by Pablo Flores Guridi on 13/12/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
@@ -12,11 +12,9 @@
 #import "casoUso0401AppDelegate.h"
 
 
-#import "processing.h"
-#import "lsd.h"
+#import "lsd_encuadro.h"
 #import "segments.h"
 #import "marker.h"
-#import "Composit.h"
 #import "CoplanarPosit.h"
 #import <stdlib.h>
 #import "kalman.h"
