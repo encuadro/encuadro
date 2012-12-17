@@ -12,11 +12,9 @@
 #import "ARtigasAppDelegate.h"
 
 
-#import "processing.h"
-#import "lsd.h"
+#import "lsd_encuadro.h"
 #import "segments.h"
 #import "marker.h"
-#import "Composit.h"
 #import "CoplanarPosit.h"
 #import <stdlib.h>
 #import "kalman.h"

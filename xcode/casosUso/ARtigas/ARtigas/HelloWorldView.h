@@ -23,7 +23,7 @@ extern "C"{
 bool fin;
 @interface videoView : UIImageView <AVAudioPlayerDelegate> {
 }
-//@property(nonatomic,retain) Isgl3dViewController* viewController;
+
 @end
 
 
@@ -41,15 +41,12 @@ bool fin;
 }
 @property (nonatomic) float* eulerAngles;
 @property (nonatomic) float* traslacion;
+@property (nonatomic) float** rotacion;
 
 
-- (void) setRotacion:(float*) rot;
 
 @end
 
-/*
- * Principal class to be instantiated in main.h.
- */
 #import "ARtigasAppDelegate.h"
 @interface AppDelegate : ARtigasAppDelegate
 - (void) createViews;
