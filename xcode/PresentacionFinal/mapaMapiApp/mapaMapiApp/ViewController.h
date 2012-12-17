@@ -14,12 +14,14 @@
 #import "lsd.h"
 #import "segments.h"
 #import "marker.h"
-//#import "Composit.h"
-//#import "CoplanarPosit.h"
+#import "Composit.h"
+#import "CoplanarPosit.h"
 #import <stdlib.h>
-//#import "kalman.h"
+#import "kalman.h"
 #import "vvector.h"
+//#import "claseDibujar.h"
 
+bool pose;
 bool fadeVolOut;
 bool audioYvideo;
 int click;
@@ -29,6 +31,7 @@ int wSize,hSize;
 @interface ViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     //video
     MPMoviePlayerController *theMovie;
+    
 }
 
 //camara

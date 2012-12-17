@@ -8,16 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-double esqRepro[4];
+
 @interface claseDibujar : UIView
 
 @property(nonatomic, readwrite) int cantidadSegmentos;
 @property(nonatomic, readwrite) int cantidadLsd;
 
-@property(nonatomic, readwrite) double* segmentos_lsd;
-@property(nonatomic, readwrite) double* segmentos;
-@property(nonatomic, readwrite) double** esquinas;
-@property(nonatomic, readwrite) double** esquinasReproyectadas;
+@property(nonatomic, readwrite) float* segmentos_lsd;
+@property(nonatomic, readwrite) float* segmentos;
+@property(nonatomic, readwrite) float** esquinas;
+@property(nonatomic, readwrite) float** esquinasReproyectadas;
 
 @property(nonatomic, readwrite) int dealloc;
 
@@ -27,6 +27,6 @@ double esqRepro[4];
 @property(nonatomic, readwrite) bool lsd_all;
 
 - (id)initWithFrame:(CGRect)frame;
--(void)drawRect:(CGRect)rect; //cantidadSeg:(int) cantidadSeg segmentos: (double*) segmentos;
+-(void)drawRect:(CGRect)rect; //cantidadSeg:(int) cantidadSeg segmentos: (float*) segmentos;
 
 @end

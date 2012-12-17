@@ -26,10 +26,20 @@
 @synthesize audioPlayer = _audioPlayer;
 
 
-double **imagePoints3; //para hacer la CGAffineTransform
-double **imagePoints4;
+/*Para HOMOGRAFIA*/
+float **imagePoints3mayas; //para hacer la CGAffineTransform
+float **imagePoints4;
+float **imagePoints4Pro;
+float **imagePoints3aztecas;
+float **imagePoints3video;
+float **imagePoints3mayasPro;
 
-double *h;
+
+float *hmaya;
+float *hazteca;
+float *hvideo;
+
+/*Sincronismo*/
 int timer;
 
 
@@ -72,6 +82,9 @@ float center[2]={240, 180};           ///modern coplanar
 float* luminancia;
 float* angles1;
 float* angles2;
+float**intrinsecos;
+float** extrinsecos;
+float** poseMatrix;
 
 /* LSD parameters */
 float scale_inv = 2; /*scale_inv= 1/scale, scale=0.5*/
@@ -88,6 +101,19 @@ int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
 image_float luminancia_sub;
 image_float image;
 int cantidad;
+
+/*Kalman variables*/
+kalman_state thetaState,psiState,phiState,xState,yState,zState;
+bool kalman=true;
+bool init=true;
+float** measureNoise;
+float** processNoise;
+float** stateEvolution;
+float** measureMatrix;
+float** errorMatrix;
+float** kalmanGain;
+float* states;
+kalman_state_3 state;
 
 - (CIContext* ) context
 {
@@ -126,7 +152,7 @@ int cantidad;
     
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationUp];
     
-    
+
     [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
     
     CGImageRelease(ref);
@@ -140,8 +166,18 @@ int cantidad;
 
 - (void) setImage: (UIImage*) imagen
 {
+    UIScreen *screen = [UIScreen mainScreen];
+    CGRect fullScreenRect = screen.bounds;
+    
+    
+    [self.videoView setCenter:CGPointMake(fullScreenRect.size.height/2, fullScreenRect.size.width/2)];
+    [self.videoView setBounds:CGRectMake(0, 0, fullScreenRect.size.height, fullScreenRect.size.width)];
+    
     self.videoView.image=imagen;
-  
+    
+    
+    
+    
 }
 
 -(void)doVolumeFadeMainIn
@@ -260,8 +296,8 @@ int cantidad;
 - (void) procesamiento
 {
     
-    if((pixels[0] != INFINITY)&(height!=0))
-    {
+ if((pixels[0] != INFINITY)&(height!=0))
+ {
         
         
         // NSLog(@"Procesando!\n");
@@ -308,189 +344,214 @@ int cantidad;
         //        printf("Tamano filtrada: %d\n", listFiltradaSize);
         //
         
-        for (int i=0; i<4; i++) {
+ if (!pose) {
+         for (int i=0; i<4; i++) {
+             
+             imagePoints4[i][0]=imagePoints[i+4][0]*wSize/480;
+             imagePoints4[i][1]=imagePoints[i+4][1]*hSize/360;
+             
+             imagePoints4Pro[i][0]=imagePoints[i+4][0]*wSize/480;
+             imagePoints4Pro[i][1]=imagePoints[i+4][1]*hSize/360;
+             
+         }
+     
+     
+         for (int i=4; i<8; i++) {
+         
+            imagePoints4Pro[i][0]=imagePoints[i+12][0]*wSize/480;
+            imagePoints4Pro[i][1]=imagePoints[i+12][1]*hSize/360;
+         
+         }
+     
+        for (int i=8; i<12; i++) {
+          
+            imagePoints4Pro[i][0]=imagePoints[i+20][0]*wSize/480;
+            imagePoints4Pro[i][1]=imagePoints[i+20][1]*hSize/360;
+         
+        }
+     
+         // solveAffineTransformation(imagePoints, imagePoints3, h);
+         solveHomographie(imagePoints4, imagePoints3video, hvideo);
+         solveHomographiePro(imagePoints4Pro, imagePoints3mayasPro, hmaya);
+         solveHomographie(imagePoints4, imagePoints3aztecas, hazteca);
+         
+         [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+ }
+     
+ else {
+
+        if (errorMarkerDetection>=0) {
             
-            imagePoints4[i][0]=imagePoints[i+4][0]*wSize/480;
-            imagePoints4[i][1]=imagePoints[i+4][1]*hSize/360;
+            cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
             
-            //            imagePoints4[i][0]=(imagePoints[i+4][0]-imagePoints[6][0])*wSize/480;
-            //            imagePoints4[i][1]=(imagePoints[i+4][1]-imagePoints[6][1])*hSize/360;
+            /* eleccion de algoritmo de pose*/
+            if (PosJuani){
+                CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
+                //                    for(int i=0;i<3;i++){
+                //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
+                //                        Transa[i]=Tras[i];
+                //                    }
+                
+            }
+            else {
+                for (int k=0;k<36;k++)
+                {
+                    imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
+                    imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
+                }
+                Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
+            }
+            
+            if (kalman){
+                Matrix2Euler(Rotmodern, angles1, angles2);
+                if(false){
+                    if(init){
+                        thetaState = kalman_init(1, 4, 1, angles1[0]);
+                        psiState = kalman_init(1, 7, 1, angles1[1]);
+                        phiState = kalman_init(1, 0.1, 1, angles1[2]);
+                        //                        xState = kalman_init(1, 8, 1, Tras[0]);
+                        //                        yState = kalman_init(1, 8, 1, Tras[1]);
+                        //                        zState = kalman_init(1, 8, 1, Tras[2]);
+                        init=false;
+                    }
+                    kalman_update(&thetaState, angles1[0]);
+                    kalman_update(&psiState, angles1[1]);
+                    kalman_update(&phiState, angles1[2]);
+                    //                     kalman_update(&xState, Tras[0]);
+                    //                     kalman_update(&yState, Tras[1]);
+                    //                     kalman_update(&zState, Tras[2]);
+                    
+                    angles1[0]=thetaState.x;
+                    angles1[1]=psiState.x;
+                    angles1[2]=phiState.x;
+                    //                     Tras[0]=xState.x;
+                    //                     Tras[1]=yState.x;
+                    //                     Tras[2]=zState.x;
+                    
+                    
+                    
+                }
+                else{
+                    if(init){
+                        
+                        /* kalman correlacionado */
+                        IDENTITY_MATRIX_3X3(stateEvolution);
+                        IDENTITY_MATRIX_3X3(measureMatrix);
+                        IDENTITY_MATRIX_3X3(processNoise);
+                        IDENTITY_MATRIX_3X3(errorMatrix);
+                        SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
+                        
+                        measureNoise[0][0] =4.96249572803608;
+                        measureNoise[0][1]=4.31450588099769;
+                        measureNoise[0][2]=-0.0459669868120827;
+                        measureNoise[1][0]=4.31450588099769;
+                        measureNoise[1][1]=7.02354899298729;
+                        measureNoise[1][2]=-0.0748919339531972;
+                        measureNoise[2][0]=-0.0459669868120827;
+                        measureNoise[2][1]=-0.0748919339531972;
+                        measureNoise[2][2]=0.00106230567668207;
+                        //                        measureNoise[0][0]=1;
+                        //                        measureNoise[0][1]=0;
+                        //                        measureNoise[0][2]=0;
+                        //                        measureNoise[1][0]=0;
+                        //                        measureNoise[1][1]=1;
+                        //                        measureNoise[1][2]=0;
+                        //                        measureNoise[2][0]=0;
+                        //                        measureNoise[2][1]=0;
+                        //                        measureNoise[2][2]=1;
+                        SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
+                        
+                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
+                        
+                        xState = kalman_init(1, 0.2, 1, Tras[0]);
+                        yState = kalman_init(1, 0.2, 1, Tras[1]);
+                        zState = kalman_init(1, 0.2, 1, Tras[2]);
+                        
+                        
+                        init=false;
+                    }
+                    /* kalman correlacionado */
+                    kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
+                    
+                    kalman_update(&xState, Tras[0]);
+                    kalman_update(&yState, Tras[1]);
+                    kalman_update(&zState, Tras[2]);
+                    
+                    Tras[0]=xState.x;
+                    Tras[1]=yState.x;
+                    Tras[2]=zState.x;
+                    
+                    //                    VEC_PRINT(angles1);
+                    //                    VEC_PRINT(Tras);
+                    
+                }
+                Euler2Matrix(angles1, Rotmodern);
+                // printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+            }
+            
+            
             
         }
-        // solveAffineTransformation(imagePoints, imagePoints3, h);
-        solveHomographie(imagePoints4, imagePoints3, h);
         
-        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
-//        if (errorMarkerDetection>=0) {
-//            
-//            cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
-//            
-//            /* eleccion de algoritmo de pose*/
-//            if (PosJuani){
-//                CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-//                //                    for(int i=0;i<3;i++){
-//                //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-//                //                        Transa[i]=Tras[i];
-//                //                    }
-//                
-//            }
-//            else {
-//                for (int k=0;k<36;k++)
-//                {
-//                    imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
-//                    imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
-//                }
-//                Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
-//            }
-//            
-//            if (kalman){
-//                Matrix2Euler(Rotmodern, angles1, angles2);
-//                if(false){
-//                    if(init){
-//                        thetaState = kalman_init(1, 4, 1, angles1[0]);
-//                        psiState = kalman_init(1, 7, 1, angles1[1]);
-//                        phiState = kalman_init(1, 0.1, 1, angles1[2]);
-//                        //                        xState = kalman_init(1, 8, 1, Tras[0]);
-//                        //                        yState = kalman_init(1, 8, 1, Tras[1]);
-//                        //                        zState = kalman_init(1, 8, 1, Tras[2]);
-//                        init=false;
-//                    }
-//                    kalman_update(&thetaState, angles1[0]);
-//                    kalman_update(&psiState, angles1[1]);
-//                    kalman_update(&phiState, angles1[2]);
-//                    //                     kalman_update(&xState, Tras[0]);
-//                    //                     kalman_update(&yState, Tras[1]);
-//                    //                     kalman_update(&zState, Tras[2]);
-//                    
-//                    angles1[0]=thetaState.x;
-//                    angles1[1]=psiState.x;
-//                    angles1[2]=phiState.x;
-//                    //                     Tras[0]=xState.x;
-//                    //                     Tras[1]=yState.x;
-//                    //                     Tras[2]=zState.x;
-//                    
-//                    
-//                    
-//                }
-//                else{
-//                    if(init){
-//                        
-//                        /* kalman correlacionado */
-//                        IDENTITY_MATRIX_3X3(stateEvolution);
-//                        IDENTITY_MATRIX_3X3(measureMatrix);
-//                        IDENTITY_MATRIX_3X3(processNoise);
-//                        IDENTITY_MATRIX_3X3(errorMatrix);
-//                        SCALE_MATRIX_3X3(errorMatrix, 1, errorMatrix);
-//                        
-//                        measureNoise[0][0] =4.96249572803608;
-//                        measureNoise[0][1]=4.31450588099769;
-//                        measureNoise[0][2]=-0.0459669868120827;
-//                        measureNoise[1][0]=4.31450588099769;
-//                        measureNoise[1][1]=7.02354899298729;
-//                        measureNoise[1][2]=-0.0748919339531972;
-//                        measureNoise[2][0]=-0.0459669868120827;
-//                        measureNoise[2][1]=-0.0748919339531972;
-//                        measureNoise[2][2]=0.00106230567668207;
-//                        //                        measureNoise[0][0]=1;
-//                        //                        measureNoise[0][1]=0;
-//                        //                        measureNoise[0][2]=0;
-//                        //                        measureNoise[1][0]=0;
-//                        //                        measureNoise[1][1]=1;
-//                        //                        measureNoise[1][2]=0;
-//                        //                        measureNoise[2][0]=0;
-//                        //                        measureNoise[2][1]=0;
-//                        //                        measureNoise[2][2]=1;
-//                        SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
-//                        
-//                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
-//                        
-//                        xState = kalman_init(1, 0.2, 1, Tras[0]);
-//                        yState = kalman_init(1, 0.2, 1, Tras[1]);
-//                        zState = kalman_init(1, 0.2, 1, Tras[2]);
-//                        
-//                        
-//                        init=false;
-//                    }
-//                    /* kalman correlacionado */
-//                    kalman_update_3x3(&state, angles1, stateEvolution, measureMatrix);
-//                    
-//                    kalman_update(&xState, Tras[0]);
-//                    kalman_update(&yState, Tras[1]);
-//                    kalman_update(&zState, Tras[2]);
-//                    
-//                    Tras[0]=xState.x;
-//                    Tras[1]=yState.x;
-//                    Tras[2]=zState.x;
-//                    
-//                    //                    VEC_PRINT(angles1);
-//                    //                    VEC_PRINT(Tras);
-//                    
-//                }
-//                Euler2Matrix(angles1, Rotmodern);
-//                // printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-//            }
-//            
-//            
-//            
-//        }
-//        
-//        
-//        
-//        
-//        //            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-//        //            printf("\nRotacion: \n");
-//        //            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-//        //            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-//        //            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-//        //            printf("Traslacion: \n");
-//        //            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
-//        
-//        
-//        /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
-//        /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
-//        /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
-//        //
-//        //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
-//        //            free(imagePointsCambiados);
-//        // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
-//        
-//        
-//        
-//        
-//        /************************************************SPINCALC*/
-//        /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
-//        
-//        
-//        
-//        /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
-//        
-//        
-//        rotacion[0]=Rotmodern[0][0];
-//        rotacion[1]=Rotmodern[0][1];
-//        rotacion[2]=Rotmodern[0][2];
-//        rotacion[3]=Rotmodern[1][0];
-//        rotacion[4]=Rotmodern[1][1];
-//        rotacion[5]=Rotmodern[1][2];
-//        rotacion[6]=Rotmodern[2][0];
-//        rotacion[7]=Rotmodern[2][1];
-//        rotacion[8]=Rotmodern[2][2];
-//        
-//        
-//        
-//        
-//        //            printf("\nPrimera solucion\n");
-//        //            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-//        //            printf("\nSegunda solicion\n");
-//        //            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
-//        
-//        
+        
+        
+        
+        //            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
+        //            printf("\nRotacion: \n");
+        //            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
+        //            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
+        //            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
+        //            printf("Traslacion: \n");
+        //            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
+        
+        
+        /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
+        /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
+        /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
+        //
+        //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
+        //            free(imagePointsCambiados);
+        // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
+        
+        
+        
+        
+        /************************************************SPINCALC*/
+        /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
+        
+        
+        
+        /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
+        
+        
+        rotacion[0]=Rotmodern[0][0];
+        rotacion[1]=Rotmodern[0][1];
+        rotacion[2]=Rotmodern[0][2];
+        rotacion[3]=Rotmodern[1][0];
+        rotacion[4]=Rotmodern[1][1];
+        rotacion[5]=Rotmodern[1][2];
+        rotacion[6]=Rotmodern[2][0];
+        rotacion[7]=Rotmodern[2][1];
+        rotacion[8]=Rotmodern[2][2];
+        
+        
+        
+        
+        //            printf("\nPrimera solucion\n");
+        //            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
+        //            printf("\nSegunda solicion\n");
+        //            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+        
+//          NO HAY ISGL
 //        [self.isgl3DView setRotacion:rotacion];
 //        [self.isgl3DView setTraslacion:Tras];
-//        
-//        
-//        /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
+     
+     [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
         
-    }
+        /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
+     
+ }
+ }
     
 }
     
@@ -502,44 +563,150 @@ int cantidad;
     CALayer *layerAzteca = self.imagenViewAzteca.layer;
     CALayer *layerZapoteca = self.imagenViewZapoteca.layer;
     
-    //VIDEO LAYER
-    layerVideo.frame = CGRectMake(0,0,60,60);
-    layerVideo.anchorPoint = CGPointMake(0.0,0.0);
-    layerVideo.zPosition = 0;
+    CATransform3D rotationAndPerspectiveTransform;
+    CATransform3D rotationAndPerspectiveTransformVIDEO = CATransform3DIdentity;
+    CATransform3D rotationAndPerspectiveTransformMAYA = CATransform3DIdentity;
+    CATransform3D rotationAndPerspectiveTransformAZTECA = CATransform3DIdentity;
+    
+    if (!pose) {
+        
+
+        
+        //VIDEO LAYER
+        layerVideo.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        layerVideo.anchorPoint = CGPointMake(0.0,0.0);
+        layerVideo.zPosition = 0;
+        
+        
+        //IMAGEN MAYA LAYER
+        layerMaya.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        layerMaya.anchorPoint = CGPointMake(0.0,0.0);
+        layerMaya.zPosition = 0;
+        
+        //IMAGEN AZTECA LAYER
+        layerAzteca.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
+        layerAzteca.zPosition = 0;
+        
+        //IMAGEN ZAPOTECA LAYER
+        layerZapoteca.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        layerZapoteca.anchorPoint = CGPointMake(0.0,0.0);
+        layerZapoteca.zPosition = 0;
+       
+        
+
+        
+        
+        
+        rotationAndPerspectiveTransformVIDEO.m11 = hvideo[0];
+        rotationAndPerspectiveTransformVIDEO.m12 = hvideo[3];
+        rotationAndPerspectiveTransformVIDEO.m14 = hvideo[6];
+        rotationAndPerspectiveTransformVIDEO.m21 = hvideo[1];
+        rotationAndPerspectiveTransformVIDEO.m22 = hvideo[4];
+        rotationAndPerspectiveTransformVIDEO.m24 = hvideo[7];
+        rotationAndPerspectiveTransformVIDEO.m41 = hvideo[2];
+        rotationAndPerspectiveTransformVIDEO.m42 = hvideo[5];
+        rotationAndPerspectiveTransformVIDEO.m44 = 1;
+        
+        rotationAndPerspectiveTransformMAYA.m11 = hmaya[0];
+        rotationAndPerspectiveTransformMAYA.m12 = hmaya[3];
+        rotationAndPerspectiveTransformMAYA.m14 = hmaya[6];
+        rotationAndPerspectiveTransformMAYA.m21 = hmaya[1];
+        rotationAndPerspectiveTransformMAYA.m22 = hmaya[4];
+        rotationAndPerspectiveTransformMAYA.m24 = hmaya[7];
+        rotationAndPerspectiveTransformMAYA.m41 = hmaya[2];
+        rotationAndPerspectiveTransformMAYA.m42 = hmaya[5];
+        rotationAndPerspectiveTransformMAYA.m44 = 1;
+        
+        rotationAndPerspectiveTransformAZTECA.m11 = hazteca[0];
+        rotationAndPerspectiveTransformAZTECA.m12 = hazteca[3];
+        rotationAndPerspectiveTransformAZTECA.m14 = hazteca[6];
+        rotationAndPerspectiveTransformAZTECA.m21 = hazteca[1];
+        rotationAndPerspectiveTransformAZTECA.m22 = hazteca[4];
+        rotationAndPerspectiveTransformAZTECA.m24 = hazteca[7];
+        rotationAndPerspectiveTransformAZTECA.m41 = hazteca[2];
+        rotationAndPerspectiveTransformAZTECA.m42 = hazteca[5];
+        rotationAndPerspectiveTransformAZTECA.m44 = 1;
+        
+        
+        
+        
+        
+        
+    }else{
+    
+        //VIDEO LAYER
+        layerVideo.frame = CGRectMake(100,100,0.00006,0.000006);
+        layerVideo.anchorPoint = CGPointMake(0.0,0.0);
+        layerVideo.zPosition = 0;
+        
+        
+//        //IMAGEN MAYA LAYER
+//        layerMaya.frame = CGRectMake(0,100,0.6,0.6);
+//        layerMaya.anchorPoint = CGPointMake(0.0,0.0);
+//        layerMaya.zPosition = 0;
+//        
+//        //IMAGEN AZTECA LAYER
+//        layerAzteca.frame = CGRectMake(190,0,0.6,0.6);
+//        layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
+//        layerAzteca.zPosition = 0;
+//        
+//        //IMAGEN ZAPOTECA LAYER
+//        layerZapoteca.frame = CGRectMake(0,0,6,6);
+//        layerZapoteca.anchorPoint = CGPointMake(0.0,0.0);
+//        layerZapoteca.zPosition = 0;
+        
+        extrinsecos[0][0] =Rotmodern[0][0];
+        extrinsecos[0][1] =Rotmodern[0][1];
+        extrinsecos[0][2] =Rotmodern[0][2];
+        extrinsecos[0][3] =Tras[0];
+        
+        extrinsecos[1][0] =Rotmodern[1][0];
+        extrinsecos[1][1] =Rotmodern[1][1];
+        extrinsecos[1][2] =Rotmodern[1][2];
+        extrinsecos[1][3] =Tras[1];;
+        
+        extrinsecos[2][0] =Rotmodern[2][0];
+        extrinsecos[2][1] =Rotmodern[2][1];
+        extrinsecos[2][2] =Rotmodern[2][2];
+        extrinsecos[2][3] =Tras[2];
+        
+        extrinsecos[3][0] =0;
+        extrinsecos[3][1] =0;
+        extrinsecos[3][2] =0;
+        extrinsecos[3][3] =1;
+        
+        SCALE_MATRIX_4X4(intrinsecos, wSize/480, intrinsecos);
+        MATRIX_PRODUCT_4X4(poseMatrix,intrinsecos,extrinsecos);
+        
+        rotationAndPerspectiveTransform.m11 = poseMatrix[0][0]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m12 = poseMatrix[0][1]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m13 = poseMatrix[0][2]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m14 = poseMatrix[0][3]/poseMatrix[3][3];
+        
+        rotationAndPerspectiveTransform.m21 = poseMatrix[1][0]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m22 = poseMatrix[1][1]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m23 = poseMatrix[1][2]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m24 = poseMatrix[1][3]/poseMatrix[3][3];
+        
+        rotationAndPerspectiveTransform.m31 = poseMatrix[2][0]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m32 = poseMatrix[2][1]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m33 = poseMatrix[2][2]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m34 = poseMatrix[2][3]/poseMatrix[3][3];
+        
+        rotationAndPerspectiveTransform.m41 = poseMatrix[3][0]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m42 = poseMatrix[3][1]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m43 = poseMatrix[3][2]/poseMatrix[3][3];
+        rotationAndPerspectiveTransform.m44 = 1;
+        
+        MAT_PRINT_4X4(poseMatrix);
+    
+    }
     
     
-    //IMAGEN MAYA LAYER
-    layerMaya.frame = CGRectMake(0,100,60,60);
-    layerMaya.anchorPoint = CGPointMake(0.0,0.0);
-    layerMaya.zPosition = 0;
-    
-    //IMAGEN AZTECA LAYER
-    layerAzteca.frame = CGRectMake(190,0,60,60);
-    layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
-    layerAzteca.zPosition = 0;
-    
-    //IMAGEN ZAPOTECA LAYER
-    layerZapoteca.frame = CGRectMake(0,50,60,60);
-    layerZapoteca.anchorPoint = CGPointMake(0.0,0.0);
-    layerZapoteca.zPosition = 0;
-    
-    
-    CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-    
-    rotationAndPerspectiveTransform.m11 = h[0];
-    rotationAndPerspectiveTransform.m12 = h[3];
-    rotationAndPerspectiveTransform.m14 = h[6];
-    rotationAndPerspectiveTransform.m21 = h[1];
-    rotationAndPerspectiveTransform.m22 = h[4];
-    rotationAndPerspectiveTransform.m24 = h[7];
-    rotationAndPerspectiveTransform.m41 = h[2];
-    rotationAndPerspectiveTransform.m42 = h[5];
-    rotationAndPerspectiveTransform.m44 = 1;
-    
-    theMovie.view.layer.transform=rotationAndPerspectiveTransform;
-    self.imagenViewMaya.layer.transform=rotationAndPerspectiveTransform;
-    self.imagenViewAzteca.layer.transform=rotationAndPerspectiveTransform;
-    self.imagenViewAzteca.layer.transform=rotationAndPerspectiveTransform;
+    theMovie.view.layer.transform=rotationAndPerspectiveTransformVIDEO;
+    self.imagenViewMaya.layer.transform=rotationAndPerspectiveTransformMAYA;
+    self.imagenViewAzteca.layer.transform=rotationAndPerspectiveTransformAZTECA;
 
     
     
@@ -569,7 +736,7 @@ int cantidad;
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(0, 0, 60, 60);
+    theMovie.view.frame = CGRectMake(0, 0, 60*1024/197,60*768/148);
     //theMovie.fullscreen=YES;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
@@ -582,7 +749,7 @@ int cantidad;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
-   // [theMovie play];
+    //[theMovie play];
     
 }
 
@@ -599,6 +766,36 @@ int cantidad;
     /*Reservamos memoria*/
     Rotmodern=(float**)malloc(3*sizeof(float*));
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
+    
+    poseMatrix=(float**)malloc(4*sizeof(float*));
+    for (i=0; i<4;i++) poseMatrix[i]=(float*)malloc(4*sizeof(float));
+    
+    intrinsecos=(float**)malloc(4*sizeof(float*));
+    for (i=0; i<4;i++) intrinsecos[i]=(float*)malloc(4*sizeof(float));
+    
+    intrinsecos[0][0]= 589.141;
+    intrinsecos[0][1]= 0;
+    intrinsecos[0][2]=240;
+    intrinsecos[0][3]= 0;
+    
+    intrinsecos[1][0]=0;
+    intrinsecos[1][1]=580.754;
+	intrinsecos[1][2]=180;
+    intrinsecos[1][3]=0;
+    
+    intrinsecos[2][0]=0;
+    intrinsecos[2][1]=0;
+    intrinsecos[2][2]=1;
+    intrinsecos[2][3]=0;
+    
+    intrinsecos[3][0]=0;
+    intrinsecos[3][1]=0;
+    intrinsecos[3][2]=0;
+    intrinsecos[3][3]=1;
+    
+    extrinsecos=(float**)malloc(4*sizeof(float*));
+    for (i=0; i<4;i++) extrinsecos[i]=(float*)malloc(4*sizeof(float));
+
     
     Tras=(float*)malloc(3*sizeof(float));
     
@@ -631,27 +828,112 @@ int cantidad;
     
     /*RESERVA MEMORIA PARA HOMOGRAFIA 2D: COMIENZO*/    
     //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
-    imagePoints3=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints3video=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints3video[i]=(float *)malloc(2 * sizeof(float));
+    //197×148 mm
+    //1024x768 px ipad
     
-    imagePoints3[0][0]=60;
-    imagePoints3[0][1]=60;
+    imagePoints3video[0][0]=(60)*1024/197;
+    imagePoints3video[0][1]=(60)*768/148;
     
-    imagePoints3[1][0]=60;
-    imagePoints3[1][1]=0;
+    imagePoints3video[1][0]=(60)*1024/197;
+    imagePoints3video[1][1]=(0)*768/148;
     
-    imagePoints3[2][0]=0;
-    imagePoints3[2][1]=0;
+    imagePoints3video[2][0]=(0)*1024/197;
+    imagePoints3video[2][1]=(0)*768/148;
     
-    imagePoints3[3][0]=0;
-    imagePoints3[3][1]=60;
+    imagePoints3video[3][0]=(0)*1024/197;
+    imagePoints3video[3][1]=(60)*768/148;
+    
+    
+    imagePoints3mayas=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints3mayas[i]=(float *)malloc(2 * sizeof(float));
+    //197×148 mm
+    //1024x768 px ipad
+    
+    imagePoints3mayas[0][0]=(60-190)*1024/197;
+    imagePoints3mayas[0][1]=(60-100)*768/148;
+    
+    imagePoints3mayas[1][0]=(60-190)*1024/197;
+    imagePoints3mayas[1][1]=(0-100)*768/148;
+    
+    imagePoints3mayas[2][0]=(0-190)*1024/197;
+    imagePoints3mayas[2][1]=(0-100)*768/148;
+    
+    imagePoints3mayas[3][0]=(0-190)*1024/197;
+    imagePoints3mayas[3][1]=(60-100)*768/148;
+    
+    imagePoints3aztecas=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints3aztecas[i]=(float *)malloc(2 * sizeof(float));
+    //197×148 mm
+    //1024x768 px ipad
+    
+    imagePoints3aztecas[0][0]=(60)*1024/197;
+    imagePoints3aztecas[0][1]=(60-100)*768/148;
+    
+    imagePoints3aztecas[1][0]=(60)*1024/197;
+    imagePoints3aztecas[1][1]=(0-100)*768/148;
+    
+    imagePoints3aztecas[2][0]=(0)*1024/197;
+    imagePoints3aztecas[2][1]=(0-100)*768/148;
+    
+    imagePoints3aztecas[3][0]=(0)*1024/197;
+    imagePoints3aztecas[3][1]=(60-100)*768/148;
     
     
     //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
-    imagePoints4=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints4[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints4=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints4[i]=(float *)malloc(2 * sizeof(float));
     
-    h=(double *)malloc(8 * sizeof(double));
+    imagePoints4Pro=(float **)malloc(12 * sizeof(float *));
+    for (i=0;i<12;i++) imagePoints4Pro[i]=(float *)malloc(2 * sizeof(float));
+    
+    
+    imagePoints3mayasPro=(float **)malloc(12 * sizeof(float *));
+    for (i=0;i<12;i++) imagePoints3mayasPro[i]=(float *)malloc(2 * sizeof(float));
+    //197×148 mm
+    //1024x768 px ipad
+    
+    imagePoints3mayasPro[0][0]=(60)*1024/197;
+    imagePoints3mayasPro[0][1]=(60)*768/148;
+    
+    imagePoints3mayasPro[1][0]=(600)*1024/197;
+    imagePoints3mayasPro[1][1]=(0)*768/148;
+    
+    imagePoints3mayasPro[2][0]=(0)*1024/197;
+    imagePoints3mayasPro[2][1]=(0)*768/148;
+    
+    imagePoints3mayasPro[3][0]=(0)*1024/197;
+    imagePoints3mayasPro[3][1]=(60)*768/148;
+/////
+    imagePoints3mayasPro[4][0]=(60)*1024/197;
+    imagePoints3mayasPro[4][1]=(60-100)*768/148;
+    
+    imagePoints3mayasPro[5][0]=(600)*1024/197;
+    imagePoints3mayasPro[5][1]=(0-100)*768/148;
+    
+    imagePoints3mayasPro[6][0]=(0)*1024/197;
+    imagePoints3mayasPro[6][1]=(0-100)*768/148;
+    
+    imagePoints3mayasPro[7][0]=(0)*1024/197;
+    imagePoints3mayasPro[7][1]=(60-100)*768/148;
+//////
+    imagePoints3mayasPro[8][0]=(60-190)*1024/197;
+    imagePoints3mayasPro[8][1]=(60)*768/148;
+    
+    imagePoints3mayasPro[9][0]=(60-190)*1024/197;
+    imagePoints3mayasPro[9][1]=(0)*768/148;
+    
+    imagePoints3mayasPro[10][0]=(0-190)*1024/197;
+    imagePoints3mayasPro[10][1]=(0)*768/148;
+    
+    imagePoints3mayasPro[11][0]=(0-190)*1024/197;
+    imagePoints3mayasPro[11][1]=(60)*768/148;
+    
+  
+    hmaya=(float *)malloc(8 * sizeof(float));
+    hazteca=(float *)malloc(8 * sizeof(float));
+    hvideo=(float *)malloc(8 * sizeof(float));
     /*RESERVA MEMORIA PARA HOMOGRAFIA 2D: FIN*/
     
     
@@ -676,6 +958,28 @@ int cantidad;
     
     /* END MARKER */
     
+    /*Reservo memoria para kalman*/
+    
+    measureNoise=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureNoise[k]=(float *)malloc(3 * sizeof(float));
+    
+    processNoise=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) processNoise[k]=(float *)malloc(3 * sizeof(float));
+    
+    stateEvolution=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) stateEvolution[k]=(float *)malloc(3 * sizeof(float));
+    
+    measureMatrix=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) measureMatrix[k]=(float *)malloc(3 * sizeof(float));
+    
+    errorMatrix=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) errorMatrix[k]=(float *)malloc(3 * sizeof(float));
+    
+    kalmanGain=(float **)malloc(3 * sizeof(float *));
+    for (int k=0;k<3;k++) kalmanGain[k]=(float *)malloc(3 * sizeof(float));
+    
+    states=(float *)malloc(3 * sizeof(float));
+    
    
     
 }
@@ -692,14 +996,13 @@ int cantidad;
     audioYvideo=true;
     timer=0;
     UIAlertView *alertWithOkButton;
-    UIAlertView *alertWithYesNoButtons;
     alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"Comenzar interacción mapaMAPI!"
                                                    message:@"Presione OK para comenzar" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
     [alertWithOkButton show];
     
-    
-    iPhone=true;
+    pose=false;
+    iPhone=false;
     
     if (iPhone) {
         wSize=480;

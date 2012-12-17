@@ -100,7 +100,7 @@ UITextField *text;
                 
                 CGContextStrokeRect(context, CGRectMake(cgesq1, cgesq2, 4, 4));
                 
-                [text release];
+                
                 
             }
             
@@ -128,27 +128,19 @@ UITextField *text;
             cgx2=self.segmentos_lsd[i*dim+2]*1024/480;
             cgy2=self.segmentos_lsd[i*dim+3]*768/360;
             
-            
+      
             
             CGContextSetRGBStrokeColor(context, 255, 255, 255, 1);
             puntos[0]=CGPointMake(cgx1,cgy1);
             puntos[1]=CGPointMake(cgx2,cgy2);
             CGContextStrokeLineSegments(context, puntos, 2);
             
-            // if (((cgx1==0)&&(cgy1==768))|| ((cgx2==0)&&(cgy2==768))) printf("%d \t %d\n",i,self.cantidadLsd);
-            printf("%d\n",self.cantidadLsd);
-            printf("%f\t %f \t %f\t %f\n",cgx1,cgy1,cgx2,cgy2);
+           // if (((cgx1==0)&&(cgy1==768))|| ((cgx2==0)&&(cgy2==768))) printf("%d \t %d\n",i,self.cantidadLsd);
+               printf("%d\n",self.cantidadLsd);
+                    printf("%f\t %f \t %f\t %f\n",cgx1,cgy1,cgx2,cgy2);
         }
-        
+
     }
-    
-    
-    cgrep1=esqRepro[0]/esqRepro[3];//*1024/(480*esqRepro[3]);
-    cgrep2=esqRepro[1]/esqRepro[3];//*768/(360*esqRepro[3]);
-    
-    
-    CGContextSetRGBStrokeColor(context, 0, 0,255, 1);
-    CGContextStrokeRect(context, CGRectMake(cgrep1, cgrep2, 4, 4));
     
 }
 

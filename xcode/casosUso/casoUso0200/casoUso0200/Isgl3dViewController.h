@@ -23,14 +23,16 @@
 #import "claseDibujar.h"
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
-    MPMoviePlayerController *theMovie;
+    MPMoviePlayerController *theMovieMaya;
+    MPMoviePlayerController *theMovieAzteca;
     
 }
 
 @property (readwrite, retain) IBOutlet UIImageView* videoView;
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
 
-@property (nonatomic, retain) MPMoviePlayerController *theMovie;
+@property (nonatomic, retain) MPMoviePlayerController *theMovieMaya;
+@property (nonatomic, retain) MPMoviePlayerController *theMovieAzteca;
 @property (readwrite, retain) IBOutlet claseDibujar *cgvista;
 
 @end

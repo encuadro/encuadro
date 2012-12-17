@@ -33,16 +33,21 @@
 @synthesize context = _context;
 @synthesize videoView = _videoView;
 @synthesize isgl3DView = _isgl3DView;
-@synthesize theMovie = _theMovie;
+@synthesize theMovieMaya = _theMovieMaya;
+@synthesize theMovieAzteca = _theMovieAzteca;
 @synthesize cgvista = _cgvista;
 
 //para DIBUJAR
 claseDibujar *cgvista;
+int wSize;
+int hSize;
+bool iPhone;
+double **imagePoints3mayas; //para hacer la CGAffineTransform
+double **imagePoints4;
+double **imagePoints3aztecas;
 
-double **imagePoints3; //para hacer la CGAffineTransform
-double **imagePoints4; 
-
-double *h;
+double *hmaya;
+double *hazteca;
 
 /*Variables para la imagen*/
 unsigned char* pixels;
@@ -81,6 +86,9 @@ double **Rotmodern;                                 ///modern coplanar
 double center[2]={240, 180};           ///modern coplanar
 bool verbose;
 double* luminancia;
+
+
+
 
 - (CIContext* ) context
 {
@@ -121,7 +129,7 @@ double* luminancia;
     
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:UIImageOrientationRight];
     
-    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:YES];
     
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
@@ -133,7 +141,52 @@ double* luminancia;
 
 - (void) setImage: (UIImage*) imagen
 {
+       
     self.videoView.image = imagen;
+
+
+//    /* DIBUJADO DE PUNTOS*/
+//    
+//    [cgvista removeFromSuperview];
+//    cgvista.corners=true;
+//    //cgvista.reproyected=true;
+//    cgvista.cantidadSegmentos = listFiltradaSize;
+//    cgvista.cantidadLsd = listSize;
+//    cgvista.esquinas = imagePoints;
+//
+//    double vec[4]={(190)*1024/197,0*768/148,0,1};
+//    double homo[4][4] = {       {h[0], h[1],  0, h[2]},
+//                                {h[3], h[4],  0, h[5]},
+//                                {0,      0,   1,   0},
+//                                {h[6], h[7],  0,   1}};
+//    
+//        //for (int i=0;i<NumberOfPoints;i++){
+//            MAT_DOT_VEC_4X4(esqRepro,homo,vec)
+//        //}
+//
+//    printf("ESQ REPRO\n");
+//    for (int i=0; i<4; i++) {
+//        printf("%f\t",esqRepro[i]);
+//        printf("\n");
+//    }
+//    
+//    printf("Vector h\n");
+//    for(int i=0;i<8;i++)
+//    {
+//        printf("%f\t",h[i]);
+//        printf("\n");
+//    }
+//
+//    
+//    [self.videoView addSubview:cgvista];
+//    
+//    cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+//    
+//    cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+//    
+//    [cgvista setNeedsDisplay];
+    
+    
     
     
     
@@ -253,9 +306,12 @@ double* luminancia;
             
         }
        // solveAffineTransformation(imagePoints, imagePoints3, h);
-        solveHomographie(imagePoints4, imagePoints3, h);
+        solveHomographie(imagePoints4, imagePoints3mayas, hmaya);
+        solveHomographie(imagePoints4, imagePoints3aztecas, hazteca);
     
-        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+        
+    
+        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovieAzteca waitUntilDone:NO];
         
         
 //        if (verbose){
@@ -355,56 +411,79 @@ double* luminancia;
     bool CGaffine=false;
     
     if (CGaffine) {
-      //  theMovie.view.frame = CGRectMake(imagePoints[6][0]*480/480, imagePoints[6][1]*320/360, 50, 50);
-        //  CGAffineTransform currentMatrix =  theMovie.view.transform;
-        //  CGAffineTransform translate = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
-        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]); 
-        CGAffineTransform affine = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
-        CGAffineTransform rotation = CGAffineTransformMake(h[0], h[3], h[1], h[4], 0, 0);
-        CGAffineTransform translation = CGAffineTransformMake(1, 0 , 0, 1, h[2], h[5]);
-        
-        //CGAffineTransform translate = CGAffineTransformMakeTranslation(200, 50);
-        // theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
-        //     theMovie.view.transform=newMatrix;
-        // theMovie.view.transform=translation;
-        theMovie.view.transform=rotation;
-       // theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
-       //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,imagePoints[6][0],imagePoints[6][1]); 
-        CGFloat x,y;
-        x=imagePoints[5][0]+imagePoints[6][0]+imagePoints[4][0]+imagePoints[7][0];
-        y=imagePoints[5][1]+imagePoints[6][1]+imagePoints[4][1]+imagePoints[7][1];
-        x=x*wSize/480;
-        y=y*hSize/360;
-        //  theMovie.view.frame.origin=CGPointMake(x,y);
-        [theMovie.view setCenter:CGPointMake(x/4, y/4)];
-        printf("imagePoints[5][0] %f",imagePoints[5][0]);
-        printf("imagePoints[6][0] %f",imagePoints[6][0]);
-        // theMovie.view.transform=newMatrix;
-        // theMovie.view.layer.transform=CATransform3DMakeAffineTransform(newMatrix);
-        //theMovie.view.frame=CGRectApplyAffineTransform(CGRectMake(10, 10, 50, 50), newMatrix);
-
+//      //  theMovie.view.frame = CGRectMake(imagePoints[6][0]*480/480, imagePoints[6][1]*320/360, 50, 50);
+//        //  CGAffineTransform currentMatrix =  theMovie.view.transform;
+//        //  CGAffineTransform translate = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+//        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]); 
+//        CGAffineTransform affine = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
+//        CGAffineTransform rotation = CGAffineTransformMake(h[0], h[3], h[1], h[4], 0, 0);
+//        CGAffineTransform translation = CGAffineTransformMake(1, 0 , 0, 1, h[2], h[5]);
+//        
+//        //CGAffineTransform translate = CGAffineTransformMakeTranslation(200, 50);
+//        // theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
+//        //     theMovie.view.transform=newMatrix;
+//        // theMovie.view.transform=translation;
+//        theMovie.view.transform=rotation;
+//       // theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
+//       //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,imagePoints[6][0],imagePoints[6][1]); 
+//        CGFloat x,y;
+//        x=imagePoints[5][0]+imagePoints[6][0]+imagePoints[4][0]+imagePoints[7][0];
+//        y=imagePoints[5][1]+imagePoints[6][1]+imagePoints[4][1]+imagePoints[7][1];
+//        x=x*wSize/480;
+//        y=y*hSize/360;
+//        //  theMovie.view.frame.origin=CGPointMake(x,y);
+//        [theMovie.view setCenter:CGPointMake(x/4, y/4)];
+//        printf("imagePoints[5][0] %f",imagePoints[5][0]);
+//        printf("imagePoints[6][0] %f",imagePoints[6][0]);
+//        // theMovie.view.transform=newMatrix;
+//        // theMovie.view.layer.transform=CATransform3DMakeAffineTransform(newMatrix);
+//        //theMovie.view.frame=CGRectApplyAffineTransform(CGRectMake(10, 10, 50, 50), newMatrix);
+//
     }else {
-        CALayer *layer = theMovie.view.layer;
+        CALayer *layerMaya = theMovieMaya.view.layer;
+        CALayer *layerAzteca = theMovieAzteca.view.layer;
         
-        layer.frame = CGRectMake(0,0,60,60);
-        layer.anchorPoint = CGPointMake(0.0,0.0);
-        layer.zPosition = 0;
+        
+        layerMaya.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        //layer.frame = CGRectMake(0,0,60,60);
+        layerMaya.anchorPoint = CGPointMake(0.0,0.0);
+        layerMaya.zPosition = 0;
+        
+        layerAzteca.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        //layer.frame = CGRectMake(0,0,60,60);
+        layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
+        layerAzteca.zPosition = 0;
        
         
-        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
+        CATransform3D rotationAndPerspectiveTransformMAYA = CATransform3DIdentity;
+        CATransform3D rotationAndPerspectiveTransformAZTECA = CATransform3DIdentity;
         
-        rotationAndPerspectiveTransform.m11 = h[0];
-        rotationAndPerspectiveTransform.m12 = h[3];
-        rotationAndPerspectiveTransform.m14 = h[6];
-        rotationAndPerspectiveTransform.m21 = h[1];
-        rotationAndPerspectiveTransform.m22 = h[4];
-        rotationAndPerspectiveTransform.m24 = h[7];
-        rotationAndPerspectiveTransform.m41 = h[2];
-        rotationAndPerspectiveTransform.m42 = h[5];
-        rotationAndPerspectiveTransform.m44 = 1;
         
-        theMovie.view.layer.transform=rotationAndPerspectiveTransform;
-    }   
+        rotationAndPerspectiveTransformMAYA.m11 = hmaya[0];
+        rotationAndPerspectiveTransformMAYA.m12 = hmaya[3];
+        rotationAndPerspectiveTransformMAYA.m14 = hmaya[6];
+        rotationAndPerspectiveTransformMAYA.m21 = hmaya[1];
+        rotationAndPerspectiveTransformMAYA.m22 = hmaya[4];
+        rotationAndPerspectiveTransformMAYA.m24 = hmaya[7];
+        rotationAndPerspectiveTransformMAYA.m41 = hmaya[2];
+        rotationAndPerspectiveTransformMAYA.m42 = hmaya[5];
+        rotationAndPerspectiveTransformMAYA.m44 = 1;
+        
+        rotationAndPerspectiveTransformAZTECA.m11 = hazteca[0];
+        rotationAndPerspectiveTransformAZTECA.m12 = hazteca[3];
+        rotationAndPerspectiveTransformAZTECA.m14 = hazteca[6];
+        rotationAndPerspectiveTransformAZTECA.m21 = hazteca[1];
+        rotationAndPerspectiveTransformAZTECA.m22 = hazteca[4];
+        rotationAndPerspectiveTransformAZTECA.m24 = hazteca[7];
+        rotationAndPerspectiveTransformAZTECA.m41 = hazteca[2];
+        rotationAndPerspectiveTransformAZTECA.m42 = hazteca[5];
+        rotationAndPerspectiveTransformAZTECA.m44 = 1;
+        
+
+        theMovieMaya.view.layer.transform=rotationAndPerspectiveTransformMAYA;
+        theMovieAzteca.view.layer.transform=rotationAndPerspectiveTransformAZTECA;
+
+}   
    
 
 
@@ -412,25 +491,49 @@ double* luminancia;
 -(void) desplegarVideo{
 
     /////////viendo commit
+
+    
     
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
-    theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    theMovieMaya = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(0, 0, 60, 60);
+    theMovieMaya.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
     //theMovie.fullscreen=YES;
-    theMovie.controlStyle=MPMovieControlStyleNone;
+    theMovieMaya.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
-    theMovie.scalingMode=MPMovieScalingModeFill;
+    theMovieMaya.scalingMode=MPMovieScalingModeFill;
     
-    [self.view addSubview:theMovie.view];
+    [self.view addSubview:theMovieMaya.view];
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
-    [theMovie play];
+    //[theMovieMaya play];
+    
+    
+    
+    
+    theMovieAzteca = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    //Place it in subview, else it won’t work
+    theMovieAzteca.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
+    //theMovie.fullscreen=YES;
+    theMovieAzteca.controlStyle=MPMovieControlStyleNone;
+    //theMovie.view.contentMode=UIViewContentModeScaleToFill;
+    theMovieAzteca.scalingMode=MPMovieScalingModeFill;
+    
+    [self.view addSubview:theMovieAzteca.view];
+    //Resize window – a bit more practical
+//    UIWindow *moviePlayerWindow = nil;
+//    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
+    //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+    // Play the movie.
+    //[theMovieAzteca play];
+    
+    
+    
 
 }
 
@@ -461,27 +564,47 @@ double* luminancia;
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(double *)malloc(2 * sizeof(double));
     
     //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
-    imagePoints3=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints3mayas=(double **)malloc(4 * sizeof(double *));
+    for (i=0;i<4;i++) imagePoints3mayas[i]=(double *)malloc(2 * sizeof(double));
+    //197×148 mm
+    //1024x768 px ipad
     
-    imagePoints3[0][0]=60;
-    imagePoints3[0][1]=60;
+    imagePoints3mayas[0][0]=(60-190)*1024/197;
+    imagePoints3mayas[0][1]=(60-100)*768/148;
     
-    imagePoints3[1][0]=60;
-    imagePoints3[1][1]=0;
+    imagePoints3mayas[1][0]=(60-190)*1024/197;
+    imagePoints3mayas[1][1]=(0-100)*768/148;
     
-    imagePoints3[2][0]=0;
-    imagePoints3[2][1]=0;
+    imagePoints3mayas[2][0]=(0-190)*1024/197;
+    imagePoints3mayas[2][1]=(0-100)*768/148;
     
-    imagePoints3[3][0]=0;
-    imagePoints3[3][1]=60;
+    imagePoints3mayas[3][0]=(0-190)*1024/197;
+    imagePoints3mayas[3][1]=(60-100)*768/148;
+    
+    imagePoints3aztecas=(double **)malloc(4 * sizeof(double *));
+    for (i=0;i<4;i++) imagePoints3aztecas[i]=(double *)malloc(2 * sizeof(double));
+    //197×148 mm
+    //1024x768 px ipad
+    
+    imagePoints3aztecas[0][0]=(60)*1024/197;
+    imagePoints3aztecas[0][1]=(60-100)*768/148;
+    
+    imagePoints3aztecas[1][0]=(60)*1024/197;
+    imagePoints3aztecas[1][1]=(0-100)*768/148;
+    
+    imagePoints3aztecas[2][0]=(0)*1024/197;
+    imagePoints3aztecas[2][1]=(0-100)*768/148;
+    
+    imagePoints3aztecas[3][0]=(0)*1024/197;
+    imagePoints3aztecas[3][1]=(60-100)*768/148;
     
     
     //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
     imagePoints4=(double **)malloc(4 * sizeof(double *));
     for (i=0;i<4;i++) imagePoints4[i]=(double *)malloc(2 * sizeof(double));
     
-    h=(double *)malloc(8 * sizeof(double));
+    hmaya=(double *)malloc(8 * sizeof(double));
+    hazteca=(double *)malloc(8 * sizeof(double));
    // for (i=0;i<8;i++) h[i]=(double *)malloc(sizeof(double));
     
     

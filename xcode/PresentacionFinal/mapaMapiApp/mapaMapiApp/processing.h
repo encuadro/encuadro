@@ -14,6 +14,7 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
+#include "svd.h"
 
 /*--------------------------------------Definiciones de tipos-------------------------------------*/
 typedef struct image_float_s
@@ -50,10 +51,11 @@ image_float gaussian_sampler( image_float in, float scale, float sigma_scale );
 
 
 /*--------------------------------------Funciones para homografia 2D-------------------------------------*/
-void solveHomographie(double **imgPts, double **imgPts2, double *h);
-void matrixProduct(double ** A, int rowA, double ** B, int colB, double ** C);
-void matrixVectorProduct(double ** A, int rowA, double* B, double* C);
-void solveAffineTransformation(double **imgPts, double **imgPts2, double *h);
+void solveHomographie(float **imgPts, float **imgPts2, float *h);
+void solveHomographiePro(float **imgPts, float **imgPts2, float *h);
+void matrixProduct(float ** A, int rowA, float ** B, int colB, float ** C);
+void matrixVectorProduct(float ** A, int rowA, float* B, float* C);
+void solveAffineTransformation(float **imgPts, float **imgPts2, float *h);
 
 
 

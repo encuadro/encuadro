@@ -130,51 +130,51 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
     
 //Resuelvo sistema A*h=imgPts2mod 
     PseudoInverseGen(A,8,8,Ainv);
-    printf("resultado inside matrixVectorProduct\n");
+   // printf("resultado inside matrixVectorProduct\n");
     matrixVectorProduct(Ainv,8,imgPtsmod,h);
 
     
-//PRINTS     
-    printf("PUNTOS IMAGE POINTS\n");
-    printf("VECTOR imgPts\n");
-    for(int i=0;i<4;i++)
-    {
-        printf("%f\t",imgPts[i][0]);
-        printf("%f\t",imgPts[i][1]);
-        printf("\n");
-    }
-     
-     printf("PUNTOS INVENTADOS\n");
-    for(int i=0;i<4;i++)
-    {
-        printf("%f\t",imgPts2[i][0]);
-        printf("%f\t",imgPts2[i][1]);
-        printf("\n");
-    }
-    
-    printf("Vector imgPtsmod\n");
-    for(int i=0;i<8;i++)
-    {
-        printf("%f\t",imgPtsmod[i]);
-        printf("\n");
-    }
-    
-    printf("MATRIZ A\n");
-    for(int i=0;i<8;i++)
-    {
-        for(j=0;j<8;j++)
-            printf("%f\t",A[i][j]);
-        printf("\n");
-    }
-    
-    
-    printf("Vector h\n");
-    for(int i=0;i<8;i++)
-    {
-        printf("%f\t",h[i]);
-        printf("\n");
-    }
-    printf("FIN PRINT\n");
+////PRINTS     
+//    printf("PUNTOS IMAGE POINTS\n");
+//    printf("VECTOR imgPts\n");
+//    for(int i=0;i<4;i++)
+//    {
+//        printf("%f\t",imgPts[i][0]);
+//        printf("%f\t",imgPts[i][1]);
+//        printf("\n");
+//    }
+//     
+//     printf("PUNTOS INVENTADOS\n");
+//    for(int i=0;i<4;i++)
+//    {
+//        printf("%f\t",imgPts2[i][0]);
+//        printf("%f\t",imgPts2[i][1]);
+//        printf("\n");
+//    }
+//    
+//    printf("Vector imgPtsmod\n");
+//    for(int i=0;i<8;i++)
+//    {
+//        printf("%f\t",imgPtsmod[i]);
+//        printf("\n");
+//    }
+//    
+//    printf("MATRIZ A\n");
+//    for(int i=0;i<8;i++)
+//    {
+//        for(j=0;j<8;j++)
+//            printf("%f\t",A[i][j]);
+//        printf("\n");
+//    }
+//    
+//    
+//    printf("Vector h\n");
+//    for(int i=0;i<8;i++)
+//    {
+//        printf("%f\t",h[i]);
+//        printf("\n");
+//    }
+//    printf("FIN PRINT\n");
     
     
     
