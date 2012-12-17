@@ -34,7 +34,7 @@ void kalman_update(kalman_state* state, float measurement)
     state->p = (1 - state->k) * state->p;
 }
 
-kalman_state_n kalman_init_3x3(float** q, float** r, float** p, float** k, float* intial_value){
+kalman_state_n kalman_init_n(float** q, float** r, float** p, float** k, float* intial_value){
     kalman_state_n result;
     result.q = q;
     result.r = r;

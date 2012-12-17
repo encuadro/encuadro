@@ -288,7 +288,7 @@ kalman_state_n state;
           
                         SCALE_MATRIX_3X3(measureNoise, 10, measureNoise);
                         
-                        state = kalman_init_3x3(processNoise, measureNoise, errorMatrix, kalmanGain, angles1);
+                        state = kalman_init_n(processNoise, measureNoise, errorMatrix, kalmanGain, angles1);
                         
                         xState = kalman_init(1, 0.2, 1, Tras[0]);
                         yState = kalman_init(1, 0.2, 1, Tras[1]);
@@ -311,7 +311,6 @@ kalman_state_n state;
                     
                 }
                 Euler2Matrix(angles1, Rotmodern);
-                // printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
             
             
@@ -321,26 +320,6 @@ kalman_state_n state;
         
         
         /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
-        
-//        
-//        rotacion[0]=Rotmodern[0][0];
-//        rotacion[1]=Rotmodern[0][1];
-//        rotacion[2]=Rotmodern[0][2];
-//        rotacion[3]=Rotmodern[1][0];
-//        rotacion[4]=Rotmodern[1][1];
-//        rotacion[5]=Rotmodern[1][2];
-//        rotacion[6]=Rotmodern[2][0];
-//        rotacion[7]=Rotmodern[2][1];
-//        rotacion[8]=Rotmodern[2][2];
-        
-        
-        
-        
-        //            printf("\nPrimera solucion\n");
-        //            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-        //            printf("\nSegunda solicion\n");
-        //            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
-        
         
         self.isgl3DView.rotacion=Rotmodern;
         [self.isgl3DView setTraslacion:Tras];
