@@ -372,7 +372,8 @@ kalman_state_3 state;
      
          // solveAffineTransformation(imagePoints, imagePoints3, h);
          solveHomographie(imagePoints4, imagePoints3video, hvideo);
-         solveHomographiePro(imagePoints4Pro, imagePoints3mayasPro, hmaya);
+         solveHomographie(imagePoints4, imagePoints3mayas, hmaya);
+        // solveHomographiePro(imagePoints4Pro, imagePoints3mayasPro, hmaya);
          solveHomographie(imagePoints4, imagePoints3aztecas, hazteca);
          
          [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
