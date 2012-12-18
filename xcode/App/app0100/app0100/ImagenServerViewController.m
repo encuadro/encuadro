@@ -83,7 +83,7 @@
     /*
      now lets create the body of the post
      */
-    NSLog(room);
+    NSLog(@"%@",room);
     
     NSString* message = @"Content-Disposition: form-data; name=\"userfile\"; filename=\"";
     message = [message stringByAppendingString:room];
@@ -100,16 +100,20 @@
     [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];//NSUTF8StringEncoding
     
         
-    
+    NSLog(@"ABOUT TO REQUEST");
     
     // setting the body of the post to the reqeust
     [request setHTTPBody:body];
-    
+    NSLog(@"ABOUT TO REQUEST A");
     // now lets make the connection to the web
-    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
     
-    NSLog(returnString);
+    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    
+    NSLog(@"ABOUT TO REQUEST B");
+    returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    NSLog(@"ABOUT TO REQUEST C ");
+    NSLog(@"%@",returnString);
+    NSLog(@"ALREADY RETURN D");
     
     
     // [self.image setImage:imagenView.image];

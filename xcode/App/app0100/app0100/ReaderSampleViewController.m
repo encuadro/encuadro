@@ -30,8 +30,8 @@
                        to: 0];
     
     // present and release the controller
-    [self presentModalViewController: reader animated: YES];
-    
+    //[self presentModalViewController: reader animated: YES];
+    [self presentViewController:reader animated:YES completion:nil];
 
    // [reader release];
         
@@ -75,7 +75,7 @@
 {
     
 
-    
+    NSLog(@"IMAGE PICKER");
     // ADD: get the decode results
     id<NSFastEnumeration> results = [info objectForKey: ZBarReaderControllerResults];
     ZBarSymbol *symbol = nil;
@@ -84,13 +84,13 @@
 
                break;
     
-   
+    NSLog(@"IMAGE BREAK");
     
     //Aca vendria la busqueda en base de datos del texto del QR
 //
     
     NSString *string=symbol.data;
-
+ NSLog(@"IMAGE SYMBOL");
     if ([string rangeOfString:@"BLANES"].location != NSNotFound) {
         //zona BLANES
 
@@ -128,6 +128,7 @@
         opcionAutor=0;
         room=@"noroom";
         cad=@"Blanes_sraCarlota.jpg";
+         NSLog(@"IMAGE NI NI");
 
     }
     
@@ -135,9 +136,9 @@
       
     // EXAMPLE: do something useful with the barcode image
     //resultImage.image = [info objectForKey: UIImagePickerControllerOriginalImage];
-
+     NSLog(@"IMAGE PHOTO");
     UIImage *cuadroPhoto = [UIImage imageNamed:cad];
-    
+     NSLog(@"IMAGE CUADROPHOTO");
     resultImage.image = cuadroPhoto;
     
     UIAlertView *alertWithOkButton;
@@ -150,10 +151,10 @@
     
 
     // ADD: dismiss the controller (NB dismiss from the *reader*!)
-    [reader dismissModalViewControllerAnimated: YES];
+    [reader dismissViewControllerAnimated:YES completion:nil];
     
     
-  
+    
     NSLog(@"opcionAutor en picker es %d",opcionAutor);
     
     [reader release];

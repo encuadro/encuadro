@@ -307,11 +307,14 @@ double* luminancia;
         }
        // solveAffineTransformation(imagePoints, imagePoints3, h);
         solveHomographie(imagePoints4, imagePoints3mayas, hmaya);
-        solveHomographie(imagePoints4, imagePoints3aztecas, hazteca);
+        if (azteca) {
+             solveHomographie(imagePoints4, imagePoints3aztecas, hazteca);
+        }
+       
     
         
     
-        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovieAzteca waitUntilDone:NO];
+        [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovieMaya waitUntilDone:NO];
         
         
 //        if (verbose){
@@ -440,25 +443,15 @@ double* luminancia;
 //        //theMovie.view.frame=CGRectApplyAffineTransform(CGRectMake(10, 10, 50, 50), newMatrix);
 //
     }else {
+        
+        
+        
         CALayer *layerMaya = theMovieMaya.view.layer;
-        CALayer *layerAzteca = theMovieAzteca.view.layer;
-        
-        
         layerMaya.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
         //layer.frame = CGRectMake(0,0,60,60);
         layerMaya.anchorPoint = CGPointMake(0.0,0.0);
         layerMaya.zPosition = 0;
-        
-        layerAzteca.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
-        //layer.frame = CGRectMake(0,0,60,60);
-        layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
-        layerAzteca.zPosition = 0;
-       
-        
         CATransform3D rotationAndPerspectiveTransformMAYA = CATransform3DIdentity;
-        CATransform3D rotationAndPerspectiveTransformAZTECA = CATransform3DIdentity;
-        
-        
         rotationAndPerspectiveTransformMAYA.m11 = hmaya[0];
         rotationAndPerspectiveTransformMAYA.m12 = hmaya[3];
         rotationAndPerspectiveTransformMAYA.m14 = hmaya[6];
@@ -468,7 +461,17 @@ double* luminancia;
         rotationAndPerspectiveTransformMAYA.m41 = hmaya[2];
         rotationAndPerspectiveTransformMAYA.m42 = hmaya[5];
         rotationAndPerspectiveTransformMAYA.m44 = 1;
+        theMovieMaya.view.layer.transform=rotationAndPerspectiveTransformMAYA;
         
+        
+        if(azteca){
+        CALayer *layerAzteca = theMovieAzteca.view.layer;
+        layerAzteca.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        //layer.frame = CGRectMake(0,0,60,60);
+        layerAzteca.anchorPoint = CGPointMake(0.0,0.0);
+        layerAzteca.zPosition = 0;
+        
+        CATransform3D rotationAndPerspectiveTransformAZTECA = CATransform3DIdentity;
         rotationAndPerspectiveTransformAZTECA.m11 = hazteca[0];
         rotationAndPerspectiveTransformAZTECA.m12 = hazteca[3];
         rotationAndPerspectiveTransformAZTECA.m14 = hazteca[6];
@@ -478,12 +481,10 @@ double* luminancia;
         rotationAndPerspectiveTransformAZTECA.m41 = hazteca[2];
         rotationAndPerspectiveTransformAZTECA.m42 = hazteca[5];
         rotationAndPerspectiveTransformAZTECA.m44 = 1;
-        
-
-        theMovieMaya.view.layer.transform=rotationAndPerspectiveTransformMAYA;
         theMovieAzteca.view.layer.transform=rotationAndPerspectiveTransformAZTECA;
+        }
 
-}   
+}
    
 
 
@@ -511,11 +512,11 @@ double* luminancia;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
-    //[theMovieMaya play];
+    [theMovieMaya play];
     
     
     
-    
+    if (azteca){
     theMovieAzteca = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
     theMovieAzteca.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
@@ -530,8 +531,8 @@ double* luminancia;
 //    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
-    //[theMovieAzteca play];
-    
+    [theMovieAzteca play];
+    }
     
     
 
@@ -569,33 +570,33 @@ double* luminancia;
     //197×148 mm
     //1024x768 px ipad
     
-    imagePoints3mayas[0][0]=(60-190)*1024/197;
-    imagePoints3mayas[0][1]=(60-100)*768/148;
+    imagePoints3mayas[0][0]=(60)*1024/197;
+    imagePoints3mayas[0][1]=(60)*768/148;
     
-    imagePoints3mayas[1][0]=(60-190)*1024/197;
-    imagePoints3mayas[1][1]=(0-100)*768/148;
+    imagePoints3mayas[1][0]=(60)*1024/197;
+    imagePoints3mayas[1][1]=(0)*768/148;
     
-    imagePoints3mayas[2][0]=(0-190)*1024/197;
-    imagePoints3mayas[2][1]=(0-100)*768/148;
+    imagePoints3mayas[2][0]=(0)*1024/197;
+    imagePoints3mayas[2][1]=(0)*768/148;
     
-    imagePoints3mayas[3][0]=(0-190)*1024/197;
-    imagePoints3mayas[3][1]=(60-100)*768/148;
+    imagePoints3mayas[3][0]=(0)*1024/197;
+    imagePoints3mayas[3][1]=(60)*768/148;
     
     imagePoints3aztecas=(double **)malloc(4 * sizeof(double *));
     for (i=0;i<4;i++) imagePoints3aztecas[i]=(double *)malloc(2 * sizeof(double));
     //197×148 mm
     //1024x768 px ipad
     
-    imagePoints3aztecas[0][0]=(60)*1024/197;
+    imagePoints3aztecas[0][0]=(60-190)*1024/197;
     imagePoints3aztecas[0][1]=(60-100)*768/148;
     
-    imagePoints3aztecas[1][0]=(60)*1024/197;
+    imagePoints3aztecas[1][0]=(60-190)*1024/197;
     imagePoints3aztecas[1][1]=(0-100)*768/148;
     
-    imagePoints3aztecas[2][0]=(0)*1024/197;
+    imagePoints3aztecas[2][0]=(0-190)*1024/197;
     imagePoints3aztecas[2][1]=(0-100)*768/148;
     
-    imagePoints3aztecas[3][0]=(0)*1024/197;
+    imagePoints3aztecas[3][0]=(0-190)*1024/197;
     imagePoints3aztecas[3][1]=(60-100)*768/148;
     
     

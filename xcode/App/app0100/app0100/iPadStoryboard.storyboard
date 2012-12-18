@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63b" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="Su1-S5-Qlo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="Su1-S5-Qlo">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
@@ -202,6 +202,12 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="viejoQR4.gif" translatesAutoresizingMaskIntoConstraints="NO" id="3aD-uM-MKc">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="163" id="H3Q-bN-SeA"/>
+                                    <constraint firstAttribute="height" constant="131" id="iE0-Um-Jr7"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -209,11 +215,13 @@
                             <constraint firstItem="RUG-Sf-pcd" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="38" id="BUu-hS-H4x"/>
                             <constraint firstItem="RUG-Sf-pcd" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" constant="36" id="G4S-VI-SLE"/>
                             <constraint firstItem="cwX-04-MqK" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="267" id="GcX-5V-ebD"/>
+                            <constraint firstAttribute="trailing" secondItem="3aD-uM-MKc" secondAttribute="trailing" constant="190" id="KVB-I9-0mq"/>
                             <constraint firstAttribute="bottom" secondItem="73J-Po-kgo" secondAttribute="bottom" constant="9" id="LRV-fz-Nbs"/>
                             <constraint firstItem="73J-Po-kgo" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" type="default" id="NwV-X0-WQd"/>
                             <constraint firstAttribute="trailing" secondItem="zKj-CT-793" secondAttribute="trailing" constant="101" id="WqP-LC-Rwh"/>
                             <constraint firstItem="zKj-CT-793" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="326" id="aIc-Ij-Ht9"/>
-                            <constraint firstAttribute="trailing" secondItem="cwX-04-MqK" secondAttribute="trailing" constant="242" id="fQH-Me-hBQ"/>
+                            <constraint firstItem="3aD-uM-MKc" firstAttribute="centerX" secondItem="cwX-04-MqK" secondAttribute="centerX" type="default" id="g7G-xx-VgK"/>
+                            <constraint firstItem="3aD-uM-MKc" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="98" id="ndk-zw-uc8"/>
                             <constraint firstItem="pX9-1Z-lZe" firstAttribute="top" secondItem="gbu-gT-wZm" secondAttribute="top" constant="-35" id="rkA-dX-vdR"/>
                             <constraint firstItem="pX9-1Z-lZe" firstAttribute="leading" secondItem="gbu-gT-wZm" secondAttribute="leading" constant="10" id="x2e-Ti-T2S"/>
                         </constraints>
@@ -221,6 +229,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="QR Detection" id="JmP-Gb-Xo2"/>
                     <connections>
+                        <outlet property="backround" destination="3aD-uM-MKc" id="eCe-wU-UTI"/>
                         <outlet property="resultImage" destination="RUG-Sf-pcd" id="K16-px-BeS"/>
                         <outlet property="resultText" destination="zKj-CT-793" id="IfP-uJ-7Q0"/>
                     </connections>
@@ -247,7 +256,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="P7g-iE-k9L" kind="push" id="QCp-lG-Puk"/>
+                                    <segue destination="P7g-iE-k9L" kind="push" identifier="Detalle2" id="QCp-lG-Puk"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HWF-zu-vRh">
@@ -299,14 +308,23 @@
                     <view key="view" contentMode="scaleToFill" id="VoM-pJ-j3P">
                         <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="AR_sample.jpeg" translatesAutoresizingMaskIntoConstraints="NO" id="KZt-Rr-baW"/>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="KZt-Rr-baW" firstAttribute="leading" secondItem="VoM-pJ-j3P" secondAttribute="leading" type="default" id="9yW-dw-wkH"/>
+                            <constraint firstItem="KZt-Rr-baW" firstAttribute="top" secondItem="VoM-pJ-j3P" secondAttribute="top" type="default" id="Jsz-5G-eCc"/>
+                            <constraint firstItem="KZt-Rr-baW" firstAttribute="bottom" secondItem="VoM-pJ-j3P" secondAttribute="bottom" type="default" id="Y0R-cE-RMx"/>
+                            <constraint firstItem="KZt-Rr-baW" firstAttribute="trailing" secondItem="VoM-pJ-j3P" secondAttribute="trailing" type="default" id="jdI-H9-hev"/>
+                        </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
                     <navigationItem key="navigationItem" title="Augmented Reality" id="Kba-xm-faH"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZyP-iF-1aR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3926" y="-69"/>
+            <point key="canvasLocation" x="3954" y="-69"/>
         </scene>
         <!--Obra Completa View Controller - Detalle-->
         <scene sceneID="dcO-PC-dJG">
@@ -367,11 +385,18 @@
                                     <constraint firstAttribute="height" constant="449" id="lLn-Q7-3sg"/>
                                 </constraints>
                             </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="viejoQR4.gif" translatesAutoresizingMaskIntoConstraints="NO" id="06U-o3-3Ig">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="159" id="WXV-1i-7wI"/>
+                                    <constraint firstAttribute="height" constant="128" id="bM3-9r-lM5"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="z00-ef-ddZ" firstAttribute="top" secondItem="Ugt-az-JZn" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="1BS-IM-BPT"/>
                             <constraint firstItem="z00-ef-ddZ" firstAttribute="leading" secondItem="Ugt-az-JZn" secondAttribute="leading" type="default" id="1rZ-6D-FNO"/>
+                            <constraint firstItem="06U-o3-3Ig" firstAttribute="leading" secondItem="cqo-TS-zxt" secondAttribute="leading" constant="696" id="8ep-Ia-KbM"/>
                             <constraint firstItem="ygl-zF-TKZ" firstAttribute="centerX" secondItem="cqo-TS-zxt" secondAttribute="centerX" type="default" id="Ae9-2S-jOf"/>
                             <constraint firstItem="tgx-H5-aT2" firstAttribute="leading" secondItem="taT-U1-kxM" secondAttribute="leading" type="default" id="KoX-ll-niG"/>
                             <constraint firstItem="tgx-H5-aT2" firstAttribute="top" secondItem="ygl-zF-TKZ" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="NQp-hh-Bac"/>
@@ -380,6 +405,7 @@
                             <constraint firstItem="tgx-H5-aT2" firstAttribute="leading" secondItem="ygl-zF-TKZ" secondAttribute="leading" type="default" id="W4J-YS-wMe"/>
                             <constraint firstAttribute="trailing" secondItem="Ugt-az-JZn" secondAttribute="trailing" constant="45" id="fAh-xz-CiU"/>
                             <constraint firstItem="ygl-zF-TKZ" firstAttribute="top" secondItem="cqo-TS-zxt" secondAttribute="top" constant="45" id="qav-Rb-48I"/>
+                            <constraint firstItem="06U-o3-3Ig" firstAttribute="top" secondItem="cqo-TS-zxt" secondAttribute="top" constant="581" id="qjn-D8-a4X"/>
                             <constraint firstAttribute="bottom" secondItem="taT-U1-kxM" secondAttribute="bottom" constant="86" id="u6J-ID-Rb3"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -390,11 +416,26 @@
                         <outlet property="detalle" destination="taT-U1-kxM" id="Jgf-pu-5Eu"/>
                         <outlet property="imagenObra" destination="ygl-zF-TKZ" id="gjH-Fn-5Dl"/>
                         <outlet property="start" destination="Ugt-az-JZn" id="bGD-co-yJZ"/>
+                        <outlet property="upsi" destination="06U-o3-3Ig" id="XF0-NE-8Tg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BEH-Oz-TeL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2640" y="-69"/>
+            <point key="canvasLocation" x="2634" y="24"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ycK-Xn-YnR">
+            <objects>
+                <viewController id="d5p-jH-QH9" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CCZ-bq-6Hm">
+                        <rect key="frame" x="0.0" y="20" width="768" height="1004"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uqJ-9e-23x" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3496" y="914"/>
         </scene>
         <!--Navigation View Controller-->
         <scene sceneID="bLw-vm-OvD">
@@ -488,9 +529,88 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AR_sample.jpeg" width="642" height="458"/>
         <image name="Default281x280.png" width="281" height="280"/>
         <image name="qrcode_BLANES.png" width="320" height="320"/>
+        <image name="viejoQR4.gif" width="257" height="196"/>
     </resources>
+    <classes>
+        <class className="AutorTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutorTableViewController.h"/>
+        </class>
+        <class className="CuadroTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="autorLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="cuadroImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="obraLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="CuadroTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewController.h"/>
+        </class>
+        <class className="ImagenServerViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImagenServerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="animate:"/>
+                <relationship kind="action" name="pressed:"/>
+                <relationship kind="action" name="stop:"/>
+                <relationship kind="action" name="tomarFoto:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imagenView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mensaje" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="read" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tomarFoto" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="url" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="InicioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InicioViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="NavigationViewController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavigationViewController.h"/>
+        </class>
+        <class className="ObraCompletaViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ObraCompletaViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="outlet" name="autor" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="detalle" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="imagenObra" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mano1" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mano4" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="obra" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="upsi" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ReaderSampleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReaderSampleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="action" name="scanButtonTapped"/>
+                <relationship kind="outlet" name="backround" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="resultImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="resultText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="site" candidateClass="NSString"/>
+            </relationships>
+        </class>
+        <class className="VistaViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VistaViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="TWeet:"/>
+                <relationship kind="outlet" name="backround" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

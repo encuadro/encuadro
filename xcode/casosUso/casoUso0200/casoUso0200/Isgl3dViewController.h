@@ -21,7 +21,7 @@
 #import <stdlib.h>
 #import "configuration.h"
 #import "claseDibujar.h"
-
+bool azteca;
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     MPMoviePlayerController *theMovieMaya;
     MPMoviePlayerController *theMovieAzteca;
