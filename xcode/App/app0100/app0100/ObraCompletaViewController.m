@@ -282,7 +282,8 @@
         [segue destinationViewController];
         
         //falta ver como asignar el ARidObra
-       ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
+     if (manual==true) {  ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
+     }
     
     }
 }

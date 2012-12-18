@@ -128,7 +128,7 @@
         opcionAutor=0;
         room=@"noroom";
         cad=@"Blanes_sraCarlota.jpg";
-         NSLog(@"IMAGE NI NI");
+         
 
     }
     
@@ -149,15 +149,16 @@
     [alertWithOkButton show];
     [alertWithOkButton release];
     
-
+NSLog(@"IMAGE ANTES");
     // ADD: dismiss the controller (NB dismiss from the *reader*!)
     [reader dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"IMAGE DESPUES");
     
     
     
     NSLog(@"opcionAutor en picker es %d",opcionAutor);
     
-    [reader release];
+   // [reader release];
     
 }
 

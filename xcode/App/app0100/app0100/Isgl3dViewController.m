@@ -869,7 +869,7 @@ double *h;
         self.hSize=768;
     }
     if (self.videoPlayer) {
-        [self desplegarVideo];
+        //[self desplegarVideo];
     }
     orientation=UIImageOrientationUp;
     
