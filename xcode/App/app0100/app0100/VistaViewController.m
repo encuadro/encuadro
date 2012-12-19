@@ -174,7 +174,8 @@
                           delay:0.6
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
-                         backround.transform = CGAffineTransformMakeScale(20,20);
+                         self.backround.transform = CGAffineTransformMakeScale(20,20);
+                         
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
@@ -327,11 +328,6 @@ _button=nil;
     NSLog(@"VIEW DID LOAD VISTA");
     //NSLog(@"ARID OBRA ES: %@",self.ARidObra);
     [super viewDidLoad];
-    
-
- 
-    
-    
 }
 
 
@@ -397,7 +393,7 @@ _button=nil;
     if([TWTweetComposeViewController canSendTweet]) {
         
         TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
-        [controller setInitialText:@"Arte Interactivo. Realidad Aumentada desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @juan_cardelino"];
+        [controller setInitialText:@"Arte Interactivo. Realidad Aumentada desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @MauriGoNappa, @juan_cardelino"];
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
         
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];

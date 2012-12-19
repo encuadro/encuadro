@@ -35,7 +35,7 @@
     if([TWTweetComposeViewController canSendTweet]) {
         
         TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
-        [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @juan_cardelino"];
+        [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @MauriGoNappa, @juan_cardelino"];
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         

@@ -142,7 +142,7 @@
     resultImage.image = cuadroPhoto;
     
     UIAlertView *alertWithOkButton;
-    UIAlertView *alertWithYesNoButtons;
+   
     alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"
                                                    message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     
@@ -158,7 +158,7 @@ NSLog(@"IMAGE ANTES");
     
     NSLog(@"opcionAutor en picker es %d",opcionAutor);
     
-   // [reader release];
+    //[reader release];
     
 }
 

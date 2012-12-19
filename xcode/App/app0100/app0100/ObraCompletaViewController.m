@@ -53,7 +53,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
+    conUpsi=true;
     if (manual==true) {
         
         //CAMINO MANUAL
@@ -108,14 +108,32 @@
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
                      }];
-    
-    [self UpsiAppear];
-    
     //agrego vistaTouch
     self.vistaTouch = [[TouchVista alloc] init];
     self.vistaTouch.obraCompleta=true;
-    //self.vistaTouch.frame=CGRectMake(370,240, 100, 100);
+    self.vistaTouch.frame=CGRectMake(600,650,500, 500);
     [self.view addSubview:self.vistaTouch];
+    
+    upsi.center=CGPointMake(950,1000);
+    if (conUpsi) {
+        [UIView animateWithDuration:2
+                              delay:0.6
+                            options: UIViewAnimationCurveEaseOut
+                         animations:^{
+                             
+                             upsi.center=CGPointMake(950,950);
+                             
+                             
+                         }
+                         completion:^(BOOL finished){
+                             NSLog(@"Done!");
+                             self.vistaTouch.frame=CGRectMake(900,650,500, 500);
+                             [self UpsiAppear];
+                         }];
+    }
+    
+    
+    
 
 
 }
@@ -123,21 +141,24 @@
 - (void)UpsiAppear
 {
     
-    upsi.center=CGPointMake(400,340);
-    [UIView animateWithDuration:2
-                          delay:0.6
-                        options: UIViewAnimationCurveEaseOut
-                     animations:^{
-                         
-                         upsi.center=CGPointMake(400,270);
-                         
-                         
-                     }
-                     completion:^(BOOL finished){
-                         NSLog(@"Done!");
-                         self.vistaTouch.frame=CGRectMake(370,240, 100, 100);
-                         [self UpsiUpMoveLeft];
-                     }];
+    //upsi.center=CGPointMake(950,1000);
+    if (conUpsi) {
+        [UIView animateWithDuration:2
+                              delay:0.6
+                            options: UIViewAnimationCurveEaseOut
+                         animations:^{
+                             
+                             upsi.center=CGPointMake(950,700);
+                             
+                             
+                         }
+                         completion:^(BOOL finished){
+                             NSLog(@"Done!");
+                            // self.vistaTouch.frame=CGRectMake(750,500,200, 200);
+                            // [self UpsiUpMoveLeft];
+                         }];
+    }
+
 }
 
 
@@ -149,15 +170,15 @@
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
                          
-                         upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
+                         //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
                          
-                         upsi.center=CGPointMake(70,70);
+                         upsi.center=CGPointMake(400,700);
                          
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
                          //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
-                         self.vistaTouch.frame=CGRectMake(170,240, 100, 100);
+                         self.vistaTouch.frame=CGRectMake(200,500, 200, 200);
                          [self UpsiDownMoveLeft];
                      }];
 }
@@ -170,16 +191,16 @@
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
                          
-                         upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
+                         //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
                          
-                         upsi.center=CGPointMake(200,270);
+                         upsi.center=CGPointMake(950,1500);
                          
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
                          //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
-                         self.vistaTouch.frame=CGRectMake(170,240, 100, 100);
-                         [self UpsiDisAppear];
+                         self.vistaTouch.frame=CGRectMake(1000,1000, 100, 100);
+                         [self UpsiAppear];
                      }];
 }
 

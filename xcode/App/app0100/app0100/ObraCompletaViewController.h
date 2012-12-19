@@ -21,7 +21,7 @@
 int click;
 bool justLoaded;
 bool manual;
-
+bool conUpsi;
 @interface ObraCompletaViewController : UIViewController
 
 @property (retain, nonatomic) NSArray *descripcionObra;
