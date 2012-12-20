@@ -77,7 +77,9 @@ bool PosJuani=true;
 
 //modern coplanar requiere float** en lugar de [][]
 float *Tras;
+float *TrasPasa;
 float **Rotmodern;                                 ///modern coplanar
+float **RotPasa;
 float center[2]={240, 180};           ///modern coplanar
 float* luminancia;
 float* angles1;
@@ -321,8 +323,17 @@ kalman_state_n state;
         
         /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
         
-        self.isgl3DView.rotacion=Rotmodern;
-        [self.isgl3DView setTraslacion:Tras];
+        
+        for (int i=0; i<3; i++) {
+            for(int j=0; j<3; j++){
+                RotPasa[i][j]=Rotmodern[i][j];
+            }
+        }
+        self.isgl3DView.rotacion=RotPasa;
+        
+        for (int i=0; i<3; i++) TrasPasa[i]=Tras[i];
+        self.isgl3DView.traslacion=TrasPasa;
+
         
         
         /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
@@ -344,8 +355,11 @@ kalman_state_n state;
     /*Reservamos memoria*/
     Rotmodern=(float**)malloc(3*sizeof(float*));
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
+    RotPasa=(float**)malloc(3*sizeof(float*));
+    for (i=0; i<3;i++) RotPasa[i]=(float*)malloc(3*sizeof(float));
     
     Tras=(float*)malloc(3*sizeof(float));
+    TrasPasa=(float*)malloc(3*sizeof(float));
     
     angles1=(float*)malloc(3*sizeof(float));
     angles2=(float*)malloc(3*sizeof(float));
