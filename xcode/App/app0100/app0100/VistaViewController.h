@@ -16,6 +16,8 @@
 #import <Twitter/Twitter.h>
 
 bool DosCubos;
+bool Artigas;
+
 @interface VistaViewController : UIViewController{
     
     UIImageView *resultImage;

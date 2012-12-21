@@ -124,20 +124,24 @@
     
     
     if ([self.ARidObra intValue]<5){
-        NSLog(@"AR DOS CUBOS");
-        DosCubos=true;
-        _viewController.videoPlayer=false;
-        [self createViews];
+                NSLog(@"AR DOS CUBOS");
+                DosCubos=true;
+//                Artigas=false;
+                _viewController.videoPlayer=false;
+                [self createViews];
         
      }else if([self.ARidObra intValue]>10) {
-        NSLog(@"AR UN CUBO y MODELOS");
-        DosCubos=false;
-        _viewController.videoPlayer=false;
-        [self createViews];
+         
+                    NSLog(@"AR UN CUBO y MODELOS");
+                    DosCubos=false;
+//                    Artigas=false;
+                    _viewController.videoPlayer=false;
+                    [self createViews];
         
-    }else{
-        DosCubos=false;
-        NSLog(@"AR VIDEO");
+    }else if([self.ARidObra intValue]==16) {
+                    DosCubos=false;
+//                    Artigas=true;
+                    NSLog(@"AR ARTIGAS");
         
         _viewController.videoPlayer=true;
     }

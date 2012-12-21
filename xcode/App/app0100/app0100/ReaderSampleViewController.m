@@ -121,7 +121,16 @@
         cad=@"AutorTorres.jpeg";
         
     
-    } else {
+    }if ([string rangeOfString:@"ESCULTURAS"].location != NSNotFound) {
+    
+        resultText.text = symbol.data;
+        site=@"http://www.mnav.gub.uy/cms.php?a=6";
+        opcionAutor=4;
+        room=@"esculturas";
+        cad=@"artigasafe.jpeg";
+    
+    }
+    else {
        //ninguna ZONA
         resultText.text = @"No está en zona BLANES, FIGARI ni TORRES GARCIA";
         site=@"http://code.google.com/p/encuadro/";
