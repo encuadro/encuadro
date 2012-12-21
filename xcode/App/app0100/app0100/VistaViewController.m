@@ -44,36 +44,36 @@
 }
 
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
-    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
-    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
-    
-    [super touchesBegan:touches withEvent:event];
-    
-  
-    
-    if (self.viewController.touchFull) {
-        NSLog(@" TOUCHFULL VISTA FALSE");
-        self.viewController.touchFull=false;
-//        [self viewWillAppear:YES];
-        
-    }else{
-        NSLog(@" TOUCHFULL VISTA TRUE");
-        self.viewController.touchFull=true;
-        //self.view=_viewController.theMovie.view;
-        
-//        [self viewWillDisappear:YES];
-//        [self desplegarVideoVista];
-        
-
-        
-    }
-    
-    
-    
-    
-}
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+//    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+//    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+//    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+//    
+//    [super touchesBegan:touches withEvent:event];
+//    
+//  
+//    
+//    if (self.viewController.touchFull) {
+//        NSLog(@" TOUCHFULL VISTA FALSE");
+//        self.viewController.touchFull=false;
+////        [self viewWillAppear:YES];
+//        
+//    }else{
+//        NSLog(@" TOUCHFULL VISTA TRUE");
+//        self.viewController.touchFull=true;
+//        //self.view=_viewController.theMovie.view;
+//        
+////        [self viewWillDisappear:YES];
+////        [self desplegarVideoVista];
+//        
+//
+//        
+//    }
+//    
+//    
+//    
+//    
+//}
 
 
 -(void) desplegarVideoVista{
@@ -164,9 +164,9 @@
     
     
     //agrego vistaTouch
-    self.vistaTouch = [[TouchVista alloc] init];
-    self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
-    [self.view addSubview:self.vistaTouch];
+//    self.vistaTouch = [[TouchVista alloc] init];
+//    self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
+//    [self.view addSubview:self.vistaTouch];
     
     
 
