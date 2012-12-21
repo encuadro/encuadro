@@ -192,7 +192,7 @@
         NSString* texto = @"http://silviaguridi99.no-ip.info/textos/";
         texto = [texto stringByAppendingString:returnString];
         texto = [texto stringByAppendingString:@".txt"];
-        
+        NSLog(@"%@",returnString);
         NSString* imagen = @"http://silviaguridi99.no-ip.info/imagenes/";
         imagen = [imagen stringByAppendingString:returnString];
         imagen = [imagen stringByAppendingString:@".jpg"];
