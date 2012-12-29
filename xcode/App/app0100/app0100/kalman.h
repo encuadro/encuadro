@@ -9,6 +9,7 @@
 
 #include <math.h>
 #include "vvector.h"
+#include "svd.h"
 
 
 typedef struct {
@@ -34,3 +35,5 @@ void kalman_update(kalman_state* state, float measurement);
 kalman_state_3 kalman_init_3x3(float** q, float** r, float** p, float** k, float* intial_value);
 
 void kalman_update_3x3(kalman_state_3* state, float* measurement,float** A, float** H);
+
+void kalman_sensors_update(kalman_state_3* state, float* measurement,float** A, float** H);

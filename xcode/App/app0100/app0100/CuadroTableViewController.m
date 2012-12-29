@@ -213,7 +213,43 @@
                       nil];
         
         
-    }else {//else-->Todos los autores 
+     }else if(opcionAutor==4){
+         NSLog(@"OPCION AUTOR ES 1---BLANES");
+         self.cuadroAutor = [[NSArray alloc]
+                             initWithObjects:
+                             @"enCuadro",
+                             nil];
+         
+         self.cuadroObra = [[NSArray alloc]
+                            initWithObjects:
+                            @"Artigas",
+                            nil];
+         
+         self.cuadroImages = [[NSArray alloc]
+                              initWithObjects:
+                              @"artigasRetrato.jpeg",
+                              nil];
+         
+         self.cuadroDescripcion = [[NSArray alloc]
+                                   initWithObjects:
+                                   @"Escultura digital de José Gervacio Artigas",
+                                   nil];
+         
+         
+         
+         self.nombre_audio = [[NSArray alloc]
+                              initWithObjects:
+                              @"Blanes_atardecer.mp3",
+                              nil];
+         
+         self.ARid = [[NSArray alloc]
+                      initWithObjects:
+                      [NSNumber numberWithInt:16],
+                      nil];
+     
+     }
+    
+     else {//else-->Todos los autores
          NSLog(@"OPCION AUTOR ES NINGUNO");
         self.cuadroAutor = [[NSArray alloc]
                             initWithObjects:
@@ -232,6 +268,7 @@
                             @"Torres Garcia",
                             @"Torres Garcia",
                             @"Torres Garcia",
+                            @"enCuadro",
                             nil];
         
         self.cuadroObra = [[NSArray alloc]
@@ -251,6 +288,7 @@
                            @"Interior",
                            @"Paisaje de ciudad",
                            @"Arte universal",
+                           @"Artigas",
                            nil];
         
         self.cuadroImages = [[NSArray alloc]
@@ -270,6 +308,7 @@
                              @"Torres_interior.jpg",
                              @"Torres_paisajeCiudad.jpg",
                              @"Torres_universal.jpg",
+                             @"esculturas.jpeg",
                              nil];
         
         self.cuadroDescripcion = [[NSArray alloc]
@@ -289,6 +328,7 @@
                                   @"Interior, 1924. Óleo sobre cartón. 49,50 x 36 cm",
                                   @"Paisaje de ciudad, 1918. Óleo sobre cartón. 36 x 56 cm",
                                   @"Arte universal, 1943. Óleo sobre tela. 106 x 75 cm",
+                                  @"Retrato de José Gervacio Artigas",
                                   nil];
         
         
@@ -313,6 +353,7 @@
                              @"Torres_interior.mp3",
                              @"Torres_paisajeCiudad.mp3",
                              @"Torres_universal.mp3",
+                             @"Blanes_atardecer.mp3",
                              nil];
         
         
@@ -333,6 +374,7 @@
                      [NSNumber numberWithInt:13],
                      [NSNumber numberWithInt:14],
                      [NSNumber numberWithInt:15],
+                     [NSNumber numberWithInt:16],
                      nil];
         
         

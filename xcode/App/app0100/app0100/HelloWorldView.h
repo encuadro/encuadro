@@ -1,31 +1,31 @@
 //
 //  HelloWorldView.h
-//  casoUso0101
+//  ARtigas
 //
-//  Created by Pablo Flores Guridi on 01/10/12.
+//  Created by Pablo Flores Guridi on 13/12/12.
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
 #ifdef __cplusplus
 extern "C"{
 #endif
-
+    
 #import "isgl3d.h"
 #include "vvector.h"
-#import "configuration.h"
 #import <AVFoundation/AVFoundation.h>
-#import "claseDibujar.h"
-
+//#import "VistaViewController.h"
+    //#import "claseDibujar.h"
+    
 #ifdef __cplusplus
 }
 #endif
+//#import "configuration.h"
 
 bool fin;
 
-
 @interface videoView : UIImageView <AVAudioPlayerDelegate> {
 }
-//@property(nonatomic,retain) Isgl3dViewController* viewController;
+
 @end
 
 
@@ -38,25 +38,21 @@ bool fin;
     Isgl3dDemoCameraController * _cameraController;
     Isgl3dNode * _container;
     Isgl3dSkeletonNode * _model;
-    Isgl3dSkeletonNode * _model2;
+    Isgl3dNode * _model2;
+    Isgl3dAnimationController * _animationController;
 }
 @property (nonatomic) float* eulerAngles;
 @property (nonatomic) float* traslacion;
-
-@property (nonatomic, retain) AVAudioPlayer *audioPlayer;
-
-- (bool) getDibujar;
-- (void) setRotacion:(float*) rot;
+@property (nonatomic) float** rotacion;
+@property(nonatomic, retain) Isgl3dNode* cubito1;
+@property(nonatomic, retain) Isgl3dNode* cubito2;
 
 
 @end
 
-/*
- * Principal class to be instantiated in main.h.
- */
-//#import "app0100AppDelegate.h"
-//@interface AppDelegate : app0100AppDelegate
-//- (void) createViews;
-//@end
+#import "app0100AppDelegate.h"
+@interface AppDelegate : app0100AppDelegate
+- (void) createViews;
+@end
 
 

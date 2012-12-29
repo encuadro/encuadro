@@ -99,7 +99,7 @@
 #include <math.h>
 #include <limits.h>
 #include <float.h>
-#include "lsd.h"
+#include "lsd_encuadro.h"
 
 /** ln(10) */
 #ifndef M_LN10
@@ -532,14 +532,10 @@ static image_float new_image_float_ptr( unsigned int xsize,
 /*----------------------------- Gaussian filter ------------------------------*/
 /*----------------------------------------------------------------------------*/
 
+//*----------------------------------------------------------------------------*/
+/*-----------------------------GAUSSIAN KERNEL--------------------------------*/
 /*----------------------------------------------------------------------------*/
-/** Compute a Gaussian kernel of length 'kernel->dim',
-    standard deviation 'sigma', and centered at value 'mean'.
 
-    For example, if mean=0.5, the Gaussian will be centered
-    in the middle point between values 'kernel->values[0]'
-    and 'kernel->values[1]'.
- */
 static void gaussian_kernel(ntuple_list kernel, float sigma, float mean)
 {
     float sum = 0.0;
@@ -567,46 +563,123 @@ static void gaussian_kernel(ntuple_list kernel, float sigma, float mean)
     if( sum >= 0.0 ) for(i=0;i<kernel->dim;i++) kernel->values[i] /= sum;
 }
 
+
 /*----------------------------------------------------------------------------*/
-/** Scale the input image 'in' by a factor 'scale' by Gaussian sub-sampling.
+/*---------------------------- GAUSSIAN SAMPLER ------------------------------*/
+/*----------------------------------------------------------------------------*/
 
-    For example, scale=0.8 will give a result at 80% of the original size.
-
-    The image is convolved with a Gaussian kernel
-    @f[
-        G(x,y) = \frac{1}{2\pi\sigma^2} e^{-\frac{x^2+y^2}{2\sigma^2}}
-    @f]
-    before the sub-sampling to prevent aliasing.
-
-    The standard deviation sigma given by:
-    -  sigma = sigma_scale / scale,   if scale <  1.0
-    -  sigma = sigma_scale,           if scale >= 1.0
-
-    To be able to sub-sample at non-integer steps, some interpolation
-    is needed. In this implementation, the interpolation is done by
-    the Gaussian kernel, so both operations (filtering and sampling)
-    are done at the same time. The Gaussian kernel is computed
-    centered on the coordinates of the required sample. In this way,
-    when applied, it gives directly the result of convolving the image
-    with the kernel and interpolated to that particular position.
-
-    A fast algorithm is done using the separability of the Gaussian
-    kernel. Applying the 2D Gaussian kernel is equivalent to applying
-    first a horizontal 1D Gaussian kernel and then a vertical 1D
-    Gaussian kernel (or the other way round). The reason is that
-    @f[
-        G(x,y) = G(x) * G(y)
-    @f]
-    where
-    @f[
-        G(x) = \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{x^2}{2\sigma^2}}.
-    @f]
-    The algorithm first applies a combined Gaussian kernel and sampling
-    in the x axis, and then the combined Gaussian kernel and sampling
-    in the y axis.
- */
 //static image_float gaussian_sampler( float* in, int width,int height, int d, float scale,
 //float sigma_scale )
+image_float gaussian_sampler( image_float in, float scale, float sigma_scale )
+{
+    image_float aux,out;
+    ntuple_list kernel;
+    unsigned int N,M,h,n,x,y,i;
+    int xc,yc,j,float_x_size,float_y_size;
+    float sigma,xx,yy,sum,prec;
+    
+    /* compute new image size and get memory for images */
+    if( in->xsize * scale > (float) UINT_MAX ||
+       in->ysize * scale > (float) UINT_MAX )
+        
+        error("gaussian_sampler: the output image size exceeds the handled size.");
+    N = (unsigned int) ceil( in->xsize * scale );
+    M = (unsigned int) ceil( in->ysize * scale );
+    
+    aux = new_image_float(N,in->ysize);
+    out = new_image_float(N,M);
+    
+    /* sigma, kernel size and memory for the kernel */
+    sigma = sigma_scale / scale;
+    /*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
+     siempre se va a cumplir que sigma = sigma_scale / scale */
+    /*
+     The size of the kernel is selected to guarantee that the
+     the first discarded term is at least 10^prec times smaller
+     than the central value. For that, h should be larger than x, with
+     e^(-x^2/2sigma^2) = 1/10^prec.
+     Then,
+     x = sigma * sqrt( 2 * prec * ln(10) ).
+     */
+    prec = 3.0;
+    h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
+    /*La funcion log() corresponde al logaritmo neperiano*/
+    n = 1+2*h; /* kernel size */
+    kernel = new_ntuple_list(n);
+    
+    /* auxiliary float image size variables */
+    float_x_size = (int) (2 * in->xsize);
+    float_y_size = (int) (2 * in->ysize);
+    
+    gaussian_kernel( kernel, sigma, (float) h );
+    float scale_inv=1/scale;
+    
+    /* First subsampling: x axis */
+    for(x=3;x<aux->xsize-2;x++)
+    {
+        /*
+         x   is the coordinate in the new image.
+         xx  is the corresponding x-value in the original size image.
+         xc  is the integer value, the pixel coordinate of xx.
+         */
+        xx = (float) x * scale_inv; /*Esto es para recorrer toda la imagen porque aux-> size = width*scale*/
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
+        xc = (int) floor( xx + 0.5 ); /*Aca redondeamos el valor. Seria lo mismo que hacer round(xx)*/
+        
+        //        gaussian_kernel( kernel, sigma, (float) h + xx - (float) xc );
+        
+        /* the kernel must be computed for each x because the fine
+         offset xx-xc is different in each case */
+        
+        for(y=0;y<aux->ysize;y++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = xc - h + i;
+                sum += in->data[ j + y * in->xsize ] * kernel->values[i];
+            }
+            aux->data[ x + y * aux->xsize ] = sum;
+        }
+    }
+    
+    /* Second subsampling: y axis */
+    for(y=3;y<out->ysize-2;y++)
+    {
+        /*
+         y   is the coordinate in the new image.
+         yy  is the corresponding x-value in the original size image.
+         yc  is the integer value, the pixel coordinate of xx.
+         */
+        yy = (float) y * scale_inv;
+        /* coordinate (0.0,0.0) is in the center of pixel (0,0),
+         so the pixel with yc=0 get the values of yy from -0.5 to 0.5 */
+        yc = (int) floor( yy + 0.5 );
+        //gaussian_kernel( kernel, sigma, (float) h + yy - (float) yc );
+        /* the kernel must be computed for each y because the fine
+         offset yy-yc is different in each case */
+        
+        for(x=0;x<out->xsize;x++)
+        {
+            sum = 0.0;
+            for(i=0;i<kernel->dim;i++)
+            {
+                j = yc - h + i;
+                sum += aux->data[ x + j * aux->xsize ] * kernel->values[i];
+            }
+            out->data[ x + y * out->xsize ] = sum;
+        }
+    }
+    
+    /* free memory */
+    free_ntuple_list(kernel);
+    free_image_float(aux);
+    
+    return out;
+}
+
+
 
 
 /*----------------------------------------------------------------------------*/
@@ -636,7 +709,7 @@ static image_float ll_angle( image_float in, float threshold,
 {
   image_float g;
   unsigned int n,p,x,y,adr,i;
-  float com1,com2,gx,gy,norm,norm2;
+    float com1,com2,gx,gy,norm;//norm2;
   /* the rest of the variables are used for pseudo-ordering
      the gradient magnitude values */
   int list_count = 0;
@@ -664,17 +737,22 @@ static image_float ll_angle( image_float in, float threshold,
                                            sizeof(struct coorlist *) );
   range_l_e = (struct coorlist **) calloc( (size_t) n_bins,
                                            sizeof(struct coorlist *) );
-  if( list == NULL || range_l_s == NULL || range_l_e == NULL )
-    error("not enough memory.");
+
   for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
 
   /* 'undefined' on the down and right boundaries */
-  for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
-  for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
+    /* 'undefined' on the rows {0,1,2} and {n-1,n-2,n-3} and in the columns{0,1,2} {p-1,p-2,p-3}*/
+    for(x=0;x<p;x++) g->data[(n-1)*p+x] = g->data[(n-2)*p+x] = g->data[(n-3)*p+x] = g->data[x] = g->data[p+x] =  g->data[p*2+x]=NOTDEF;
+    for(y=0;y<n;y++) g->data[p*y+p-1] =  g->data[p*y+p-2]   = g->data[p*y+p-3] =  g->data[p*y] =  g->data[p*y+1] = g->data[p*y+2]  = NOTDEF;
+    
+//    for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
+//    for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
 
   /* compute gradient on the remaining pixels */
-  for(x=0;x<p-1;x++)
-    for(y=0;y<n-1;y++)
+//    for(x=0;x<p-1;x++)
+//    for(y=0;y<n-1;y++)
+  for(x=3;x<p-3;x++)
+    for(y=3;y<n-3;y++)
       {
         adr = y*p+x;
 
@@ -694,8 +772,10 @@ static image_float ll_angle( image_float in, float threshold,
 
         gx = com1+com2; /* gradient x component */
         gy = com1-com2; /* gradient y component */
-        norm2 = gx*gx+gy*gy;
-        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+//        norm2 = gx*gx+gy*gy;
+//        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+          
+          norm = sqrt( gx*gx+gy*gy)*0.5; /* gradient norm */
 
         (*modgrad)->data[adr] = norm; /* store gradient norm */
 
@@ -711,8 +791,9 @@ static image_float ll_angle( image_float in, float threshold,
           }
       }
 
+    
   /* compute histogram of gradient values */
-//  for(x=0;x<p-1;x++)
+//    for(x=0;x<p-1;x++)
 //    for(y=0;y<n-1;y++)
     for(x=3;x<p-3;x++)
     for(y=3;y<n-3;y++)
@@ -721,7 +802,7 @@ static image_float ll_angle( image_float in, float threshold,
         norm = (*modgrad)->data[y*p+x];
 
         /* store the point in the right bin according to its norm */
-        i = (unsigned int) (norm * (float) n_bins / max_grad);
+        i = (unsigned int) (norm * (float) n_bins / 175);
         if( i >= n_bins ) i = n_bins-1;
         if( range_l_e[i] == NULL )
           range_l_s[i] = range_l_e[i] = list+list_count++;
@@ -768,14 +849,15 @@ static image_float ll_angle( image_float in, float threshold,
 static int isaligned( int x, int y, image_float angles, float theta,
                       float prec )
 {
+ 
   float a;
 
   /* check parameters */
-  if( angles == NULL || angles->data == NULL )
-    error("isaligned: invalid image 'angles'.");
-  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
-    error("isaligned: (x,y) out of the image.");
-  if( prec < 0.0 ) error("isaligned: 'prec' must be positive.");
+//  if( angles == NULL || angles->data == NULL )
+//    error("isaligned: invalid image 'angles'.");
+//  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
+//    error("isaligned: (x,y) out of the image.");
+//  if( prec < 0.0 ) error("isaligned: 'prec' must be positive.");
 
   /* angle at pixel (x,y) */
   a = angles->data[ x + y * angles->xsize ];
@@ -1361,8 +1443,8 @@ static float rect_nfa(struct rect * rec, image_float angles, float logNT)
   int alg = 0;
 
   /* check parameters */
-  if( rec == NULL ) error("rect_nfa: invalid rectangle.");
-  if( angles == NULL ) error("rect_nfa: invalid 'angles'.");
+//  if( rec == NULL ) error("rect_nfa: invalid rectangle.");
+//  if( angles == NULL ) error("rect_nfa: invalid 'angles'.");
 
   /* compute the total number of pixels and of aligned points in 'rec' */
   for(i=ri_ini(rec); !ri_end(i); ri_inc(i)) /* rectangle iterator */
@@ -1450,11 +1532,11 @@ static float get_theta( struct point * reg, int reg_size, float x, float y,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("get_theta: invalid region.");
-  if( reg_size <= 1 ) error("get_theta: region size <= 1.");
-  if( modgrad == NULL || modgrad->data == NULL )
-    error("get_theta: invalid 'modgrad'.");
-  if( prec < 0.0 ) error("get_theta: 'prec' must be positive.");
+//  if( reg == NULL ) error("get_theta: invalid region.");
+//  if( reg_size <= 1 ) error("get_theta: region size <= 1.");
+//  if( modgrad == NULL || modgrad->data == NULL )
+//    error("get_theta: invalid 'modgrad'.");
+//  if( prec < 0.0 ) error("get_theta: 'prec' must be positive.");
 
   /* compute inertia matrix */
   for(i=0; i<reg_size; i++)
@@ -1733,15 +1815,15 @@ static int reduce_region_radius( struct point * reg, int * reg_size,
   int i;
 
   /* check parameters */
-  if( reg == NULL ) error("reduce_region_radius: invalid pointer 'reg'.");
-  if( reg_size == NULL )
-    error("reduce_region_radius: invalid pointer 'reg_size'.");
-  if( prec < 0.0 ) error("reduce_region_radius: 'prec' must be positive.");
-  if( rec == NULL ) error("reduce_region_radius: invalid pointer 'rec'.");
-  if( used == NULL || used->data == NULL )
-    error("reduce_region_radius: invalid image 'used'.");
-  if( angles == NULL || angles->data == NULL )
-    error("reduce_region_radius: invalid image 'angles'.");
+//  if( reg == NULL ) error("reduce_region_radius: invalid pointer 'reg'.");
+//  if( reg_size == NULL )
+//    error("reduce_region_radius: invalid pointer 'reg_size'.");
+//  if( prec < 0.0 ) error("reduce_region_radius: 'prec' must be positive.");
+//  if( rec == NULL ) error("reduce_region_radius: invalid pointer 'rec'.");
+//  if( used == NULL || used->data == NULL )
+//    error("reduce_region_radius: invalid image 'used'.");
+//  if( angles == NULL || angles->data == NULL )
+//    error("reduce_region_radius: invalid image 'angles'.");
 
   /* compute region points density */
   density = (float) *reg_size /
@@ -1808,16 +1890,6 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
   float angle,ang_d,mean_angle,tau,density,xc,yc,ang_c,sum,s_sum;
   int i,n;
 
-  /* check parameters */
-  if( reg == NULL ) error("refine: invalid pointer 'reg'.");
-  if( reg_size == NULL ) error("refine: invalid pointer 'reg_size'.");
-  if( prec < 0.0 ) error("refine: 'prec' must be positive.");
-  if( rec == NULL ) error("refine: invalid pointer 'rec'.");
-  if( used == NULL || used->data == NULL )
-    error("refine: invalid image 'used'.");
-  if( angles == NULL || angles->data == NULL )
-    error("refine: invalid image 'angles'.");
-
   /* compute region points density */
   density = (float) *reg_size /
                          ( dist(rec->x1,rec->y1,rec->x2,rec->y2) * rec->width );
@@ -1825,6 +1897,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
   /* if the density criterion is satisfied there is nothing to do */
   if( density >= density_th ) return TRUE;
 
+    
   /*------ First try: reduce angle tolerance ------*/
 
   /* compute the new mean angle and tolerance */
@@ -1879,7 +1952,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
 /*----------------------------------------------------------------------------*/
 /** LSD full interface.
  */
-float * LineSegmentDetection( int * n_out,
+float * LineSegmentDetection_encuadro( int * n_out,
                                float * img, int X, int Y,
                                float scale_inv, float sigma_scale, float quant,
                                float ang_th, float log_eps, float density_th,
@@ -1909,8 +1982,9 @@ float * LineSegmentDetection( int * n_out,
 
   /* load and scale image (if necessary) and compute angle at each pixel */
   image = new_image_float_ptr( (unsigned int) X, (unsigned int) Y, img );
+  
   angles = ll_angle( image, rho, &list_p, &mem_p, &modgrad, (unsigned int) n_bins );
-    
+ 
   xsize = angles->xsize;
   ysize = angles->ysize;
 
@@ -1968,11 +2042,19 @@ float * LineSegmentDetection( int * n_out,
            by R. Grompone von Gioi, J. Jakubowicz, J.M. Morel, and G. Randall.
            The original algorithm is obtained with density_th = 0.0.
          */
-        if( !refine( reg, &reg_size, modgrad, reg_angle,
-                     prec, p, &rec, used, angles, density_th ) ) continue;
+          
+          /*Aca compara la region con un umbral de densidad. Si la region no lo cumple trata de mojorarla.*/
+        /*if( !refine( reg, &reg_size, modgrad, reg_angle,
+                     prec, p, &rec, used, angles, density_th ) ) continue;*/
+                    
 
+        
         /* compute NFA value */
-        log_nfa = rect_improve(&rec,angles,logNT,log_eps);
+        /*Aca calcula el valor NFA de la region y si es menor a cierto valor, trata de mejorar la region.*/
+        /*log_nfa = rect_improve(&rec,angles,logNT,log_eps);*/
+          
+        log_nfa = rect_nfa(&rec,angles,logNT);
+        
         if( log_nfa <= log_eps ) continue;
 
         /* A New Line Segment was found! */
@@ -2044,3 +2126,36 @@ float * LineSegmentDetection( int * n_out,
 }
 
 /*----------------------------------------------------------------------------*/
+
+
+float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height)
+{
+    
+    /* float scale_inv = 2;         scale_inv= 1/scale, scale=0.5*/
+    /* float sigma_scale = 0.6;     Sigma for Gaussian filter is computed as
+                                    sigma = sigma_scale/scale.                    */
+    /* float quant = 2.0;           Bound to the quantization error on the
+                                    gradient norm.                                */
+    /* float ang_th = 22.5;         Gradient angle tolerance in degrees.           */
+    /* float log_eps = 0.0;         Detection threshold: -log10(NFA) > log_eps     */
+    /* float density_th = 0.0; (0.7)Minimal density of region points in rectangle. */
+    /* int n_bins = 1024;           Number of bins in pseudo-ordering of gradient
+                                    modulus.                                       */
+    
+    image_float image;
+    image_float luminancia_sub;
+    float* list;
+    
+    image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+
+    luminancia_sub = gaussian_sampler(image, 0.5, 0.6);
+    
+    list = LineSegmentDetection_encuadro(quantSegments, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize, 2.0, 0.6, 2.0, 22.5, 0.0, 0.7, 1024, NULL, NULL, NULL);
+
+    free( (void *) image );
+    free_image_float(luminancia_sub);
+    
+    return list;
+   
+   
+}

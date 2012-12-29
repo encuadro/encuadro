@@ -1,10 +1,14 @@
-//
-//  CoplanarPosit.c
-//  ModernCoplanarPosit
-//
-//  Created by Juan Ignacio Braun on 5/14/12.
-//  Copyright (c) 2012 juanibraun@gmail.com. All rights reserved.
-//
+/*
+ Program: CoplanarPosit.c
+ Proyect: encuadro - Facultad de Ingeniería - UDELAR
+ Author: Juan Ignacio Braun - juanibraun@gmail.com.
+ 
+ Description:
+ C implementation of modern copalanar posit, based on the IJCV 2004 SoftPOSIT paper by Daniel DeMenthon and coplanar posit paper.
+ 
+ Hosted on:
+ http://code.google.com/p/encuadro/
+ */
 
 
 #include "CoplanarPosit.h"
@@ -20,7 +24,7 @@ void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLengt
     float* TransFinal1;
     float* TransFinal2;
     float  E1=0, E2=0;
-
+    
     /* allocation for Rot1*/
     Rot1=(float **)malloc(3* sizeof(float *));
     for (i=0;i<3;i++) Rot1[i]=(float *)malloc(3 * sizeof(float));
@@ -126,7 +130,7 @@ void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLengt
         ACCUM_OUTER_PRODUCT_3X3(m,v,v);
     }
     INVERT_3X3(objectMat,det,m);
-//    MAT_PRINT_3X3(objectMat);
+    //    MAT_PRINT_3X3(objectMat);
     
     /*se calculan las dos ramas principales*/
     PositBranches(NbPts, centeredImage, worldPts, objectMat, Rot1, Rot2, Trans);
@@ -167,7 +171,7 @@ void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLengt
         
         imgDiff(NbPts, centeredImage, worldPts, RotFinal1, TransFinal1, &E1);
         imgDiff(NbPts, centeredImage, worldPts, RotFinal2, TransFinal2, &E2);
-       
+        
         if (E1<E2)
         {
             for (i=0;i<3;i++)
@@ -255,7 +259,7 @@ void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**ob
     float r2Taux[3]={0,0,0};
     float r11Taux[3]={0,0,0};
     float r22Taux[3]={0,0,0};
-
+    
     
     for (i=0; i<NbPts; i++) {
         b[0]=worldPts[i][0];
@@ -301,38 +305,47 @@ void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**ob
     
     /*Computation of mu and lambda*/
     delta=sqrt((J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0));
-    if ((J0J0-I0J0)>0.00000001){
-      q=atan2(-2*I0J0, (J0J0-I0I0));
-    }
-    else if ((J0J0-I0J0)<-0.00000001) {
-      q=atan2(-2*I0J0, (J0J0-I0I0))+MY_PI;
+    if ((J0J0-I0I0)!=0){
+        q=atan2(-2*I0J0, (J0J0-I0I0));
     }
     else{
         absValue(absI0J0, I0J0);
         delta=2*absI0J0;
-        q=(I0J0/absI0J0)*MY_PI;
+        q=-(I0J0/absI0J0)*MY_PI/2;
     }
     
-
+    //    if ((J0J0-I0I0)>0){
+    //        q=atan2(-2*I0J0, (J0J0-I0I0));
+    //    }
+    //    else if ((J0J0-I0I0)<0) {
+    //        q=atan2(-2*I0J0, (J0J0-I0I0))+MY_PI;
+    //    }
+    //    else{
+    //        absValue(absI0J0, I0J0);
+    //        delta=2*absI0J0;
+    //        q=-(I0J0/absI0J0)*MY_PI/2;
+    //    }
+    
+    
     lambda=sqrt(delta)*cos(q/2);
     mu=sqrt(delta)*sin(q/2);
     
-//    delta=(J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0);
-//    if ((I0I0-J0J0)>=0) q=-(I0I0-J0J0+sqrt(delta))/2;
-//    else q=-(I0I0-J0J0-sqrt(delta))/2;
-//    if (q>=0)
-//    {
-//        lambda=sqrt(q);
-//        if (lambda==0.0) mu=0.0;
-//        else mu=-I0J0/sqrt(q);
-//    }
-//    else
-//    {
-//        lambda=sqrt(-(I0J0*I0J0)/q);
-//        if (lambda==0.0) mu=sqrt(I0I0-J0J0);
-//        else mu=-I0J0/sqrt(-(I0J0*I0J0)/q);
-//    }
-
+    //    delta=(J0J0-I0I0)*(J0J0-I0I0)+4*(I0J0*I0J0);
+    //    if ((I0I0-J0J0)>=0) q=-(I0I0-J0J0+sqrt(delta))/2;
+    //    else q=-(I0I0-J0J0-sqrt(delta))/2;
+    //    if (q>=0)
+    //    {
+    //        lambda=sqrt(q);
+    //        if (lambda==0.0) mu=0.0;
+    //        else mu=-I0J0/sqrt(q);
+    //    }
+    //    else
+    //    {
+    //        lambda=sqrt(-(I0J0*I0J0)/q);
+    //        if (lambda==0.0) mu=sqrt(I0I0-J0J0);
+    //        else mu=-I0J0/sqrt(-(I0J0*I0J0)/q);
+    //    }
+    
     
     //    printf("\nlambda=%f\t mu=%f\n",lambda,mu);
     
@@ -429,7 +442,7 @@ void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**ob
     /*(object points behind image plane)*/
     if (zmin1<0||zmin1!=zmin1) Rot1[0][0]=2;
     if (zmin2<0||zmin2!=zmin2) Rot2[0][0]=2;
-
+    
 }
 
 
@@ -438,15 +451,15 @@ void imgDiff(int numberOfPoints,float** imgPts,float** objPts,float** Rot,float*
     float a[3],b[3],c[2];
     
     for(int i=0;i<numberOfPoints;i++){
-    //Calculo error de proyeccion de rotacion1//
-    b[0]=objPts[i][0];
-    b[1]=objPts[i][1];
-    b[2]=objPts[i][2];
-    MAT_DOT_VEC_3X3(a, Rot, b);
-    VEC_SUM(b,a,Tras);
-    c[0]=b[0]/b[2];
-    c[1]=b[1]/b[2];
-    *Er+=pow((imgPts[i][0]-c[0]),2)+pow((imgPts[i][1]-c[1]),2);
+        //Calculo error de proyeccion de rotacion1//
+        b[0]=objPts[i][0];
+        b[1]=objPts[i][1];
+        b[2]=objPts[i][2];
+        MAT_DOT_VEC_3X3(a, Rot, b);
+        VEC_SUM(b,a,Tras);
+        c[0]=b[0]/b[2];
+        c[1]=b[1]/b[2];
+        *Er+=pow((imgPts[i][0]-c[0]),2)+pow((imgPts[i][1]-c[1]),2);
     }
 }
 
@@ -460,7 +473,7 @@ void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, fl
     float r3T[4];
     float a[3],b[3];
     
-
+    
     /* allocation for Rot1 and Rot2*/
     float** Rot1;
     float** Rot2;
@@ -525,9 +538,9 @@ void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, fl
                 for (j=0;j<3;j++) Rot[i][j]=Rot1[i][j];
             }
         }
-       
-//        MAT_PRINT_3X3(Rot);
-//        VEC_PRINT(Trans);
+        
+        //        MAT_PRINT_3X3(Rot);
+        //        VEC_PRINT(Trans);
         
         r3T[0]=Rot[2][0];
         r3T[1]=Rot[2][1];
@@ -566,7 +579,7 @@ void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, fl
         //        for (i=0; i<NbPts; i++) printf("%f\t",wk[i]);
         //        printf("\n");
         delta=sqrt(delta);
-        converged=(count>0 && delta<0.3) || (count>100);
+        converged=(count>5 && delta<0.1) || (count>100);
         count+=1;
         
         if (count>10&&delta>1) Rot[0][0]=2; /* if pose doesn't converge after 20 iteration, discard the pose, the value for count and delta is arbitrary*/
@@ -629,20 +642,28 @@ void Matrix2Euler(float** Rot, float* angles1,float* angles2){
         psi2=0;
     }
     
-    angles1[0]=(180/MY_PI)*psi1;
-    angles1[1]=(180/MY_PI)*theta1;
-    angles1[2]=(180/MY_PI)*phi1;
+    //    angles1[0]=(180/MY_PI)*psi1;
+    //    angles1[1]=(180/MY_PI)*theta1;
+    //    angles1[2]=(180/MY_PI)*phi1;
+    //
+    //    angles2[0]=(180/MY_PI)*psi2;
+    //    angles2[1]=(180/MY_PI)*theta2;
+    //    angles2[2]=(180/MY_PI)*phi2;
     
-    angles2[0]=(180/MY_PI)*psi2;
-    angles2[1]=(180/MY_PI)*theta2;
-    angles2[2]=(180/MY_PI)*phi2;
+    angles1[0]=psi1;
+    angles1[1]=theta1;
+    angles1[2]=phi1;
+    
+    angles2[0]=psi2;
+    angles2[1]=theta2;
+    angles2[2]=phi2;
 }
 
 void Euler2Matrix(float* angles, float** Rot){
     
-    angles[0]=angles[0]*(MY_PI/180);
-    angles[1]=angles[1]*(MY_PI/180);
-    angles[2]=angles[2]*(MY_PI/180);
+    //    angles[0]=angles[0]*(MY_PI/180);
+    //    angles[1]=angles[1]*(MY_PI/180);
+    //    angles[2]=angles[2]*(MY_PI/180);
     
     Rot[0][0]=cos(angles[1])*cos(angles[2]);
     Rot[0][1]=sin(angles[0])*sin(angles[1])*cos(angles[2])-cos(angles[0])*sin(angles[2]);
@@ -653,5 +674,10 @@ void Euler2Matrix(float* angles, float** Rot){
     Rot[2][0]=-sin(angles[1]);
     Rot[2][1]=sin(angles[0])*cos(angles[1]);
     Rot[2][2]=cos(angles[0])*cos(angles[1]);
+    
+    //    angles[0]=angles[0]*(180/MY_PI);
+    //    angles[1]=angles[1]*(180/MY_PI);
+    //    angles[2]=angles[2]*(180/MY_PI);
+    
     
 }

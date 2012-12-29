@@ -77,7 +77,9 @@ bool PosJuani=true;
 
 //modern coplanar requiere float** en lugar de [][]
 float *Tras;
+float *TrasPasa;
 float **Rotmodern;                                 ///modern coplanar
+float **RotPasa;
 float center[2]={240, 180};           ///modern coplanar
 bool verbose;
 float* luminancia;
@@ -95,8 +97,7 @@ float density_th = 0.7;  /* Minimal density of region points in rectangle. */
 int n_bins = 1024;        /* Number of bins in pseudo-ordering of gradient
                            modulus.                                       */
 /*Up to here */
-image_float luminancia_sub;
-image_float image;
+
 int cantidad;
 
 /*Kalman variables*/
@@ -237,33 +238,35 @@ double *h;
     {
         
         
-        if (verbose) NSLog(@"Procesando!\n");
+        // NSLog(@"Procesando!\n");
         
-        /******************PROCESAMIENTO********************************************/
-        /***************************************************************************/
+        /*-------------------------------------|PROCESAMIENTO|-------------------------------------*/
         //NSLog(@"rgb2gray in\n");
         /*Se pasa la imagen a nivel de grises*/
         cantidad =width*height;
         for(int pixelNr=0;pixelNr<cantidad;pixelNr++) luminancia[pixelNr] = 0.30*pixels[pixelNr*4+2] + 0.59*pixels[pixelNr*4+1] + 0.11*pixels[pixelNr*4];
         /*Ahora luminancia es la imagen en nivel de grises*/
-        //NSLog(@"rgb2gray out\n");
         
         /*Se pasa el filtro gaussiano y se obtiene una imagen de tamano scale*tmn_original*/
-        image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
-        //        NSLog(@"gaussian_sampler in\n");
-        luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
-        //        NSLog(@"gaussian_sampler out\n");
+        
+        
+        
+        //image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
+        //NSLog(@"gaussian_sampler in\n");
+        //luminancia_sub = gaussian_sampler(image, 0.5, sigma_scale);
+        //NSLog(@"gaussian_sampler out\n");
         
         /*Se corre el LSD a la imagen escalada y filtrada*/
         free(list);
-        listSize =0;
-       // NSLog(@"LSD in\n");
-        list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,2, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
-       // NSLog(@"LSD out\n");
+        // NSLog(@"LSD in\n");
+        list = lsd_encuadro(&listSize, luminancia, width, height);
+        
+        //list = LineSegmentDetection(&listSize, luminancia_sub->data, luminancia_sub->xsize, luminancia_sub->ysize,scale_inv, sigma_scale, quant, ang_th, log_eps, density_th, n_bins, NULL, NULL, NULL);
+        // NSLog(@"LSD out\n");
         
         /*Se libera memoria*/
-        free( (void *) image );
-        free_image_float(luminancia_sub);
+        //free( (void *) image );
+        //free_image_float(luminancia_sub);
         
         
         /*-------------------------------------|FILTRADO|-------------------------------------*/
@@ -278,55 +281,21 @@ double *h;
         errorMarkerDetection = findPointCorrespondances(&listFiltradaSize, listFiltrada,imagePoints);
         
         
- /* aplicado al caso de uso de movie player-----------------*/
- 
-        if (self.videoPlayer) {
-            for (int i=0; i<4; i++) {
-                
-                imagePoints4[i][0]=imagePoints[i+4][0]*self.wSize/480;
-                imagePoints4[i][1]=imagePoints[i+4][1]*self.hSize/360;
-                
-            }
-            // solveAffineTransformation(imagePoints, imagePoints3, h);
-            solveHomographie(imagePoints4, imagePoints3, h);
-            
-            [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
-        }
-        
-        
- /* aplicado al caso de uso de movie player-----------------*/
-       
-        
-        
-        if (verbose){
-            printf("Tamano: %d\n", listSize);
-            printf("Tamano filtrada: %d\n", listFiltradaSize);
-        }
+        //        printf("Tamano: %d\n", listSize);
+        //        printf("Tamano filtrada: %d\n", listFiltradaSize);
+        //
         
         
         if (errorMarkerDetection>=0) {
             
             cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
             
-            /* eleccion de algoritmo de pose*/
-            if (PosJuani){
-                CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
-                //                    for(int i=0;i<3;i++){
-                //                        for(int j=0;j<3;j++) Rota[i][j]=Rotmodern[i][j];
-                //                        Transa[i]=Tras[i];
-                //                    }
-                
-            }
-            else {
-                for (int k=0;k<36;k++)
-                {
-                    imagePointsCrop[k][0]=imagePointsCrop[k][0]-center[0];
-                    imagePointsCrop[k][1]=imagePointsCrop[k][1]-center[1];
-                }
-                Composit(cantPtosDetectados,imagePointsCrop,objectCrop,f,Rotmodern,Tras);
-            }
+            
+            CoplanarPosit(cantPtosDetectados, imagePointsCrop, objectCrop, f, center, Rotmodern, Tras);
+            
             
             if (kalman){
+                
                 Matrix2Euler(Rotmodern, angles1, angles2);
                 if(false){
                     if(init){
@@ -374,18 +343,10 @@ double *h;
                         measureNoise[2][0]=-0.0459669868120827;
                         measureNoise[2][1]=-0.0748919339531972;
                         measureNoise[2][2]=0.00106230567668207;
-                        //                        measureNoise[0][0]=1;
-                        //                        measureNoise[0][1]=0;
-                        //                        measureNoise[0][2]=0;
-                        //                        measureNoise[1][0]=0;
-                        //                        measureNoise[1][1]=1;
-                        //                        measureNoise[1][2]=0;
-                        //                        measureNoise[2][0]=0;
-                        //                        measureNoise[2][1]=0;
-                        //                        measureNoise[2][2]=1;
-                        SCALE_MATRIX_3X3(measureNoise, 2, measureNoise);
                         
-                        state = kalman_init_3x3(processNoise,measureNoise, errorMatrix,kalmanGain,angles1);
+                        SCALE_MATRIX_3X3(measureNoise, 10, measureNoise);
+                        
+                        state = kalman_init_3x3(processNoise, measureNoise, errorMatrix, kalmanGain, angles1);
                         
                         xState = kalman_init(1, 0.2, 1, Tras[0]);
                         yState = kalman_init(1, 0.2, 1, Tras[1]);
@@ -405,12 +366,9 @@ double *h;
                     Tras[1]=yState.x;
                     Tras[2]=zState.x;
                     
-                    //                    VEC_PRINT(angles1);
-                    //                    VEC_PRINT(Tras);
                     
                 }
                 Euler2Matrix(angles1, Rotmodern);
-                if(verbose) printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
             }
             
             
@@ -419,56 +377,19 @@ double *h;
         
         
         
-        if (verbose){
-            printf("\nPARAMETROS DEL COPLANAR:R y T: \n");
-            printf("\nRotacion: \n");
-            printf("%f\t %f\t %f\n",Rotmodern[0][0],Rotmodern[0][1],Rotmodern[0][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[1][0],Rotmodern[1][1],Rotmodern[1][2]);
-            printf("%f\t %f\t %f\n",Rotmodern[2][0],Rotmodern[2][1],Rotmodern[2][2]);
-            printf("Traslacion: \n");
-            printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
-        }
-        
-        /*-------------------------------------|POSIT COPLANAR|-------------------------------------*/
-        /*Algoritmo de estimacion de pose en base a esquinas en forma correspondiente*/
-        /*Este algoritmo devuelve una matriz de rotacion y un vector de rotacion*/
-        //
-        //            Composit(NumberOfPoints,imagePointsCambiados,object,f,Rot1,Trans1);
-        //            free(imagePointsCambiados);
-        // ModernPosit( NumberOfPoints,imagePoints, object,f,center, Rotmodern, Trans1);
-        
-        
-        
-        
-        /************************************************SPINCALC*/
-        /*En base a una matriz de rotacion calcula los angulos de Euler que se corresponden*/
-        
-        
-        
         /*Ahora asignamos la rotacion y la traslacion a las propiedades rotacion y traslacion del view*/
         
         
-        rotacion[0]=Rotmodern[0][0];
-        rotacion[1]=Rotmodern[0][1];
-        rotacion[2]=Rotmodern[0][2];
-        rotacion[3]=Rotmodern[1][0];
-        rotacion[4]=Rotmodern[1][1];
-        rotacion[5]=Rotmodern[1][2];
-        rotacion[6]=Rotmodern[2][0];
-        rotacion[7]=Rotmodern[2][1];
-        rotacion[8]=Rotmodern[2][2];
-        
-        
-        
-        if (verbose){
-            printf("\nPrimera solucion\n");
-            printf("psi1: %g\ntheta1: %g\nphi1: %g\n",angles1[0],angles1[1],angles1[2]);
-            printf("\nSegunda solicion\n");
-            printf("psi2: %g\ntheta2: %g\nphi2: %g\n",angles2[0],angles2[1],angles2[2]);
+        for (int i=0; i<3; i++) {
+            for(int j=0; j<3; j++){
+                RotPasa[i][j]=Rotmodern[i][j];
+            }
         }
+        self.isgl3DView.rotacion=RotPasa;
         
-        [self.isgl3DView setRotacion:rotacion];
-        [self.isgl3DView setTraslacion:Tras];
+        for (int i=0; i<3; i++) TrasPasa[i]=Tras[i];
+        self.isgl3DView.traslacion=TrasPasa;
+        
         
         
         /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
@@ -593,7 +514,7 @@ double *h;
 
 - (void) reservarMemoria {
     
-    if (verbose) printf("Reservamos memoria");
+    // printf("Reservamos memoria");
     
     free(pixels);
     free(Rotmodern);
@@ -604,8 +525,11 @@ double *h;
     /*Reservamos memoria*/
     Rotmodern=(float**)malloc(3*sizeof(float*));
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
+    RotPasa=(float**)malloc(3*sizeof(float*));
+    for (i=0; i<3;i++) RotPasa[i]=(float*)malloc(3*sizeof(float));
     
     Tras=(float*)malloc(3*sizeof(float));
+    TrasPasa=(float*)malloc(3*sizeof(float));
     
     angles1=(float*)malloc(3*sizeof(float));
     angles2=(float*)malloc(3*sizeof(float));
@@ -625,30 +549,6 @@ double *h;
     imagePoints=(float **)malloc(NumberOfPoints * sizeof(float *));
     for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(float *)malloc(2 * sizeof(float));
     
-    
-    //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
-    imagePoints3=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints3[i]=(double *)malloc(2 * sizeof(double));
-    
-    imagePoints3[0][0]=60;
-    imagePoints3[0][1]=60;
-    
-    imagePoints3[1][0]=60;
-    imagePoints3[1][1]=0;
-    
-    imagePoints3[2][0]=0;
-    imagePoints3[2][1]=0;
-    
-    imagePoints3[3][0]=0;
-    imagePoints3[3][1]=60;
-    
-    
-    //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
-    imagePoints4=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints4[i]=(double *)malloc(2 * sizeof(double));
-    
-    h=(double *)malloc(8 * sizeof(double));
-    
     //    coplMatrix=(float **)malloc(3 * sizeof(float *));
     //    for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(NumberOfPoints * sizeof(float));
     
@@ -659,9 +559,12 @@ double *h;
     }
     
     luminancia = (float *) malloc(360*480*sizeof(float));
-    cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
+    // cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
     
     /* READ MARKER MODEL */
+    
+    
+    
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
     
     FILE *filePuntos;

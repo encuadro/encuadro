@@ -41,6 +41,7 @@
                         @"Blanes",
                         @"Figari",
                         @"Torres Garcia",
+                        @"Esculturas",
                         nil];
     
     self.autorImagen = [[NSArray alloc]
@@ -48,13 +49,15 @@
                        @"AutorBlanes.jpeg",
                        @"AutorFigari.jpeg",
                        @"AutorTorres.jpeg",
+                       @"esculturas.jpeg",
                        nil];
     
     self.autorDescripcion = [[NSArray alloc]
                          initWithObjects:
                          @"Juan Manuel Blanes (Montevideo, 8 de junio de 1830 — Pisa, Italia, 15 de abril de 1901)",
                          @"Pedro Figari Solari (n. Montevideo, 29 de junio de 1861 - íbidem, 24 de julio de 1938)",
-                         @"Joaquín Torres García (Montevideo, 28 de julio de 1874 - Montevideo, 8 de agosto de 1949)", 
+                         @"Joaquín Torres García (Montevideo, 28 de julio de 1874 - Montevideo, 8 de agosto de 1949)",
+                         @"Recorrido por la zona de esculturas digitales interactivas.",
                          nil];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;

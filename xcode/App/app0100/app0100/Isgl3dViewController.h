@@ -15,8 +15,8 @@
 //#import "TouchVista.h"
 
 
-#import "processing.h"
-#import "lsd.h"
+
+#import "lsd_encuadro.h"
 #import "segments.h"
 #import "marker.h"
 #import "Composit.h"

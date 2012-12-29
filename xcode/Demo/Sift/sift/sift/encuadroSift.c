@@ -313,10 +313,19 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors)
     {
     //imagen = "Torres Garcia - Interior, 1924";
     imagen = "Torres_interior";
-        final_matches = correspondences;
+    final_matches = correspondences;
     }
     free(descriptors_base);
     
+    descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Esculturas_artigas.txt", &nKeyPoints_base);
+    compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
+    if (correspondences>final_matches)
+    {
+        //imagen = "Blanes - Un episodio de la fiebre amarilla en Buenos Aires, c.1871";
+        imagen = "Esculturas_artigas";
+        final_matches = correspondences;
+    }
+    free(descriptors_base);
     
     if (final_matches > 0.1*nKeyPoints)
     {
@@ -411,6 +420,22 @@ const char* buscarBaseDeDatos_ala(int nKeyPoints, int* descriptors, const char* 
             imagen = "Torres_interior";
             final_matches = correspondences;
         }
+        free(descriptors_base);
+        
+        if (final_matches > 0.1*nKeyPoints)
+        {
+            return imagen;
+        }
+        else return "wrong_enter";
+    }
+    
+    else if (strcmp(ala,"esculturas")==0)
+    {
+        descriptors_base = levantarDescriptor("/Library/WebServer/Documents/descriptors/Esculturas_artigas.txt", &nKeyPoints_base);
+        compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
+        
+        imagen = "Esculturas_artigas";
+        final_matches = correspondences;
         free(descriptors_base);
         
         if (final_matches > 0.1*nKeyPoints)

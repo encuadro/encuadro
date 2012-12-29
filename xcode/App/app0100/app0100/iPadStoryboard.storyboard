@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="Su1-S5-Qlo">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63b" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="Su1-S5-Qlo">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
@@ -13,7 +13,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="zaW-lz-MVR">
-                                <rect key="frame" x="630" y="311" width="76" height="44"/>
+                                <rect key="frame" x="269" y="222" width="76" height="44"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Manual">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -27,7 +27,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9os-nQ-Xs8">
-                                <rect key="frame" x="630" y="403" width="59" height="44"/>
+                                <rect key="frame" x="278" y="305" width="59" height="44"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Auto">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -41,7 +41,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="mAs-uV-us6">
-                                <rect key="frame" x="154" y="76" width="122" height="44"/>
+                                <rect key="frame" x="90" y="98" width="122" height="44"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Instrucciones">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -54,8 +54,11 @@
                                     <action selector="play" destination="coE-eX-qu7" eventType="touchUpInside" id="beg-hB-NXw"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Default281x280.png" id="Hqu-4G-nMb">
-                                <rect key="frame" x="154" y="127" width="368" height="473"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="mnav600.jpg" id="Hqu-4G-nMb">
+                                <rect key="frame" x="90" y="491" width="812" height="136"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Default281x280.png" id="YfO-Lv-rZg">
+                                <rect key="frame" x="473" y="34" width="368" height="473"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -121,7 +124,7 @@
             </objects>
             <point key="canvasLocation" x="92" y="-738"/>
         </scene>
-        <!--Reader Sample View Controller - QR Detection-->
+        <!--Reader Sample View Controller - Detección QR-->
         <scene sceneID="9wk-eX-pt1">
             <objects>
                 <viewController id="QXs-4c-4RK" customClass="ReaderSampleViewController" sceneMemberID="viewController">
@@ -142,7 +145,7 @@
                                 <rect key="frame" x="0.0" y="651" width="1024" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="mU4-bP-8U4"/>
-                                    <barButtonItem title="Foward" id="n6n-ls-TAQ">
+                                    <barButtonItem title="Identificar obra" id="n6n-ls-TAQ">
                                         <connections>
                                             <segue destination="Hqs-IX-j7F" kind="push" id="sez-Rb-nb3"/>
                                         </connections>
@@ -150,9 +153,9 @@
                                 </items>
                             </toolbar>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="cwX-04-MqK">
-                                <rect key="frame" x="722" y="267" width="60" height="44"/>
+                                <rect key="frame" x="691" y="267" width="123" height="44"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Scan">
+                                <state key="normal" title="Detección QR">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -163,22 +166,18 @@
                                     <action selector="scanButtonTapped" destination="QXs-4c-4RK" eventType="touchUpInside" id="y23-bq-PMG"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Push Scan and focuse QR-code..." id="zKj-CT-793">
-                                <rect key="frame" x="642" y="326" width="281" height="98"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="Detecte el QR de la sala del museo en la que se encuentra." id="zKj-CT-793">
+                                <rect key="frame" x="618" y="326" width="305" height="98"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="viejoQR4.gif" id="3aD-uM-MKc">
-                                <rect key="frame" x="671" y="98" width="163" height="131"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="QR Detection" id="JmP-Gb-Xo2"/>
+                    <navigationItem key="navigationItem" title="Detección QR" id="JmP-Gb-Xo2"/>
                     <connections>
-                        <outlet property="backround" destination="3aD-uM-MKc" id="eCe-wU-UTI"/>
                         <outlet property="resultImage" destination="RUG-Sf-pcd" id="K16-px-BeS"/>
                         <outlet property="resultText" destination="zKj-CT-793" id="IfP-uJ-7Q0"/>
                     </connections>
@@ -187,7 +186,7 @@
             </objects>
             <point key="canvasLocation" x="-16" y="415"/>
         </scene>
-        <!--Imagen Server View Controller - Art Recognition-->
+        <!--Imagen Server View Controller - Identificación-->
         <scene sceneID="qI5-pe-ube">
             <objects>
                 <viewController id="Hqs-IX-j7F" customClass="ImagenServerViewController" sceneMemberID="viewController">
@@ -196,9 +195,9 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5Ul-yq-S3d">
-                                <rect key="frame" x="660" y="507" width="75" height="44"/>
+                                <rect key="frame" x="663" y="507" width="70" height="44"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Upload">
+                                <state key="normal" title="Enviar">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -212,7 +211,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="HWF-zu-vRh">
                                 <rect key="frame" x="239" y="507" width="80" height="44"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Camara">
+                                <state key="normal" title="Cámara">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -230,7 +229,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Art Recognition" id="f2X-5x-FtB"/>
+                    <navigationItem key="navigationItem" title="Identificación" id="f2X-5x-FtB"/>
                     <connections>
                         <outlet property="image" destination="f0e-f9-6wX" id="msX-JH-Cpw"/>
                         <outlet property="imagenView" destination="f0e-f9-6wX" id="dPi-Qv-YXU"/>
@@ -241,7 +240,7 @@
             </objects>
             <point key="canvasLocation" x="1254" y="655"/>
         </scene>
-        <!--Vista View Controller - Augmented Reality-->
+        <!--Vista View Controller - Realidad Aumentada-->
         <scene sceneID="TqW-p3-eo7">
             <objects>
                 <viewController id="HuG-xk-Kvv" customClass="VistaViewController" sceneMemberID="viewController">
@@ -257,7 +256,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Augmented Reality" id="Kba-xm-faH"/>
+                    <navigationItem key="navigationItem" title="Realidad Aumentada" id="Kba-xm-faH"/>
                     <connections>
                         <outlet property="backround" destination="KZt-Rr-baW" id="Q1g-PY-Sja"/>
                     </connections>
@@ -274,34 +273,6 @@
                         <rect key="frame" x="0.0" y="64" width="1024" height="704"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Ugt-az-JZn">
-                                <rect key="frame" x="945" y="451" width="59" height="44"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Start">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="play" destination="P7g-iE-k9L" eventType="touchUpInside" id="fo2-sX-828"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="z00-ef-ddZ">
-                                <rect key="frame" x="945" y="511" width="59" height="44"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="AR">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="HuG-xk-Kvv" kind="push" identifier="AR" id="dJH-my-39P"/>
-                                </connections>
-                            </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="taT-U1-kxM">
                                 <rect key="frame" x="196" y="524" width="331" height="94"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -315,27 +286,31 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="ygl-zF-TKZ">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" id="ygl-zF-TKZ">
                                 <rect key="frame" x="196" y="45" width="631" height="449"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="libroViejo.jpeg" id="06U-o3-3Ig">
-                                <rect key="frame" x="696" y="581" width="140" height="128"/>
-                            </imageView>
-                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="qGv-cd-egd">
-                                <rect key="frame" x="920" y="641" width="73" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="d5p-jH-QH9" kind="push" identifier="todraw" id="bgg-4d-7IL"/>
-                                </connections>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Zla-Cl-eWh">
+                                <rect key="frame" x="-1" y="660" width="1024" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Dibujar" id="NfU-UC-RoZ">
+                                        <connections>
+                                            <segue destination="d5p-jH-QH9" kind="push" identifier="todraw" id="DlV-ig-dLo"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="avM-34-cqG"/>
+                                    <barButtonItem title="Audio" id="np4-cS-lGc">
+                                        <connections>
+                                            <action selector="play" destination="P7g-iE-k9L" id="Vuh-lf-eFP"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Realidad Aumentada" id="xbV-Ol-t8f">
+                                        <connections>
+                                            <segue destination="HuG-xk-Kvv" kind="push" identifier="AR" id="hkd-Wv-DH9"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
@@ -345,15 +320,13 @@
                         <outlet property="autor" destination="tgx-H5-aT2" id="78e-Ow-Wtn"/>
                         <outlet property="detalle" destination="taT-U1-kxM" id="Jgf-pu-5Eu"/>
                         <outlet property="imagenObra" destination="ygl-zF-TKZ" id="gjH-Fn-5Dl"/>
-                        <outlet property="start" destination="Ugt-az-JZn" id="bGD-co-yJZ"/>
-                        <outlet property="upsi" destination="06U-o3-3Ig" id="XF0-NE-8Tg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BEH-Oz-TeL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2657" y="31"/>
         </scene>
-        <!--Draw Sign - Art Sign-->
+        <!--Draw Sign - Dibujado Manual-->
         <scene sceneID="ycK-Xn-YnR">
             <objects>
                 <viewController id="d5p-jH-QH9" customClass="DrawSign" sceneMemberID="viewController">
@@ -369,7 +342,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Art Sign" id="9Y8-fK-Gxv">
+                    <navigationItem key="navigationItem" title="Dibujado Manual" id="9Y8-fK-Gxv">
                         <barButtonItem key="rightBarButtonItem" title="Tweet" id="Rep-zB-Jtp">
                             <connections>
                                 <action selector="TWeet:" destination="d5p-jH-QH9" id="xen-t5-q78"/>
@@ -461,11 +434,88 @@
     </scenes>
     <resources>
         <image name="AR_sample.jpeg" width="642" height="458"/>
-        <image name="Default281x280.png" width="281" height="280"/>
-        <image name="libroViejo.jpeg" width="230" height="220"/>
+        <image name="Default281x280.png" width="16" height="16"/>
+        <image name="mnav600.jpg" width="600" height="70"/>
         <image name="qrcode_BLANES.png" width="320" height="320"/>
-        <image name="viejoQR4.gif" width="257" height="196"/>
     </resources>
+    <classes>
+        <class className="AutorTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AutorTableViewController.h"/>
+        </class>
+        <class className="CuadroTableViewCell" superclassName="UITableViewCell">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewCell.h"/>
+            <relationships>
+                <relationship kind="outlet" name="autorLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="cuadroImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="obraLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="CuadroTableViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CuadroTableViewController.h"/>
+        </class>
+        <class className="DrawSign" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/DrawSign.h"/>
+            <relationships>
+                <relationship kind="action" name="TWeet:"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ImagenServerViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ImagenServerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="tomarFoto:"/>
+                <relationship kind="outlet" name="activity" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="image" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="imagenView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mensaje" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="read" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="tomarFoto" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="url" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="InicioViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/InicioViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+            </relationships>
+        </class>
+        <class className="NavigationViewController" superclassName="UINavigationController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NavigationViewController.h"/>
+        </class>
+        <class className="ObraCompletaViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ObraCompletaViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="outlet" name="autor" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="detalle" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="imagenObra" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mano1" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="mano4" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="obra" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="start" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="upsi" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="ReaderSampleViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReaderSampleViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="play"/>
+                <relationship kind="action" name="scanButtonTapped"/>
+                <relationship kind="outlet" name="backround" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="resultImage" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="resultText" candidateClass="UITextView"/>
+                <relationship kind="outlet" name="site" candidateClass="NSString"/>
+            </relationships>
+        </class>
+        <class className="VistaViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/VistaViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="TWeet:"/>
+                <relationship kind="outlet" name="backround" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
         <simulatedOrientationMetrics key="orientation"/>

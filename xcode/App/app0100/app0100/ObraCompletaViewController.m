@@ -43,7 +43,7 @@
         //DrawSign *drawS = [[DrawSign alloc] init];
         
         // do any setup you need for myNewVC
-        [self performSegueWithIdentifier: @"todraw" sender: self];
+        //[self performSegueWithIdentifier: @"todraw" sender: self];
         //[self presentViewController:drawS animated:YES completion:NO];
     }
     
@@ -98,39 +98,39 @@
     justLoaded=true;
     
 
-    [UIView animateWithDuration:1
-                          delay:0.3
-                        options: UIViewAnimationCurveEaseOut
-                     animations:^{
-                         mano1.center=CGPointMake(-100,150);
-                         mano4.center=CGPointMake(700,150);
-                     }
-                     completion:^(BOOL finished){
-                         NSLog(@"Done!");
-                     }];
-    //agrego vistaTouch
-    self.vistaTouch = [[TouchVista alloc] init];
-    self.vistaTouch.obraCompleta=true;
-    self.vistaTouch.frame=CGRectMake(600,650,500, 500);
-    [self.view addSubview:self.vistaTouch];
-    
-    upsi.center=CGPointMake(950,1000);
-    if (conUpsi) {
-        [UIView animateWithDuration:2
-                              delay:0.6
-                            options: UIViewAnimationCurveEaseOut
-                         animations:^{
-                             
-                             upsi.center=CGPointMake(950,950);
-                             
-                             
-                         }
-                         completion:^(BOOL finished){
-                             NSLog(@"Done!");
-                             self.vistaTouch.frame=CGRectMake(900,650,500, 500);
-                             [self UpsiAppear];
-                         }];
-    }
+//    [UIView animateWithDuration:1
+//                          delay:0.3
+//                        options: UIViewAnimationCurveEaseOut
+//                     animations:^{
+//                         mano1.center=CGPointMake(-100,150);
+//                         mano4.center=CGPointMake(700,150);
+//                     }
+//                     completion:^(BOOL finished){
+//                         NSLog(@"Done!");
+//                     }];
+//    //agrego vistaTouch
+//    self.vistaTouch = [[TouchVista alloc] init];
+//    self.vistaTouch.obraCompleta=true;
+//    self.vistaTouch.frame=CGRectMake(600,650,500, 500);
+//    [self.view addSubview:self.vistaTouch];
+//    
+//    upsi.center=CGPointMake(950,1000);
+//    if (conUpsi) {
+//        [UIView animateWithDuration:2
+//                              delay:0.6
+//                            options: UIViewAnimationCurveEaseOut
+//                         animations:^{
+//                             
+//                             upsi.center=CGPointMake(950,950);
+//                             
+//                             
+//                         }
+//                         completion:^(BOOL finished){
+//                             NSLog(@"Done!");
+//                             self.vistaTouch.frame=CGRectMake(900,650,500, 500);
+//                             [self UpsiAppear];
+//                         }];
+//    }
     
     
     
@@ -263,7 +263,7 @@
         //audioPlayer=nil;
         [self.audioPlayer stop];
         click=0;
-        [self.start setTitle:@"Start" forState:UIControlStateNormal];
+        [self.start setTitle:@"Audio" forState:UIControlStateNormal];
     }
     
     

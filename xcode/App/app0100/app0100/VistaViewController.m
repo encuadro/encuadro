@@ -44,36 +44,36 @@
 }
 
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
-    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
-    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
-    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
-    
-    [super touchesBegan:touches withEvent:event];
-    
-  
-    
-    if (self.viewController.touchFull) {
-        NSLog(@" TOUCHFULL VISTA FALSE");
-        self.viewController.touchFull=false;
-//        [self viewWillAppear:YES];
-        
-    }else{
-        NSLog(@" TOUCHFULL VISTA TRUE");
-        self.viewController.touchFull=true;
-        //self.view=_viewController.theMovie.view;
-        
-//        [self viewWillDisappear:YES];
-//        [self desplegarVideoVista];
-        
-
-        
-    }
-    
-    
-    
-    
-}
+//-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
+//    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+//    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+//    NSLog(@"TOUCH VISTA VIEWCONTROLLER");
+//    
+//    [super touchesBegan:touches withEvent:event];
+//    
+//  
+//    
+//    if (self.viewController.touchFull) {
+//        NSLog(@" TOUCHFULL VISTA FALSE");
+//        self.viewController.touchFull=false;
+////        [self viewWillAppear:YES];
+//        
+//    }else{
+//        NSLog(@" TOUCHFULL VISTA TRUE");
+//        self.viewController.touchFull=true;
+//        //self.view=_viewController.theMovie.view;
+//        
+////        [self viewWillDisappear:YES];
+////        [self desplegarVideoVista];
+//        
+//
+//        
+//    }
+//    
+//    
+//    
+//    
+//}
 
 
 -(void) desplegarVideoVista{
@@ -124,20 +124,24 @@
     
     
     if ([self.ARidObra intValue]<5){
-        NSLog(@"AR DOS CUBOS");
-        DosCubos=true;
-        _viewController.videoPlayer=false;
-        [self createViews];
+                NSLog(@"AR DOS CUBOS");
+                DosCubos=true;
+//                Artigas=false;
+                _viewController.videoPlayer=false;
+                [self createViews];
         
      }else if([self.ARidObra intValue]>10) {
-        NSLog(@"AR UN CUBO y MODELOS");
-        DosCubos=false;
-        _viewController.videoPlayer=false;
-        [self createViews];
+         
+                    NSLog(@"AR UN CUBO y MODELOS");
+                    DosCubos=false;
+//                    Artigas=false;
+                    _viewController.videoPlayer=false;
+                    [self createViews];
         
-    }else{
-        DosCubos=false;
-        NSLog(@"AR VIDEO");
+    }else if([self.ARidObra intValue]==16) {
+                    DosCubos=false;
+//                    Artigas=true;
+                    NSLog(@"AR ARTIGAS");
         
         _viewController.videoPlayer=true;
     }
@@ -164,9 +168,9 @@
     
     
     //agrego vistaTouch
-    self.vistaTouch = [[TouchVista alloc] init];
-    self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
-    [self.view addSubview:self.vistaTouch];
+//    self.vistaTouch = [[TouchVista alloc] init];
+//    self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
+//    [self.view addSubview:self.vistaTouch];
     
     
 
