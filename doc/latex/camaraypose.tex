@@ -1,5 +1,6 @@
 \chapter{Modelo de cámara y estimación de pose monocular}
 \label{chap: camypose}
+% v5.0: Corregida por el tribunal.
 % !TEX encoding = IsoLatin
 
 %Definición de realidad aumentada, ejemplos. Breve mención de las cosas que se usan, modelo cámara pinhole, calibración, extracción de características(LSD,ORT), marcador utilizado.
@@ -11,7 +12,7 @@
 
 Se le llama ``estimación de pose'' al proceso mediante el cual se calcula en qué punto del mundo y con qué orientación se encuentra determinado objeto respecto de un eje de coordenadas previamente definido al que se lo llama ``ejes del mundo''. Las aplicaciones de realidad aumentada requieren de un modelado preciso del entorno respecto de estos ejes, para poder ubicar correctamente los agregados virtuales dentro del modelo y luego dibujarlos de forma coherente en la imagen vista por el usuario. El objeto cuya estimación de pose resulta de mayor importancia es la cámara, ya que por ésta es por donde se mira la escena y es respecto de ésta que los objetos virtuales deben ubicarse de manera consistente.  Una forma de estimar la pose de la cámara es mediante el uso de las imágenes capturadas por ella misma.  Asimismo, el concepto ``monocular'' hace referencia al uso de una sola cámara, ya que es posible trabajar con más de una.
 
-Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura interna ya que no todas las cámaras son iguales. El modelo más comunmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
+Para poder obtener información relevante a partir de las imágenes tomadas por una cámara, resulta necesario contar con un modelo preciso de su arquitectura interna ya que no todas las cámaras son iguales. El modelo más comúnmente utilizado es el denominado \textit{pin-hole}. Para modelar completamente la arquitectura de la cámara se deben estimar ciertos ``parámetros intrínsecos'' a ésta, y eso se logra luego de realizados ciertos experimentos. A la estimación de estos parámetros se le denomina ``calibración de la cámara''.
 
 En este capítulo se verá en detalle el modelo de cámara \textit{pin-hole}, tomando en cuenta la distorsión introducida por las lentes. Más adelante, se mencionarán distintos métodos para la calibración de una cámara y se verá en detalle en particular, el método de Zhang. 
 
@@ -279,7 +280,7 @@ La función $L(r)$ es definida sólo para valores positivos de $r$ y $L(0) = 1$. U
 \section{Métodos para la calibración de cámara}
 \label{sec:Metodos de calibracion}
 
-Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, sin embargo, los tres algoritmos basados en modelos planos más ampliamente utilizados alrededor del mundo \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y el método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que afortunadamente dio resultados muy buenos. Por eso se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.
+Como se vio algunos párrafos atrás, el proceso mediante el cual se calculan los parámetros intrínsecos reales de una cámara es denominado ``calibración de cámara''. Existen varios métodos para calibrar una cámara, sin embargo, los tres algoritmos basados en modelos planos más ampliamente utilizados \cite{PP-Zollner04a} son el método de Zhang \cite{Zhang99:8}, el método de R.Y. Tsai \cite{Tsai86} y el método llamado ``Direct Linear Transform'' (DLT) \cite{abdel1971} . Para calibrar las cámaras utilizadas en este proyecto, se trabajó con una implementación en \textit{Matlab} basada en el método de Zhang (\cite{camCalib12}), que dio resultados muy buenos. Por eso se explicará a continuación, de forma breve, cómo funciona este método. Por dudas respecto de cualquier resultado matemático expuesto sin los cálculos intermedios, siempre se recomienda leer el artículo original.
 
 \begin{figure}[h!]
 \centering
@@ -372,7 +373,7 @@ B_{13} & B_{23} & B_{33}
 \]
 se ve fácilmente que esta es simétrica, por lo que quedará absolutamente definida por un vector de 6 dimensiones:
 \[
-b = (B{11}, B_{12}, B_{22}, B_{13}, B_{23}, B_{33})^T
+b = (B_{11}, B_{12}, B_{22}, B_{13}, B_{23}, B_{33})^T
 \]
 Si además se define el vector variable $v_{ij}$ de la siguiente manera:
 \[
@@ -407,7 +408,7 @@ Finalmente se realiza una estimación de la distorsión radial utilizando un model
 % ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 \section{Calibración de cámaras utilizadas}
-A lo largo del proyecto se utilizaron diferentes dispositivos, se utilizó un \textit{iPad 2}, un \textit{iPhone 4} y un \textit{iPod Touch $4^{ta}$ generación}. Todas las cámaras fueron calibradas con el método de Zhang. La distorsión radial no se tomó en cuenta para ningún  caso, aún así los resultados obtenidos buenos. 
+A lo largo del proyecto se utilizaron diferentes dispositivos, se utilizó un \textit{iPad 2}, un \textit{iPhone 4} y un \textit{iPod Touch $4^{ta}$ generación}. Todas las cámaras fueron calibradas con el método de Zhang. La distorsión radial no se tomó en cuenta para ningún  caso, aún así los resultados obtenidos son buenos. 
 Se recuerda que la matriz de parámetros intrínsecos se expresa como 
 \[
 I = \left(\begin{array}{ccc}
@@ -555,10 +556,10 @@ y_ i\\
 f
 \end{array}\right)
 $$
-\item[$\bullet$] Con estos versores es posible determinar los ángulos que forman las lineas de vista de los puntos $\textbf{M}_i$ entre sí. 
+\item[$\bullet$] Con estos versores es posible determinar los ángulos que forman las líneas de vista de los puntos $\textbf{M}_i$ entre sí. 
 \item[$\bullet$] Se busca estimar las distancias $l_i = \Vert\textbf{O}\textbf{M}_i\Vert$ entre el centro de la cámara y los puntos 3D $\textbf{M}_i$ a partir de las relaciones dadas por los triángulos $\textbf{O}\textbf{M}_i\textbf{M}_j$.
 \item[$\bullet$]  Una vez que se calculan las distancias $l_i$, los puntos $\textbf{M}_i$ se expresan en el sistema de coordenadas de la cámara como $\textbf{M}^\textbf{C}_i$. 
-\item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo a el sistema de coordenadas de la cámara.
+\item[$\bullet$] Finalmente \textbf{R} y \textbf{T} quedan determinadas como la transformación que lleva puntos en el sistema de coordenadas del mundo al sistema de coordenadas de la cámara.
 \end{itemize}
 En la bibliografía \cite{Fischler} y \cite{Haralick} se encuentran varios métodos para resolver numéricamente el problema. 
 \begin{figure}[h]
@@ -580,18 +581,14 @@ A continuación se presenta el algoritmo:
 
 \item[(3)] Si la cantidad de puntos en $S_1^*$ es menor que \textbf{T}, se sortea un nuevo subconjunto $S_2$ y se repite el proceso. Si luego de una cantidad de \textit{N} número de pruebas no se obtiene un subconjunto de decisión que cumple con el umbral \textbf{T}, se resuelve el modelo con el subconjunto de decisión mas grande obtenido, o se termina sin devolver modelo.
 \end{itemize}
-Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo a estimar y a la probabilidad de encontrar un \textit{outlier} en el conjunto de datos . 
+Los parámetros \textit{t}, \textbf{T} y \textit{N}, se eligen en base al modelo a estimar y a la probabilidad de encontrar un \textit{outlier} en el conjunto de datos. 
 
 
  \subsection{POSIT}
-Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en \ref{ch: posit}. 
+Este es un algoritmo iterativo que se basa en utilizar la proyección ortogonal escalada (SOP) para resolver el problema de estimación de pose. Se necesita tener más de cuatro correspondencias entre puntos del modelo $M_i$ y puntos en la imagen $m_i$. De todos los algoritmos presentados, este fue el que se decidió utilizar. El desarrollo de la teoría de este algoritmo se encuentra en el Capítulo \ref{ch: posit}. 
 Este algoritmo tiene diferentes variantes. Por un lado esta la versión original del algoritmo (POSIT Clásico) y una versión que resuelve el caso en que todos los puntos del modelo están en un mismo plano, (POSIT Coplanar). Luego se tiene una variante llamada SoftPOSIT que resuelve la estimación de pose sin la necesidad de conocer las correspondencias entre puntos del modelo 3D y puntos de la imagen en el caso en que los puntos del modelo no sean coplanares. Finalmente se tiene una variante de SoftPOSIT que trabaja con líneas.
 
-La variante de SoftPOSIT de líneas se eligió ya que el detector de características que se usa es el LSD \ref{chap: lsd} y se tenía la intuición de que la estimación de líneas sería mas robusta que la basada en puntos. Para esta variante no se contó con una implementación, fue implementada pero sin éxito. Sin embargo en busca de esta implementación se desarrolló una versión propia de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implemetaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo\cite{SoftLine}.
-
-decir que se tenia la intuición de que la estimación de pose basad en lineas iba a ser mas precisa que la basada en puntos, por eso se queria elegir este.
-
-Como no se contaba con una implementación, se impleemntó pero sin éxito
+La variante de SoftPOSIT de líneas se eligió ya que el detector de características que se usa es LSD, descripto en el Capítulo \ref{chap: lsd}, ya que se tenía la intuición de que la detección de líneas sería mas robusta que la detección de puntos. Para esta variante no se contó con una implementación; y la implementación lograda no colmó las expectativas. Sin embargo en busca de esta implementación se desarrolló una versión propia de POSIT para puntos coplanares que no está presentada en la bibliografía y dio buenos resultados. Otro argumento a favor de esta opción es que se contaba con implementaciones de algunas variantes. De \cite{DeMenthonCoplanarCode} se obtuvieron las implementaciones de POSIT y POSIT coplanar en C y la implementación en MatLab de SoftPOSIT. Para la variante de SoftPOSIT de líneas sólo se contó con el artículo \cite{SoftLine}.
 
 \section{Representación de la pose de la cámara}\label{sec:Representación de la pose de la cámara}
 Como se vio anteriormente, la pose de la cámara queda determinada por una matriz de rotación \textbf{R} y un vector de traslación \textbf{T}. La matriz \textbf{R} indica la orientación de la cámara respecto al mundo. Hay varias maneras de representar esta orientación, entre ellas se encuentran la representación matricial, la representación en ángulos de Euler y los cuaternios o \textit{quaternions} inglés. Dependiendo de la aplicación puede resultar más útil utilizar las diferentes representaciones. 
@@ -724,7 +721,7 @@ La gran desventaja que presenta la representación de la rotación mediante ángulo
 -1 & 0 & 0
 \end{array}\right)
 \]
-Esto es una rotación entorno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi$.
+Esto es una rotación en torno al vector $(0,0,-1)$ de un ángulo $\alpha=\psi-\phi$.
 
 Esto se puede ver gráficamente en la Figura \ref{fig: gimbal}. Se realiza la rotación según $y$ y se pueden ver que los ejes de $x$ y $z$ quedan alineados. Luego se realiza una rotación de $60^\circ$ en torno a $x$ y por otra parte también se hace otra igual pero de signo opuesto en torno a $z$. Se ve que la posición final, partiendo de los ejes alineados para una y otra rotación del modelo es la misma. Lo que cambia es la posición del eje $y$. Cuando se rota en torno a $x$, el eje $y$ queda quieto porque está más arriba en la jerarquía de rotaciones para este caso particular. Cuando se rota en torno a $z$, el eje $y$ se mueve ya que está por debajo de $z$ en la jerarquía. 
 
