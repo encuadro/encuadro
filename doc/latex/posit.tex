@@ -1,4 +1,5 @@
 \chapter{POSIT: \textit{POS} with \textit{IT}erations}\label{ch: posit}
+% v5.0: Corregida por el tribunal.
 \label{chap: posit}
 
 \section{Introducción}
@@ -12,9 +13,9 @@ Finalmente se presentan los resultados obtenidos de la comparación de las dos ve
 La primera versión de POSIT presentada por DeMenthon et al. en \cite{DeMenthon95} resuelve el problema de estimar la pose de la cámara dados 4 o más puntos detectados en la imagen y sus correspondientes en el mundo real,  con la condición de que estos puntos no sean coplanares. Si bien no es la versión final que se utilizó vale la pena ser explicada ya que ayuda a explicar los fundamentos del algoritmo utilizado.
 
 \subsection{Notación}\label{sec:classicPosit1}
-En la Figura \ref{fig: posit_1} se puede ver un modelo de cámara pinhole como el que se presentó en \ref{sec:Fundamentos y definiciones}. $O$ es el centro óptico y $G$ es el plano imagen ubicado  a una distancia focal $f$ de $O$. $x$ e $y$ son los ejes que apuntan en las direcciones de las filas y las columnas del sensor de la cámara respectivamente. $z$ es el eje que esta sobre el eje óptico de la cámara y apunta en sentido saliente. Los versores para estos ejes son \textbf{i}, \textbf{j} y \textbf{k} respectivamente.
+En la Figura \ref{fig: posit_1} se puede ver un modelo de cámara pinhole como el que se presenta en la Sección \ref{sec:Fundamentos y definiciones}. $O$ es el centro óptico y $G$ es el plano imagen ubicado a una distancia focal $f$ de $O$. $x$ e $y$ son los ejes que apuntan en las direcciones de las filas y las columnas del sensor de la cámara respectivamente. $z$ es el eje que está sobre el eje óptico de la cámara y apunta en sentido saliente. Los versores para estos ejes son \textbf{i}, \textbf{j} y \textbf{k} respectivamente.
 
-Se considera ahora un objeto con puntos característicos $M_0$, $M_1$, ...., $M_i$, ...., $M_n$, cuyo eje de coordenadas esta centrado en $M_0$ y está compuesto por los versores ($M_0u$, $M_0v$, $M_0w$ ). Como los ejes del mundo son arbitrarios se puede asumir sin pérdida de generalidad que los ejes del objeto coinciden con los ejes del mundo. La geometría del objeto se asume conocida, por ejemplo ($U_i$, $V_i$, $W_i$) son las coordenadas del punto $M_i$ en el marco de referencia del objeto.
+Se considera ahora un objeto con puntos característicos $M_0$, $M_1$, ...., $M_i$, ...., $M_n$, cuyo eje de coordenadas está centrado en $M_0$ y está compuesto por los versores ($M_0u$, $M_0v$, $M_0w$ ). Como los ejes del mundo son arbitrarios se puede asumir sin pérdida de generalidad que los ejes del objeto coinciden con los ejes del mundo. La geometría del objeto se asume conocida, por ejemplo ($U_i$, $V_i$, $W_i$) son las coordenadas del punto $M_i$ en el marco de referencia del objeto.
 Los puntos correspondientes a los puntos del objeto $M_i$ en la imagen son conocidos y se identifican como $m_i$, ($x_i$, $y_i$) son las coordenadas de este punto en la imagen\footnote{En realidad los puntos $m_i$ no están dados, vienen de la etapa anterior de detección.}. Las coordenadas de los puntos $M_i$ en el eje de coordenadas de la cámara, identificadas como ($X_i$, $Y_i$, $Z_i$), son desconocidas ya que no se conoce la pose del objeto respecto a la cámara.
 
 \begin{figure}[h!]
@@ -32,7 +33,7 @@ i_u & i_v & i_w \\
 j_u & j_v & j_w \\
 k_u & k_v & k_w \end{array} \right)\] 
 
-Por lo tanto, para obtener la matriz de rotación sólo es necesario obtener los versores  \textbf{i}  y  \textbf{j} , el versor  \textbf{k}  se obtiene de realizar el producto vectorial  \textbf{i} $\times$  \textbf{j}. El vector de traslación es el vector que va del centro del objeto $M_0$ a el centro del sistema de coordenadas de la cámara $O$. Por lo tanto las coordenadas del vector de traslación son ($X_0$,$Y_0$,$Z_0$). Si este punto $M_0$ es uno de los puntos visibles en la imagen, entonces el vector \textbf{T}  esta alineado con el vector $Om_0$ y es igual a ($Z_0$/$f$)$Om_0$. La pose queda determinada si se conocen  \textbf{i}, \textbf{j} y  \textbf{$Z_0$}.
+Por lo tanto, para obtener la matriz de rotación sólo es necesario obtener los versores \textbf{i} y \textbf{j}, el versor \textbf{k} se obtiene de realizar el producto vectorial \textbf{i} $\times$  \textbf{j}. El vector de traslación es el vector que va del centro del objeto $M_0$ al centro del sistema de coordenadas de la cámara $O$. Por lo tanto las coordenadas del vector de traslación son ($X_0$,$Y_0$,$Z_0$). Si este punto $M_0$ es uno de los puntos visibles en la imagen, entonces el vector \textbf{T}  esta alineado con el vector $Om_0$ y es igual a ($Z_0$/$f$)$Om_0$. La pose queda determinada si se conocen  \textbf{i}, \textbf{j} y  \textbf{$Z_0$}.
 
 %Como detalle a tener en cuenta, se observa que para calcular la traslación es necesario conocer el punto de referencia del objeto $M_0$, esta es la principal diferencia con la versión moderna de POSIT en la que para calcular la traslación no es necesario suponer nada acerca del punto de referencia del objeto. %
 
@@ -114,7 +115,7 @@ x_i(1+\epsilon_i) = f\frac{X_i}{Z_i} \frac{Z_i}{Z_0} = f\frac{X_i}{Z_0}
 que es la coordenada $x^{'}_i$ del punto $p_i$.
 
 \subsection{Algoritmo}\label{sec:classicPosit4}
-Las Ecuaciones \ref{posit_eq2} y \ref{posit_eq3} se puede reescribir como:
+Las Ecuaciones \ref{posit_eq2} y \ref{posit_eq3} se pueden reescribir como:
 \begin{equation}\label{posit_eq8}
 \textbf{$M_0M_i$} \textbf{I}=x_i(1+\epsilon_i)-x_0
 \end{equation}
@@ -126,7 +127,7 @@ en donde
 \textbf{I}& = \frac{f}{Z_0}\textbf{i} = s\cdot \textbf{i},&  \textbf{J} = \frac{f}{Z_0}\textbf{j} = s\cdot\textbf{j}
 \end{align}
 
-Si se conociera el valor de $\epsilon_i$, las Ecuaciones \ref{posit_eq8} y \ref{posit_eq9} representan un sistema de ecuaciones en que las incógnitas son los vectores $\textbf{I}$ y $\textbf{J}$. Una vez obtenidos estos vectores se pueden obtener los versores $\textbf{i}$ y $\textbf{j}$ normalizando, y $Z_0$ se obtiene de la norma de cualquiera de los vectores  $\textbf{I}$ o $\textbf{J}$. A esta parte del del algoritmo se le llama \textit{POS} (\textit{P}ose from \textit{O}rthography and \textit{Scaling}), ya que estima la pose a partir de las proyecciones SOP de los puntos $M_i$.
+Si se conociera el valor de $\epsilon_i$, las Ecuaciones \ref{posit_eq8} y \ref{posit_eq9} representan un sistema de ecuaciones en que las incógnitas son los vectores $\textbf{I}$ y $\textbf{J}$. Una vez obtenidos estos vectores se pueden obtener los versores $\textbf{i}$ y $\textbf{j}$ normalizando, y $Z_0$ se obtiene de la norma de cualquiera de los vectores  $\textbf{I}$ o $\textbf{J}$. A esta parte del algoritmo se le llama \textit{POS} (\textit{P}ose from \textit{O}rthography and \textit{S}caling), ya que estima la pose a partir de las proyecciones SOP de los puntos $M_i$.
 
 Si se conocieran los valores exactos de los $\epsilon_i$ la pose obtenida de resolver el sistema de ecuaciones sería la pose exacta del objeto, como no se conocen los valores exactos de $\epsilon_i$ se utiliza un método iterativo que converge a la solución buscada. En la primera iteración se le toma $\epsilon_i = 0$. La ecuación para un punto cualquiera está dada por: 
 \begin{equation}\label{posit_eq10}
@@ -176,7 +177,7 @@ Para entender cual es el problema de trabajar con puntos coplanares se explica l
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_posit/posit_2.eps}
-\caption{Configuración de puntos coplanares pertenecientes al plano \textit{D}. Los planos perpendiculares que pasan por los puntos ${H_x}_1$ y ${H_x}_2$ se intersectan en un recta que pasa por el punto \textit{Q}. Se puede ver que si hubiera un $4^{to}$ punto, el plano perpendicular correspondiente haría aparecer 2 rectas paralelas. Tomado de: \cite{CoplanarPosit} .}
+\caption{Configuración de puntos coplanares pertenecientes al plano \textit{D}. Los planos perpendiculares que pasan por los puntos ${H_x}_1$ y ${H_x}_2$ se intersectan en un recta que pasa por el punto \textit{Q}. Se puede ver que si hubiera un $4^{to}$ punto, el plano perpendicular correspondiente haría aparecer 2 rectas paralelas. Tomado de \cite{CoplanarPosit}.}
 \label{fig: posit_2}
 \end{figure}
 
@@ -247,7 +248,7 @@ Como el vector \textbf{u} es perpendicular al plano del objeto, la solución enco
 \label{fig: posit_3}
 \end{figure}
 
-Por lo tanto se toman las soluciones $(\textbf{I}_1, \textbf{J}_1)$ y $(\textbf{I}_2, \textbf{J}_2)$ y se calculan las poses. Como las dos poses son simétricas respecto a un plano paralelo al plano imagen, puede pasar que una pose dé una solución en la que los los puntos del objeto queden ubicados detrás de la cámara. Por lo tanto previo a dar las dos soluciones como válidas hay que verificar esto.
+Por lo tanto se toman las soluciones $(\textbf{I}_1, \textbf{J}_1)$ y $(\textbf{I}_2, \textbf{J}_2)$ y se calculan las poses. Como las dos poses son simétricas respecto a un plano paralelo al plano imagen, puede pasar que una pose dé una solución en la que los puntos del objeto queden ubicados detrás de la cámara. Por lo tanto previo a dar las dos soluciones como válidas hay que verificar esto.
 
 En el caso en que las dos soluciones sean válidas para todas las iteraciones, el número de poses posibles sería $2^n$ a lo largo de $n$ iteraciones. En la práctica se manejan menos soluciones posibles. Se diferencian dos casos:
 \begin{itemize}
@@ -281,10 +282,10 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 
 
 \section{SoftPOSIT}\label{sec:SoftPosit}
-Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el Capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe como se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} \cite{Gold:1996:GAA:243877.248379} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
+Hasta aquí se vio el algoritmo POSIT que permite obtener la pose de un modelo respecto a la cámara para el caso en que se tienen correspondencias entre puntos del modelo y puntos característicos en la imagen. Como se vio en el Capítulo \ref{ch:detection} obtener correspondencias entre puntos detectados en una imagen y el modelo real puede ser complicado. Por este motivo se estudió el algoritmo SoftPOSIT desarrollado por DeMenthon et al. en \cite{Daniel03simultaneouspose}. Este algoritmo recibe como entrada los puntos del modelo 3D, una lista de puntos detectados en la imagen para los cuales no se sabe cómo se relacionan con los puntos del modelo y una pose inicial para realizar la búsqueda. Utiliza un método llamado \textit{softassign} \cite{Gold:1996:GAA:243877.248379} para resolver las correspondencias y luego que tiene las correspondencias utiliza una versión modificada de POSIT. 
 
 \subsection{Modern POSIT}\label{sec:SoftPosit1}
-Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cual es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cual es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
+Como se mencionó anteriormente, SoftPOSIT utiliza una versión modificada de POSIT llamada Modern POSIT. POSIT clásico requiere que se conozca cuál es el punto de referencia en el modelo y en la imagen, ya que de estos datos se calcula el vector de traslación. Para el caso de SoftPOSIT no es posible saber de antemano cuál es el punto de referencia del modelo ya que no se tienen las correspondencias. Modern POSIT calcula la pose, sabiendo las correspondencias, pero sin utilizar ningún punto en particular como referencia. 
 
 El punto $M_0$ origen del sistema de coordenadas del objeto no es conocido, por lo tanto tampoco se conoce su correspondiente $m_0$ en el plano imagen. En la Ecuación \ref{posit_eq10} que se presentó en la Sección \ref{sec:classicPosit4} se conocían las coordenadas del punto $m_0$, por lo que las incógnitas de esta ecuación eran solamente los vectores \textbf{i}, \textbf{j}. 
 \begin{equation*}
@@ -318,11 +319,11 @@ donde la matriz  \textbf{A} son los puntos del modelo 3D en coordenadas homogéne
 %X_0 &= \frac{(sX_0)}{s}& Y_0 &= \frac{(sY_0)}{s}& Z_0 &= \frac{f}{s} 
 %\end{align} 
 
-Sin embargo se propone un método que busca minimizar la distancia al cuadrado entre las proyecciones SOP de los puntos $M_i$ y las proyecciones SOP calculadas en cada iteración. En la Figura \ref{fig: posit_7} se puede ver geométricamente cual es la distancia que se busca minimizar.
+Sin embargo se propone un método que busca minimizar la distancia al cuadrado entre las proyecciones SOP de los puntos $M_i$ y las proyecciones SOP calculadas en cada iteración. En la Figura \ref{fig: posit_7} se puede ver geométricamente cuál es la distancia que se busca minimizar.
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=1.8]{figs_posit/posit_7}
-\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{posit_eq24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{posit_eq24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Fuente: \cite{Daniel03simultaneouspose}.}
+\caption{Interpretación geométrica de POSIT. El punto $p_i$ es la proyección SOP de $M_i$ que es el término de la derecha de la Ecuación \ref{posit_eq24}. El punto $p^{'}_i$ es la proyección SOP de $M_L$, ubicado en la línea de vista de $m_i$, corresponde al término de la izquierda de la Ecuación \ref{posit_eq24}. Para que la ecuación se satisfaga se tiene que cumplir que $p_i$ y $p^{'}_i$ sean iguales. Tomado de \cite{Daniel03simultaneouspose}.}
 \label{fig: posit_7}
 \end{figure}
 
@@ -433,14 +434,14 @@ Al final del algoritmo se observa que la matriz \textit{a} está muy cerca de ser
 \subsection{Implementación}
 Durante la investigación de este algoritmo se desarrollaron versiones de POSIT moderno y SoftPOSIT en C. Ambas implementaciones son autocontenidas, no se necesita ninguna librería adicional para poderlas usar. Además todas las funciones están incluidas en un solo archivo. Esto es de gran valor ya que no se encontró en la web una versión de estos algoritmos que fuera del tipo \textit{plug and play} como lo son estas. 
 
-Se implementó pero sin éxito la variante de SoftPOSIT para líneas presentada en \cite{SoftLine}. El principal problema para llevar adelante la implementación fue la construcción de la matriz de asignación. Esta matriz de asignación indica correspondencias entre lineas en el mundo y líneas en la imagen, en el articulo no aparece una expresión explícita de la matriz sino que se dan los pasos para construirla. Las matriz de asignación que se obtuvo a partir de la interpretación de los pasos en el articulo no dio resultados satisfactorios.   
+Se implementó pero sin éxito la variante de SoftPOSIT para líneas presentada en \cite{SoftLine}. El principal problema para llevar adelante la implementación fue la construcción de la matriz de asignación. Esta matriz de asignación indica correspondencias entre líneas en el mundo y líneas en la imagen, en el artículo no aparece una expresión explícita de la matriz sino que se dan los pasos para construirla. Las matriz de asignación que se obtuvo a partir de la interpretación de los pasos en el articulo no dio resultados satisfactorios.   
 
 Se intentó implementar una variante de SoftPOSIT para puntos coplanares, combinando el método de \textit{softassign} y POSIT coplanar. Esta variante no se encuentra en la bibliografía. El principal problema para llevar a cabo esta implementación fue elegir en cada iteración una de las dos poses calculadas por el POSIT coplanar. Se obtuvieron resultados prometedores pero el tiempo de desarrollo no era compatible con los tiempos del proyecto. 
  
 \section{POSIT moderno para puntos coplanares}
 La implementación que se usó en la aplicación es el POSIT moderno adaptado para trabajar con puntos coplanares. Inicialmente se quiso desarrollar una versión de SoftPOSIT que trabajara con puntos coplanares, para ello previamente se desarrolló POSIT moderno coplanar a modo de prueba. 
 
-Como se vio en la Sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{posit_eq11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego aplicando lo visto en POSIT para puntos coplanares se termino de calcular la pose. 
+Como se vio en la Sección \ref{sec:classicPosit5} cuando los puntos son coplanares, al resolver el sistema \ref{posit_eq11} se obtienen las proyecciones de los vectores \textbf{i} y \textbf{j} sobre el plano del objeto. Se utilizó el enfoque de POSIT moderno para hallar las proyecciones de \textbf{i} y \textbf{j} sobre el plano del modelo, así como los componentes en \textit{x} e \textit{y} del vector de traslación. Luego, aplicando lo visto en POSIT para puntos coplanares se terminó de calcular la pose. 
 
 Se definen los puntos $M_0M_i^*$ como los puntos $M_0M_i$ sin la coordenada \textit{z}, ya que la coordenada \textit{z} es función de \textit{x} e \textit{y}. A su vez se definen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ como los vectores $\textbf{Q}_1$ y $\textbf{Q}_2$ sin la componente según el eje \textit{w} en el sistema de coordenadas del modelo. Teniendo esto en cuenta se tiene 
 \begin{equation*}
@@ -458,7 +459,7 @@ Una vez que se tienen los vectores $\textbf{Q}_1^*$ y $\textbf{Q}_2^*$ se proced
 
 Esta implementación de POSIT para puntos coplanares dio resultados levemente mejores que la versión obtenida de \cite{DeMenthonCoplanarCode}. Es una variante de POSIT coplanar que no se encuentra en la bibliografía, permite obtener la pose minimizando una función de costo a diferencia de POSIT clásico que usa mínimos cuadrados. 
 
-Además desde el punto de vista de programación se mejoró en la interfaz respecto a la versión clásica. En la versión clásica se tiene varios archivos con las diferentes funciones que se necesitan, puede llegar a ser difícil entender por completo la arquitectura del algoritmo y el código esta comentado en francés. En cambio en la versión implementada para este proyecto se busco tener un solo archivo con todas las funciones y mejorar la arquitectura respecto a la versión anterior. 
+Además desde el punto de vista de programación se mejoró en la interfaz respecto a la versión clásica. En la versión clásica se tiene varios archivos con las diferentes funciones que se necesitan, puede llegar a ser difícil entender por completo la arquitectura del algoritmo y el código esta comentado en francés. En cambio en la versión implementada para este proyecto se buscó tener un solo archivo con todas las funciones y mejorar la arquitectura respecto a la versión anterior. 
 
 \section{Resultados}\label{sec: resultadosPosit}
 Se realizó una comparación entre la implementación en C de POSIT clásico para puntos coplanares, obtenida de \cite{DeMenthonCoplanarCode} , y una versión desarrollada para esta aplicación de POSIT moderno para puntos coplanares. 
@@ -484,8 +485,8 @@ En la Figura \ref{fig:posit_8} se muestran los resultados obtenidos para el erro
 
 \begin{figure}[H]
 \centering
-        \includegraphics[scale=0.8]{figs_posit/histAngulosPosit2}
-         \caption{Histograma de los errores obtenidos en la orientación. La escala de las gráficas es logarítmica.}
+        \includegraphics[scale=0.75]{figs_posit/histAngulosPosit2}
+         \caption{Histograma de los errores obtenidos en la orientación. Los ángulos están expresados en grados. Los porcentajes de las muestras correspondientes a cada error en la orientación están expresados en escala logarítmica.}
          \label{fig:posit_8}
 \end{figure}
  
@@ -514,16 +515,16 @@ En la Figura \ref{fig:posit_12} se muestran los errores de posición para los dif
 \begin{figure}[H]
 \centering
         \includegraphics[scale=0.7]{figs_posit/histTrasPosit2}
-         \caption{Histograma de los errores obtenidos en traslación. La escala en el de las gráficas es logarítmica.}
+         \caption{Histograma de los errores obtenidos en traslación. Las distancias están expresadas en milímetros. Los porcentajes de las muestras correspondientes a cada error en la traslación están expresados en escala logarítmica. }
          \label{fig:posit_12}
 \end{figure}
 
 \subsubsection{Comportamiento global}\label{sec: positComportamientoGlobal}
-A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. Esta trayectoria se muestra resumida en la Figura \ref{fig:recorrida} 
+A continuación se muestra el comportamiento de las dos variantes del algoritmo para una trayectoria representativa del movimiento que se realiza con el dispositivo. Se generaron 100 imágenes a partir de poses a las que se les sumó un ruido blanco para simular el comportamiento de una persona. Esta trayectoria se muestra resumida en la Figura \ref{fig:recorrida}.
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.5]{figs_posit/recorrida}
-\caption{Trayectoria de prueba utilizada. Se parte de una distancia de $1.2m$ del marcador y se acerca hasta $0.7m$. Luego se mantiene la distancia fija y se rota $25^\circ$ en $x$ y $50^\circ$ en $y$}
+\caption{Trayectoria de prueba utilizada. Se parte de una distancia de $1.2m$ del marcador y se acerca hasta $0.7m$. Luego se mantiene la distancia fija y se rota $25^\circ$ en $x$ y $50^\circ$ en $y$.}
 \label{fig:recorrida}
 \end{figure}
 
@@ -551,7 +552,7 @@ La trayectoria se puede dividir en dos movimientos. El primer movimiento simula 
 \textbf{POSIT coplanar moderno} &   1.4012 &     3.2910 \\ \hline
 \textbf{POSIT coplanar clásico} &     2.4991 &     4.9868 \\ \hline
 \end{tabular}
-\caption{Error de reproyección}
+\caption{Error de reproyección.}
 \label{tablaBarridoReproy}
 \end{table}
 
@@ -565,7 +566,7 @@ $\psi_x$ & 2.035 & 3.8616 & 3.4011 & 4.7145 \\ \hline
 $\theta_y$ & -6.8797 & 9.483 & -6.6954 & 10.1103 \\ \hline
 $\phi_z$ & 0.0766 & 0.1248 & 0.0757 & 0.0781 \\ \hline
 \end{tabular}
-\caption{Error de orientación}
+\caption{Error de orientación.}
 \label{tablaBarridoOrient}
 \end{table}
 
@@ -578,12 +579,7 @@ Se utilizaron imágenes de prueba obtenidas con el \textit{iPad 2} e imágenes sin
 
 Para el caso de las imágenes de prueba del \textit{iPad} se eligieron 9 posiciones y en cada posición se sacaron 50 fotos. Con estas 450 fotos se obtuvo la estadística del funcionamiento de los algoritmos. En la Figura \ref{fig:posit_16} se puede ver una de las imágenes utilizadas para cada posición. También se utilizaron imágenes sintéticas en posiciones similares a las de las imágenes de prueba que se pueden ver en la Figura \ref{fig:posit_20}, se utilizaron 9 casos con 50 fotos por caso. Se partió de una posición base y se varió la posición muy poco, intentando simular el movimiento que se  tuvo al sacar las fotos con el \textit{iPad}. En total se probaron 900 imágenes. 
 
-
- 
-
-
- 
-A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de todas laa imágenes. Esto sirve para evaluar el comportamiento de los algoritmos ya que los puntos a la entrada son los mismos para las dos variantes. 
+A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado de segmentos, se calculan las correspondencias y luego se estima la pose. Para cada imagen se calcula el error de proyección de cada punto, luego se promedian obteniendo una sola medida de error por imagen, esta medida es a su vez promediada con los errores obtenidos de todas las imágenes. Esto sirve para evaluar el comportamiento de los algoritmos ya que los puntos a la entrada son los mismos para las dos variantes. 
 
 \begin{figure}[H]
 \centering
@@ -601,7 +597,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
                 \includegraphics[scale=0.35]{figs_posit/histDistEuclComp}
                 \label{fig:posit_19}}
                 
-         \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes de prueba. \subref{fig:posit_18}, POSIT moderno. \subref{fig:posit_19}, POSIT clásico}
+         \caption{Histograma normalizado de los errores de reproyección (en píxeles) para POSIT para las imágenes de prueba. \subref{fig:posit_18}, POSIT moderno. \subref{fig:posit_19}, POSIT clásico.}
          \label{fig:posit_17}
  \end{figure}
 
@@ -613,14 +609,14 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \textbf{Media} & 3.9684 &  5.1368  \\ \hline
 \textbf{Desviación estándar} &   5.1212 &     6.8950 \\ \hline
 \end{tabular}
-\caption{Error de proyección de imágenes de pruebas. El error está expresado en píxeles}
+\caption{Error de proyección de imágenes de pruebas. El error está expresado en píxeles.}
 \label{posit_tabla1}
 \end{table} 
 
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.16]{figs_posit/posit_9b}
-\caption{Posiciones que se utilizaron para las imágenes sintéticas}
+\caption{Posiciones que se utilizaron para las imágenes sintéticas.}
 \label{fig:posit_20}
 \end{figure}
 
@@ -634,7 +630,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
                 \includegraphics[scale=0.35]{figs_posit/histDistEuclCompSint}
                 \label{fig:posit_23}}
                 
-         \caption{Histograma normalizado de los errores de reproyección para POSIT para las imágenes sintéticas. \subref{fig:posit_22}, POSIT moderno. \subref{fig:posit_23}, POSIT clásico}
+         \caption{Histograma normalizado de los errores de reproyección (en píxeles) para POSIT para las imágenes sintéticas. \subref{fig:posit_22}, POSIT moderno. \subref{fig:posit_23}, POSIT clásico.}
          \label{fig:posit_21}
  \end{figure}
 
@@ -646,7 +642,7 @@ A las imágenes se les aplica todo el proceso, se realiza la detección y filtrado
 \textbf{Media} & 4.033 &  5.4942  \\ \hline
 \textbf{Desviación estándar} &   5.6196 &    7.2591 \\ \hline
 \end{tabular}
-\caption{Error de proyección de imágenes sintéticas. El error está expresado en píxeles}
+\caption{Error de proyección de imágenes sintéticas. El error está expresado en píxeles.}
 \label{posit_tabla2}
 \end{table} 
 
@@ -706,7 +702,7 @@ En general se puede ver que el error de proyección y la varianza son un poco men
 
 En este capítulo se presentó la teoría detrás del algoritmo POSIT. Se explicaron las diferentes versiones que se utilizaron, se vio que para marcadores coplanares hay ambigüedad en la estimación de la pose lo que genera errores. Se presentó una variante del POSIT coplanar moderno que minimiza una función de costo para estimar la pose, a diferencia de la versión clásica que resuelve la estimación utilizando mínimos cuadrados. También se explicó el algoritmo SoftPOSIT que estima las pose para conjuntos de puntos para los cuales no se saben las correspondencias. Este algoritmo requiere de una pose inicial para realizar la búsqueda. 
 
-Se realizó un estudio detallado del desempe\~no de los las dos versiones de POSIT coplanar y se compararon los resultados obtenidos, se vio que las dos versiones funcionan de manera similar. En la Figura \ref{fig:posit_Repr} se ven algunos ejemplos que muestran como quedan los puntos reproyectados sobre el marcador. Se muestra por un lado la imagen original y a su lado, se muestra el resultado obtenido de filtrado de segmentos más estimación de pose. Como anexo a la documentación se incluye un video donde se muestra la reproyección un tiempo real.
+Se realizó un estudio detallado del desempe\~no de las dos versiones de POSIT coplanar y se compararon los resultados obtenidos, se vio que ambas funcionan de manera similar. En la Figura \ref{fig:posit_Repr} se ven algunos ejemplos que muestran cómo quedan los puntos reproyectados sobre el marcador. Se muestra por un lado la imagen original y a su lado, se muestra el resultado obtenido del filtrado de segmentos más estimación de pose. Como anexo a la documentación se incluye un video donde se muestra la reproyección un tiempo real.
 
 \begin{figure}
         \centering
@@ -719,7 +715,7 @@ Se realizó un estudio detallado del desempe\~no de los las dos versiones de POSI
        \subfigure[]{
                 \includegraphics[scale=0.3]{figs_posit/Repr3}
 				\label{fig:posit_Repr3}}
-         \caption{Ejemplos de reproyección de puntos sobre el marcador. En color magenta se se ven los puntos detectados a la salida el filtro de correspondencias, en color cyan de ven los puntos reproyectados por POSIT coplanar moderno y en negro se ven los puntos reproyectados por POSIT coplanar clásico. }
+         \caption{Ejemplos de reproyección de puntos sobre el marcador. En color magenta se se ven los puntos detectados a la salida el filtro de correspondencias, en color cyan se ven los puntos reproyectados por POSIT coplanar moderno y en negro se ven los puntos reproyectados por POSIT coplanar clásico. }
          \label{fig:posit_Repr}
 \end{figure}
 
