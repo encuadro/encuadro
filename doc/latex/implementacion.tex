@@ -1,4 +1,5 @@
 \chapter{Aplicación}
+% v5.0: Corregida por el tribunal.
 \label{chap: imp}
 \section{Introducción}
 En este capítulo se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. En particular se desarrolló una aplicación pensando en los cuadros de la planta baja del Museo Nacional de Artes Visuales (MNAV). Entre otros autores, tiene cuadros de Pedro Figari, Juan Manuel Blanes y de Joaquín Torres García, que se eligieron para hacer el prototipo. Se siguió la línea que se planteó desde un inicio que fue la de tener tres partes fundamentales: Navegación, Identificación y Realidad Aumentada. Para eso se incorporaron a la aplicación las siguientes funcionalidades:
@@ -17,16 +18,16 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=1.5]{figs_implementacion/implementacion_bloques.eps}
-\caption{Diagrama global de la aplicación}
+\caption{Diagrama global de la aplicación.}
 \label{fig: Diaglobal}
 \end{figure}
 Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de navegar por el museo leyendo códigos QR desplegados en las distintas salas o secciones, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: identificación de la de obra. La identificación de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}\\
 
-De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y así entonces interactuar con él. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la Figura \ref{fig: story}, se presenta el \textit{Storyboard} de la misma, que muestra la relación entre las distintas clases. Se recuerda al lector que el \textit{Storyboard} es una herramienta de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una representación gráfica de la interfaz de usuario. A su vez, a la Figura \ref{fig: story} se le agregó un número identificador en cada \textit{ViewController} para poder referencialos en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
+De esta manera es que se da el flujo de la aplicación a nivel de usuario, para llegar a un determinado cuadro de interés y así entonces interactuar con él. Pero este flujo es necesario representarlo en una serie de clases e instancias y con cierta invocación de métodos que cumplan las reglas de Objective-C con las herramientas existentes de desarrollo que provee Xcode. Para tener una idea de cómo se mapea el flujo de la aplicación en el lenguaje de desarrollo, en la Figura \ref{fig: story}, se presenta el \textit{Storyboard} de la misma, que muestra la relación entre las distintas clases. Se recuerda al lector que el \textit{Storyboard} es una herramienta de programación gráfica, que permite generar instancias de clases y vínculos entre las mismas en forma visual a la vez de ser una representación gráfica de la interfaz de usuario. A su vez, a la Figura \ref{fig: story} se le agregó un número identificador en cada \textit{ViewController} para poder referenciarlos en la medida que sea necesario detallar determinados aspectos de las clases involucradas.\\
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.3]{figs_implementacion/Storynum.png}
-\caption{\textit{Storyboard} de la aplicación}
+\caption{\textit{Storyboard} de la aplicación.}
 \label{fig: story}
 \end{figure}
 En las próximas subsecciones se explican algunas de las clases implementadas en la aplicación y que además tienen cierta relevancia. Se muestran su rol dentro de la aplicación y sus principales características.
@@ -102,7 +103,7 @@ que por defecto retorna un \textit{0}. El mismo indica la cantidad de secciones 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/AutorYCuadroTable.eps}
-\caption{Autor y Cuadro TableViewControllers}
+\caption{Autor y Cuadro TableViewControllers.}
 %\label{fig: implementacion_1}
 \end{figure}
 
@@ -115,7 +116,7 @@ Este \textit{ViewController} (identificado con el número 7 en la Figura \ref{fig
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/imagenServer.eps}
-\caption{Ejemplo de captura para reconocimiento SIFT}
+\caption{Ejemplo de captura para reconocimiento SIFT.}
 \label{fig: imagenServer}
 \end{figure}
 
@@ -137,7 +138,7 @@ Este \textit{ViewController} (identificado con el número 8 en la Figura \ref{fig
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.4]{figs_implementacion/ObraCompleta.eps}
-\caption{Pantalla con la obra completa}
+\caption{Pantalla con la obra completa.}
 \label{fig: obraCompleta}
 \end{figure}
 
@@ -172,7 +173,7 @@ Esta clase (identificada con el número 10 en la Figura \ref{fig: story}) hereda 
 \begin{figure}[h!]
 \centering
 \includegraphics[scale=0.2]{figs_implementacion/Draw.eps}
-\caption{Ejemplo de dibujo libre}
+\caption{Ejemplo de dibujo libre.}
 \label{fig: draw}
 \end{figure}
 Se implementó haciendo una reimplementación de los siguientes tres métodos:
@@ -286,7 +287,7 @@ Para el prototipo de aplicación se optó por tener un identificador QR para cada 
 
 
 \section{Servidor}
-Si bien el desarrollo de la aplicación busca lograr un prototipo y no una aplicación comercial, por lo que la cantidad de imágenes y datos en general es peque\~na y por lo tanto puede ser almacenada dentro de la aplicación, por prolijidad y escalabilidad resulta imprescindible contar con un servidor. Es necesario un servidor que guarde la toda la información y a la vez realice algo de procesamiento, siempre y cuando este no deba hacerse en tiempo real. Se decidió entonces, almacenar toda aquella información relevante en cuanto a registro de obras (imágenes, títulos, autores y descripciones), audioguías, videos, modelos y animaciones utilizadas para la realidad aumentada en un servidor que hubo que implementar. El servidor debe estar hubicado dentro del museo y se debe poder interactuar con él por medio de la Wireless LAN ($54$ Mbps). Si bien es cierto que el servidor podría perfectamente ser remoto, con acceso por medio de internet, su desempe\~no a nivel de tiempos bajaría notoriamente.
+Si bien el desarrollo de la aplicación busca lograr un prototipo y no una aplicación comercial, por lo que la cantidad de imágenes y datos en general es peque\~na y por lo tanto puede ser almacenada dentro de la aplicación, por prolijidad y escalabilidad resulta imprescindible contar con un servidor. Es necesario un servidor que guarde toda la información y a la vez realice algo de procesamiento, siempre y cuando este no deba hacerse en tiempo real. Se decidió entonces, almacenar toda aquella información relevante en cuanto a registro de obras (imágenes, títulos, autores y descripciones), audioguías, videos, modelos y animaciones utilizadas para la realidad aumentada en un servidor que hubo que implementar. El servidor debe estar hubicado dentro del museo y se debe poder interactuar con él por medio de la Wireless LAN ($54$ Mbps). Si bien es cierto que el servidor podría perfectamente ser remoto, con acceso por medio de Internet, su desempe\~no a nivel de tiempos bajaría notoriamente.
 
 \subsection{Creando el servidor}
 Para la creación del servidor se buscó primeramente la alternativa de hacerlo sobre una máquina con sistema operativo con núcleo Linux, distribución Ubuntu, ya que se creyó sería más sencillo. Luego de realizada esta tarea, se estudió la posibilidad de tener el servidor corriendo sobre una plataforma Mac OS X y de manera sorpresiva, en este segundo caso, el objetivo se logró de forma mucho más sencilla. A continuación se explica paso por paso como se implementaron los servidores en uno y otro sistema operativo.
@@ -309,7 +310,7 @@ sudo apt-get install php5
 Para este proyecto en particular, no fue necesario instalar MySQL.
 
 \subsubsection{Servidor en Mac OS X}
-A diferencia de otros sistemas operativos, Mac OS X cuenta por defecto con Apache y Php, no así con MySQL. Para tener un servidor entonces, sólo resta activarlos y si además se quiere contar con MySQL, es necesario instalarlo. La activación del servidor es un proceso muy simple, del cual existe bastante material disponible en internet.\\
+A diferencia de otros sistemas operativos, Mac OS X cuenta por defecto con Apache y Php, no así con MySQL. Para tener un servidor entonces, sólo resta activarlos y si además se quiere contar con MySQL, es necesario instalarlo. La activación del servidor es un proceso muy simple, del cual existe bastante material disponible en Internet.\\
 
 Una vez instalado el servidor en cualquiera de ambos sistemas operativos, se puede corroborar su correcto funcionamiento abriendo cualquier navegador web y digitando la dirección IP de la máquina en la que se instaló el servidor (si se está en ella misma, se puede digitar la dirección del bucle local). Se deberá ver la página que por defecto muestra el servidor, la de la Figura \ref{fig: implementacion_4}.
 
@@ -334,7 +335,7 @@ Se tiene entonces, para cada obra en cuesti\'on, una lista de 128 descriptores i
 
 % ------------------------------------------------------------------------------------- |COMENTARIOS SOBRE LA IMPLEMENTACIÓN| ---------------------------------------------------------------------------
 \section{Resumen y comentarios sobre la implementación}
-Hasta el momento se mencionaron una cantidad de herramientas más que interesantes, que reunidas logran un recorrido interactivo para uno o más museos. Sin embargo, no se expusieron cuáles son las aplicaciones puntuales de realidad aumentada que se dijo se iba a hacer sobre las obras. Por otra parte, aunque dejando afuera aspectos estéticos y artísticos, en el Capítulo \ref{chap: casoUso} se mostró cómo se resolvieron los aspectos técnicos necesarios para llevar a cabo una aplicación final real de realidad aumentada. Así entonces generar un \textit{render} de un perro junto a un sillón (caso de uso ``modelos''), que claramente puede llegar a ser de muy poco interés para un museo, resuelve el mismo problema que si se quisiera generar un \textit{render} con el modelo de José Artigas. Asimismo ser capaz de responder frente a al toque en la pantalla del modelo de un cubo y así entonces actuar en consecuencia (caso de uso ``interactivo''), resuelve el mismo problema que animar al modelo de José Artigas si este es tocado. Lo que se tiene en este caso (y efectivamente se logró), es una escultura digital e interactiva de Artigas, que sólo puede visualizarse a través de un \textit{iPad}. Ver Figura \ref{fig:artigases}.\\ 
+Hasta el momento se mencionaron una cantidad de herramientas más que interesantes, que reunidas logran un recorrido interactivo para uno o más museos. Sin embargo, no se expusieron cuáles son las aplicaciones puntuales de realidad aumentada que se dijo se iba a hacer sobre las obras. Por otra parte, aunque dejando afuera aspectos estéticos y artísticos, en el Capítulo \ref{chap: casoUso} se mostró cómo se resolvieron los aspectos técnicos necesarios para llevar a cabo una aplicación final real de realidad aumentada. Así entonces generar un \textit{render} de un perro junto a un sillón (caso de uso ``modelos''), que claramente puede llegar a ser de muy poco interés para un museo, resuelve el mismo problema que si se quisiera generar un \textit{render} con el modelo de José Artigas. Asimismo, ser capaz de responder frente al toque en la pantalla del modelo de un cubo y así entonces actuar en consecuencia (caso de uso ``interactivo''), resuelve el mismo problema que animar al modelo de José Artigas si este es tocado. Lo que se tiene en este caso (y efectivamente se logró), es una escultura digital e interactiva de Artigas, que sólo puede visualizarse a través de un \textit{iPad}. Ver Figura \ref{fig:artigases}.\\ 
 
 \begin{figure}[h!]
 \centering
