@@ -1,4 +1,5 @@
 \chapter{Detección}
+% v5.0: Corregida por el tribunal.
 \label{ch:detection}
 
 \section{Introducción}
@@ -14,7 +15,7 @@ El capítulo comienza con la revisión de algunos detectores clásicos de bordes y 
 \section{Bordes y esquinas}
 Los detectores de bordes, en particular los detectores de bordes tipo escalón son una parte esencial de muchos sistemas de visión. El proceso de detección de bordes cumple la función de simplificar drásticamente la cantidad de información a procesar conservando aspectos estructurales utilizables para establecer los límites de cierto objeto en la imagen \cite{Canny:1986:ACA}. 
 
-Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. Más formalmente puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación está relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo\cite{operador_gradiente}. Hay implementaciones de detección de bordes que toman en cuenta el \textit{efecto rampa} y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
+Un \textbf{borde} se puede definir intuitivamente como un cambio brusco sobre una zona en la intensidad de una imagen. Más formalmente puede ser asociado a la búsqueda de discontinuidades y naturalmente su implementación está relacionada con la derivada primera de una imagen. En una imagen una derivada primera puede ser aproximada de distintas formas por un operador de gradiente como lo son los operadores de Sobel, Prewitt o Roberts por ejemplo. Hay implementaciones de detección de bordes que toman en cuenta el \textit{efecto rampa} y por lo tanto acuden a derivadas de segundo y tercer orden. El efecto rampa se muestra en la Figura \ref{fig:rampa} en donde se puede ver en lo que aparentemente ocurre una discontinuidad en la imagen si uno se acerca lo suficiente a la región, esta discontinuidad es en realidad continua.
 \begin{figure}[h!]
   \centering
     \includegraphics[scale=0.8]{figs_detection/rampa.png}
