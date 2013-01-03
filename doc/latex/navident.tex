@@ -1,4 +1,5 @@
 \chapter{Navegación e Identificación}
+% v5.0: Corregida por el tribunal.
 \label{chap: navident}
 \section{Introducción}
 Como se plantea en el Capítulo \ref{chap: alcance} las tres partes del recorrido son \textit{Navegación, Identificación} y \textit{Realidad aumentada}. En este capítulo se presentan las alternativas investigadas y finalmente implementadas para poder lograr un grado de completitud en la aplicación. Para el caso de las alternativas implementadas se aporta mayor detalle sobre la resolución. 
@@ -45,7 +46,7 @@ Es fácil darse cuenta que la codificación resulta mucho más sencilla que la deco
 
 Debido a que el centro del presente proyecto no fue la codificación y decodificación de QRs, y que además ya existen distintas librerías que resuelven muy bien este problema, se optó por investigar varias de ellas e incorporar la más adecuada a la aplicación.
 
-Entre todas las librerías que resuelven la decodificación, las librerías \textbf{ZXing} y \textbf{ZBar} \cite{zxing} \cite{zbar} son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossing'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.
+Entre todas las librerías que resuelven la decodificación, las librerías \textbf{ZXing} \cite{zxing} y \textbf{ZBar} \cite{zbar} son quizá las más destacadas, por su popularidad, simplicidad y buena documentación para la fácil implementación. ZXing, denominada así por ``Zebra Crossing'', es una librería gratis y en código abierto desarrollada en java y que tiene implementaciones que están adaptadas para otros lenguajes como C++, Objetive-C y JRuby, entre otros.
 
 Por su parte ZBar también tiene soporte sobre varios lenguajes y cuenta con un kit de desarrollo interesante para lograr fácilmente aplicaciones que integren el lector de QR. Luego de haber trabajado sobre el código de ejemplo que contiene la implementación de las clases principales para obtener un lector se optó por utilizar esta librería para los fines de la aplicación. En este código de ejemplo, al presionarse un botón da la posibilidad de escanear directamente y guardar el contenido del QR en una variable denominada \textit{ZBarReaderControllerResults}. Esta variable luego se mapea en una \textit{hash table} con el contenido en formato \textit{NSDictionary}. De esta manera se accede fácilmente al contenido en formato legible y es fácil de hacer una lógica de comparación y búsqueda en una base de datos.\\
 %fuente http://code.google.com/p/zxing/
@@ -111,7 +112,7 @@ Una vez que se obtiene la ``pir\'amide'' de diferencia de Gaussianas anterior, s
 \subsubsection{Localizaci\'on exacta de puntos clave.}
 La b\'usqueda de extremos en las diferencias de Gaussianas produce m\'ultilpes candidatos entre los que se encuentran puntos con poco contraste;  los cuales no son estables a cambios de iluminaci\'on y al ruido. Para quitarlos se procede de la siguente manera.
 
-Primero se realiza una expansi\'on de Taylor de orden 2 entorno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
+Primero se realiza una expansi\'on de Taylor de orden 2 en torno a cada extremo detectado $(x_0,y_0,\sigma_0)$:
 \begin{equation}
 D(\chi) = D + \frac{\partial D^T}{\partial \chi} \chi + \frac{1}{2}{\chi}^T\frac{\partial^2D}{\partial {\chi}^2} \chi
 \label{eq:1}
@@ -157,7 +158,7 @@ m(x,y) = \sqrt{[L(x+1,y) - L(x-1,y)]^2 + [L(x,y+1) - L(x,y-1)]^2}
 \end{array}
 \]
 
-Para determinar de una forma fiel la orientaci\'on de cada punto clave, \'esta es determinada tomando en cuenta las direcciones de todos los puntos de la imagen dentro de cierto entorno al mismo. Se genera entonces un histograma de direcciones con valores que var\'ian de a 10 grados, ponderado por el m\'odulo del gradiente y una ventana Gaussiana circular centrada en el punto clave, de desviaci\'on est\'andar igual a 1.5 veces el valor del nivel del en cuesti\'on. Cada m\'aximo en el histograma corresponde a la direcci\'on dominante en el gradiente local y ser\'a la asignada al punto clave. Si existen en el histograma otros m\'aximos secundarios de valor mayor o igual al $80\%$ del m\'aximo principal, estos ser\'an utilizados para generar nuevos puntos clave con esa direcci\'on. S\'olo al $15\%$ de los puntos clave se les asigna m\'as de una direcci\'on.\\
+Para determinar de una forma fiel la orientaci\'on de cada punto clave, \'esta es determinada tomando en cuenta las direcciones de todos los puntos de la imagen dentro de cierto entorno del mismo. Se genera entonces un histograma de direcciones con valores que var\'ian de a 10 grados, ponderado por el m\'odulo del gradiente y una ventana Gaussiana circular centrada en el punto clave, de desviaci\'on est\'andar igual a 1.5 veces el valor del nivel del en cuesti\'on (valor de $\sigma$ en la imagen diferencia de Gaussianas). Cada m\'aximo en el histograma corresponde a la direcci\'on dominante en el gradiente local y ser\'a la asignada al punto clave. Si existen en el histograma otros m\'aximos secundarios de valor mayor o igual al $80\%$ del m\'aximo principal, estos ser\'an utilizados para generar nuevos puntos clave con esa direcci\'on. S\'olo al $15\%$ de los puntos clave se les asigna m\'as de una direcci\'on.\\
 % -------------------------------------------------------------------------------------------------------------------------------------------
 \subsubsection{Descriptor de puntos clave.}
 \begin{figure}[h!]
@@ -169,7 +170,7 @@ Para determinar de una forma fiel la orientaci\'on de cada punto clave, \'esta e
 
 Hasta el momento, se le ha asignado a cada punto clave una escala, una locaci\'on y una orientaci\'on. El siguiente paso es determinar para cada punto clave un descriptor relativamente invariante a cambios de iluminaci\'on y afinidades, basado en el entorno del mismo.
 
-Una vez determinadas la magnitud y fase del gradiente entorno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcciones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.
+Una vez determinadas la magnitud y fase del gradiente en torno a un punto clave, una ventana Gaussiana centrada en este pondera los valores de m\'odulo y fase de $4\times 4$ subregiones cuadradas en la vecindad del mismo, cada una formada por $16$ p\'ixeles. Nuevamente se genera para cada subregi\'on un histograma de 8 direcciones distintas. Se obtiene finalmente para cada punto clave un descriptor de $4\times 4 \times 8 = 128$ valores.
 
 En la Figura \ref{fig:SIFT_3} se ve c\'omo se computan los descriptores para cada punto clave. En el ejemplo se utilizan \'unicamente $2\times 2 = 4$ subregiones en vez de $4\times 4 = 16$.\\
 \section{Resumen}
