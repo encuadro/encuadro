@@ -1,4 +1,5 @@
 \chapter{Conclusiones y trabajo a futuro}
+% v5.0: Corregida por el tribunal.
 
 \section{Introducci\'on}
 
@@ -43,7 +44,7 @@ En lo que respecta a los algoritmos de filtrado y agrupación de segmentos, deter
 
 En el Cap\'itulo \ref{chap: posit} se explicaron en detalle diferentes versiones de POSIT, el algoritmo que este proyecto utiliza para estimar la pose de la c\'amara a partir de ciertas caracter\'isticas de la imagen. En particular, se utiliz\'o \textbf{el POSIT coplanar moderno} que toma como entrada ciertos puntos en un modelo predefinido y sus correspondientes en la imagen. Este es un algoritmo muy preciso bajo ciertas condiciones y  veloz respecto de los algoritmos de estimación de pose tradicionales.  Sin embargo, resulta no del todo l\'ogico utilizar un algoritmo que tome puntos como entrada si las caracter\'isticas extra\'idas de la imagen primeramente son segmentos.
 
-Existe por su parte, otra versión de POSIT denominada ``\textit{Soft} POSIT de líneas''. Esta versión, toma como entrada líneas en una imagen y líneas en un modelo y tiene la habilidad de detectar correspondencias entre ellas y luego estimar la pose de la cámara a partir de dichas correspondencias. De haberse usado esta versión de POSIT, el segundo y tercer bloque del diagrama de la Figura \ref{fig: bloques_correspondencias} no hubieran sido necesarios.
+Existe por su parte, otra versión de POSIT denominada ``\textit{Soft} POSIT de líneas''. Esta versión, toma como entrada líneas en una imagen y líneas en un modelo y tiene la habilidad de detectar correspondencias entre ellas y luego estimar la pose de la cámara a partir de dichas correspondencias. De haberse usado esta versión de POSIT, el segundo y tercer bloque del diagrama de la Figura \ref{fig: bloques_correspondencias_conclu} no hubieran sido necesarios.
 
 Sin embargo, \textit{Soft} POSIT de líneas no funciona para marcadores planos como los utilizados en este proyecto. Además, requiere de una estimación de la pose inicial del dispositivo lo que no hace tan trivial su uso. Por estos motivos se optó por utilizar POSIT coplanar y resolver las correspondencias en la etapa de filtrado de segmentos. 
 
@@ -78,4 +79,4 @@ De forma alternativa, se puede profundizar en la integraci\'on de los sensores i
 
 \subsection{Sobre la plataforma}
 
-Como trabajo a futuro también se considera la migración de todo lo desarrollado, a dispositivos que funcionen con \textit{Android} como sistema operativo. Dado que gran parte del desarrollo fue en lenguaje C, en particular todos los algoritmos de procesamiento de imágenes, es fácilmente portable a Android, que si bien se basa en Java, cuenta con una herramienta llamada NDK que permite reutilizar código de C/C++. Una motivación importante para considerar esta migración a Android es que estos dispositivos son de uso más masivo que los dispositivos \textit{Apple} y en algunos casos tienen prestaciones similares y con precios más acccesibles.
+Como trabajo a futuro también se considera la migración de todo lo desarrollado, a dispositivos que funcionen con \textit{Android} como sistema operativo. Dado que gran parte del desarrollo fue en lenguaje C, en particular todos los algoritmos de procesamiento de imágenes, es fácilmente portable a Android, que si bien se basa en Java, cuenta con una herramienta llamada NDK que permite reutilizar código de C/C++. Una motivación importante para considerar esta migración a Android es que estos dispositivos son de uso más masivo que los dispositivos \textit{Apple} y en algunos casos tienen prestaciones similares y con precios más accesibles.
