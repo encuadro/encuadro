@@ -52,8 +52,7 @@ La primera generación del \textit{iPhone} fue lanzada por Apple en Junio de 2007
 
 %GPU SGX
 %http://developer.apple.com/library/ios/#documentation/3DDrawing/Conceptual/OpenGLES_ProgrammingGuide/OpenGLESPlatforms/OpenGLESPlatforms.html
-Por su parte, tanto el \textit{iPad} como el \textit{iPod Touch} también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, a continuación se muestra una tabla comparativa de determinadas características que son de interés a los 
-efectos del presente proyecto.\\
+Por su parte, tanto el \textit{iPad} como el \textit{iPod Touch} también representaron un gran salto en el mundo de las plataformas y \textit{Tablets}, agrandando las posibilidades de desarrollo y procesamiento. Como se dijo, de cada una de estas tres familias de dispositivos existen distintas versiones y modelos. Por eso, en la Tabla \ref{tab: compHWiOS} se comparan determinadas características\footnote{Cabe destacar que \textbf{SoC} hace referencia a ``System on Chip''. Para más información sobre \textit{SoCs} ver Sección \ref{sec: SoC}.} que son de interés a los efectos del presente proyecto.\\
 
 
 \begin{table}[htbp]
@@ -88,7 +87,7 @@ efectos del presente proyecto.\\
 & \scriptsize Sensor de luz ambiente & \scriptsize Sensor de luz ambiente & \scriptsize  Sensor de luz ambiente & \scriptsize  Sensor de luz \\ 
 & \scriptsize Sensor de proximidad & \scriptsize Sensor de proximidad &  & \\ \hline
 \end{tabular}
-\caption{Comparativa de algunas plataformas Apple. \cite{iphone4_support} \cite{iphone4S_support} \cite{ipodTouch_support} \cite{ipad2_support} }
+\caption{Comparativa de algunas plataformas Apple \cite{iphone4_support} \cite{iphone4S_support} \cite{ipodTouch_support} \cite{ipad2_support}.}
 \label{tab: compHWiOS}
 
 
@@ -99,28 +98,7 @@ efectos del presente proyecto.\\
 
 Hay algunos comentarios respecto de la Tabla \ref{tab: compHWiOS} que es bueno destacar. Es importante decir que se eligieron esos cuatro dispositivos, pues pareció de interés conocer al menos una plataforma de cada familia; y dentro de las mismas se eligieron las que fueron utilizadas para desarrollar.
 
-Uno de los puntos a evaluar es el \textbf{SoC}, que refiere a \textit{System on Chip} por sus siglas en inglés. ``\textit{System on Chip}'' es un concepto de los sistemas embebidos que refiere a la integración de todo lo necesario para poder correr un sistema operativo, en un solo circuito integrado. En contraposición a un microcontrolador que es capaz de realizar procesamiento más básico y menos potente, con poca interacción de usuario y menor flexibilidad, un \textit{SoC} refiere a la idea de tener todo lo necesesario para desarrollar sobre la plataforma y poder hacer procesamiento sin tantas limitaciones. Básicamente cumplen funciones similares pero el \textit{SoC} forma parte de una evolución de los microcontroladores, siendo de una complejidad mayor e integrado en un tama\~no muy reducido buscando poco consumo y eficiencia de costos. Así entonces, un \textit{SoC} puede estar conformado por un microcontrolador y hardware adicional como procesadores de se\~nal y bloques de memoria \cite{SoC}.  \\
-%Microcontroller and System-on-a-chip
-%Seminar on Embedded Systems Architecture
-%Peter Thoman (peter.thoman@uibk.ac.at)
-%University of Innsbruck 2009-12-03
-
-En la Figura \ref{fig: soc} se ilustran los dos tipos de \textit{SoC} de los dispositivos de la Tabla \ref{tab: compHWiOS}: Apple A4 y Apple A5. Algunos dispositivos que no figuran en la tabla como el \textit{iPhone 5} o el \textit{iPad 4} usan \textit{SoCs} más recientes como el Apple A6 o Apple A6x respectivamente. La familia de \textit{SoCs} Apple Ax, es la que la mencionada firma utiliza en todas sus plataformas, inclusive en el \textit{Apple TV} y es fabricada por Samsung. Estos \textit{SoCs} se caracterizan por utilizar CPUs de arquitectura ARM, en su mayoría ARMv7 y GPUs de PowerVR de la línea SGX. \\
-
-
-\begin{figure}[h!]
-\centering
-$
-\begin{array}{cc}
-\includegraphics[scale=0.33]{figs_hwysw/applea4.png} & \includegraphics[scale=0.3]{figs_hwysw/applea5.png} \\
-\end{array}
-$
-\caption{\textit{System on Chip}: SoC.}
-\label{fig: soc}
-\end{figure}
-
-
-
+\newpage
 \section{Desarrollo de Software}
 Para poder desarrollar aplicaciones sobre dispositivos móviles de la firma Apple Inc. es necesario contar con computadoras que corran el sistema operativo \textbf{Mac OS X}. Esto puede ser llevado a cabo, ya sea adquiriendo plataformas de desarrollo de la mencionada firma o creando máquinas virtuales que corran dicho sistema operativo. Para la segunda opción (la más económica pero con ciertas dificultades de \textit{performance}), es necesario que la computadora cuente con virtualización de \textit{hardware}. Se comenzó trabajando de esta manera hasta el momento de adquirir plataformas de desarrollo que contaran con Mac OS X en forma nativa.\\
 
@@ -169,5 +147,5 @@ Sin ir más lejos, la implementación del algoritmo LSD utilizada en el presente p
 Por otro lado, resulta no menor aclarar que al realizar todo el procesamiento en C también se deja la puerta abierta a portar todo lo implementado a Android, ya que el C y C++ pueden ser integrados con java usando una tecnología denominada NDK.\\
 
 \section{Resumen}
-En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se conoce el poder de procesamiento de los \textit{SoCs} que componen estas plataformas que integran CPU ARMv7 en varias versiones y GPU SGX con distintas capacidades. Se vio un análisis comparativo entre las tres familias de dispositivos, y dentro de las mismas, en detalle los modelos de plataformas que fueron utilizados. 
+En resumen frente a los dos sistemas operativos más importantes para desarrollar se optó por elegir iOS y desarrollar en plataformas de Apple. Se vio un análisis comparativo entre las tres familias de dispositivos, y dentro de las mismas, en detalle los modelos de plataformas que fueron utilizados. 
 Se explicaron algunas características generales de desarrollar sobre plataformas con iOS, así como también del lenguaje de programación Objective-C, superconjunto de C y que es el utilizado para desarrollar en los dispositivos mencionados. En caso de querer profundizar sobre los distintos \textit{frameworks} del SDK de iOS, herramientas de \textit{debugging} y herramientas generales de desarrollo, se sugiere leer el Apéndice \ref{chap: herramientas}.
