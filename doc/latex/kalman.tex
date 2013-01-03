@@ -1,4 +1,5 @@
 \chapter{Filtrado de Kalman para estimación de pose}
+% v5.0: Corregida por el tribunal.
 \label{chap: kalman}
 
 \section{Introducción}
@@ -20,7 +21,7 @@ Adicionalmente se tiene el vector de observaciones $\mathbf{y}_k$ formado como
 \begin{equation}
  \mathbf{y}_k=\mathbf{H}_k\mathbf{x}_k + \mathbf{v}_k
 \end{equation}
-donde $\mathbf{y}_k$ es de largo $m$. $\mathbf{H}_k$ es la matriz de medición, relaciona las observaciones con los estados del proceso, es de tama\~no $m\times m$. $\mathbf{v}_k$ es el vector de ruido en la medición, es de tama\~no $m$ y se modela como $\mathbf{v}_k\sim \mathcal{N}(\mathbf{0},\mathbf{R}_k)$ siendo $\mathbf{R}_k$ la matriz de covarianza de tama\~no $m\times m$.
+donde $\mathbf{y}_k$ es de largo $m$. $\mathbf{H}_k$ es la matriz de medición, relaciona las observaciones con los estados del proceso, es de tama\~no $m\times n$. $\mathbf{v}_k$ es el vector de ruido en la medición, es de tama\~no $m$ y se modela como $\mathbf{v}_k\sim \mathcal{N}(\mathbf{0},\mathbf{R}_k)$ siendo $\mathbf{R}_k$ la matriz de covarianza de tama\~no $m\times m$.
 
 Se tiene entonces un proceso representado por un modelo en variables de estado que se puede expresar así:
 \begin{equation*}
@@ -65,7 +66,7 @@ El parámetro $\sigma_w^2$ se utiliza para ajustar la respuesta del filtro.
 
 En este caso las observaciones que se tienen son los ángulos de Euler obtenidos en la etapa de estimación de pose $\psi_{Ck}$, $\theta_{Ck}$ y $\phi_{Ck}$. Estos tienen el mismo significado físico que los estados, por lo tanto la matriz de medición \textbf{H} se toma como la matriz identidad. 
 
-Para calcular la matriz de covarianza del ruido de medición se tomó la estadística de alrededor de 200 imágenes sintéticas en las cuales tomó el error entre la estimación y la pose original. Con los errores de estimación para los tres ángulos se obtuvieron los datos suficientes para estimar la matriz \textbf{R}. A partir de estos datos se obtuvo que:
+Para calcular la matriz de covarianza del ruido de medición se tomó la estadística de alrededor de 200 imágenes sintéticas en las cuales se tomó el error entre la estimación y la pose original. Con los errores de estimación para los tres ángulos se obtuvieron los datos suficientes para estimar la matriz \textbf{R}. A partir de estos datos se obtuvo que:
 
 \[
 \textbf{R} = \left(\begin{array}{ccc}
@@ -189,7 +190,7 @@ En esta sección se muestra el resultado de aplicar el filtro de Kalman para suav
 \label{fig: kalman}
 \end{figure}
 
-Se puede ver que para el caso en que la cámara se acerca de frente al marcador el filtro suaviza. El parámetro que se puede variar en este filtro es la potencia del ruido de proceso (la potencia del ruido en las observaciones se calculo a partir de datos empíricos). A mayor potencia se le da menos confianza al modelo, por lo que la pose filtrada se va a parecer más a la pose estimada por POSIT y se pierde el efecto de suavizado. En cambio cuando el ruido de potencia disminuye la pose filtrada se mueve muy lento. Esto se debe a que el modelo que se utilizó  es de posición constante, ante cambios bruscos el filtro reacciona de forma lenta. El valor de la potencia del ruido de proceso se ajustó utilizando el caso de uso de interactividad presentado en \ref{chap: casoUso}, en el que se puede variar este parámetro en tiempo real y ver como se comporta el filtro. 
+Se puede ver que para el caso en que la cámara se acerca de frente al marcador el filtro suaviza. El parámetro que se puede variar en este filtro es la potencia del ruido de proceso (la potencia del ruido en las observaciones se calculó a partir de datos empíricos). A mayor potencia se le da menos confianza al modelo, por lo que la pose filtrada se va a parecer más a la pose estimada por POSIT y se pierde el efecto de suavizado. En cambio cuando el ruido de potencia disminuye la pose filtrada se mueve muy lento. Esto se debe a que el modelo que se utilizó  es de posición constante, ante cambios bruscos el filtro reacciona de forma lenta. El valor de la potencia del ruido de proceso se ajustó utilizando el caso de uso de interactividad presentado en el Capítulo \ref{chap: casoUso}, en el que se puede variar este parámetro en tiempo real y ver cómo se comporta el filtro. 
 
 \section{Resumen}
 En este capítulo se presentó el marco teórico para el desarrollo del filtro de Kalman. Se explicó el modelo dinámico utilizado y el motivo de su elección. Se presentaron las ecuaciones utilizadas para la integración de la orientación obtenida por POSIT y la orientación obtenida por los sensores inerciales de dispositivos. 
