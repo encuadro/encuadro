@@ -1,6 +1,3 @@
-\section{Introducción}
-
-En el presente capítulo se establece el alcance del proyecto. Se plantean los objetivos tal y como fueron formulados originalmente y luego se los clasifica en las tres partes fundamentales del proyecto: \textit{investigación}, \textit{implementación} y \textit{aplicación}. Estas son ponderadas en función de la importancia que tienen en el mismo, y por consiguiente la importancia que se les dio. Luego, se resume la estructura de la aplicación final, de manera de poder comprender a todo el proyecto en su conjunto. Finalmente se presenta un esquema del resto de la documentación donde se explican los elementos necesarios para desarrollar cada parte de dicha aplicación.
  
 \section{Objetivos del proyecto}
 
@@ -32,8 +29,60 @@ Para llevar a cabo los objetivos planteados es bueno tener un contexto del estad
 
 \begin{figure}[H]
 \centering
-\includegraphics[scale=0.222]{figs_alcance/metaio.png}
-\caption{Izq}
+$$
+\begin{array}{cc}
+\includegraphics[scale=0.1665]{figs_alcance/metaio.png} & \includegraphics[scale=0.375]{figs_alcance/string.png}
+\end{array}
+$$
+\caption{Izq.: Ejemplo de realidad aumentada que incluye por defecto el kit de desarrollo \textit{Metaio}. Der.: Otro ejemplo de realidad aumentada incluído por \textit{String}. En ambos casos debe notarse la coherencia lograda entre el mundo real y el mundo virtual. En la imagen de la derecha se tiene al personaje de \textit{String} parado en una mesa por delante de un mate y encima de un llavero.}
 \label{fig: metaioystring}
 \end{figure}
 
+Si bien se probaron algunas de estas herramientas y se tomaron de ellas est\'andares en cuanto a la \textit{performance} que una aplicaci\'on de realidad aumentada debe tener, \textbf{no es un objetivo} del proyecto el desarrollo de aplicaciones de realidad aumentada con kits de desarrollo ya existentes. Se hace hincapi\'e en la investigaci\'on de herramientas y adquisici\'on de experiencia propia, con el objetivo de marcar una hoja de ruta para todo aquel que desee continuar la investigaci\'on con nuevas ideas y algoritmos. Todo el código generado en este proyecto, así como la documentación es \textit{open source} y se puede bajar del repositorio git ubicado en: \url{https://github.com/encuadro/encuadro}.
+%Se deja a disposici\'on de cualquier interesado el c\'odigo de la aplicaci\'on final, los algoritmos implementados o editados, as\'i como toda la documentaci\'on.
+
+Un último aspecto a destacar es que dentro del IIE hay poca experiencia en el área de realidad aumentada y en particular es la primera experiencia en plataformas móviles, por lo cual este proyecto tiene la importancia además de abrir el camino a nuevas generaciones que quieran abordar estos temas. 
+
+\section{Explicación global de la aplicación}
+\label{sec: app}
+Si bien se dijo que la creación de la aplicación integral, correspondiente a un recorrido con realidad aumentada para muesos, corresponde tan sólo a un quinto del alcance total del proyecto; la visualización de la aplicación total es quizá la forma más sencilla de comprender el proyecto en su conjunto y ayuda a evaluar si el sistema desarrollado funciona de manera aceptable.\\
+
+La aplicación se desglosa en tres grandes bloques que son resumidos individualmente en secciones subsiguientes:
+\begin{itemize}
+\item \textbf{Navegación}
+\item \textbf{Identificación de obras}
+\item \textbf{Realidad aumentada}
+\end{itemize}
+
+\subsection{Navegación}
+La navegación es la ubicación del usuario dentro del museo, la importancia de este bloque reside en que permite brindar información contextual de donde se encuentra el usuario. Esta información podría ser una breve descripción de la sala en la que se encuentra o indicaciones para ir de un lugar a otro del museo, entre otras. Desde el punto de vista de la aplicación también es importante porque permite manejar un menor volumen de datos al momento de identificar las obras, debido a que sabe en que sala se encuentra el usuario.  Se estudiaron distintas alternativas para la navegación. La primera posibilidad analizada fue la utilización de tres o más \textit{access points}, mediante los cuales, una vez mapeadas las características de las se\~nales en cada uno de los puntos de las salas, se puede ubicar al usuario dentro de las mismas. Otra forma de navegación que se tuvo en cuenta fue la localización a través de la tecnología GPS. Sin embargo, se optó por utilizar códigos QR dada su amplia difusión, practicidad y facilidad de implementación. La discusión técnica que justifica estas elecciones se encuentra detallada en la documentación del proyecto.\\
+
+\subsection{Identificación de obras}
+Por identificación de obras se entiende al proceso mediante el cual la aplicación detecta frente a qué obra se encuentra el usuario para así entonces brindarle información de la misma, una audioguía y si fuera el caso la posibilidad de desplegar realidad aumentada sobre ella. La forma en la que se implementó este bloque fue mediante un algoritmo de detección de características de imágenes llamado SIFT. Es un algoritmo que se basa en el contenido de la imagen únicamente, por lo que para identificar la obra no se necesita ningún tipo de marcador o agregado externo. Los detalles de la implementación se encuentran en la documentación del proyecto.\\
+
+\subsection{Realidad Aumentada}
+
+El proceso mediante el cual se logra la realidad aumentada puede verse en el diagrama de bloques de la Figura \ref{fig: bloques_ra}. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.9]{figs_alcance/bloques_ra.eps}
+\caption{Diagrama de bloques del proceso mediante el cual se logra la realidad aumentada.}
+\label{fig: bloques_ra}
+\end{figure}
+
+El primer bloque corresponde a la cámara que captura una imagen. En el segundo bloque dicha imagen es procesada con el objetivo de detectar en esta características. Estas características pueden ser segmentos, esquinas, descriptores. El tercer bloque corresponde a la estimación de pose, busca estimar en qué posición se encuentra la cámara respecto de cierto eje de coordenadas previamente definido y hacia dónde esta apunta.  En el cuarto bloque con la información anterior, se debe poder \textit{renderizar} una escena de manera consistente con la pose de la cámara, para así entonces lograr la salida del sistema, que será una imagen con la realidad aumentada incorporada.
+
+Debe notarse que en ninguna etapa se mencionó ningún algoritmo en particular, ya sea para la detección de características como para la estimación de pose. Tampoco se menciona nada en particular para la etapa de \textit{rendering}. Esto se debe a que las etapas se concibieron de forma genérica, de manera ser libres de utilizar cualquier algoritmo de detección de características con cualquier algoritmo de estimación de pose. Las interfases entre los bloque están pensadas de forma de poder cambiar un bloque sin generar problemas en los demás bloques.  \\
+
+Para este proyecto se dise\~nó un marcador formado por tres grupos de cuadrados concéntricos, a partir del cual se extraen los segmentos necesarios para la estimación de la pose del dispositivo. El bloque de detección de características está compuesto por los bloques del diagrama de la Figura \ref{fig: bloques_correspondencias}.\\
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.2]{figs_alcance/bloques_correspondencias.eps}
+\caption{Diagrama de bloques de la detección de características utilizada en este proyecto.}
+\label{fig: bloques_correspondencias}
+\end{figure}
+
+En el diagrama de bloques de la Figura \ref{fig: bloques_correspondencias}, primero se detectan idealmente todos los segmentos que hay en la imagen y luego se filtran tan sólo los pertenecientes al marcador antedicho y se agrupan por cuadrado. En el tercer bloque, se hallan las esquinas de estos cuadrados mediante la intersección de los segmentos. Finalmente estos puntos son ordenados de una manera predefinida. Detalles respecto de este proceso y sobre el marcador utilizado se ven en el Capítulo \ref{ch:marcadores}.\\
+
+En lo que sigue se hace una explicación breve del modelo de cámara que fue necesario adoptar a los efectos de vincular las relaciones del mundo con las de las imágenes, se describe parcialmente la detección de características desarrollada y el algoritmo de estimación de pose que se utilizó.
