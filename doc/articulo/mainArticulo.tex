@@ -660,6 +660,36 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 
 \end{itemize}
 
+\section{Casos de Uso}
+Se implementaron distintos casos de uso con el fin de integrar los algoritmos comentados en secciones anteriores en peque\~nas aplicaciones que funcionen \textit{de punta a punta}. Se buscó resolver individualmente los diferentes desafíos técnicos que una aplicación real de realidad aumentada para museos puede llegar a tener. Estas últimas no serán más que una combinación guionada de cada uno de estos casos de uso.
+
+Se implementaron tres casos de uso: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. El último caso de uso muestra cómo es posible importar modelos de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con modelos simples.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=0.15]{figs_casosuso/CasoUso1.PNG}
+\caption{Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el $QlSet$ de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.}
+\label{fig:CasoUso1}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.15]{figs_casosuso/CasoUso2}
+\caption{Captura de pantalla del caso de uso ``video''. Se puede ver al video proyectado sobre el $QlSet$ de la esquina superior izquierda.}
+\label{fig:CasoUso2}
+\end{figure}
+
+\begin{figure}[h!]
+\centering
+$$
+\begin{array}{cc}
+\includegraphics[scale=0.1]{figs_casosuso/CasoUso_3_1.png} & \includegraphics[scale=0.1]{figs_casosuso/CasoUso_3_2.png}
+\end{array}
+$$
+\caption{Dos capturas de pantalla del caso de uso ``modelos'', desde dos ángulos disintos. Se pueden ver los modelos 3D pertenecientes a un perro chihuahue\~no y a dos sillones, uno de dos plazas y otro de tres.}
+\label{fig:CasoUso3}
+\end{figure}
+
 \section{Aplicación}
 A continuación se muestra la integración de los conocimientos adquiridos a lo largo del proyecto para poder llevar a cabo la realidad aumentada en una aplicación real. Si bien el objetivo principal del proyecto era la exploración de distintos métodos y algoritmos, parecía importante poder poner en práctica todo lo desarrollado en un producto final que pudiera parecerse a un prototipo de aplicación comercial. Se siguió la línea que se planteó desde un inicio que fue la de tener tres partes fundamentales: Navegación, Identificación y Realidad Aumentada. Para eso se incorporaron a la aplicación las siguientes funcionalidades:
  \begin{itemize}
@@ -679,10 +709,6 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \label{fig: Diaglobal}
 \end{figure}
 Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de navegar por el museo leyendo códigos QR desplegados en las distintas salas o secciones, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: identificación de la de obra. La identificación de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}
-
-\subsection{Realidad Aumentada en ISGL3D}
-Para realizar realidad aumentada se necesita poder hacer un \textit{render} por encima de las imágenes capturadas por la cámara del dispositivo en tiempo real.
-el Capítulo \ref{chap: casoUso} se mostró cómo se resolvieron los aspectos técnicos necesarios para llevar a cabo una aplicación final real de realidad aumentada. Así entonces generar un \textit{render} de un perro junto a un sillón (caso de uso ``modelos''), que claramente puede llegar a ser de muy poco interés para un museo, resuelve el mismo problema que si se quisiera generar un \textit{render} con el modelo de José Artigas. Asimismo, ser capaz de responder frente al toque en la pantalla del modelo de un cubo y así entonces actuar en consecuencia (caso de uso ``interactivo''), resuelve el mismo problema que animar al modelo de José Artigas si este es tocado. Lo que se tiene en este caso (y efectivamente se logró), es una escultura digital e interactiva de Artigas, que sólo puede visualizarse a través de un \textit{iPad}. Ver Figura \ref{fig:artigases}.\\ 
 
 \begin{figure}[h!]
 \centering
