@@ -3,21 +3,18 @@
 \catcode`<\active
 \catcode`>\active
 \@nameuse{es@quoting}
-\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
-\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
-\global\let\oldcontentsline\contentsline
-\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
-\global\let\oldnewlabel\newlabel
-\gdef\newlabel#1#2{\newlabelxx{#1}#2}
-\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
-\AtEndDocument{\ifx\hyper@anchor\@undefined
-\let\contentsline\oldcontentsline
-\let\newlabel\oldnewlabel
-\fi}
-\fi}
-\global\let\hyper@last\relax 
-\gdef\HyperFirstAtBeginDocument#1{#1}
-\providecommand\HyField@AuxAddToFields[1]{}
+\ifx\hyper@anchor\@undefined
+\global \let \oldcontentsline\contentsline
+\gdef \contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global \let \oldnewlabel\newlabel
+\gdef \newlabel#1#2{\newlabelxx{#1}#2}
+\gdef \newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\let \contentsline\oldcontentsline
+\let \newlabel\oldnewlabel}
+\else
+\global \let \hyper@last\relax 
+\fi
+
 \select@language{spanish}
 \@writefile{toc}{\select@language{spanish}}
 \@writefile{lof}{\select@language{spanish}}
@@ -71,6 +68,7 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces V\'ertices de cada $Ql$ ordenados respecto al signo de sus proyecciones contra el sistema de coordenadas local a cada $QlSet$.\relax }}{7}{figure.caption.10}}
 \newlabel{fig:Centros}{{10}{7}{Vértices de cada $Ql$ ordenados respecto al signo de sus proyecciones contra el sistema de coordenadas local a cada $QlSet$.\relax \relax }{figure.caption.10}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {VII}POSIT}{7}{section.7}}
+\newlabel{POSIT}{{VII}{7}{POSIT\relax }{section.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}}Notaci\'on}{7}{subsection.7.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Proyecci\'on en perspectiva ($m_i$) y SOP ($p_i$) para un punto del modelo 3D $M_i$ y un punto de referencia del modelo $M_O$. Tomado de: \cite  {DeMenthon95}.\relax }}{8}{figure.caption.11}}
 \newlabel{fig: posit_1}{{11}{8}{Proyección en perspectiva ($m_i$) y SOP ($p_i$) para un punto del modelo 3D $M_i$ y un punto de referencia del modelo $M_O$. Tomado de: \cite {DeMenthon95}.\relax \relax }{figure.caption.11}{}}
@@ -98,13 +96,13 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Dos objetos dando la misma proyecci\'on SOP. Fuente: \cite  {CoplanarPosit}.\relax }}{9}{figure.caption.12}}
 \newlabel{fig: posit_3}{{12}{9}{Dos objetos dando la misma proyección SOP. Fuente: \cite {CoplanarPosit}.\relax \relax }{figure.caption.12}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {VIII}Casos de Uso}{9}{section.8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el $QlSet$ de la esquina superior izquierda y los diferentes controles que ayudan a la depuraci\'on del c\'odigo.\relax }}{9}{figure.caption.13}}
-\newlabel{fig:CasoUso1}{{13}{9}{Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el $QlSet$ de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.\relax \relax }{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Aplicaci\'on}{9}{section.9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el $QlSet$ de la esquina superior izquierda y los diferentes controles que ayudan a la depuraci\'on del c\'odigo.\relax }}{10}{figure.caption.13}}
+\newlabel{fig:CasoUso1}{{13}{10}{Captura de pantalla del caso de uso ``interactividad'. Se puede ver al cubo apoyado sobre el $QlSet$ de la esquina superior izquierda y los diferentes controles que ayudan a la depuración del código.\relax \relax }{figure.caption.13}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Captura de pantalla del caso de uso ``video''. Se puede ver al video proyectado sobre el $QlSet$ de la esquina superior izquierda.\relax }}{10}{figure.caption.14}}
 \newlabel{fig:CasoUso2}{{14}{10}{Captura de pantalla del caso de uso ``video''. Se puede ver al video proyectado sobre el $QlSet$ de la esquina superior izquierda.\relax \relax }{figure.caption.14}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Dos capturas de pantalla del caso de uso ``modelos'', desde dos \'angulos disintos. Se pueden ver los modelos 3D pertenecientes a un perro chihuahue\~no y a dos sillones, uno de dos plazas y otro de tres.\relax }}{10}{figure.caption.15}}
 \newlabel{fig:CasoUso3}{{15}{10}{Dos capturas de pantalla del caso de uso ``modelos'', desde dos ángulos disintos. Se pueden ver los modelos 3D pertenecientes a un perro chihuahue\~no y a dos sillones, uno de dos plazas y otro de tres.\relax \relax }{figure.caption.15}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IX}Aplicaci\'on}{10}{section.9}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {IX-A}}Diagrama global de la aplicaci\'on}{10}{subsection.9.1}}
 \@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Diagrama global de la aplicaci\'on.\relax }}{10}{figure.caption.16}}
 \newlabel{fig: Diaglobal}{{16}{10}{Diagrama global de la aplicación.\relax \relax }{figure.caption.16}{}}
@@ -112,10 +110,12 @@
 \newlabel{fig:artigases}{{17}{10}{Escultura digital e interactiva de Artigas vista desde ángulos distintos y en posiciones distintas.\relax \relax }{figure.caption.17}{}}
 \bibstyle{IEEEtran}
 \bibdata{IEEEfull,articulo}
-\bibcite{Hartley2004}{1}
-\bibcite{DeMenthon95}{2}
-\bibcite{CoplanarPosit}{3}
-\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{11}{section.10}}
-\@writefile{toc}{\contentsline {section}{Ap\'{e}ndice~A: Proof of the First Zonklar Equation}{11}{section*.18}}
-\@writefile{toc}{\contentsline {section}{Ap\'{e}ndice~B}{11}{section*.19}}
-\@writefile{toc}{\contentsline {section}{Referencias}{11}{section*.21}}
+\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusiones}{11}{section.10}}
+\newlabel{sec: concluespe}{{X}{11}{Conclusiones\relax }{section.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {X-A}}Detecci\'on de caracter\'isticas}{11}{subsection.10.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Diagrama de bloques de la detecci\'on de caracter\IeC {\'\i }sticas utilizada en este proyecto.\relax }}{11}{figure.caption.18}}
+\newlabel{fig: bloques_correspondencias_conclu}{{18}{11}{Diagrama de bloques de la detección de características utilizada en este proyecto.\relax \relax }{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {X-B}}Estimaci\'on de pose}{11}{subsection.10.2}}
+\newlabel{POSIT}{{\unhbox \voidb@x \hbox {X-B}}{11}{Estimaci\'on de pose\relax }{subsection.10.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {X-C}}Una soluci\'on alternativa: SLAM}{11}{subsection.10.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {X-D}}Dem\'as bloques}{11}{subsection.10.4}}

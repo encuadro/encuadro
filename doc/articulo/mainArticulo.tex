@@ -62,7 +62,7 @@ Debido a la creciente disponibilidad de las plataformas móviles y el gran poder 
 
 Por otro lado, desde hace algunos a\~nos varios museos de distintas partes del mundo han comenzado a considerar este tipo de dispositivos, y otras tantas tecnologías, como una alternativa muy interesante para brindar un valor agregado al usuario. Proyecciones de imágenes y videos, recorridos interactivos y aplicaciones de \textit{realidad aumentada} son tan s\'olo algunos de los ejemplos. Sin embargo, esta es un área muy reciente y en la que todavía queda un camino muy largo por recorrer.
 
-Durante el proyecto de fin de carrera se desarrolló sobre dispositivos móviles un recorrido interactivo para un museo, con realidad aumentada. Probablemente, la realidad aumentada sea el mayor atractivo del proyecto por ser un área que se encuentra en pleno desarrollo y que todo el tiempo recibe ideas innovadoras y muy interesantes, lo que la hace por demás apasionante. Vale la pena entonces dar una definición para la misma:
+Durante el proyecto de fin de carrera se desarrolló un recorrido interactivo para un museo con realidad aumentada, sobre dispositivos móviles con sistema operativo iOS como iPhone, iPod Touch y iPad. Probablemente, la realidad aumentada sea el mayor atractivo del proyecto por ser un área que se encuentra en pleno desarrollo y que todo el tiempo recibe ideas innovadoras y muy interesantes, lo que la hace por demás apasionante. Vale la pena entonces dar una definición para la misma:
 
 \textit{La realidad aumentada (AR del inglés \textit{Augmented Reality}) es un término que denota la visión de un entorno físico del mundo real, cuyos elementos se combinan con elementos virtuales generados por computadora, para la creación de una realidad mixta en tiempo real.}\\
 
@@ -512,6 +512,7 @@ Por último, a partir del marcador ordenado, se extrae una lista de vértices que 
 
 
 \section{POSIT}
+\label{POSIT}
 A continuación se explica el algoritmo utilizado para el cálculo de la pose a partir de una imagen capturada por la cámara. Como lo dice el nombre del algoritmo se utiliza una técnica llamada \textit{POS} (\textit{P}ose from \textit{O}rtography and \textit{S}caling), esta técnica consiste en aproximar la pose de la cámara a partir de la proyección \textit{SOP}(\textit{S}caled \textit{O}rtographic \textit{Projection}). 
 
 \subsection{Notación}
@@ -663,7 +664,7 @@ En el caso en que las dos soluciones sean válidas para todas las iteraciones, el
 \section{Casos de Uso}
 Se implementaron distintos casos de uso con el fin de integrar los algoritmos comentados en secciones anteriores en peque\~nas aplicaciones que funcionen \textit{de punta a punta}. Se buscó resolver individualmente los diferentes desafíos técnicos que una aplicación real de realidad aumentada para museos puede llegar a tener. Estas últimas no serán más que una combinación guionada de cada uno de estos casos de uso.
 
-Se implementaron tres casos de uso: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. El último caso de uso muestra cómo es posible importar modelos de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con modelos simples.
+Se implementaron tres casos de uso: ``interactividad'', ``video'' y ``modelos''. El primero presenta un modelo simple sobre el marcador que responde a toques con cierto movimiento y un audio en particular, el segundo soluciona el problema de proyectar un video sobre el marcador de forma consistente con el movimiento del usuario. Para los casos de uso ``interactividad'' y ``modelos'' se utilizó la librería \textit{isgl3D} para poder realizar el \textit{rendering}. Esta librería fue ampliamente utilizada dada su fácil incorporación a las aplicaciones desarrolladas. La misma cuenta con modelos propios como el cubo que se ve en ``interactividad'' y tiene la posibilidad de importar otros modelos (generados con programas específicos para ello) de manera de lograr realidades aumentadas mucho más interesantes que si tan sólo se hicieran con modelos simples.
 
 \begin{figure}[h!]
 \centering
@@ -708,8 +709,7 @@ Para que sea más sencilla la comprensión de los bloques que componen la aplicaci
 \caption{Diagrama global de la aplicación.}
 \label{fig: Diaglobal}
 \end{figure}
-Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de navegar por el museo leyendo códigos QR desplegados en las distintas salas o secciones, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: identificación de la de obra. La identificación de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}
-
+Al comenzar el recorrido, el usuario tiene la opción de elegir cómo recorrer el museo: de manera \textit{autónoma} o de manera \textit{automática}. En la opción autónoma el usuario es el encargado de elegir dentro de una lista de autores el que más le interese, y dentro de la lista de cuadros del autor seleccionado, la obra que desea contemplar en detalle. De esta manera el usuario llega eligiendo opciones al cuadro de interés y está listo para comenzar la interacción con la obra, a través de audioguías o realidad aumentada. De la otra manera de recorrer el museo, con la opción automática, el usuario tiene la opción de navegar por el museo leyendo códigos QR desplegados en las distintas salas o secciones, que sirven para identificar en qué parte del museo se encuentra el usuario. De esta manera una vez que el usuario lee el QR, la aplicación lo reconoce y despliega una foto del autor y un mensaje que invita al usuario a continuar con el recorrido. 
 \begin{figure}[h!]
 \centering
 $
@@ -722,25 +722,59 @@ $
 \label{fig:artigases}
 \end{figure}
 
+Internamente la aplicación guarda la información en la que está el usuario y la utiliza en la siguiente etapa: identificación de la de obra. La identificación de la obra se da una vez que el usuario está frente a la misma y toma una foto de ella que es procesada y en pocos segundos la aplicación responde con la imagen original de la obra y el usuario puede comenzar la interacción con la obra, a través de audioguías o realidad aumentada. Ver Figura \ref{fig: Diaglobal}
 
-\section{Conclusion}
-The conclusion goes here.
 
-\appendices
-\section{Proof of the First Zonklar Equation}
-Appendix one text goes here.
+\section{Conclusiones}
+\label{sec: concluespe}
+A continuación se detallan conclusiones separadas por los distintos bloques que componen la realidad aumentada.
 
-% you can choose not to have a title for an appendix
-% if you want by leaving the argument blank
-\section{}
-Appendix two text goes here.
+\subsection{Detecci\'on de caracter\'isticas}
+El bloque de detecci\'on de catacter\'isticas se expande en la Figura \ref{fig: bloques_correspondencias_conclu}. 
+
+\begin{figure}[h!]
+\centering
+\includegraphics[scale=1.2]{figs_conclusiones/bloques_correspondencias.eps}
+\caption{Diagrama de bloques de la detección de características utilizada en este proyecto.}
+\label{fig: bloques_correspondencias_conclu}
+\end{figure}
+
+Se vio en secciones anteriores que la detección de segmentos se realizó utilizando LSD. Se está conforme tanto con el desempe\~no del algoritmo como con la optimización que se le hizo para tiempo real. Sin embargo, se cree que la implementación se puede optimizar aún más.\\
+
+En lo que respecta a los algoritmos de filtrado y agrupación de segmentos, determinación de esquinas y correspondencias, se puede afirmar que funcionan correctamente. De cualquier manera, se cree que para ciertas aplicaciones en particular se podría utilizar un marcador más sencillo, con una geometría más simple de detectar; lo que simplificaría los algoritmos de detección y aumentaría la aplicabilidad a otros casos de uso.
+
+\subsection{Estimaci\'on de pose}
+
+En la sección \label{POSIT} se explicaron en detalle diferentes versiones de POSIT, el algoritmo que este proyecto utiliza para estimar la pose de la c\'amara a partir de ciertas caracter\'isticas de la imagen. En particular, se utiliz\'o \textbf{el POSIT coplanar moderno} que toma como entrada ciertos puntos en un modelo predefinido y sus correspondientes en la imagen. Este es un algoritmo muy preciso bajo ciertas condiciones y  veloz respecto de los algoritmos de estimación de pose tradicionales.  Sin embargo, resulta no del todo l\'ogico utilizar un algoritmo que tome puntos como entrada si las caracter\'isticas extra\'idas de la imagen primeramente son segmentos.
+
+Existe por su parte, otra versión de POSIT denominada ``\textit{Soft} POSIT de líneas''. Esta versión, toma como entrada líneas en una imagen y líneas en un modelo y tiene la habilidad de detectar correspondencias entre ellas y luego estimar la pose de la cámara a partir de dichas correspondencias. De haberse usado esta versión de POSIT, el segundo y tercer bloque del diagrama de la Figura \ref{fig: bloques_correspondencias_conclu} no hubieran sido necesarios.
+
+Sin embargo, \textit{Soft} POSIT de líneas no funciona para marcadores planos como los utilizados en este proyecto. Además, requiere de una estimación de la pose inicial del dispositivo lo que no hace tan trivial su uso. Por estos motivos se optó por utilizar POSIT coplanar y resolver las correspondencias en la etapa de filtrado de segmentos. 
+
+\subsection{Una soluci\'on alternativa: SLAM}
+
+``\textit{Simultaneous Localization And Mapping}'' (SLAM), o en espa\~nol ``Localización y Mapeado Simultáneos'', es el problema de ubicar a un dispositivo de visión artificial en un determinado lugar desconocido y que este, de manera incremental, vaya construyendo un modelo del lugar y a la vez vaya ubicándose dentro del modelo.
+
+Este problema no sólo tiene solución, sino que además muchos de los kits de desarrollo de realidad aumentada lo utilizan. Y por lo que se pudo ver, da muy buenos resultados. En particular, logra resultados sustancialmente mejores a los de este proyecto, en cuanto a los tiempos de procesamiento.
+
+De esta manera, los bloques ``Detección de características'' y ``Estimación de pose'' del diagrama de la Figura \ref{fig: bloques_ra_conclu}, pueden ser sustituidos por un algoritmo que solucione este problema.
+
+
+\subsection{Dem\'as bloques}
+
+El desempe\~no de los dem\'as bloques involucrados en el proceso mediante el cual se logra la realidad aumentada no requiere de un análisis extra al realizado en secciones anteriores. ISGL3D, la herramienta utilizada para realizar renders sobre las imágenes capturadas, funciona perfectamente y los dispositivos de captura y despliegue de imágenes del \textit{iPad} son muy buenos. Hubiera sido mejor capturar imágenes de mayor tama\~no, para así lograr una mejor calidad a la salida. Pero cuanto mayor es el tama\~no de la imagen capturada, tambi\'en lo es el tiempo de procesamiento de los algoritmos de detección, en particular LSD.
 
 
 % use section* for acknowledgement
-\section*{Acknowledgment}
+\section*{Agradecimientos}
+\textit{
+Los autores quieren agradecer especialmente a Rafael Grompone por sus consejos en la optimización de LSD y a Pablo Musé por su ayuda con el filtrado de Kalman. A Fernando Foglino por facilitar y permitir utilizar su modelo de Artigas.\\}
 
+\textit{
+A las comunidades de Software Libre y de Código Abierto, en particular a la comunidad de Acceso Abierto e Investigación Reproducible: IPOL.\\}
 
-The authors would like to thank...
+\textit{
+Al Museo Nacional de Artes Visuales (MNAV) y al Museo Blanes. Finalmente también agradecer al Programa de Apoyo a la Investigación Estudiantil (PAIE) de la Comisión Sectorial de Investigación Científica (CSIC) por el apoyo económico para adquirir herramientas de desarrollo.\\}
 
 \bibliographystyle{IEEEtran}
 \bibliography{IEEEfull,articulo}
