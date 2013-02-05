@@ -59,7 +59,7 @@
     NSData *imageData = UIImageJPEGRepresentation(imagenView.image, 90);
     NSData *textData = [NSData dataWithContentsOfFile:@"/Users/encuadro/Desktop/lenaTocada.txt"];
     // setting up the URL to post to
-    NSString *urlString = @"http://silviaguridi99.no-ip.info/upload.php";
+    NSString *urlString = @"http://192.168.1.111/upload.php";
     //   NSString *urlString = @"http://192.168.1.4/upload2.php";
     
     // setting up the request object now
@@ -179,21 +179,21 @@
         ObraCompletaViewController *obracompletaViewController = 
         [segue destinationViewController];
          
-        NSString* autor = @"http://silviaguridi99.no-ip.info/autores/";
+        NSString* autor = @"http://192.168.1.111/autores/";
         autor = [autor stringByAppendingString:returnString];
         autor = [autor stringByAppendingString:@".txt"];
         
         
-        NSString* obra = @"http://silviaguridi99.no-ip.info/obras/";
+        NSString* obra = @"http://192.168.1.111/obras/";
         obra = [obra stringByAppendingString:returnString];
         obra = [obra stringByAppendingString:@".txt"];
         
         
-        NSString* texto = @"http://silviaguridi99.no-ip.info/textos/";
+        NSString* texto = @"http://192.168.1.111/textos/";
         texto = [texto stringByAppendingString:returnString];
         texto = [texto stringByAppendingString:@".txt"];
         NSLog(@"%@",returnString);
-        NSString* imagen = @"http://silviaguridi99.no-ip.info/imagenes/";
+        NSString* imagen = @"http://192.168.1.111/imagenes/";
         imagen = [imagen stringByAppendingString:returnString];
         imagen = [imagen stringByAppendingString:@".jpg"];
         

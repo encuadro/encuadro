@@ -87,13 +87,18 @@ bool touched;
         /* Create a container node as a parent for all scene objects.*/
         _container = [self.scene createNode];
         
-        
+    
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
+  
+//        NSURL *url = [NSURL URLWithString:@"/Users/pablofloresguridi/Desktop/artigas2.pod"];
+//        NSString *string = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+//        podImporter2 = [Isgl3dPODImporter podImporterWithFile:string];
+//        [podImporter2 buildSceneObjects];
         
         podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas1.pod"];
         [podImporter buildSceneObjects];
         podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"artigas2.pod"];
-        [podImporter2 buildSceneObjects];
+       [podImporter2 buildSceneObjects];
         podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas3.pod"];
         [podImporter3 buildSceneObjects];
         podImporter4 = [Isgl3dPODImporter podImporterWithFile:@"artigas6.pod"];
@@ -143,18 +148,18 @@ bool touched;
          node.rotationX=90;
         node.rotationZ=90;
         
-        node.scaleX=5;
-        node.scaleY=5;
-        node.scaleZ=5;
+        node.scaleX=3;
+        node.scaleY=3;
+        node.scaleZ=3;
         
         Isgl3dNode * node2 = [_container createNodeWithMesh:_artigasMesh2 andMaterial:[podImporter2 materialWithName:@"material_0"]];
 		node2.position = iv3(0, -50, 0);
         node2.rotationX=90;
          node2.rotationZ=90;
         node2.alpha =0.0;
-        node2.scaleX=5;
-        node2.scaleY=5;
-        node2.scaleZ=5;
+        node2.scaleX=3;
+        node2.scaleY=3;
+        node2.scaleZ=3;
         
         /*----------------------------------|LUCES|----------------------------------*/
         

@@ -144,18 +144,18 @@ bool touched;
         node.rotationX=90;
         node.rotationZ=90;
         
-        node.scaleX=5;
-        node.scaleY=5;
-        node.scaleZ=5;
+        node.scaleX=4;
+        node.scaleY=4;
+        node.scaleZ=4;
         
         Isgl3dNode * node2 = [_container createNodeWithMesh:_artigasMesh2 andMaterial:[podImporter2 materialWithName:@"material_0"]];
 		node2.position = iv3(0, -50, 0);
         node2.rotationX=90;
         node2.rotationZ=90;
         node2.alpha =0.0;
-        node2.scaleX=5;
-        node2.scaleY=5;
-        node2.scaleZ=5;
+        node2.scaleX=4;
+        node2.scaleY=4;
+        node2.scaleZ=4;
         
         /*----------------------------------|LUCES|----------------------------------*/
         

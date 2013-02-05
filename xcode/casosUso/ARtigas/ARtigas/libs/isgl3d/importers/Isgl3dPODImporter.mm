@@ -65,6 +65,9 @@
 @implementation Isgl3dPODImporter
 
 
+
+
+
 + (id) podImporterWithFile:(NSString *)path {
 	return [[[self alloc] initWithFile:path] autorelease];
 }
