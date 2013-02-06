@@ -26,7 +26,7 @@
 #import "kalman.h"
 
 #include "AuxiVar.h"
-
+int augmID;
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{
     MPMoviePlayerController *theMovie;
@@ -48,6 +48,8 @@
 @property (nonatomic,readwrite) int hSize;
 @property (nonatomic,readwrite) bool videoPlayer;
 @property (nonatomic,readwrite) bool* touchFull;
+
+
 
 - (void) procesamiento;
 - (void) reservarMemoria;

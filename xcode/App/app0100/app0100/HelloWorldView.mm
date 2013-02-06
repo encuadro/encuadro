@@ -48,6 +48,8 @@
 @synthesize rotacion = _rotacion;
 @synthesize cubito1 = _cubito1;
 @synthesize cubito2 = _cubito2;
+@synthesize ARidObra = _ARidObra;
+
 float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,0,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
@@ -79,7 +81,9 @@ double k;
 bool touched;
 
 
-- (id) init {
+- (id) init:(int) Ar{
+    NSLog(@"INIT DEL HW");
+   printf("ArID desde HWORLD: %d\n",Ar);
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
         

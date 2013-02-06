@@ -20,7 +20,7 @@ extern "C"{
 }
 #endif
 //#import "configuration.h"
-
+int jota;
 bool fin;
 
 @interface videoView : UIImageView <AVAudioPlayerDelegate> {
@@ -46,7 +46,8 @@ bool fin;
 @property (nonatomic) float** rotacion;
 @property(nonatomic, retain) Isgl3dNode* cubito1;
 @property(nonatomic, retain) Isgl3dNode* cubito2;
-
+@property (nonatomic, readwrite) int ARidObra;
+- (id) init:(int) Ar;
 
 @end
 

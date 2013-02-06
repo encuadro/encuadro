@@ -125,6 +125,7 @@
     
     if ([self.ARidObra intValue]<5){
                 NSLog(@"AR DOS CUBOS");
+        
                 DosCubos=true;
 //                Artigas=false;
                 _viewController.videoPlayer=false;
@@ -133,6 +134,7 @@
      }else if([self.ARidObra intValue]>10) {
          
                     NSLog(@"AR UN CUBO y MODELOS");
+         
                     DosCubos=false;
 //                    Artigas=false;
                     _viewController.videoPlayer=false;
@@ -246,13 +248,17 @@
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000"; 
     
 	// Create view and add to Isgl3dDirector
-    self.HWview =[[Isgl3dView alloc] init];
+//    self.HWview =[[Isgl3dView alloc] init];
     NSLog(@"PRE INSTANCIA [HELLOWORLD VIEW]");
-    //[HelloWorldView s]
-	self.HWview = [HelloWorldView view];
+    
+	//self.HWview = [HelloWorldView view];
     NSLog(@"POST INSTANCIA [HELLOWORLD VIEW]");
-    _viewController.isgl3DView = self.HWview;
-	[[Isgl3dDirector sharedInstance] addView:self.HWview];
+    printf("ArID desde VISTAVIEWCTRL: %d\n",[self.ARidObra intValue]);
+    
+    _viewController.isgl3DView =  [[HelloWorldView alloc] init:[self.ARidObra intValue]];
+    [[Isgl3dDirector sharedInstance] addView:_viewController.isgl3DView];
+    
+    
 }
 
 //este metodo es igual a buttonclicked

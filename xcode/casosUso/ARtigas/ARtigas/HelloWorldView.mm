@@ -90,10 +90,6 @@ bool touched;
     
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
   
-//        NSURL *url = [NSURL URLWithString:@"/Users/pablofloresguridi/Desktop/artigas2.pod"];
-//        NSString *string = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
-//        podImporter2 = [Isgl3dPODImporter podImporterWithFile:string];
-//        [podImporter2 buildSceneObjects];
         
         podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas1.pod"];
         [podImporter buildSceneObjects];

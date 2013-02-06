@@ -57,7 +57,7 @@
 }
 
 - (id) init {
-	
+	NSLog(@"INIT DEL ISGL3DVIEW");
 	if ((self = [super init])) {
 	 	
 		_isRunning = NO;
