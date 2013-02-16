@@ -69,11 +69,11 @@ Isgl3dPODImporter * podImporter2;
 Isgl3dPODImporter * podImporter3;
 Isgl3dPODImporter * podImporter4;
 Isgl3dPODImporter * podImporter5;
-Isgl3dGLMesh* _artigasMesh;
-Isgl3dGLMesh* _artigasMesh2;
-Isgl3dGLMesh* _artigasMesh3;
-Isgl3dGLMesh* _artigasMesh4;
-Isgl3dGLMesh* _artigasMesh5;
+Isgl3dGLMesh* _ARmesh;
+Isgl3dGLMesh* _ARmesh2;
+Isgl3dGLMesh* _ARmesh3;
+Isgl3dGLMesh* _ARmesh4;
+Isgl3dGLMesh* _ARmesh5;
 Isgl3dNode * node;
 
 int i;
@@ -81,70 +81,64 @@ double k;
 bool touched;
 
 
-- (id) init:(int) Ar{
+- (id) init:(int) Ar ARType:(NSString*)ARType ARObj:(NSString*)ARObj{
     NSLog(@"INIT DEL HW");
    printf("ArID desde HWORLD: %d\n",Ar);
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
-        
-        
+        NSLog(@"AR TYPE HW ES: %@",ARType);
+        NSLog(@"AR OBJ HW ES: %@",ARObj);
+    
 //        if(Artigas){
         /* Create a container node as a parent for all scene objects.*/
         _container = [self.scene createNode];
         
-        
+     
+        if([ARType isEqual:@"animacion"])
+        {
         /*--------------|INTRODUCIMOS EL MODELO|------------------*/
         
-        podImporter = [Isgl3dPODImporter podImporterWithFile:@"artigas1.pod"];
+       
+            
+        
+        podImporter = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"1.pod"]];
         [podImporter buildSceneObjects];
-        podImporter2 = [Isgl3dPODImporter podImporterWithFile:@"artigas2.pod"];
+        podImporter2 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"2.pod"]];
         [podImporter2 buildSceneObjects];
-        podImporter3 = [Isgl3dPODImporter podImporterWithFile:@"artigas3.pod"];
+        podImporter3 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"3.pod"]];
         [podImporter3 buildSceneObjects];
-        podImporter4 = [Isgl3dPODImporter podImporterWithFile:@"artigas6.pod"];
+        podImporter4 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"4.pod"]];
         [podImporter4 buildSceneObjects];
-        podImporter5 = [Isgl3dPODImporter podImporterWithFile:@"artigas5.pod"];
+        podImporter5 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"5.pod"]];
         [podImporter5 buildSceneObjects];
         
         
         
-        _artigasMesh = [podImporter meshAtIndex:0 ];
-        _artigasMesh2 = [podImporter2 meshAtIndex:0 ];
-        _artigasMesh3 = [podImporter3 meshAtIndex:0 ];
-        _artigasMesh4 = [podImporter4 meshAtIndex:0 ];
-        _artigasMesh5 = [podImporter5 meshAtIndex:0 ];
+        _ARmesh = [podImporter meshAtIndex:0 ];
+        _ARmesh2 = [podImporter2 meshAtIndex:0 ];
+        _ARmesh3 = [podImporter3 meshAtIndex:0 ];
+        _ARmesh4 = [podImporter4 meshAtIndex:0 ];
+        _ARmesh5 = [podImporter5 meshAtIndex:0 ];
         
         
         
-        _mesh = [Isgl3dKeyframeMesh keyframeMeshWithMesh:_artigasMesh2];
-        [_mesh addKeyframeMesh:_artigasMesh5];
-        [_mesh addKeyframeMesh:_artigasMesh4];
-        [_mesh addKeyframeMesh:_artigasMesh];
-        [_mesh addKeyframeMesh:_artigasMesh3];
-        
-        //        [_mesh addKeyframeAnimationData:0 duration:1.0f];
-        //        [_mesh addKeyframeAnimationData:1 duration:1.0f];
-        //		[_mesh addKeyframeAnimationData:2 duration:2.0f];
-        //		[_mesh addKeyframeAnimationData:3 duration:2.0f];
-        //        [_mesh addKeyframeAnimationData:4 duration:1.0f];
-        //        [_mesh addKeyframeAnimationData:0 duration:2.0f];
-        
-        [_mesh addKeyframeAnimationData:0 duration:1.0f];
-        [_mesh addKeyframeAnimationData:4 duration:1.0f];
-		[_mesh addKeyframeAnimationData:3 duration:2.0f];
-        [_mesh addKeyframeAnimationData:4 duration:1.0f];
-        [_mesh addKeyframeAnimationData:0 duration:2.0f];
+        _mesh = [Isgl3dKeyframeMesh keyframeMeshWithMesh:_ARmesh];
+        [_mesh addKeyframeMesh:_ARmesh2];
+        [_mesh addKeyframeMesh:_ARmesh3];
+        [_mesh addKeyframeMesh:_ARmesh4];
+        [_mesh addKeyframeMesh:_ARmesh5];
         
         
-		
+//        [_mesh addKeyframeAnimationData:0 duration:1.0f];
+//        [_mesh addKeyframeAnimationData:3 duration:1.0f];
+//		[_mesh addKeyframeAnimationData:5 duration:2.0f];
+//        [_mesh addKeyframeAnimationData:3 duration:1.0f];
+//        [_mesh addKeyframeAnimationData:0 duration:2.0f];
         
-		// Start the automatic mesh animation
-		//[_mesh startAnimation];
         
-        
-        node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter2 materialWithName:@"material_0"]];
+        node = [_container createNodeWithMesh:_mesh andMaterial:[podImporter materialWithName:@"material_0"]];
 		node.position = iv3(0,-50, 0);
-        [podImporter2 addMeshesToScene:node];
+        [podImporter addMeshesToScene:node];
         node.rotationX=90;
         node.rotationZ=90;
         
@@ -152,7 +146,7 @@ bool touched;
         node.scaleY=4;
         node.scaleZ=4;
         
-        Isgl3dNode * node2 = [_container createNodeWithMesh:_artigasMesh2 andMaterial:[podImporter2 materialWithName:@"material_0"]];
+        Isgl3dNode * node2 = [_container createNodeWithMesh:_ARmesh andMaterial:[podImporter materialWithName:@"material_0"]];
 		node2.position = iv3(0, -50, 0);
         node2.rotationX=90;
         node2.rotationZ=90;
@@ -161,10 +155,36 @@ bool touched;
         node2.scaleY=4;
         node2.scaleZ=4;
         
-        /*----------------------------------|LUCES|----------------------------------*/
-        
+        /*Agregamos interactividad*/
         node2.interactive =YES;
         [node2 addEvent3DListener:self method:@selector(objectTouched:) forEventType:TOUCH_EVENT];
+        
+        }
+        
+        if([ARType isEqual:@"modelo"])
+        {
+         
+            /*--------------|INTRODUCIMOS EL MODELO|------------------*/
+            
+
+            Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@".pod"]];
+
+            node = [_container createNode];
+        
+            
+            node.scaleX=5;
+            node.scaleY=5;
+            node.scaleZ=5;
+            node.rotationZ = 90;
+            
+            [podImporter addMeshesToScene:node];
+
+            node.position = iv3(190, -50, 0);
+         
+         
+         
+        }
+        /*----------------------------------|LUCES|----------------------------------*/
         Isgl3dShadowCastingLight * light  = [Isgl3dLight lightWithHexColor:@"FFFFFF" diffuseColor:@"FFFFFF" specularColor:@"FFFFFF" attenuation:0.00];
 		[self.scene addChild:light];
         light.position = iv3(-2, 2, -10);

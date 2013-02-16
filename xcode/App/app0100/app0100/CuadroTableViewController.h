@@ -27,6 +27,8 @@ else-->Todos los autores
 @property (nonatomic, retain) NSArray *cuadroDescripcion;
 @property (nonatomic, retain) NSArray *nombre_audio;
 @property (nonatomic, retain) NSArray *ARid;
+@property (nonatomic, retain) NSArray *ARType; //modelo, animacion, video
+@property (nonatomic, retain) NSArray *ARObj;
 
 
 

@@ -38,6 +38,13 @@
 @synthesize videoPlayer = _videoPlayer;
 @synthesize touchFull = _touchFull;
 
+
+/*Para HOMOGRAFIA*/
+float **imagePoints3video;
+float *hvideo;
+float **imagePoints4;
+
+
 int contador;
 /*para DIBUJAR*/
 claseDibujar *cgvista;
@@ -116,10 +123,7 @@ kalman_state_3 state;
 /* video rotation for App*/
 UIImageOrientation orientation;
 
-/* homographie variables*/
-double **imagePoints3;
-double **imagePoints4;
-double *h;
+
 
 
 - (CIContext* ) context
@@ -286,6 +290,26 @@ double *h;
         //
         
         
+        
+        
+///** AGREGA CASO DE USO VIDEO COMIENZO ****/
+//            for (int i=0; i<4; i++) {
+//                imagePoints4[i][0]=imagePoints[i+4][0]*self.wSize/480;
+//                imagePoints4[i][1]=imagePoints[i+4][1]*self.hSize/360;
+//            }
+//        
+//            solveHomographie(imagePoints4, imagePoints3video, hvideo);
+//            
+//            [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+//
+//
+//        
+///** AGREGA CASO DE USO VIDEO FIN ****/        
+        
+        
+        
+        
+        
         if (errorMarkerDetection>=0) {
             
             cantPtosDetectados=getCropLists(imagePoints, object, imagePointsCrop, objectCrop);
@@ -399,106 +423,58 @@ double *h;
 }
 
 
--(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux{
-    bool CGaffine=false;
-    
-    if (CGaffine) {
-        //  theMovie.view.frame = CGRectMake(imagePoints[6][0]*480/480, imagePoints[6][1]*320/360, 50, 50);
-        //  CGAffineTransform currentMatrix =  theMovie.view.transform;
-        //  CGAffineTransform translate = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
-        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
-        CGAffineTransform affine = CGAffineTransformMake(h[0], h[3], h[1], h[4], h[2], h[5]);
-        CGAffineTransform rotation = CGAffineTransformMake(h[0], h[3], h[1], h[4], 0, 0);
-        CGAffineTransform translation = CGAffineTransformMake(1, 0 , 0, 1, h[2], h[5]);
-        
-        //CGAffineTransform translate = CGAffineTransformMakeTranslation(200, 50);
-        // theMovie.view.transform=CGAffineTransformConcat(currentMatrix, newMatrix);
-        //     theMovie.view.transform=newMatrix;
-        // theMovie.view.transform=translation;
-        theMovie.view.transform=rotation;
-        // theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,h[2],h[5]);
-        //theMovie.view.transform = CGAffineTransformTranslate(theMovie.view.transform,imagePoints[6][0],imagePoints[6][1]);
-        CGFloat x,y;
-        x=imagePoints[5][0]+imagePoints[6][0]+imagePoints[4][0]+imagePoints[7][0];
-        y=imagePoints[5][1]+imagePoints[6][1]+imagePoints[4][1]+imagePoints[7][1];
-        x=x*self.wSize/480;
-        y=y*self.hSize/360;
-        //  theMovie.view.frame.origin=CGPointMake(x,y);
-        [theMovie.view setCenter:CGPointMake(x/4, y/4)];
-        printf("imagePoints[5][0] %f",imagePoints[5][0]);
-        printf("imagePoints[6][0] %f",imagePoints[6][0]);
-        // theMovie.view.transform=newMatrix;
-        // theMovie.view.layer.transform=CATransform3DMakeAffineTransform(newMatrix);
-        //theMovie.view.frame=CGRectApplyAffineTransform(CGRectMake(10, 10, 50, 50), newMatrix);
-        
-    }else {
-        CALayer *layer = theMovie.view.layer;
-        
-        layer.frame = CGRectMake(0,0,60,60);
-        layer.anchorPoint = CGPointMake(0.0,0.0);
-        layer.zPosition = 0;
-        
-        
-        CATransform3D rotationAndPerspectiveTransform = CATransform3DIdentity;
-        
-        rotationAndPerspectiveTransform.m11 = h[0];
-        rotationAndPerspectiveTransform.m12 = h[3];
-        rotationAndPerspectiveTransform.m14 = h[6];
-        rotationAndPerspectiveTransform.m21 = h[1];
-        rotationAndPerspectiveTransform.m22 = h[4];
-        rotationAndPerspectiveTransform.m24 = h[7];
-        rotationAndPerspectiveTransform.m41 = h[2];
-        rotationAndPerspectiveTransform.m42 = h[5];
-        rotationAndPerspectiveTransform.m44 = 1;
-        
-        if (self.touchFull) {
-//            [self.view reloadInputViews];
-//            //[self.view removeFromSuperview];
-//           // [self.view removeFromSuperview:theMovie.view];
-//            [self.view addSubview:theMovie.view];
-//            [self.view bringSubviewToFront:theMovie.view];
-//            theMovie.view.frame=CGRectMake(0, 0, 100, 100);
-            [theMovie setFullscreen:YES animated:YES];
+-(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux
+{
+    CALayer *layerVideo = theMovie.view.layer;
 
-         }else{
-         theMovie.view.layer.transform=rotationAndPerspectiveTransform;
-        }
- 
-    }
-    
+    CATransform3D rotationAndPerspectiveTransformVIDEO = CATransform3DIdentity;
+        
+        //VIDEO LAYER
+        layerVideo.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+        layerVideo.anchorPoint = CGPointMake(0.0,0.0);
+        layerVideo.zPosition = 0;
+        
+        rotationAndPerspectiveTransformVIDEO.m11 = hvideo[0];
+        rotationAndPerspectiveTransformVIDEO.m12 = hvideo[3];
+        rotationAndPerspectiveTransformVIDEO.m14 = hvideo[6];
+        rotationAndPerspectiveTransformVIDEO.m21 = hvideo[1];
+        rotationAndPerspectiveTransformVIDEO.m22 = hvideo[4];
+        rotationAndPerspectiveTransformVIDEO.m24 = hvideo[7];
+        rotationAndPerspectiveTransformVIDEO.m41 = hvideo[2];
+        rotationAndPerspectiveTransformVIDEO.m42 = hvideo[5];
+        rotationAndPerspectiveTransformVIDEO.m44 = 1;
+        
+     
+    theMovie.view.layer.transform=rotationAndPerspectiveTransformVIDEO;
     
     
 }
+
+
 -(void) desplegarVideo{
-    
-    
-    
     
     /////////viendo commit
     
-    
-    
-    
     NSBundle *bundle = [NSBundle mainBundle];
-    NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
+    NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(0, 0, 60, 60);
+    theMovie.view.frame = CGRectMake(0, 0, 60*1024/197,60*768/148);
+   
     //theMovie.fullscreen=YES;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
     
-    
     [self.view addSubview:theMovie.view];
+    theMovie.view.hidden=NO;
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
     [theMovie play];
-    
     
 }
 
@@ -560,6 +536,33 @@ double *h;
     
     luminancia = (float *) malloc(360*480*sizeof(float));
     // cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
+    
+    
+    
+    /*RESERVA MEMORIA PARA HOMOGRAFIA 2D: COMIENZO*/
+    //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
+    imagePoints3video=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints3video[i]=(float *)malloc(2 * sizeof(float));
+    //197×148 mm
+    //1024x768 px ipad
+    
+    imagePoints3video[0][0]=(60)*1024/197;
+    imagePoints3video[0][1]=(60)*768/148;
+    
+    imagePoints3video[1][0]=(60)*1024/197;
+    imagePoints3video[1][1]=(0)*768/148;
+    
+    imagePoints3video[2][0]=(0)*1024/197;
+    imagePoints3video[2][1]=(0)*768/148;
+    
+    imagePoints3video[3][0]=(0)*1024/197;
+    imagePoints3video[3][1]=(60)*768/148;
+
+    //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
+    imagePoints4=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints4[i]=(float *)malloc(2 * sizeof(float));
+    
+    
     
     /* READ MARKER MODEL */
     
@@ -772,7 +775,7 @@ double *h;
         self.hSize=768;
     }
     if (self.videoPlayer) {
-        //[self desplegarVideo];
+        [self desplegarVideo];
     }
     orientation=UIImageOrientationUp;
     

@@ -21,6 +21,8 @@
 @synthesize button = _button;
 @synthesize HWview = _HWview;
 @synthesize ARidObra = _ARidObra;
+@synthesize ARType = _ARType;
+@synthesize ARObj = _ARObj;
 
 @synthesize vistaTouch = _vistaTouch;
 @synthesize theMovieVista = _theMovieVista;
@@ -122,13 +124,16 @@
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
     
+    if ([self.ARType isEqual:@"video"]) {
+        _viewController.videoPlayer=true;
+    }
     
     if ([self.ARidObra intValue]<5){
                 NSLog(@"AR DOS CUBOS");
         
                 DosCubos=true;
 //                Artigas=false;
-                _viewController.videoPlayer=false;
+               
                 [self createViews];
         
      }else if([self.ARidObra intValue]>10) {
@@ -137,7 +142,7 @@
          
                     DosCubos=false;
 //                    Artigas=false;
-                    _viewController.videoPlayer=false;
+                   
                     [self createViews];
         
     }else if([self.ARidObra intValue]==16) {
@@ -145,7 +150,7 @@
 //                    Artigas=true;
                     NSLog(@"AR ARTIGAS");
         
-        _viewController.videoPlayer=true;
+        
     }
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
@@ -230,10 +235,13 @@
 	// Create view and add to Isgl3dDirector
 	//Isgl3dView * view = [HelloWorldView view];
     
-    [self.viewController.view removeFromSuperview];
+   
+    
    // [self.view removeFromSuperview:self.HWview];
+    
+	[[Isgl3dDirector sharedInstance] removeView:self.viewController.isgl3DView];
     _viewController.isgl3DView = nil;
-	[[Isgl3dDirector sharedInstance] removeView:self.HWview];
+    [self.viewController.view removeFromSuperview];
     [self.HWview release];
 }
 
@@ -255,7 +263,8 @@
     NSLog(@"POST INSTANCIA [HELLOWORLD VIEW]");
     printf("ArID desde VISTAVIEWCTRL: %d\n",[self.ARidObra intValue]);
     
-    _viewController.isgl3DView =  [[HelloWorldView alloc] init:[self.ARidObra intValue]];
+    _viewController.isgl3DView =  [[HelloWorldView alloc] init:[self.ARidObra intValue] ARType:self.ARType ARObj:self.ARObj];
+    
     [[Isgl3dDirector sharedInstance] addView:_viewController.isgl3DView];
     
     

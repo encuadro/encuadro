@@ -303,7 +303,10 @@
         [segue destinationViewController];
         
         //falta ver como asignar el ARidObra
-     if (manual==true) {  ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
+     if (manual==true) {
+         ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
+         ARVistaViewController.ARType=[self.descripcionObra objectAtIndex:6];
+         ARVistaViewController.ARObj=[self.descripcionObra objectAtIndex:7];
      }
     
     }

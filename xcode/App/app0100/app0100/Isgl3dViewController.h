@@ -26,6 +26,9 @@
 #import "kalman.h"
 
 #include "AuxiVar.h"
+
+#include "homografia.h"
+
 int augmID;
 
 @interface Isgl3dViewController : UIViewController <AVCaptureVideoDataOutputSampleBufferDelegate>{

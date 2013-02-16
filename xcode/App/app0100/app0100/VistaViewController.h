@@ -40,6 +40,8 @@ bool Artigas;
 @property (nonatomic,retain) Isgl3dView * HWview;
 //- (IBAction)buttonClicked:(id)sender;
 @property (nonatomic, readwrite) NSNumber *ARidObra;
+@property (nonatomic, retain) NSString *ARType; //modelo, animacion, video
+@property (nonatomic, retain) NSString *ARObj;
 //@property (nonatomic, readwrite) bool *DosCubos;
 
 @property (nonatomic, retain) TouchVista *vistaTouch;

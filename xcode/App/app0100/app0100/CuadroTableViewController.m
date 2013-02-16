@@ -21,6 +21,8 @@
 @synthesize cuadroDescripcion=_cuadroDescripcion;
 @synthesize nombre_audio = _nombre_audio;
 @synthesize ARid = _ARid;
+@synthesize ARType = _ARType;
+@synthesize ARObj = _ARObj;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -88,6 +90,25 @@
                       [NSNumber numberWithInt:3],
                       [NSNumber numberWithInt:4],
                       nil];
+         
+         self.ARType = [[NSArray alloc]
+                              initWithObjects:
+                              @"modelo",
+                              @"modelo",
+                              @"modelo",
+                              @"modelo",
+                              nil];
+         
+         self.ARObj = [[NSArray alloc]
+                              initWithObjects:
+                              @"artigas",
+                              @"artigas",
+                              @"artigas",
+                              @"artigas",
+                              nil];
+         
+         
+         
    
      }else if (opcionAutor==2) {//2--> Figari
          
@@ -155,6 +176,29 @@
                       nil];
          
          
+         self.ARType = [[NSArray alloc]
+                              initWithObjects:
+                              @"modelo",
+                              @"modelo",
+                              @"modelo",
+                              @"modelo",
+                              @"modelo",
+                              @"modelo",
+                              nil];
+         
+         
+         self.ARObj = [[NSArray alloc]
+                              initWithObjects:
+                              @"chihuahua",
+                              @"chihuahua",
+                              @"chihuahua",
+                              @"chihuahua",
+                              @"chihuahua",
+                              @"chihuahua",
+                              nil];
+         
+         
+         
      } else if (opcionAutor==3) {//3--> Torres Garcia
          NSLog(@"OPCION AUTOR ES 3---TORRES GARCIA");
         self.cuadroAutor = [[NSArray alloc]
@@ -212,9 +256,30 @@
                       [NSNumber numberWithInt:15],
                       nil];
         
+         self.ARType = [[NSArray alloc]
+                        initWithObjects:
+                        @"video",
+                        @"video",
+                        @"video",
+                        @"video",
+                        @"video",
+                        nil];
+         
+         
+         self.ARObj = [[NSArray alloc]
+                       initWithObjects:
+                       @"sofa",
+                       @"sofa",
+                       @"sofa",
+                       @"sofa",
+                       @"sofa",
+                       nil];
+         
+         
+         
         
      }else if(opcionAutor==4){
-         NSLog(@"OPCION AUTOR ES 1---BLANES");
+         NSLog(@"OPCION AUTOR ES 4---ESCULTURAS DIGITALES");
          self.cuadroAutor = [[NSArray alloc]
                              initWithObjects:
                              @"enCuadro",
@@ -246,6 +311,19 @@
                       initWithObjects:
                       [NSNumber numberWithInt:16],
                       nil];
+         
+         self.ARType = [[NSArray alloc]
+                        initWithObjects:
+                        @"animacion",
+                        nil];
+         
+         
+         self.ARObj = [[NSArray alloc]
+                       initWithObjects:
+                       @"artigas",
+                       nil];
+         
+         
      
      }
     
@@ -376,6 +454,49 @@
                      [NSNumber numberWithInt:15],
                      [NSNumber numberWithInt:16],
                      nil];
+         
+         
+         self.ARType = [[NSArray alloc]
+                        initWithObjects:
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"video",
+                        @"video",
+                        @"video",
+                        @"video",
+                        @"video",
+                        @"animacion",
+                        nil];
+         
+         
+         self.ARObj = [[NSArray alloc]
+                       initWithObjects:
+                       @"artigas",
+                       @"artigas",
+                       @"artigas",
+                       @"artigas",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"sofa",
+                       @"sofa",
+                       @"sofa",
+                       @"sofa",
+                       @"sofa",
+                       @"artigas",
+                       nil];
+         
         
         
         
@@ -510,6 +631,8 @@
                                             [self.cuadroDescripcion objectAtIndex:[myIndexPath row]],
                                             [self.nombre_audio objectAtIndex:[myIndexPath row]],
                                             [self.ARid objectAtIndex:[myIndexPath row]],
+                                            [self.ARType objectAtIndex:[myIndexPath row]],
+                                            [self.ARObj objectAtIndex:[myIndexPath row]],
                                             nil];
 
     }
