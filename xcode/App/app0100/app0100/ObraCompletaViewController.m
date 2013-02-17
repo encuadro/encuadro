@@ -302,13 +302,23 @@
         VistaViewController *ARVistaViewController =
         [segue destinationViewController];
         
-        //falta ver como asignar el ARidObra
-     if (manual==true) {
-         ARVistaViewController.ARidObra=[self.descripcionObra objectAtIndex:5];
-         ARVistaViewController.ARType=[self.descripcionObra objectAtIndex:6];
-         ARVistaViewController.ARObj=[self.descripcionObra objectAtIndex:7];
-     }
+       
+        NSString *filePath = [self.descripcionObra objectAtIndex:5];
+        NSData* textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        NSString* text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
+        ARVistaViewController.ARidObra=text;
+        
+        filePath = [self.descripcionObra objectAtIndex:6];
+        textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
+        ARVistaViewController.ARType=text;
+        
+        filePath = [self.descripcionObra objectAtIndex:7];
+        textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
+        text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
+        ARVistaViewController.ARObj=text;
     
+        
     }
 }
 

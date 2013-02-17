@@ -51,7 +51,7 @@ int augmID;
 @property (nonatomic,readwrite) int hSize;
 @property (nonatomic,readwrite) bool videoPlayer;
 @property (nonatomic,readwrite) bool* touchFull;
-
+@property (nonatomic, retain) NSString *videoName;
 
 
 - (void) procesamiento;

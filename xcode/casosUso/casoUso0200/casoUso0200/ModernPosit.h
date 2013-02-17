@@ -16,6 +16,6 @@
 #include <math.h>
 #include <stdbool.h>
 
-void  ModernPosit(int NbPts,double** imgPts,double** worldPts, double focalLength,double center[2],double** R, double* T);
-void  ModPosit(int NbPts,double** centeredImage,double** homogeneousWorldPts,double** objectMat, double focalLength,double center[2],double** R, double* T);
+void  ModernPosit(int NbPts,float** imgPts,float** worldPts, float focalLength,float center[2],float** R, float* T);
+void  ModPosit(int NbPts,float** centeredImage,float** homogeneousWorldPts,float** objectMat, float focalLength,float center[2],float** R, float* T);
 

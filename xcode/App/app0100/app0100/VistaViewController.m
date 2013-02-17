@@ -126,32 +126,13 @@
     
     if ([self.ARType isEqual:@"video"]) {
         _viewController.videoPlayer=true;
+        _viewController.videoName=self.ARObj;
     }
+   
     
-    if ([self.ARidObra intValue]<5){
-                NSLog(@"AR DOS CUBOS");
-        
-                DosCubos=true;
-//                Artigas=false;
-               
-                [self createViews];
-        
-     }else if([self.ARidObra intValue]>10) {
-         
-                    NSLog(@"AR UN CUBO y MODELOS");
-         
-                    DosCubos=false;
-//                    Artigas=false;
-                   
-                    [self createViews];
-        
-    }else if([self.ARidObra intValue]==16) {
-                    DosCubos=false;
-//                    Artigas=true;
-                    NSLog(@"AR ARTIGAS");
-        
-        
-    }
+    [self createViews];
+    
+    
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
@@ -276,9 +257,11 @@ NSLog(@"BUTTON BACK");
 // _viewController.AugmReal=false;
 
     [self removeViews];
-
+  
     [self.viewController.session stopRunning];
     [self.viewController.theMovie stop];
+    self.viewController.theMovie=nil;
+    [self.viewController.theMovie autorelease];
 
 //////////////////////////////////////////////////////    
 

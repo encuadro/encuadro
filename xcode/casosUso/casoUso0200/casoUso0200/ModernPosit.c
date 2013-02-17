@@ -15,7 +15,7 @@
 #include "svd.h"
 
 
-void  ModPosit(int NbPts,double** centeredImage,double** homogeneousWorldPts,double** objectMat, double focalLength,double center[2],double** R, double* T){
+void  ModPosit(int NbPts,float** centeredImage,float** homogeneousWorldPts,float** objectMat, float focalLength,float center[2],float** R, float* T){
     /* 
     Esta funcion es identica a ModernPosit, se le cambian las entradas ya que se usa para positCoplanar donde se realizan dos calculos de pose por pasada. 
     Entradas:
@@ -31,23 +31,23 @@ void  ModPosit(int NbPts,double** centeredImage,double** homogeneousWorldPts,dou
     
 
     int i,j;
-    double deltaX, deltaY,delta=0;
-    double sR1,sR2,s;
+    float deltaX, deltaY,delta=0;
+    float sR1,sR2,s;
     int count=0;
     bool converged= false;
     
-    double* r1T;
-    r1T=(double*)malloc(4*sizeof(double));
-    double* r2T;
-    r2T=(double*)malloc(4*sizeof(double));
-    double* r3T;
-    r3T=(double*)malloc(4*sizeof(double));
+    float* r1T;
+    r1T=(float*)malloc(4*sizeof(float));
+    float* r2T;
+    r2T=(float*)malloc(4*sizeof(float));
+    float* r3T;
+    r3T=(float*)malloc(4*sizeof(float));
     
     /* allocation for centeredImage and centered imageAux*/
-    double** centeredImageAux;
-    centeredImageAux=(double **)malloc(NbPts* sizeof(double *));
+    float** centeredImageAux;
+    centeredImageAux=(float **)malloc(NbPts* sizeof(float *));
     for (i=0;i<NbPts;i++){
-        centeredImageAux[i]=(double *)malloc(2 * sizeof(double));
+        centeredImageAux[i]=(float *)malloc(2 * sizeof(float));
     }
     /* end alloc*/
     
@@ -59,8 +59,8 @@ void  ModPosit(int NbPts,double** centeredImage,double** homogeneousWorldPts,dou
     
     
     /* allocation for wk*/
-    double* wk;
-    wk=(double *)malloc(NbPts*sizeof(double));
+    float* wk;
+    wk=(float *)malloc(NbPts*sizeof(float));
     /* end alloc*/
     
     
@@ -179,7 +179,7 @@ void  ModPosit(int NbPts,double** centeredImage,double** homogeneousWorldPts,dou
 
 }
 
-void  ModernPosit(int NbPts,double** imgPts,double** worldPts, double focalLength,double center[2],double **R, double* T){
+void  ModernPosit(int NbPts,float** imgPts,float** worldPts, float focalLength,float center[2],float **R, float* T){
     /* 
      Esta funcion calcula la pose dadas las correspondencias entre los puntos detectados en la imagen y los puntos del modelos 3D. La diferencia de esta version de posit con la version original es que no se necesita pasarle punto origen en el modelo. 
      Entradas:
@@ -193,27 +193,27 @@ void  ModernPosit(int NbPts,double** imgPts,double** worldPts, double focalLengt
      */
     
     int i,j;
-    double deltaX, deltaY,delta=0;
-    double sR1,sR2,s;
+    float deltaX, deltaY,delta=0;
+    float sR1,sR2,s;
     int count=0;
     bool converged= false;
     
-    double* r1T;
-    r1T=(double*)malloc(4*sizeof(double));
-    double* r2T;
-    r2T=(double*)malloc(4*sizeof(double));
-    double* r3T;
-    r3T=(double*)malloc(4*sizeof(double));
+    float* r1T;
+    r1T=(float*)malloc(4*sizeof(float));
+    float* r2T;
+    r2T=(float*)malloc(4*sizeof(float));
+    float* r3T;
+    r3T=(float*)malloc(4*sizeof(float));
 
     
     /* allocation for centeredImage and centered imageAux*/
-    double** centeredImage;
-    double** centeredImageAux;
-    centeredImage=(double **)malloc(NbPts* sizeof(double *));
-    centeredImageAux=(double **)malloc(NbPts* sizeof(double *));
+    float** centeredImage;
+    float** centeredImageAux;
+    centeredImage=(float **)malloc(NbPts* sizeof(float *));
+    centeredImageAux=(float **)malloc(NbPts* sizeof(float *));
     for (i=0;i<NbPts;i++){
-        centeredImage[i]=(double *)malloc(2 * sizeof(double));
-        centeredImageAux[i]=(double *)malloc(2 * sizeof(double));
+        centeredImage[i]=(float *)malloc(2 * sizeof(float));
+        centeredImageAux[i]=(float *)malloc(2 * sizeof(float));
     }
     /* end alloc*/
     
@@ -226,9 +226,9 @@ void  ModernPosit(int NbPts,double** imgPts,double** worldPts, double focalLengt
     }
     
     /* allocation for homogeneousWorldPts*/
-    double** homogeneousWorldPts;
-    homogeneousWorldPts=(double **)malloc(NbPts* sizeof(double *));
-    for (i=0;i<NbPts;i++) homogeneousWorldPts[i]=(double *)malloc(4 * sizeof(double));
+    float** homogeneousWorldPts;
+    homogeneousWorldPts=(float **)malloc(NbPts* sizeof(float *));
+    for (i=0;i<NbPts;i++) homogeneousWorldPts[i]=(float *)malloc(4 * sizeof(float));
     /* end alloc*/ 
     
     /* Homogeneus world points -  append a 1 to each 3-vector. An Nx4 matrix.*/
@@ -240,15 +240,15 @@ void  ModernPosit(int NbPts,double** imgPts,double** worldPts, double focalLengt
     }
     
     /* allocation for wk*/
-    double* wk;
-    wk=(double *)malloc(NbPts*sizeof(double));
+    float* wk;
+    wk=(float *)malloc(NbPts*sizeof(float));
     /* end alloc*/
     
     
     /* objectMat alloc*/
-    double** objectMat;
-    objectMat=(double **)malloc(4 * sizeof(double*));
-    for (i=0; i<4; i++) objectMat[i]=(double *)malloc(NbPts* sizeof(double));
+    float** objectMat;
+    objectMat=(float **)malloc(4 * sizeof(float*));
+    for (i=0; i<4; i++) objectMat[i]=(float *)malloc(NbPts* sizeof(float));
     /* end*/
     
     PseudoInverseGen(homogeneousWorldPts,NbPts,4,objectMat);

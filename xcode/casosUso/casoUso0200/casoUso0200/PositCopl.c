@@ -5,13 +5,13 @@
 (ceil(x)) : (floor(x)))
 
 /****************************************************************************************************/
-void PositCopl(long int nbP,double** imagePoints,double**objectPoints,double** objectMatrix,
-               double focalLength,double Rot1[3][3],double Trans1[3],double Rot2[3][3],double Trans2[3])
+void PositCopl(long int nbP,float** imagePoints,float**objectPoints,float** objectMatrix,
+               float focalLength,float Rot1[3][3],float Trans1[3],float Rot2[3][3],float Trans2[3])
 /*retourne les DEUX poses resultant de la convergence des deux branches de POSIT, sans les juger*/
 
 {
 
-double   POSRot1[3][3],POSRot2[3][3],POSTrans[3];
+float   POSRot1[3][3],POSRot2[3][3],POSTrans[3];
 void     PosCopl();
 void     Transf();
 
@@ -71,24 +71,24 @@ void PosCopl(nbrP,imagePts,objectPts,objectMtrx,
 /*Le premier element des matrices de rotation est mis a 2 en cas de pose impossible*/
 /*(points objets derriere le plan image)*/
 
-double  **imagePts,**objectPts,**objectMtrx;
-double  focLength;
-double  rotation1[3][3],rotation2[3][3],translation[3];
+float  **imagePts,**objectPts,**objectMtrx;
+float  focLength;
+float  rotation1[3][3],rotation2[3][3],translation[3];
 long int    nbrP;
 {
 
-double    **imageVects,**objectVects;
-double    I0[3],J0[3],U[3],u[3],IVect[3],JVect[3],row1[3],row2[3],row3[3];
-    double    NU=0,I0I0,J0J0,I0J0,delta,q,lambda,mu,scale,zmin1,zmin2,zi;
+float    **imageVects,**objectVects;
+float    I0[3],J0[3],U[3],u[3],IVect[3],JVect[3],row1[3],row2[3],row3[3];
+    float    NU=0,I0I0,J0J0,I0J0,delta,q,lambda,mu,scale,zmin1,zmin2,zi;
 long int  i,j,firstNonCol;
 
 /*allocations*/
-imageVects=(double **)malloc(nbrP * sizeof(double *));
-objectVects=(double **)malloc(nbrP * sizeof(double *));
+imageVects=(float **)malloc(nbrP * sizeof(float *));
+objectVects=(float **)malloc(nbrP * sizeof(float *));
 for (i=0;i<nbrP;i++)
   {
-    imageVects[i]=(double *)malloc(2 * sizeof(double));
-    objectVects[i]=(double *)malloc(3 * sizeof(double));
+    imageVects[i]=(float *)malloc(2 * sizeof(float));
+    objectVects[i]=(float *)malloc(3 * sizeof(float));
   }
 
 for (i=0;i<nbrP;i++)
@@ -233,18 +233,18 @@ for (i=0;i<nbrP;i++)
 void Transf(nP,imPoints,obPoints,obMatrix,focalL,Rot,Trans,R,T)
 /*PROCESSUS ITERATIF de raffinement de la pose*/
 
-double    **imPoints,**obPoints,**obMatrix;
-double    focalL;
-double    Rot[3][3],R[3][3],Trans[3],T[3];
+float    **imPoints,**obPoints,**obMatrix;
+float    focalL;
+float    Rot[3][3],R[3][3],Trans[3],T[3];
 long int  nP;
 {
 
-double   **obVectors,**oldSOPImagePoints,**SOPImagePoints;
-double   fact,imDifference,oldImDifference,deltaImDifference,Er1,Erhvmax1,Er2,Erhvmax2,Er,Erhvmax;
-double   Threshold=0.01; /*seuil de convergence sur:*/
+float   **obVectors,**oldSOPImagePoints,**SOPImagePoints;
+float   fact,imDifference,oldImDifference,deltaImDifference,Er1,Erhvmax1,Er2,Erhvmax2,Er,Erhvmax;
+float   Threshold=0.01; /*seuil de convergence sur:*/
                          /*-difference des images SOP consecutives (ImDifference)*/
                          /*-et sa variation (deltaImDifference)*/
-double   R1[3][3],R2[3][3],trans1[3],trans2[3];
+float   R1[3][3],R2[3][3],trans1[3],trans2[3];
 long int i,j,Erp1,Erp2,Erp,Erpmin=1000;
 long int converged=0;
 long int count=0;
@@ -252,14 +252,14 @@ void     PosCopl();
 void     Error(); /*cf file Error.c*/
 
 /*allocations*/
-obVectors=(double **)malloc(nP * sizeof(double *));
-oldSOPImagePoints=(double **)malloc(nP * sizeof(double *));
-SOPImagePoints=(double **)malloc(nP * sizeof(double *));
+obVectors=(float **)malloc(nP * sizeof(float *));
+oldSOPImagePoints=(float **)malloc(nP * sizeof(float *));
+SOPImagePoints=(float **)malloc(nP * sizeof(float *));
 for (i=0;i<nP;i++)
   {
-    obVectors[i]=(double *)malloc(3 * sizeof(double));
-    oldSOPImagePoints[i]=(double *)malloc(2 * sizeof(double));
-    SOPImagePoints[i]=(double *)malloc(2 * sizeof(double));
+    obVectors[i]=(float *)malloc(3 * sizeof(float));
+    oldSOPImagePoints[i]=(float *)malloc(2 * sizeof(float));
+    SOPImagePoints[i]=(float *)malloc(2 * sizeof(float));
   }
 
 for (i=0;i<nP;i++)

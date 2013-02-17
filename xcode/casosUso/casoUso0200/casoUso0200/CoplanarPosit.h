@@ -7,16 +7,16 @@
 //
 
 
-void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLength, double center[2], double** Rot, double* Trans);
+void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLength, float center[2], float** Rot, float* Trans);
 
-void CoplanarPosit4Soft(int NbPts, double **centeredImage, double** homogeneousWorldPts, double focalLength, double center[2], double** Rot, double* Trans);
+void CoplanarPosit4Soft(int NbPts, float **centeredImage, float** homogeneousWorldPts, float focalLength, float center[2], float** Rot, float* Trans);
 
-void PositBranches(int NbPts, double **centeredImage, double** worldPts, double**objectMat, double** Rot1, double** Rot2, double* Trans);
+void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**objectMat, float** Rot1, float** Rot2, float* Trans);
 
-void PerspMoveAndProjC(int N, double **obj, double **r, double *t, double foc, double** proj);
+void PerspMoveAndProjC(int N, float **obj, float **r, float *t, float foc, float** proj);
 
-void ErrorC(long int NP,double** impts,double** obpts,double f,double center[2], double** Rotat,double* Translat,double* Er,long int* Epr,double* Erhvmax);
+void ErrorC(long int NP,float** impts,float** obpts,float f,float center[2], float** Rotat,float* Translat,float* Er,long int* Epr,float* Erhvmax);
 
-void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, double**objectMat, double f,double center[2], double** RotIn, double* TransIn,double** Rot, double* Trans);
+void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, float**objectMat, float f,float center[2], float** RotIn, float* TransIn,float** Rot, float* Trans);
 
-void Matrix2Euler(double** Rot, double* angles1, double* angles2);
+void Matrix2Euler(float** Rot, float* angles1, float* angles2);

@@ -56,12 +56,12 @@
 
 
 
-double punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
+float punto3D1[3], punto3D2[3], punto3D3[3], punto3D4[3], puntoModelo3D1[4] = {0,0,-30,1}, puntoModelo3D2[4] = {190,0,-30,1}, puntoModelo3D3[4] = {0,100,-30,1};// puntoModelo3D4[4] = {0,0,-60,1};
 /*Si queremos meter cubos*/
 //puntoModelo3D2[4] = {187.5,0,35/2,1}, puntoModelo3D3[4] = {0,105,35/2,1},
 Isgl3dMatrix4 Matriz;
 Isgl3dVector3 angles;
-double rotacion[3][3];
+float rotacion[3][3];
 bool verbose;
 
 bool dibujar;
@@ -71,7 +71,7 @@ bool dibujar;
     return dibujar;
 }
 
-- (void) setRotacion:(double*) rot
+- (void) setRotacion:(float*) rot
 {
     rotacion[0][0] = rot[0];
     rotacion[0][1] = rot[1];

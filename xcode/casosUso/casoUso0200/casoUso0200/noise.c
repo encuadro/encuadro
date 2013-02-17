@@ -16,13 +16,13 @@
 #define IA3 4561
 #define IC3 51349
 
-double ran1(idum) /*retourne un nombre aleatoire entre 0 et 1 (probabilites uniformes).*/
+float ran1(idum) /*retourne un nombre aleatoire entre 0 et 1 (probabilites uniformes).*/
                   /*Pour initialiser ou reinitialiser la sequence, donner une valeur negative a idum*/
 long int *idum;
 {
         static long ix1,ix2,ix3;
-        static double r[98];
-        double temp;
+        static float r[98];
+        float temp;
         static long int iff=0;
         long int j;
         void nrerror();

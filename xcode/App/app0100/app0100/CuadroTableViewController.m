@@ -177,25 +177,24 @@
          
          
          self.ARType = [[NSArray alloc]
-                              initWithObjects:
-                              @"modelo",
-                              @"modelo",
-                              @"modelo",
-                              @"modelo",
-                              @"modelo",
-                              @"modelo",
-                              nil];
-         
+                        initWithObjects:
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        @"modelo",
+                        nil];
          
          self.ARObj = [[NSArray alloc]
-                              initWithObjects:
-                              @"chihuahua",
-                              @"chihuahua",
-                              @"chihuahua",
-                              @"chihuahua",
-                              @"chihuahua",
-                              @"chihuahua",
-                              nil];
+                       initWithObjects:
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       @"chihuahua",
+                       nil];
          
          
          
@@ -268,11 +267,11 @@
          
          self.ARObj = [[NSArray alloc]
                        initWithObjects:
-                       @"sofa",
-                       @"sofa",
-                       @"sofa",
-                       @"sofa",
-                       @"sofa",
+                       @"videoplayback",
+                       @"videoplayback",
+                       @"GangnamStyle",
+                       @"GangnamStyle",
+                       @"GangnamStyle",
                        nil];
          
          
@@ -489,11 +488,11 @@
                        @"chihuahua",
                        @"chihuahua",
                        @"chihuahua",
-                       @"sofa",
-                       @"sofa",
-                       @"sofa",
-                       @"sofa",
-                       @"sofa",
+                       @"videoplayback",
+                       @"videoplayback",
+                       @"GangnamStyle",
+                       @"GangnamStyle",
+                       @"GangnamStyle",
                        @"artigas",
                        nil];
          

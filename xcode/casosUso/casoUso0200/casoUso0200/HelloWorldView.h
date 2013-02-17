@@ -24,11 +24,11 @@
     Isgl3dMeshNode * _3dText;
     Isgl3dDemoCameraController * _cameraController;
 }
-@property (nonatomic) double* eulerAngles;
-@property (nonatomic) double* traslacion;
+@property (nonatomic) float* eulerAngles;
+@property (nonatomic) float* traslacion;
 
 - (bool) getDibujar;
--(void) setRotacion:(double*) rot;
+-(void) setRotacion:(float*) rot;
 
 
 @end

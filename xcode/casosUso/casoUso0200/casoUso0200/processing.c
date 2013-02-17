@@ -13,13 +13,13 @@
 #include "svd.h"
 
 
-void rgb2gray(double* brillo, unsigned char *pixels, int w, int h, int d)
+void rgb2gray(float* brillo, unsigned char *pixels, int w, int h, int d)
 {
     // printf("w: %-3d h: %-3d\n",w,h);
     
     unsigned long int  pixelNr;
     int blue,green, red, r,g,b;
-    double fvalue;
+    float fvalue;
     
     
     for(int j=0;j<h;j++)
@@ -52,7 +52,7 @@ void rgb2gray(double* brillo, unsigned char *pixels, int w, int h, int d)
 }
 
 
-void solveHomographie(double **imgPts, double **imgPts2, double *h){
+void solveHomographie(float **imgPts, float **imgPts2, float *h){
 //PUNTO 4 --X: 208.142039
 //PUNTO 4 --Y: 231.760118
 //PUNTO 5 --X: 208.254415
@@ -66,19 +66,19 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
      imgPts     --->    x,y puntos detectados por el filtro
      imgPts2    --->    i,j puntos sinteticos absolutos a partir de los cuales se pretende hacer la transformacion
      */
-    double ** A;
-    double ** Ainv;
-    double * imgPtsmod;
+    float ** A;
+    float ** Ainv;
+    float * imgPtsmod;
     int j;
     
 //Reservo memoria    
-    A=(double **)malloc(8 * sizeof(double *));
-    for (int i=0;i<8;i++) A[i]=(double *)malloc(8 * sizeof(double));
+    A=(float **)malloc(8 * sizeof(float *));
+    for (int i=0;i<8;i++) A[i]=(float *)malloc(8 * sizeof(float));
     
-    Ainv=(double **)malloc(8 * sizeof(double *));
-    for (int i=0;i<8;i++) Ainv[i]=(double *)malloc(8 * sizeof(double));
+    Ainv=(float **)malloc(8 * sizeof(float *));
+    for (int i=0;i<8;i++) Ainv[i]=(float *)malloc(8 * sizeof(float));
     
-	imgPtsmod=(double *)malloc(8 * sizeof(double));
+	imgPtsmod=(float *)malloc(8 * sizeof(float));
     
 
     
@@ -189,7 +189,7 @@ void solveHomographie(double **imgPts, double **imgPts2, double *h){
 
 }
 
-void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
+void solveAffineTransformation(float **imgPts, float **imgPts2, float *h){
     //PUNTO 4 --X: 208.142039
     //PUNTO 4 --Y: 231.760118
     //PUNTO 5 --X: 208.254415
@@ -203,19 +203,19 @@ void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
      imgPts     --->    x,y puntos detectados por el filtro
      imgPts2    --->    i,j puntos sinteticos absolutos a partir de los cuales se pretende hacer la transformacion
      */
-    double ** A;
-    double ** Ainv;
-    double * imgPtsmod;
+    float ** A;
+    float ** Ainv;
+    float * imgPtsmod;
     int j;
     
     //Reservo memoria    
-    A=(double **)malloc(6 * sizeof(double *));
-    for (int i=0;i<6;i++) A[i]=(double *)malloc(6 * sizeof(double));
+    A=(float **)malloc(6 * sizeof(float *));
+    for (int i=0;i<6;i++) A[i]=(float *)malloc(6 * sizeof(float));
     
-    Ainv=(double **)malloc(6 * sizeof(double *));
-    for (int i=0;i<6;i++) Ainv[i]=(double *)malloc(6 * sizeof(double));
+    Ainv=(float **)malloc(6 * sizeof(float *));
+    for (int i=0;i<6;i++) Ainv[i]=(float *)malloc(6 * sizeof(float));
     
-	imgPtsmod=(double *)malloc(6 * sizeof(double));
+	imgPtsmod=(float *)malloc(6 * sizeof(float));
     
     
     
@@ -321,7 +321,7 @@ void solveAffineTransformation(double **imgPts, double **imgPts2, double *h){
     
 }
 
-void matrixProduct(double ** A, int rowA, double ** B, int colB, double ** C)
+void matrixProduct(float ** A, int rowA, float ** B, int colB, float ** C)
 {
     int i,j,k;
     
@@ -339,7 +339,7 @@ void matrixProduct(double ** A, int rowA, double ** B, int colB, double ** C)
     
 }
 
-void matrixVectorProduct(double ** A, int rowA, double* B, double* C)
+void matrixVectorProduct(float ** A, int rowA, float* B, float* C)
 {
     int i,k;
     for (i=0; i<rowA; i++) {

@@ -15,55 +15,55 @@
 #include "vvector.h"
 #define MY_PI 3.14159265
 
-void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLength, double center[2], double** Rot, double* Trans){
+void CoplanarPosit(int NbPts, float **imgPts, float** worldPts, float focalLength, float center[2], float** Rot, float* Trans){
     
 
     long int i,j;
-    double** Rot1;
-    double** Rot2;
-    double** RotFinal1;
-    double** RotFinal2;
-    double* TransFinal1;
-    double* TransFinal2;
-    double  E1,Ehvmax1,E2,Ehvmax2;
+    float** Rot1;
+    float** Rot2;
+    float** RotFinal1;
+    float** RotFinal2;
+    float* TransFinal1;
+    float* TransFinal2;
+    float  E1,Ehvmax1,E2,Ehvmax2;
     long int Ep1,Ep2;
         
 
 
     /* allocation for Rot1*/ 
-    Rot1=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) Rot1[i]=(double *)malloc(3 * sizeof(double));
+    Rot1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot1[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for Rot2*/ 
-    Rot2=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) Rot2[i]=(double *)malloc(3 * sizeof(double));
+    Rot2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot2[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for RotFinal1*/ 
-    RotFinal1=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) RotFinal1[i]=(double *)malloc(3 * sizeof(double));
+    RotFinal1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal1[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for RotFinal2*/ 
-    RotFinal2=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) RotFinal2[i]=(double *)malloc(3 * sizeof(double));
+    RotFinal2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal2[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for TransFinal1*/ 
-    TransFinal1=(double *)malloc(3* sizeof(double));
+    TransFinal1=(float *)malloc(3* sizeof(float));
     /* end alloc*/ 
     
     /* allocation for TransFinal2*/ 
-    TransFinal2=(double *)malloc(3* sizeof(double));
+    TransFinal2=(float *)malloc(3* sizeof(float));
     /* end alloc*/ 
 
 
     
     /* allocation for homogeneousWorldPts*/ 
-    double** homogeneousWorldPts;
-    homogeneousWorldPts=(double **)malloc(NbPts* sizeof(double *));
-    for (i=0;i<NbPts;i++) homogeneousWorldPts[i]=(double *)malloc(4 * sizeof(double));
+    float** homogeneousWorldPts;
+    homogeneousWorldPts=(float **)malloc(NbPts* sizeof(float *));
+    for (i=0;i<NbPts;i++) homogeneousWorldPts[i]=(float *)malloc(4 * sizeof(float));
     /* end alloc*/ 
     
     /* Homogeneus world points -  append a 1 to each 3-vector. An Nx4 matrix.*/
@@ -81,9 +81,9 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         }
     }
     /* allocation for centeredImage*/
-    double** centeredImage;
-    centeredImage=(double**)malloc(NbPts*sizeof(double*));
-    for (i=0; i<NbPts; i++) centeredImage[i]=(double*)malloc(2*sizeof(double));
+    float** centeredImage;
+    centeredImage=(float**)malloc(NbPts*sizeof(float*));
+    for (i=0; i<NbPts; i++) centeredImage[i]=(float*)malloc(2*sizeof(float));
     /* end alloc*/   
     
     for (i=0;i<NbPts;i++){
@@ -101,9 +101,9 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
     
     
     /* objectMat alloc*/
-    double** objectMat;
-    objectMat=(double **)malloc(4 * sizeof(double*));
-    for (i=0; i<4; i++) objectMat[i]=(double *)malloc(NbPts* sizeof(double));
+    float** objectMat;
+    objectMat=(float **)malloc(4 * sizeof(float*));
+    for (i=0; i<4; i++) objectMat[i]=(float *)malloc(NbPts* sizeof(float));
     /* end*/
     
     if (false) {        
@@ -232,55 +232,55 @@ void CoplanarPosit(int NbPts, double **imgPts, double** worldPts, double focalLe
         
 }
 
-void CoplanarPosit4Soft(int NbPts, double **centeredImage, double** homogeneousWorldPts, double focalLength, double center[2], double** Rot, double* Trans){
+void CoplanarPosit4Soft(int NbPts, float **centeredImage, float** homogeneousWorldPts, float focalLength, float center[2], float** Rot, float* Trans){
     
     
     long int i,j;
-    double** Rot1;
-    double** Rot2;
-    double** RotFinal1;
-    double** RotFinal2;
-    double* TransFinal1;
-    double* TransFinal2;
-    double  E1,Ehvmax1,E2,Ehvmax2;
+    float** Rot1;
+    float** Rot2;
+    float** RotFinal1;
+    float** RotFinal2;
+    float* TransFinal1;
+    float* TransFinal2;
+    float  E1,Ehvmax1,E2,Ehvmax2;
     long int Ep1,Ep2;
     
     
     
     /* allocation for Rot1*/ 
-    Rot1=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) Rot1[i]=(double *)malloc(3 * sizeof(double));
+    Rot1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot1[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for Rot2*/ 
-    Rot2=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) Rot2[i]=(double *)malloc(3 * sizeof(double));
+    Rot2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) Rot2[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for RotFinal1*/ 
-    RotFinal1=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) RotFinal1[i]=(double *)malloc(3 * sizeof(double));
+    RotFinal1=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal1[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for RotFinal2*/ 
-    RotFinal2=(double **)malloc(3* sizeof(double *));
-    for (i=0;i<3;i++) RotFinal2[i]=(double *)malloc(3 * sizeof(double));
+    RotFinal2=(float **)malloc(3* sizeof(float *));
+    for (i=0;i<3;i++) RotFinal2[i]=(float *)malloc(3 * sizeof(float));
     /* end alloc*/ 
     
     /* allocation for TransFinal1*/ 
-    TransFinal1=(double *)malloc(3* sizeof(double));
+    TransFinal1=(float *)malloc(3* sizeof(float));
     /* end alloc*/ 
     
     /* allocation for TransFinal2*/ 
-    TransFinal2=(double *)malloc(3* sizeof(double));
+    TransFinal2=(float *)malloc(3* sizeof(float));
     /* end alloc*/ 
     
     
     
     /* objectMat alloc*/
-    double** objectMat;
-    objectMat=(double **)malloc(4 * sizeof(double*));
-    for (i=0; i<4; i++) objectMat[i]=(double *)malloc(NbPts* sizeof(double));
+    float** objectMat;
+    objectMat=(float **)malloc(4 * sizeof(float*));
+    for (i=0; i<4; i++) objectMat[i]=(float *)malloc(NbPts* sizeof(float));
     /* end*/
     
     PseudoInverseGen(homogeneousWorldPts,NbPts,4,objectMat);
@@ -409,14 +409,14 @@ void CoplanarPosit4Soft(int NbPts, double **centeredImage, double** homogeneousW
 
 
 
-void PositBranches(int NbPts, double **centeredImage, double** worldPts, double**objectMat, double** Rot1, double** Rot2, double* Trans){
+void PositBranches(int NbPts, float **centeredImage, float** worldPts, float**objectMat, float** Rot1, float** Rot2, float* Trans){
     int i,j;
-    double r1T[4],r2T[4],U[3],u[3],IVect[3],JVect[3],row1[3],row2[3],row3[3];
-    double I0I0, J0J0, I0J0;
-    double scale;
-    double NU;
+    float r1T[4],r2T[4],U[3],u[3],IVect[3],JVect[3],row1[3],row2[3],row3[3];
+    float I0I0, J0J0, I0J0;
+    float scale;
+    float NU;
     int firstNonCol;
-    double delta,lambda,mu,q,zi,zmin1,zmin2;
+    float delta,lambda,mu,q,zi,zmin1,zmin2;
 
     if (false) {
         printf("\nIMAGE POINTS A LA ENTRADA DE POSITBRANCHES:\n");
@@ -572,15 +572,15 @@ void PositBranches(int NbPts, double **centeredImage, double** worldPts, double*
     
 }
 
-void  PerspMoveAndProjC(int N, double **obj, double** r, double* t, double foc, double** proj) /*Image projection given a rotation and a traslation.*/
+void  PerspMoveAndProjC(int N, float **obj, float** r, float* t, float foc, float** proj) /*Image projection given a rotation and a traslation.*/
 {
-    double  **moved;
+    float  **moved;
     long int    i,j,k;
     
     
     /*allocations*/
-    moved=(double **)malloc(N * sizeof(double *));
-    for (i=0;i<N;i++) moved[i]=(double *)malloc(3 * sizeof(double));
+    moved=(float **)malloc(N * sizeof(float *));
+    for (i=0;i<N;i++) moved[i]=(float *)malloc(3 * sizeof(float));
         
     for (i=0;i<N;i++)
     {
@@ -604,23 +604,23 @@ void  PerspMoveAndProjC(int N, double **obj, double** r, double* t, double foc, 
         
 }
 
-void ErrorC(long int NP,double** impts,double** obpts,double f,double center[2],double** Rotat,double* Translat,double* Er,long int* Epr,double* Erhvmax)
+void ErrorC(long int NP,float** impts,float** obpts,float f,float center[2],float** Rotat,float* Translat,float* Er,long int* Epr,float* Erhvmax)
 /*Returns different error between the original image and the projected image*/
 /*E is the euclidean distance between the two images*/
 /*Ep is the sum of the horizontal and vertical variations in pixels*/
 /*Ehvmax is the maximum horizontal or vertical variation (nonround values in pixels)*/
 
 {
-    double  **impredic,**ErVect;
+    float  **impredic,**ErVect;
     long int    i,j,fr;
     
     /*allocations*/
-    impredic=(double **)malloc(NP * sizeof(double *));
-    ErVect=(double **)malloc(NP * sizeof(double *));
+    impredic=(float **)malloc(NP * sizeof(float *));
+    ErVect=(float **)malloc(NP * sizeof(float *));
     for (i=0;i<NP;i++)
     {
-        impredic[i]=(double *)malloc(2 * sizeof(double));
-        ErVect[i]=(double *)malloc(2 * sizeof(double));
+        impredic[i]=(float *)malloc(2 * sizeof(float));
+        ErVect[i]=(float *)malloc(2 * sizeof(float));
     }
     
     if ((Rotat[0][0])!=2.0) /*A 2 in the first position of the rotation matrix means the pose is not possible*/
@@ -674,40 +674,40 @@ void ErrorC(long int NP,double** impts,double** obpts,double f,double center[2],
     free(ErVect);
 }
 
-void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, double**objectMat, double f,double center[2], double** RotIn, double* TransIn,double** Rot, double* Trans){
+void PositLoop(int NbPts, float **centeredImage, float** homogeneousWorldPts, float**objectMat, float f,float center[2], float** RotIn, float* TransIn,float** Rot, float* Trans){
     
     int i,j;
-    double deltaX, deltaY,delta=0;
+    float deltaX, deltaY,delta=0;
     int count=0;
     bool converged= false;
-    double Er,Erhvmax,Er1,Erhvmax1,Er2,Erhvmax2;
+    float Er,Erhvmax,Er1,Erhvmax1,Er2,Erhvmax2;
     long int Epr,Epr1,Epr2;
-    double r3T[4];
-    double a[3],b[3];
+    float r3T[4];
+    float a[3],b[3];
     
     
     
     
     /* allocation for Rot1 and Rot2*/
-    double** Rot1;
-    double** Rot2;
-    Rot1=(double**)malloc(3*sizeof(double*));
-    Rot2=(double**)malloc(3*sizeof(double*));
+    float** Rot1;
+    float** Rot2;
+    Rot1=(float**)malloc(3*sizeof(float*));
+    Rot2=(float**)malloc(3*sizeof(float*));
     for (i=0; i<3; i++) {
-        Rot1[i]=(double*)malloc(3*sizeof(double));
-        Rot2[i]=(double*)malloc(3*sizeof(double));
+        Rot1[i]=(float*)malloc(3*sizeof(float));
+        Rot2[i]=(float*)malloc(3*sizeof(float));
     }
 
     
     /* allocation for centeredImageAux*/
-    double** centeredImageAux;
-    centeredImageAux=(double **)malloc(NbPts* sizeof(double *));
-    for (i=0;i<NbPts;i++) centeredImageAux[i]=(double *)malloc(2 * sizeof(double));
+    float** centeredImageAux;
+    centeredImageAux=(float **)malloc(NbPts* sizeof(float *));
+    for (i=0;i<NbPts;i++) centeredImageAux[i]=(float *)malloc(2 * sizeof(float));
     /* end alloc*/
     
     /* allocation for wk*/
-    double* wk;
-    wk=(double *)malloc(NbPts*sizeof(double));
+    float* wk;
+    wk=(float *)malloc(NbPts*sizeof(float));
     /* end alloc*/
     
     /* initializaton for Rot and Trans*/
@@ -848,10 +848,10 @@ void PositLoop(int NbPts, double **centeredImage, double** homogeneousWorldPts, 
 }
 
 
-void Matrix2Euler(double** Rot, double* angles1,double* angles2){
-    double theta1, theta2;
-    double phi1, phi2;   
-    double psi1, psi2;
+void Matrix2Euler(float** Rot, float* angles1,float* angles2){
+    float theta1, theta2;
+    float phi1, phi2;   
+    float psi1, psi2;
     
     theta1=-asin(Rot[2][0]);
     theta2= MY_PI - theta1;

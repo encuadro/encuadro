@@ -7,8 +7,8 @@
 //
 
 
-void rgb2gray(double* brillo, unsigned char *pixels, int w, int h, int d);
-void solveHomographie(double **imgPts, double **imgPts2, double *h);
-void matrixProduct(double ** A, int rowA, double ** B, int colB, double ** C);
-void matrixVectorProduct(double ** A, int rowA, double* B, double* C);
-void solveAffineTransformation(double **imgPts, double **imgPts2, double *h);
+void rgb2gray(float* brillo, unsigned char *pixels, int w, int h, int d);
+void solveHomographie(float **imgPts, float **imgPts2, float *h);
+void matrixProduct(float ** A, int rowA, float ** B, int colB, float ** C);
+void matrixVectorProduct(float ** A, int rowA, float* B, float* C);
+void solveAffineTransformation(float **imgPts, float **imgPts2, float *h);

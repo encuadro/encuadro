@@ -57,7 +57,7 @@
      setting the quality to 90
      */
     NSData *imageData = UIImageJPEGRepresentation(imagenView.image, 90);
-    NSData *textData = [NSData dataWithContentsOfFile:@"/Users/encuadro/Desktop/lenaTocada.txt"];
+
     // setting up the URL to post to
     NSString *urlString = @"http://192.168.1.111/upload.php";
     //   NSString *urlString = @"http://192.168.1.4/upload2.php";
@@ -112,7 +112,7 @@
     NSLog(@"ABOUT TO REQUEST B");
     returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
     NSLog(@"ABOUT TO REQUEST C ");
-    NSLog(@"%@",returnString);
+    NSLog(@"%@\n",returnString);
     NSLog(@"ALREADY RETURN D");
     
     
@@ -203,13 +203,34 @@
         
         
         
+        NSString* ARid = @"http://192.168.1.111/ARid/";
+        ARid = [ARid stringByAppendingString:returnString];
+        ARid = [ARid stringByAppendingString:@".txt"];
+        
+        
+        NSString* ARType = @"http://192.168.1.111/ARType/";
+        ARType = [ARType stringByAppendingString:returnString];
+        ARType = [ARType stringByAppendingString:@".txt"];
+        
+        
+        NSString* ARObj = @"http://192.168.1.111/ARObj/";
+        ARObj = [ARObj stringByAppendingString:returnString];
+        ARObj = [ARObj stringByAppendingString:@".txt"];
+        
+
+        
+        
+        
         obracompletaViewController.descripcionObra = [[NSArray alloc]
                                                       initWithObjects: 
                                                       autor,
                                                       obra,
                                                       imagen,
                                                       texto,
-                                                      audio,          
+                                                      audio,
+                                                      ARid,
+                                                      ARType,
+                                                      ARObj,
                                                       nil];
 
        [self performSelectorOnMainThread:@selector(stop:) withObject:nil waitUntilDone:YES];

@@ -19,30 +19,30 @@ http://code.google.com/p/encuadro/
 typedef struct segment{
 		int p1[2];
 		int p2[2];
-		/*double dir[2];
-		double length;
-		double angleDeg;
-		double angleRad;*/
-		double width;
+		/*float dir[2];
+		float length;
+		float angleDeg;
+		float angleRad;*/
+		float width;
 } segment;
 
-segment segmentNew(int x1,int y1,int x2,int y2,double w);
+segment segmentNew(int x1,int y1,int x2,int y2,float w);
 
-int lineIntersection(	double Ax, double Ay,
-						double Bx, double By,
-						double Cx, double Cy,
-						double Dx, double Dy,
-						double *X, double *Y );
+int lineIntersection(	float Ax, float Ay,
+						float Bx, float By,
+						float Cx, float Cy,
+						float Dx, float Dy,
+						float *X, float *Y );
 					
-int lineSegmentIntersection(double Ax, double Ay,
-							double Bx, double By,
-							double Cx, double Cy,
-							double Dx, double Dy,
-							double *X, double *Y );
+int lineSegmentIntersection(float Ax, float Ay,
+							float Bx, float By,
+							float Cx, float Cy,
+							float Dx, float Dy,
+							float *X, float *Y );
 							
-double** getCorners(int *listSize, double *list);
+float** getCorners(int *listSize, float *list);
 
-double* filterSegments(int *listOutSize , int *listInSize , double *listIn, float distance_thr);
+float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float distance_thr);
 
-double** getMarkerCornersAlgo(int *listSize, double *list);
+float** getMarkerCornersAlgo(int *listSize, float *list);
 

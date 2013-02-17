@@ -43,7 +43,7 @@
                        line segments detected.
 
     @param img         Pointer to input image data. It must be an array of
-                       doubles of size X x Y, and the pixel at coordinates
+                       floats of size X x Y, and the pixel at coordinates
                        (x,y) is obtained by img[x+y*X].
 
     @param X           X size of the image: the number of columns.
@@ -120,7 +120,7 @@
                        'reg_img' image, when asked for.
                        Suggested value: NULL
 
-    @return            A double array of size 7 x n_out, containing the list
+    @return            A float array of size 7 x n_out, containing the list
                        of line segments detected. The array contains first
                        7 values of line segment number 1, then the 7 values
                        of line segment number 2, and so on, and it finish
@@ -135,10 +135,10 @@
                        line segment number 'n+1' are obtained with
                        'out[7*n+0]' to 'out[7*n+6]'.
  */
-double * LineSegmentDetection( int * n_out,
-                               double * img, int X, int Y,
-                               double scale, double sigma_scale, double quant,
-                               double ang_th, double log_eps, double density_th,
+float * LineSegmentDetection( int * n_out,
+                               float * img, int X, int Y,
+                               float scale, float sigma_scale, float quant,
+                               float ang_th, float log_eps, float density_th,
                                int n_bins,
                                int ** reg_img, int * reg_x, int * reg_y );
 
@@ -149,7 +149,7 @@ double * LineSegmentDetection( int * n_out,
                        line segments detected.
 
     @param img         Pointer to input image data. It must be an array of
-                       doubles of size X x Y, and the pixel at coordinates
+                       floats of size X x Y, and the pixel at coordinates
                        (x,y) is obtained by img[x+y*X].
 
     @param X           X size of the image: the number of columns.
@@ -188,7 +188,7 @@ double * LineSegmentDetection( int * n_out,
                        'reg_img' image, when asked for.
                        Suggested value: NULL
 
-    @return            A double array of size 7 x n_out, containing the list
+    @return            A float array of size 7 x n_out, containing the list
                        of line segments detected. The array contains first
                        7 values of line segment number 1, then the 7 values
                        of line segment number 2, and so on, and it finish
@@ -203,8 +203,8 @@ double * LineSegmentDetection( int * n_out,
                        line segment number 'n+1' are obtained with
                        'out[7*n+0]' to 'out[7*n+6]'.
  */
-double * lsd_scale_region( int * n_out,
-                           double * img, int X, int Y, double scale,
+float * lsd_scale_region( int * n_out,
+                           float * img, int X, int Y, float scale,
                            int ** reg_img, int * reg_x, int * reg_y );
 
 /*----------------------------------------------------------------------------*/
@@ -214,7 +214,7 @@ double * lsd_scale_region( int * n_out,
                        line segments detected.
 
     @param img         Pointer to input image data. It must be an array of
-                       doubles of size X x Y, and the pixel at coordinates
+                       floats of size X x Y, and the pixel at coordinates
                        (x,y) is obtained by img[x+y*X].
 
     @param X           X size of the image: the number of columns.
@@ -229,7 +229,7 @@ double * lsd_scale_region( int * n_out,
                        is applied.
                        Suggested value: 0.8
 
-    @return            A double array of size 7 x n_out, containing the list
+    @return            A float array of size 7 x n_out, containing the list
                        of line segments detected. The array contains first
                        7 values of line segment number 1, then the 7 values
                        of line segment number 2, and so on, and it finish
@@ -244,7 +244,7 @@ double * lsd_scale_region( int * n_out,
                        line segment number 'n+1' are obtained with
                        'out[7*n+0]' to 'out[7*n+6]'.
  */
-double * lsd_scale(int * n_out, double * img, int X, int Y, double scale);
+float * lsd_scale(int * n_out, float * img, int X, int Y, float scale);
 
 /*----------------------------------------------------------------------------*/
 /** LSD Simple Interface
@@ -253,14 +253,14 @@ double * lsd_scale(int * n_out, double * img, int X, int Y, double scale);
                        line segments detected.
 
     @param img         Pointer to input image data. It must be an array of
-                       doubles of size X x Y, and the pixel at coordinates
+                       floats of size X x Y, and the pixel at coordinates
                        (x,y) is obtained by img[x+y*X].
 
     @param X           X size of the image: the number of columns.
 
     @param Y           Y size of the image: the number of rows.
 
-    @return            A double array of size 7 x n_out, containing the list
+    @return            A float array of size 7 x n_out, containing the list
                        of line segments detected. The array contains first
                        7 values of line segment number 1, then the 7 values
                        of line segment number 2, and so on, and it finish
@@ -275,7 +275,7 @@ double * lsd_scale(int * n_out, double * img, int X, int Y, double scale);
                        line segment number 'n+1' are obtained with
                        'out[7*n+0]' to 'out[7*n+6]'.
  */
-double * lsd(int * n_out, double * img, int X, int Y);
+float * lsd(int * n_out, float * img, int X, int Y);
 
 #endif /* !LSD_HEADER */
 /*----------------------------------------------------------------------------*/

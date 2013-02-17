@@ -5,28 +5,28 @@
 
 
 /*********************************************************************************************************/
-void Composit(long int np, double** coplImage,double** copl,double fLength,double** R,double* T){
+void Composit(long int np, float** coplImage,float** copl,float fLength,float** R,float* T){
 /*Retourne le nombre de poses DIFFERENTES acceptables (cf plus bas pour cette notion) en nsol, ainsi que*/ 
 /*la meilleure pose (rota1, transa1), i.e. la plus proche en rotation (transmission de rota) lorsque 2*/
 /*sont acceptables, ou celle donnant la plus faible erreur E s'il n'y en a pas 2 acceptables.*/
 //
 //long int   np;
-//double **coplImage,**copl;
-//double R[3][3],T[3];
-//double fLength;
+//float **coplImage,**copl;
+//float R[3][3],T[3];
+//float fLength;
 
 
 long int i,j,Ep1,Ep2,fr;
-double   E1,E2,Ehvmax1,Ehvmax2;
-double   **coplVectors,**coplMatrix;
-double   POSITRot1[3][3],POSITTrans1[3],POSITRot2[3][3],POSITTrans2[3];
+float   E1,E2,Ehvmax1,Ehvmax2;
+float   **coplVectors,**coplMatrix;
+float   POSITRot1[3][3],POSITTrans1[3],POSITRot2[3][3],POSITTrans2[3];
 
 
 /*allocations*/
-coplVectors=(double **)malloc(np * sizeof(double *));
-coplMatrix=(double **)malloc(3 * sizeof(double *));
-for (i=0;i<np;i++) coplVectors[i]=(double *)malloc(3 * sizeof(double));
-for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(np * sizeof(double));
+coplVectors=(float **)malloc(np * sizeof(float *));
+coplMatrix=(float **)malloc(3 * sizeof(float *));
+for (i=0;i<np;i++) coplVectors[i]=(float *)malloc(3 * sizeof(float));
+for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(np * sizeof(float));
 
 for (i=0;i<np;i++)
   {

@@ -10,4 +10,4 @@
 #include <math.h>
 #include <stdlib.h>
 
-void Error(long int NP,double** impts,double** obpts,double f,double Rotat[3][3],double Translat[3],double* Er,long int* Epr,double* Erhvmax);
+void Error(long int NP,float** impts,float** obpts,float f,float Rotat[3][3],float Translat[3],float* Er,long int* Epr,float* Erhvmax);

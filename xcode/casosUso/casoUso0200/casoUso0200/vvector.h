@@ -237,7 +237,7 @@ extern "C" {
 
 #define VEC_IMPACT_SQ(bsq,direction,position)		\
 {							\
-   gleDouble len, llel;					\
+   glefloat len, llel;					\
    VEC_DOT_PRODUCT (len, (position), (position));	\
    VEC_DOT_PRODUCT (llel, (direction), (position));	\
    (bsq) = len - llel*llel;				\
@@ -287,7 +287,7 @@ extern "C" {
 
 #define VEC_DISTANCE(len,va,vb)			\
 {						\
-    gleDouble tmp[4];				\
+    glefloat tmp[4];				\
     VEC_DIFF (tmp, (vb), (va));			\
     VEC_LENGTH ((len), tmp);			\
 }
@@ -306,7 +306,7 @@ extern "C" {
 
 #define VEC_NORMALIZE(a)			\
 {						\
-   double len;					\
+   float len;					\
    VEC_LENGTH (len,a);				\
    if (len != 0.0) {				\
       len = 1.0 / len;				\
@@ -321,7 +321,7 @@ extern "C" {
 
 #define VEC_NORMALIZE_2(a)			\
 {						\
-   double len;					\
+   float len;					\
    VEC_LENGTH_2 (len,a);				\
    if (len != 0.0) {				\
       len = 1.0 / len;				\
@@ -335,7 +335,7 @@ extern "C" {
 
 #define VEC_RENORMALIZE(a,newlen)		\
 {						\
-   double len;					\
+   float len;					\
    VEC_LENGTH (len,a);				\
    if (len != 0.0) {				\
       len = (newlen) / len;			\
@@ -361,7 +361,7 @@ extern "C" {
 
 #define VEC_PERP(vp,v,n)			\
 {						\
-   double dot;					\
+   float dot;					\
 						\
    VEC_DOT_PRODUCT (dot, v, n);			\
    (vp)[0] = (v)[0] - dot * (n)[0];		\
@@ -377,7 +377,7 @@ extern "C" {
 
 #define VEC_PARALLEL(vp,v,n)			\
 {						\
-   double dot;					\
+   float dot;					\
 						\
    VEC_DOT_PRODUCT (dot, v, n);			\
    (vp)[0] = dot * (n)[0];			\
@@ -393,7 +393,7 @@ extern "C" {
 
 #define VEC_REFLECT(vr,v,n)			\
 {						\
-   double dot;					\
+   float dot;					\
 						\
    VEC_DOT_PRODUCT (dot, v, n);			\
    (vr)[0] = (v)[0] - 2.0 * dot * (n)[0];	\
@@ -418,7 +418,7 @@ extern "C" {
 
 #define VEC_PRINT_2(a)					\
 {							\
-   double len;						\
+   float len;						\
    VEC_LENGTH_2 (len, a);				\
    printf (#a " is %f %f length of " #a " is %f \n", 	\
       (a)[0], *(a)[1], len); 				\
@@ -429,7 +429,7 @@ extern "C" {
 
 #define VEC_PRINT(a)					\
 {							\
-   double len;						\
+   float len;						\
    VEC_LENGTH (len, (a));				\
    printf (#a " is %f %f %f length of " #a " is %f \n", \
       (a)[0], (a)[1], (a)[2], len); 			\
@@ -440,7 +440,7 @@ extern "C" {
 
 #define VEC_PRINT_4(a)					\
 {							\
-   double len;						\
+   float len;						\
    VEC_LENGTH_4 (len, (a));				\
    printf (#a " is %f %f %f %f length of " #a " is %f \n",	\
        (a)[0], (a)[1], (a)[2], (a)[3], len);		\
@@ -908,7 +908,7 @@ extern "C" {
 
 #define INV_TRANSP_MAT_DOT_VEC_2X2(p,m,v)			\
 {								\
-   gleDouble det;						\
+   glefloat det;						\
 								\
    det = (m)[0][0]*(m)[1][1] - (m)[0][1]*(m)[1][0];		\
    (p)[0] = (m)[1][1]*(v)[0] - (m)[1][0]*(v)[1];		\
@@ -934,7 +934,7 @@ extern "C" {
 
 #define NORM_XFORM_2X2(p,m,v)					\
 {								\
-   double len;							\
+   float len;							\
 								\
    /* do nothing if off-diagonals are zero and diagonals are 	\
     * equal */							\
@@ -1148,7 +1148,7 @@ extern "C" {
 
 #define DETERMINANT_4X4(d,m)					\
 {								\
-   double cofac;						\
+   float cofac;						\
    COFACTOR_4X4_IJ (cofac, (m), 0, 0);				\
    (d) = (m)[0][0] * cofac;					\
    COFACTOR_4X4_IJ (cofac, (m), 0, 1);				\
@@ -1325,7 +1325,7 @@ extern "C" {
 
 #define INVERT_2X2(b,det,a)			\
 {						\
-   double tmp;					\
+   float tmp;					\
    DETERMINANT_2X2 ((det), (a));		\
    tmp = 1.0 / (det);				\
    SCALE_ADJOINT_2X2 ((b), tmp, (a));		\
@@ -1340,7 +1340,7 @@ extern "C" {
 
 #define INVERT_3X3(b,det,a)			\
 {						\
-   double tmp;					\
+   float tmp;					\
    DETERMINANT_3X3 ((det), (a));		\
    tmp = 1.0 / (det);				\
    SCALE_ADJOINT_3X3 ((b), tmp, (a));		\
@@ -1355,7 +1355,7 @@ extern "C" {
 
 #define INVERT_4X4(b,det,a)			\
 {						\
-   double tmp;					\
+   float tmp;					\
    DETERMINANT_4X4 ((det), (a));		\
    tmp = 1.0 / (det);				\
    SCALE_ADJOINT_4X4 ((b), tmp, (a));		\

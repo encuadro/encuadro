@@ -42,12 +42,12 @@ claseDibujar *cgvista;
 int wSize;
 int hSize;
 bool iPhone;
-double **imagePoints3mayas; //para hacer la CGAffineTransform
-double **imagePoints4;
-double **imagePoints3aztecas;
+float **imagePoints3mayas; //para hacer la CGAffineTransform
+float **imagePoints4;
+float **imagePoints3aztecas;
 
-double *hmaya;
-double *hazteca;
+float *hmaya;
+float *hazteca;
 
 /*Variables para la imagen*/
 unsigned char* pixels;
@@ -55,37 +55,37 @@ size_t width;
 size_t height;
 size_t bitsPerComponent;
 size_t bitsPerPixel;
-double* luminancia;
+float* luminancia;
 int d;
 int dProcesamiento;
 UIImage *imagen;
 
 /*Variables para el procesamiento*/
-double* list;
-double*listFiltrada;
-//double** esquinas;
+float* list;
+float*listFiltrada;
+//float** esquinas;
 
-double **imagePoints,**imagePointsCrop;
+float **imagePoints,**imagePointsCrop;
 int listSize;
 int listFiltradaSize;
 float distance_thr=20;
-double rotacion[9];
-double traslacion[3];
+float rotacion[9];
+float traslacion[3];
 int errorMarkerDetection; //Codigo de error del findPointCorrespondence
 
 /*Variables para el Coplanar*/
 int NumberOfPoints=36;
 int cantPtosDetectados;
 long int i;
-double **object, **objectCrop, f=615; //con 630 andaba bien /*f: focal length en pixels*/
+float **object, **objectCrop, f=615; //con 630 andaba bien /*f: focal length en pixels*/
 bool PosJuani=true;
 
-//modern coplanar requiere double** en lugar de [][]
-double *Tras;
-double **Rotmodern;                                 ///modern coplanar
-double center[2]={240, 180};           ///modern coplanar
+//modern coplanar requiere float** en lugar de [][]
+float *Tras;
+float **Rotmodern;                                 ///modern coplanar
+float center[2]={240, 180};           ///modern coplanar
 bool verbose;
-double* luminancia;
+float* luminancia;
 
 
 
@@ -145,46 +145,46 @@ double* luminancia;
     self.videoView.image = imagen;
 
 
-//    /* DIBUJADO DE PUNTOS*/
-//    
-//    [cgvista removeFromSuperview];
-//    cgvista.corners=true;
-//    //cgvista.reproyected=true;
-//    cgvista.cantidadSegmentos = listFiltradaSize;
-//    cgvista.cantidadLsd = listSize;
-//    cgvista.esquinas = imagePoints;
-//
-//    double vec[4]={(190)*1024/197,0*768/148,0,1};
-//    double homo[4][4] = {       {h[0], h[1],  0, h[2]},
-//                                {h[3], h[4],  0, h[5]},
-//                                {0,      0,   1,   0},
-//                                {h[6], h[7],  0,   1}};
-//    
-//        //for (int i=0;i<NumberOfPoints;i++){
-//            MAT_DOT_VEC_4X4(esqRepro,homo,vec)
-//        //}
-//
-//    printf("ESQ REPRO\n");
-//    for (int i=0; i<4; i++) {
-//        printf("%f\t",esqRepro[i]);
-//        printf("\n");
-//    }
-//    
-//    printf("Vector h\n");
-//    for(int i=0;i<8;i++)
-//    {
-//        printf("%f\t",h[i]);
-//        printf("\n");
-//    }
-//
-//    
-//    [self.videoView addSubview:cgvista];
-//    
-//    cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
-//    
-//    cgvista.bounds=CGRectMake(0, 0, 1024, 768);
-//    
-//    [cgvista setNeedsDisplay];
+    /* DIBUJADO DE PUNTOS*/
+    
+    [cgvista removeFromSuperview];
+    cgvista.corners=true;
+    //cgvista.reproyected=true;
+    cgvista.cantidadSegmentos = listFiltradaSize;
+    cgvista.cantidadLsd = listSize;
+    cgvista.esquinas = imagePoints;
+
+    float vec[4]={(60)*1024/197,0*768/148,0,1};
+    float homo[4][4] = {       {hmaya[0], hmaya[1],  0, hmaya[2]},
+                                {hmaya[3], hmaya[4],  0, hmaya[5]},
+                                {0,      0,   1,   0},
+                                {hmaya[6], hmaya[7],  0,   1}};
+    
+        //for (int i=0;i<NumberOfPoints;i++){
+            MAT_DOT_VEC_4X4(esqRepro,homo,vec)
+        //}
+
+    printf("ESQ REPRO\n");
+    for (int i=0; i<4; i++) {
+        printf("%f\t",esqRepro[i]);
+        printf("\n");
+    }
+    
+    printf("Vector h\n");
+    for(int i=0;i<8;i++)
+    {
+        printf("%f\t",hmaya[i]);
+        printf("\n");
+    }
+
+    
+    [self.videoView addSubview:cgvista];
+    
+    cgvista.backgroundColor=[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0];
+    
+    cgvista.bounds=CGRectMake(0, 0, 1024, 768);
+    
+    [cgvista setNeedsDisplay];
     
     
     
@@ -305,6 +305,10 @@ double* luminancia;
 //            imagePoints4[i][1]=(imagePoints[i+4][1]-imagePoints[6][1])*hSize/360;
             
         }
+        
+
+
+       
        // solveAffineTransformation(imagePoints, imagePoints3, h);
         solveHomographie(imagePoints4, imagePoints3mayas, hmaya);
         if (azteca) {
@@ -312,7 +316,10 @@ double* luminancia;
         }
        
     
-        
+        printf("PUNTOS COLORADO\n");
+        for (int i =0; i<8; i++) {
+            printf("imagePoints[%d][x]=%f, imagePoints[%d][y]=%f\n",i,imagePoints[i+4][0],i,imagePoints[i+4][1]);
+        }
     
         [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovieMaya waitUntilDone:NO];
         
@@ -386,7 +393,7 @@ double* luminancia;
 //        rotacion[8]=Rotmodern[2][2];
 //        
 //        
-//        double angles1[3],angles2[3];
+//        float angles1[3],angles2[3];
 //        Matrix2Euler(Rotmodern,angles1,angles2);
 //        //            self.isgl3DView.eulerAngles = angles1;
 //        
@@ -547,26 +554,26 @@ double* luminancia;
     free(Tras);
     
     /*Reservamos memoria*/
-    Rotmodern=(double**)malloc(3*sizeof(double*));
-    for (i=0; i<3;i++) Rotmodern[i]=(double*)malloc(3*sizeof(double));
+    Rotmodern=(float**)malloc(3*sizeof(float*));
+    for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
     
-    Tras=(double*)malloc(3*sizeof(double));
+    Tras=(float*)malloc(3*sizeof(float));
     
-    object=(double **)malloc(NumberOfPoints * sizeof(double *));
-    for (i=0;i<NumberOfPoints;i++) object[i]=(double *)malloc(3 * sizeof(double));
+    object=(float **)malloc(NumberOfPoints * sizeof(float *));
+    for (i=0;i<NumberOfPoints;i++) object[i]=(float *)malloc(3 * sizeof(float));
     
-    objectCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
-    for (i=0;i<NumberOfPoints;i++) objectCrop[i]=(double *)malloc(3 * sizeof(double));
+    objectCrop=(float **)malloc(NumberOfPoints * sizeof(float *));
+    for (i=0;i<NumberOfPoints;i++) objectCrop[i]=(float *)malloc(3 * sizeof(float));
     
-    imagePointsCrop=(double **)malloc(NumberOfPoints * sizeof(double *));
-    for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(double *)malloc(2 * sizeof(double));
+    imagePointsCrop=(float **)malloc(NumberOfPoints * sizeof(float *));
+    for (i=0;i<NumberOfPoints;i++) imagePointsCrop[i]=(float *)malloc(2 * sizeof(float));
     
-    imagePoints=(double **)malloc(NumberOfPoints * sizeof(double *));
-    for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints=(float **)malloc(NumberOfPoints * sizeof(float *));
+    for (i=0;i<NumberOfPoints;i++) imagePoints[i]=(float *)malloc(2 * sizeof(float));
     
     //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
-    imagePoints3mayas=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints3mayas[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints3mayas=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints3mayas[i]=(float *)malloc(2 * sizeof(float));
     //197×148 mm
     //1024x768 px ipad
     
@@ -582,8 +589,8 @@ double* luminancia;
     imagePoints3mayas[3][0]=(0)*1024/197;
     imagePoints3mayas[3][1]=(60)*768/148;
     
-    imagePoints3aztecas=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints3aztecas[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints3aztecas=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints3aztecas[i]=(float *)malloc(2 * sizeof(float));
     //197×148 mm
     //1024x768 px ipad
     
@@ -601,16 +608,16 @@ double* luminancia;
     
     
     //imagePoints4 guarda los puntos detectados con el ajuste de pantalla
-    imagePoints4=(double **)malloc(4 * sizeof(double *));
-    for (i=0;i<4;i++) imagePoints4[i]=(double *)malloc(2 * sizeof(double));
+    imagePoints4=(float **)malloc(4 * sizeof(float *));
+    for (i=0;i<4;i++) imagePoints4[i]=(float *)malloc(2 * sizeof(float));
     
-    hmaya=(double *)malloc(8 * sizeof(double));
-    hazteca=(double *)malloc(8 * sizeof(double));
-   // for (i=0;i<8;i++) h[i]=(double *)malloc(sizeof(double));
+    hmaya=(float *)malloc(8 * sizeof(float));
+    hazteca=(float *)malloc(8 * sizeof(float));
+   // for (i=0;i<8;i++) h[i]=(float *)malloc(sizeof(float));
     
     
-    //    coplMatrix=(double **)malloc(3 * sizeof(double *));
-    //    for (i=0;i<3;i++) coplMatrix[i]=(double *)malloc(NumberOfPoints * sizeof(double));
+    //    coplMatrix=(float **)malloc(3 * sizeof(float *));
+    //    for (i=0;i<3;i++) coplMatrix[i]=(float *)malloc(NumberOfPoints * sizeof(float));
     
     pixels = (unsigned char*) malloc(480*360*4*sizeof(unsigned char));
     for (int i=0;i<360*480*4;i++)
@@ -618,7 +625,7 @@ double* luminancia;
         pixels[i]= INFINITY;
     }
     
-    luminancia = (double *) malloc(480*360*sizeof(double));
+    luminancia = (float *) malloc(480*360*sizeof(float));
     
     cgvista=[[claseDibujar alloc] initWithFrame:self.videoView.frame];
     

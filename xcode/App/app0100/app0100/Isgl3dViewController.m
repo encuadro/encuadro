@@ -37,7 +37,7 @@
 @synthesize hSize = _hSize;
 @synthesize videoPlayer = _videoPlayer;
 @synthesize touchFull = _touchFull;
-
+@synthesize videoName = _videoName;
 
 /*Para HOMOGRAFIA*/
 float **imagePoints3video;
@@ -292,19 +292,19 @@ UIImageOrientation orientation;
         
         
         
-///** AGREGA CASO DE USO VIDEO COMIENZO ****/
-//            for (int i=0; i<4; i++) {
-//                imagePoints4[i][0]=imagePoints[i+4][0]*self.wSize/480;
-//                imagePoints4[i][1]=imagePoints[i+4][1]*self.hSize/360;
-//            }
-//        
-//            solveHomographie(imagePoints4, imagePoints3video, hvideo);
-//            
-//            [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
-//
-//
-//        
-///** AGREGA CASO DE USO VIDEO FIN ****/        
+/** AGREGA CASO DE USO VIDEO COMIENZO ****/
+            for (int i=0; i<4; i++) {
+                imagePoints4[i][0]=imagePoints[i+4][0]*self.wSize/480;
+                imagePoints4[i][1]=imagePoints[i+4][1]*self.hSize/360;
+            }
+
+            solveHomographie(imagePoints4, imagePoints3video, hvideo);
+        
+            [self performSelectorOnMainThread:@selector(actualizarBounds:) withObject: theMovie waitUntilDone:NO];
+
+
+        
+/** AGREGA CASO DE USO VIDEO FIN ****/        
         
         
         
@@ -425,27 +425,33 @@ UIImageOrientation orientation;
 
 -(void) actualizarBounds:(MPMoviePlayerController *) theMovieAux
 {
-    CALayer *layerVideo = theMovie.view.layer;
 
+    
+    
+    CALayer *layerMaya = theMovie.view.layer;
+    layerMaya.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
+    //layer.frame = CGRectMake(0,0,60,60);
+    layerMaya.anchorPoint = CGPointMake(0.0,0.0);
+    layerMaya.zPosition = 0;
     CATransform3D rotationAndPerspectiveTransformVIDEO = CATransform3DIdentity;
-        
-        //VIDEO LAYER
-        layerVideo.frame = CGRectMake(0*(1024/197),0*(768/148),60*(1024/197),60*(768/148));
-        layerVideo.anchorPoint = CGPointMake(0.0,0.0);
-        layerVideo.zPosition = 0;
-        
-        rotationAndPerspectiveTransformVIDEO.m11 = hvideo[0];
-        rotationAndPerspectiveTransformVIDEO.m12 = hvideo[3];
-        rotationAndPerspectiveTransformVIDEO.m14 = hvideo[6];
-        rotationAndPerspectiveTransformVIDEO.m21 = hvideo[1];
-        rotationAndPerspectiveTransformVIDEO.m22 = hvideo[4];
-        rotationAndPerspectiveTransformVIDEO.m24 = hvideo[7];
-        rotationAndPerspectiveTransformVIDEO.m41 = hvideo[2];
-        rotationAndPerspectiveTransformVIDEO.m42 = hvideo[5];
-        rotationAndPerspectiveTransformVIDEO.m44 = 1;
-        
-     
+    rotationAndPerspectiveTransformVIDEO.m11 = hvideo[0];
+    rotationAndPerspectiveTransformVIDEO.m12 = hvideo[3];
+    rotationAndPerspectiveTransformVIDEO.m14 = hvideo[6];
+    rotationAndPerspectiveTransformVIDEO.m21 = hvideo[1];
+    rotationAndPerspectiveTransformVIDEO.m22 = hvideo[4];
+    rotationAndPerspectiveTransformVIDEO.m24 = hvideo[7];
+    rotationAndPerspectiveTransformVIDEO.m41 = hvideo[2];
+    rotationAndPerspectiveTransformVIDEO.m42 = hvideo[5];
+    rotationAndPerspectiveTransformVIDEO.m44 = 1;
     theMovie.view.layer.transform=rotationAndPerspectiveTransformVIDEO;
+    
+//    printf("HVIDEO RESULT ACTUALIZAR BOUDNS\n");
+//    for (int i =0; i<8; i++) {
+//        printf("h[%d]=%f\n",i,hvideo[i]);
+//    }
+    
+    
+    
     
     
 }
@@ -455,20 +461,20 @@ UIImageOrientation orientation;
     
     /////////viendo commit
     
+    
+    
     NSBundle *bundle = [NSBundle mainBundle];
-    NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
+    NSString *moviePath = [bundle pathForResource:self.videoName ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(0, 0, 60*1024/197,60*768/148);
-   
+    theMovie.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
     //theMovie.fullscreen=YES;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
     
     [self.view addSubview:theMovie.view];
-    theMovie.view.hidden=NO;
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
@@ -539,7 +545,6 @@ UIImageOrientation orientation;
     
     
     
-    /*RESERVA MEMORIA PARA HOMOGRAFIA 2D: COMIENZO*/
     //imagePoints3 reserva 4 puntos para hacer la CGAffineTransform
     imagePoints3video=(float **)malloc(4 * sizeof(float *));
     for (i=0;i<4;i++) imagePoints3video[i]=(float *)malloc(2 * sizeof(float));
@@ -562,11 +567,10 @@ UIImageOrientation orientation;
     imagePoints4=(float **)malloc(4 * sizeof(float *));
     for (i=0;i<4;i++) imagePoints4[i]=(float *)malloc(2 * sizeof(float));
     
+    hvideo=(float *)malloc(8 * sizeof(float));
     
     
     /* READ MARKER MODEL */
-    
-    
     
     NSString *filePath = [[NSBundle mainBundle] pathForResource:@"MarkerQR" ofType:@"txt"];
     
@@ -715,6 +719,8 @@ UIImageOrientation orientation;
 - (void) viewWillDisappear:(BOOL)animated {
     NSLog(@"WILL DIS ISGL");
     [super viewWillDisappear:animated];
+    self.videoPlayer=false;
+   
 }
 
 

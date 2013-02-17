@@ -12,5 +12,5 @@
 #include <stdbool.h>
 
     
-void PositCopl(long int nbP,double** imagePoints,double**objectPoints,double** objectMatrix,
-               double focalLength,double Rot1[3][3],double Trans1[3],double Rot2[3][3],double Trans2[3]);
+void PositCopl(long int nbP,float** imagePoints,float**objectPoints,float** objectMatrix,
+               float focalLength,float Rot1[3][3],float Trans1[3],float Rot2[3][3],float Trans2[3]);

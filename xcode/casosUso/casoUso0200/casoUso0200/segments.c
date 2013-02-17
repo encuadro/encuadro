@@ -15,9 +15,9 @@ http://code.google.com/p/encuadro/
 #include "segments.h"
 #include "vvector.h"
 
-double *angleList;
+float *angleList;
 
-segment segmentNew(int x1, int y1, int x2, int y2, double w){
+segment segmentNew(int x1, int y1, int x2, int y2, float w){
 
 	segment seg;
 
@@ -38,11 +38,11 @@ segment segmentNew(int x1, int y1, int x2, int y2, double w){
 }
 
 
-int lineIntersection(	double Ax, double Ay,
-						double Bx, double By,
-						double Cx, double Cy,
-						double Dx, double Dy,
-						double *X, double *Y ) {
+int lineIntersection(	float Ax, float Ay,
+						float Bx, float By,
+						float Cx, float Cy,
+						float Dx, float Dy,
+						float *X, float *Y ) {
 //  public domain function by Darel Rex Finley, 2006
 // http://alienryderflex.com/intersect/
 //
@@ -53,7 +53,7 @@ int lineIntersection(	double Ax, double Ay,
 //  Returns NO if there is no determinable intersection point, in which case X,Y will
 //  be unmodified.
 
-	double  distAB, theCos, theSin, newX, ABpos ;
+	float  distAB, theCos, theSin, newX, ABpos ;
 
 	//  Fail if either line is undefined.
 	if (Ax==Bx && Ay==By || Cx==Dx && Cy==Dy) return -1;
@@ -88,11 +88,11 @@ int lineIntersection(	double Ax, double Ay,
 	return 0; 
 }
 
-int lineSegmentIntersection(	double Ax, double Ay,
-								double Bx, double By,
-								double Cx, double Cy,
-								double Dx, double Dy,
-								double *X, double *Y ) {
+int lineSegmentIntersection(	float Ax, float Ay,
+								float Bx, float By,
+								float Cx, float Cy,
+								float Dx, float Dy,
+								float *X, float *Y ) {
 //  public domain function by Darel Rex Finley, 2006
 // http://alienryderflex.com/intersect/
 //
@@ -103,7 +103,7 @@ int lineSegmentIntersection(	double Ax, double Ay,
 //  Returns NO if there is no determinable intersection point, in which case X,Y will
 //  be unmodified.
 
-	double  distAB, theCos, theSin, newX, ABpos ;
+	float  distAB, theCos, theSin, newX, ABpos ;
 
 	//  Fail if either line is undefined.
 	if (Ax==Bx && Ay==By || Cx==Dx && Cy==Dy) return -1;
@@ -138,18 +138,18 @@ int lineSegmentIntersection(	double Ax, double Ay,
 	return 0; 
 }
 
-double** getCorners(int *listSize, double *list){
+float** getCorners(int *listSize, float *list){
 	
-	double center_thr = 25;
+	float center_thr = 25;
 	int listDim = 7;
 	long int NP = *listSize;
-	double **imgPts;
+	float **imgPts;
 	int i,j,k,l;
 	int I[4];
 	
 	/*get memory*/
-	imgPts=(double **)malloc(NP * sizeof(double *));
-	for (i=0;i<NP;i++) imgPts[i]=(double *)malloc(2 * sizeof(double));
+	imgPts=(float **)malloc(NP * sizeof(float *));
+	for (i=0;i<NP;i++) imgPts[i]=(float *)malloc(2 * sizeof(float));
 	
 	/*find marker corners*/
 	for (i=0;i<NP;i+=4){
@@ -179,12 +179,12 @@ double** getCorners(int *listSize, double *list){
 	return imgPts;
 };
 
-double* filterSegments(int *listOutSize , int *listInSize , double *listIn, float distance_thr){
+float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float distance_thr){
 	
 	int listDim = 7;	
-	double* listOut;
+	float* listOut;
 	int i,j,k,l;
-	double dist[4], dist3[4]; 
+	float dist[4], dist3[4]; 
 	int marker_id = 0;
 	int index[4];
 	segment seg[4];
@@ -192,7 +192,7 @@ double* filterSegments(int *listOutSize , int *listInSize , double *listIn, floa
 	int marker_found;
 	
 	/*get memory*/
-	listOut=(double *) malloc ( 100 * listDim * sizeof(double));
+	listOut=(float *) malloc ( 100 * listDim * sizeof(float));
 	
 	/*use width field to flag marker id - initialize*/
 	for (j=0;j<*listInSize;j++) listIn[4+j*listDim] = 0;

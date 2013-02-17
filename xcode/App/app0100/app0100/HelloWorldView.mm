@@ -165,9 +165,11 @@ bool touched;
         {
          
             /*--------------|INTRODUCIMOS EL MODELO|------------------*/
-            
+            NSLog(@"ARType:%@\n",ARType);
+            NSLog(@"ARObj:%@\n",ARObj);
 
             Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@".pod"]];
+              
 
             node = [_container createNode];
         

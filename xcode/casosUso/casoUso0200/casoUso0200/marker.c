@@ -16,11 +16,11 @@ int compare_quadrilateral_perimeter(const void* a, const void* b) {
                   - ((*qa).perimeter < (*qb).perimeter));
 }
 
-quadrilateral quadrilateralNew(double vertices[QL_NB_VERTICES][2]) {
+quadrilateral quadrilateralNew(float vertices[QL_NB_VERTICES][2]) {
     
 	quadrilateral ql;
-	double sidelength;
-	double side[2];
+	float sidelength;
+	float side[2];
     
 	VEC_ZERO_2(ql.center);
 	ql.perimeter = 0;
@@ -48,7 +48,7 @@ quadrilateralSet quadrilateralSetNew(quadrilateral ql[QLSET_NB_QLS]) {
     
 	VEC_ZERO_2(qlSet.center);
     
-	double count = 0;
+	float count = 0;
 	for (int i = 0; i < QLSET_NB_QLS; i++) {
 		qlSet.ql[i] = ql[i];
 		if (qlSet.ql[i].id != -1) {
@@ -95,9 +95,9 @@ int getQlSetArrDirections(quadrilateralSet qlSet[MRKR_NB_QLSETS]) {
 
 int orderMarkerVertices(markerQr *marker) {
     
-	double px, py;
-	double vect[2];
-	double temp_vertices[4][2];
+	float px, py;
+	float vect[2];
+	float temp_vertices[4][2];
     
 	for (int i = 0; i < MRKR_NB_QLSETS; i++) {
 		for (int j = 0; j < QLSET_NB_QLS; j++) {
@@ -137,15 +137,15 @@ int orderMarkerVertices(markerQr *marker) {
 	return 0;
 }
 
-int getQlList(int listSize, double *list, quadrilateral *qlList) {
+int getQlList(int listSize, float *list, quadrilateral *qlList) {
     
-	double center_thr = 25;
+	float center_thr = 25;
 	int listDim = 7;
 	long int NP = listSize;
 	int i, j, k, l;
 	int I[4];
     
-	double vertices[4][2];
+	float vertices[4][2];
     
 	for (i = 0; i < NP; i += QL_NB_VERTICES) {
 		I[0] = i;
@@ -230,7 +230,7 @@ int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList,
 	}
     
 	/*get mean perimeters*/
-	double perimeter[3] = { 0, 0, 0 };
+	float perimeter[3] = { 0, 0, 0 };
 	for (int i = 0; i < MRKR_NB_QLSETS; i++) {
 		if (qlSet[i].id == 1) {
 			for (int j = 0; j < QLSET_NB_QLS; j++)
@@ -266,12 +266,12 @@ int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList,
 }
 
 int getIncompleteQlSet(int qlListSize, quadrilateral *qlList,
-                       quadrilateralSet *qlSet, double perimeter[3]) {
+                       quadrilateralSet *qlSet, float perimeter[3]) {
     
 	quadrilateral ql[QLSET_NB_QLS];
     
-	double cicj[2];
-	double dist_cicj;
+	float cicj[2];
+	float dist_cicj;
 	int found = 0;
     
 	for (int i = 0; i < qlListSize; i++) {
@@ -307,9 +307,9 @@ int getIncompleteQlSet(int qlListSize, quadrilateral *qlList,
 	return 1;
 }
 
-int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]) {
+int orderIncompleteQlArr(quadrilateral *ql, float perimeter[3]) {
     
-	double verticesDummy[4][2] = { { -1, -1 }, { -1, -1 }, { -1, -1 },
+	float verticesDummy[4][2] = { { -1, -1 }, { -1, -1 }, { -1, -1 },
         { -1, -1 } };
 	quadrilateral qlTemp, qlDummy;
 	qlDummy = quadrilateralNew(verticesDummy);
@@ -338,7 +338,7 @@ int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]) {
      }
      */
 	//compute perimeter errors
-	double perim_err[QLSET_NB_QLS-1][QLSET_NB_QLS] = { { 0, 0, 0 } , { 0, 0, 0 } };
+	float perim_err[QLSET_NB_QLS-1][QLSET_NB_QLS] = { { 0, 0, 0 } , { 0, 0, 0 } };
 	for (int i = 0; i < QLSET_NB_QLS-1; i++) {
 		for (int j = 0; j < QLSET_NB_QLS; j++) {
 			perim_err[i][j] =  fabs(ql[i].perimeter - perimeter[j]);
@@ -347,7 +347,7 @@ int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]) {
 	//get matches by min perimeter error
 	int checks[QLSET_NB_QLS] = { -1, -1, -1 };
 	for (int i = 0; i < QLSET_NB_QLS-1; i++) {
-		double perim_min_err = 10000;
+		float perim_min_err = 10000;
 		for (int j = 0; j < QLSET_NB_QLS; j++) {
 			if (perim_err[i][j]<perim_min_err){
 				checks[i]=j;
@@ -416,8 +416,8 @@ int getQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet) {
 	quadrilateral ql[QLSET_NB_QLS];
 	//ql=(quadrilateral *)malloc(QLSET_NB_QLS * sizeof(quadrilateral));
     
-	double cicj[2], cick[2];
-	double dist_cicj, dist_cick;
+	float cicj[2], cick[2];
+	float dist_cicj, dist_cick;
 	int found = 0;
     
 	/*FIXME: find a more general way. store indexes. two nested for's not three*/
@@ -528,9 +528,9 @@ int getMarker(quadrilateralSet *qlSet, markerQr *marker) {
 
 int orderQlSetArr(quadrilateralSet *qlSet) {
 	quadrilateralSet qlSetTemp[MRKR_NB_QLSETS];
-	double vect[MRKR_NB_QLSETS][2];
-	double leng[MRKR_NB_QLSETS];
-	double dirs[2][2];
+	float vect[MRKR_NB_QLSETS][2];
+	float leng[MRKR_NB_QLSETS];
+	float dirs[2][2];
 	int ref_index = -1;
     
 	/*compute the 3 posible principal directions*/
@@ -551,7 +551,7 @@ int orderQlSetArr(quadrilateralSet *qlSet) {
 		}
 	}
     
-	double cos_angle1, cos_angle2;
+	float cos_angle1, cos_angle2;
 	/*find out origin by widest angle*/
 	VEC_DOT_PRODUCT_2(cos_angle1, dirs[1], vect[(ref_index+1)%MRKR_NB_QLSETS]);
 	VEC_DOT_PRODUCT_2(cos_angle2, dirs[1], vect[(ref_index+2)%MRKR_NB_QLSETS]);
@@ -574,13 +574,13 @@ int orderQlSetArr(quadrilateralSet *qlSet) {
 int orderQlSetArr2(quadrilateralSet *qlSet) {
     
 	quadrilateralSet qlSetTemp[MRKR_NB_QLSETS];
-	double vect[MRKR_NB_QLSETS][2];
-	double leng[MRKR_NB_QLSETS];
-	double dirs[2][2];
-	double angles[2] = { 0, 0 };
-	double ref_angle = -1;
-	double ref_index = -1;
-	double test_angle[2];
+	float vect[MRKR_NB_QLSETS][2];
+	float leng[MRKR_NB_QLSETS];
+	float dirs[2][2];
+	float angles[2] = { 0, 0 };
+	float ref_angle = -1;
+	float ref_index = -1;
+	float test_angle[2];
     
 	/*compute the 3 posible principal directions*/
 	for (int i = 0; i < MRKR_NB_QLSETS; i++) {
@@ -656,7 +656,7 @@ int orderQlSetArr2(quadrilateralSet *qlSet) {
 		return ref_index;
 }
 
-int findPointCorrespondances(int *listSize, double *list, double **imgPts) {
+int findPointCorrespondances(int *listSize, float *list, float **imgPts) {
     
 	int error_code;
     
@@ -693,7 +693,7 @@ int findPointCorrespondances(int *listSize, double *list, double **imgPts) {
     
 }
 
-int getMarkerVertices(markerQr marker, double **imgPts) {
+int getMarkerVertices(markerQr marker, float **imgPts) {
     
 	int contador = 0;
 	for (int i = 0; i < MRKR_NB_QLSETS; i++) {
@@ -708,8 +708,8 @@ int getMarkerVertices(markerQr marker, double **imgPts) {
 	return 0;
 }
 
-int getCropLists(double** imagePts, double** worldPts, double
-                 **imagePtsCrop, double **worldPtsCrop){
+int getCropLists(float** imagePts, float** worldPts, float
+                 **imagePtsCrop, float **worldPtsCrop){
     int k=0;
     for (int i=0; i<36; i++) {
         if ((imagePts[i][0]!=-1)&&(imagePts[i][1]!=-1)) {

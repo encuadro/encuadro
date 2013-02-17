@@ -50,40 +50,40 @@
 /*FIXME: resolve structure intialization! */
 typedef struct quadrilateral{
 	//const int NB = QL_NB_VERTICES;
-	double vertices[QL_NB_VERTICES][2];
-	double dirs_deg[QL_NB_VERTICES];
-	double center[2] ;
-	double perimeter;
+	float vertices[QL_NB_VERTICES][2];
+	float dirs_deg[QL_NB_VERTICES];
+	float center[2] ;
+	float perimeter;
 	int id; //not constructed - not assigned
 } quadrilateral;
 typedef struct quadrilateralSet {
 	//const int NB = QLSET_NB_QLS;
 	quadrilateral ql[QLSET_NB_QLS];
-	double center[2] ;
+	float center[2] ;
 	int id; //not constructed - not assigned
     
 } quadrilateralSet;
 typedef struct markerQr{
 	//const int NB = MRKR_NB_QLSETS;
 	quadrilateralSet qlSet[MRKR_NB_QLSETS];
-	double origin[2] ;
-	double directions[2][2];
+	float origin[2] ;
+	float directions[2][2];
 } markerQr;
 /*=====================================================*/
 
 
 /*======================constructors===================*/
-quadrilateral quadrilateralNew(double vertices[4][2]);
+quadrilateral quadrilateralNew(float vertices[4][2]);
 quadrilateralSet quadrilateralSetNew(quadrilateral ql[QLSET_NB_QLS]);
 markerQr markerQrNew(quadrilateralSet qlSet[MRKR_NB_QLSETS]);
 /*=====================================================*/
 
 
 /*=====================functions=======================*/
-int findPointCorrespondances(int *listSize, double *list, double **imgPts);
-int getMarkerVertices(markerQr marker, double **imgPts);
+int findPointCorrespondances(int *listSize, float *list, float **imgPts);
+int getMarkerVertices(markerQr marker, float **imgPts);
 
-int getQlList(int listSize, double *list, quadrilateral *qlList);
+int getQlList(int listSize, float *list, quadrilateral *qlList);
 int getQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet );
 int getQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet);
 int getMarker(quadrilateralSet *qlSet, markerQr *marker);
@@ -94,11 +94,11 @@ int orderQlSetArr(quadrilateralSet *qlSet);
 int orderQlSetArr2(quadrilateralSet *qlSet);
 int orderMarkerVertices(markerQr *marker);
 
-int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , double perimeter[3]);
+int getIncompleteQlSet(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet , float perimeter[3]);
 int getIncompleteQlSetArr(int qlListSize, quadrilateral *qlList, quadrilateralSet *qlSet);
-int orderIncompleteQlArr(quadrilateral *ql, double perimeter[3]);
-int getCropLists(double **imagePts, double **worldPts, double
-                 **imagePtsCrop, double **worldPtsCrop);
+int orderIncompleteQlArr(quadrilateral *ql, float perimeter[3]);
+int getCropLists(float **imagePts, float **worldPts, float
+                 **imagePtsCrop, float **worldPtsCrop);
 
 /*=====================================================*/
 

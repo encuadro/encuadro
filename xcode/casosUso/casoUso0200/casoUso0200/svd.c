@@ -4,8 +4,8 @@
 /*A part PseudoInverse(), toutes les fonctions sont tirees de l'ouvrage "Numerical Recipes"*/
 /*de W.H. Press, B.P. Flannery, S.A. Teukolsky, et W.T. Vetterling, Cambridge University Press*/
 
-static double at,bt,ct;
-static double maxarg1,maxarg2;
+static float at,bt,ct;
+static float maxarg1,maxarg2;
 
 #define PYTHAG(a,b) ((at=fabs(a)) > (bt=fabs(b)) ? \
 (ct=bt/at,at*sqrt(1.0+ct*ct)) : (bt ? (ct=at/bt,bt*sqrt(1.0+ct*ct)): 0.0))
@@ -26,25 +26,25 @@ exit(1);
 }
 
 /*******************************************************************************************************/
-double *vector(nl,nh) /*allocation de memoire*/
+float *vector(nl,nh) /*allocation de memoire*/
 long int nl,nh;
 {
-double *v;
-v=(double *)malloc((unsigned) (nh-nl+1)*sizeof(double));
+float *v;
+v=(float *)malloc((unsigned) (nh-nl+1)*sizeof(float));
 if (!v) nrerror("allocation failure in vector()");
 return v-nl;
 }
 
 /*******************************************************************************************************/
 void free_vector(v,nl) /*desallocation de memoire*/
-double *v;
+float *v;
 long int nl;
 {
 free((char*) (v+nl));
 }
 
 /*******************************************************************************************************/
-void svdcmp(double **a,int m,int n,double *w,double **v) /*Etant donnee une matrice a de dimension m x n, cette routine calcule sa*/
+void svdcmp(float **a,int m,int n,float *w,float **v) /*Etant donnee une matrice a de dimension m x n, cette routine calcule sa*/
                        /*decomposition en valeurs singulieres, a=U.W.(V)t. La matrice U remplace*/
                        /*a en sortie. La matrice diagonale des valeurs singulieres, W, est fournie*/
                        /*sous forme de vecteur w. La matrice V (dont on utilise la transposee) est*/
@@ -53,9 +53,9 @@ void svdcmp(double **a,int m,int n,double *w,double **v) /*Etant donnee une matr
 
 {
 long int flag,i,its,j,jj,k,l,nm;
-double c,f,h,s,x,y,z;
-double anorm=0.0,g=0.0,scale=0.0;
-double *rv1,*vector();
+float c,f,h,s,x,y,z;
+float anorm=0.0,g=0.0,scale=0.0;
+float *rv1,*vector();
 void nrerror(),free_vector();
 
   if (m < n) nrerror("SVDCMP: You must augment A with extra zero rows");
@@ -243,23 +243,23 @@ void nrerror(),free_vector();
 
 
 /*******************************************************************************************************/
-void  PseudoInverse(double** A,long int N,double** B) /*retourne en B la pseudoinverse de A qui est de dimension N x 3*/
+void  PseudoInverse(float** A,long int N,float** B) /*retourne en B la pseudoinverse de A qui est de dimension N x 3*/
                            /*C'est par definition la matrice v.[diag(1/wi)].(u)t (cf. svdcmp())*/
 
 
 
 {
   void svdcmp();
-  double **V,*W,temp[3][3];
-  double WMAX;
-  double TOL = 0.01;
+  float **V,*W,temp[3][3];
+  float WMAX;
+  float TOL = 0.01;
   long int i,j,k,cn;
 
   /*allocations*/
-  V=(double **)malloc(3*sizeof(double *));
-  W=(double *)malloc(3*sizeof(double));		//Afshin: I corrected this line. It was sizeof(double *) by mistake
-//  W=(double *)malloc(3*sizeof(double *));	//Afshin: This was the original line
-  for (i=0;i<3;i++) V[i]=(double *)malloc(3*sizeof(double));
+  V=(float **)malloc(3*sizeof(float *));
+  W=(float *)malloc(3*sizeof(float));		//Afshin: I corrected this line. It was sizeof(float *) by mistake
+//  W=(float *)malloc(3*sizeof(float *));	//Afshin: This was the original line
+  for (i=0;i<3;i++) V[i]=(float *)malloc(3*sizeof(float));
 
   /*decomposition en valeurs singulieres*/
   svdcmp(A,N,3,W,V);
@@ -327,26 +327,26 @@ for (i=0;i<3;i++) free(V[i]);
 
 
 
-void  PseudoInverseGen(double** A,int N,int M,double** B) /*retourne en B la pseudoinverse de A qui est de dimension N x M*/
+void  PseudoInverseGen(float** A,int N,int M,float** B) /*retourne en B la pseudoinverse de A qui est de dimension N x M*/
 /*C'est par definition la matrice v.[diag(1/wi)].(u)t (cf. svdcmp())*/
 
 
 
 {
     void svdcmp();
-    double **U;
-    double **V,*W,temp[M][M];
-    double WMAX;
-    double TOL = 0.01;
+    float **U;
+    float **V,*W,temp[M][M];
+    float WMAX;
+    float TOL = 0.01;
     long int i,j,k,cn;
     
     /*allocations*/
-    U=(double **)malloc(N*sizeof(double *));
-    V=(double **)malloc(M*sizeof(double *));
-    W=(double *)malloc(M*sizeof(double));		//Afshin: I corrected this line. It was sizeof(double *) by mistake
-    //  W=(double *)malloc(M*sizeof(double *));	//Afshin: This was the original line
-    for (i=0;i<M;i++) V[i]=(double *)malloc(M*sizeof(double));
-    for (i=0;i<N;i++) U[i]=(double *)malloc(M*sizeof(double));
+    U=(float **)malloc(N*sizeof(float *));
+    V=(float **)malloc(M*sizeof(float *));
+    W=(float *)malloc(M*sizeof(float));		//Afshin: I corrected this line. It was sizeof(float *) by mistake
+    //  W=(float *)malloc(M*sizeof(float *));	//Afshin: This was the original line
+    for (i=0;i<M;i++) V[i]=(float *)malloc(M*sizeof(float));
+    for (i=0;i<N;i++) U[i]=(float *)malloc(M*sizeof(float));
     
     for (i=0;i<N;i++){
         for (j=0;j<M;j++) {
