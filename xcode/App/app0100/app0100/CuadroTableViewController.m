@@ -59,10 +59,10 @@
         
         self.cuadroImages = [[NSArray alloc]
                              initWithObjects:
-                             @"Blanes_atardecer.jpg",
-                             @"Blanes_fiebreAmarilla.jpg",
-                             @"Blanes_laParaguaya.jpg", 
-                             @"Blanes_sraCarlota.jpg", 
+                             @"Blanes_atardecer",
+                             @"Blanes_fiebreAmarilla",
+                             @"Blanes_laParaguaya",
+                             @"Blanes_sraCarlota", 
                              nil];
         
         self.cuadroDescripcion = [[NSArray alloc]
@@ -135,12 +135,12 @@
          
          self.cuadroImages = [[NSArray alloc]
                               initWithObjects:
-                              @"Figari_cambacua.jpg",
-                              @"Figari_candombe.jpg",
-                              @"Figari_gritoDeAsencio.jpg", 
-                              @"Figari_pericon.jpg",
-                              @"Figari_pique.jpg",
-                              @"Figari_toque.jpg",
+                              @"Figari_cambacua",
+                              @"Figari_candombe",
+                              @"Figari_gritoDeAsencio",
+                              @"Figari_pericon",
+                              @"Figari_pique",
+                              @"Figari_toque",
                               nil];
          
          self.cuadroDescripcion = [[NSArray alloc]
@@ -220,11 +220,11 @@
         
         self.cuadroImages = [[NSArray alloc]
                              initWithObjects:
-                             @"Torres_constructiva.jpg", 
-                             @"Torres_constructiva2.jpg",
-                             @"Torres_interior.jpg",
-                             @"Torres_paisajeCiudad.jpg",
-                             @"Torres_universal.jpg",
+                             @"Torres_constructiva",
+                             @"Torres_constructiva2",
+                             @"Torres_interior",
+                             @"Torres_paisajeCiudad",
+                             @"Torres_universal",
                              nil];
         
         self.cuadroDescripcion = [[NSArray alloc]
@@ -291,7 +291,7 @@
          
          self.cuadroImages = [[NSArray alloc]
                               initWithObjects:
-                              @"artigasRetrato.jpeg",
+                              @"Esculturas_artigas",
                               nil];
          
          self.cuadroDescripcion = [[NSArray alloc]
@@ -370,22 +370,22 @@
         
         self.cuadroImages = [[NSArray alloc]
                              initWithObjects:
-                             @"Blanes_atardecer.jpg",
-                             @"Blanes_fiebreAmarilla.jpg",
-                             @"Blanes_laParaguaya.jpg", 
-                             @"Blanes_sraCarlota.jpg", 
-                             @"Figari_cambacua.jpg",
-                             @"Figari_candombe.jpg",
-                             @"Figari_gritoDeAsencio.jpg", 
-                             @"Figari_pericon.jpg",
-                             @"Figari_pique.jpg",
-                             @"Figari_toque.jpg",
-                             @"Torres_constructiva.jpg", 
-                             @"Torres_constructiva2.jpg",
-                             @"Torres_interior.jpg",
-                             @"Torres_paisajeCiudad.jpg",
-                             @"Torres_universal.jpg",
-                             @"esculturas.jpeg",
+                             @"Blanes_atardecer",
+                             @"Blanes_fiebreAmarilla",
+                             @"Blanes_laParaguaya",
+                             @"Blanes_sraCarlota",
+                             @"Figari_cambacua",
+                             @"Figari_candombe",
+                             @"Figari_gritoDeAsencio",
+                             @"Figari_pericon",
+                             @"Figari_pique",
+                             @"Figari_toque",
+                             @"Torres_constructiva",
+                             @"Torres_constructiva2",
+                             @"Torres_interior",
+                             @"Torres_paisajeCiudad",
+                             @"Torres_universal",
+                             @"Esculturas_artigas",
                              nil];
         
         self.cuadroDescripcion = [[NSArray alloc]
@@ -561,8 +561,22 @@
     cell.obraLabel.text = [self.cuadroObra 
                             objectAtIndex:[indexPath row]];
     
-    UIImage *cuadroPhoto = [UIImage imageNamed: 
-                         [self.cuadroImages objectAtIndex: [indexPath row]]];
+    NSString *nombreFotoAutor;
+    
+    if (opcionAutor==1) {//1--> Blanes
+    
+    nombreFotoAutor=@"AutorBlanes.jpeg";
+    }else if (opcionAutor==2) {//2--> Figari
+    
+    nombreFotoAutor=@"AutorFigari.jpeg";
+    }else if (opcionAutor==3) {//3--> Torres
+    
+    nombreFotoAutor=@"AutorTorres.jpeg";
+    }else if (opcionAutor==4) {//3--> Esculturas
+    nombreFotoAutor=@"esculturas.jpeg";
+    
+    }
+    UIImage *cuadroPhoto = [UIImage imageNamed:nombreFotoAutor];
     
     cell.cuadroImage.image = cuadroPhoto;
   
@@ -622,17 +636,77 @@
         NSIndexPath *myIndexPath = [self.tableView 
                                     indexPathForSelectedRow];
         
+//        obracompletaViewController.descripcionObra = [[NSArray alloc]
+//                                               initWithObjects: 
+//                                            [self.cuadroAutor objectAtIndex:[myIndexPath row]],
+//                                            [self.cuadroObra objectAtIndex:[myIndexPath row]],
+//                                            [self.cuadroImages objectAtIndex:[myIndexPath row]],
+//                                            [self.cuadroDescripcion objectAtIndex:[myIndexPath row]],
+//                                            [self.nombre_audio objectAtIndex:[myIndexPath row]],
+//                                            [self.ARid objectAtIndex:[myIndexPath row]],
+//                                            [self.ARType objectAtIndex:[myIndexPath row]],
+//                                            [self.ARObj objectAtIndex:[myIndexPath row]],
+//                                            nil];
+        
+        
+        NSString* returnString=[self.cuadroImages objectAtIndex:[myIndexPath row]];
+        
+        
+        NSString* autor = @"http://192.168.1.111/autores/";
+        autor = [autor stringByAppendingString:returnString];
+        autor = [autor stringByAppendingString:@".txt"];
+        
+        
+        NSString* obra = @"http://192.168.1.111/obras/";
+        obra = [obra stringByAppendingString:returnString];
+        obra = [obra stringByAppendingString:@".txt"];
+        
+        
+        NSString* texto = @"http://192.168.1.111/textos/";
+        texto = [texto stringByAppendingString:returnString];
+        texto = [texto stringByAppendingString:@".txt"];
+        NSLog(@"%@",returnString);
+        NSString* imagen = @"http://192.168.1.111/imagenes/";
+        imagen = [imagen stringByAppendingString:returnString];
+        imagen = [imagen stringByAppendingString:@".jpg"];
+        
+        
+        NSString* audio = returnString;
+        audio = [audio stringByAppendingString:@".mp3"];
+        
+        
+        
+        NSString* ARid = @"http://192.168.1.111/ARid/";
+        ARid = [ARid stringByAppendingString:returnString];
+        ARid = [ARid stringByAppendingString:@".txt"];
+        
+        
+        NSString* ARType = @"http://192.168.1.111/ARType/";
+        ARType = [ARType stringByAppendingString:returnString];
+        ARType = [ARType stringByAppendingString:@".txt"];
+        
+        
+        NSString* ARObj = @"http://192.168.1.111/ARObj/";
+        ARObj = [ARObj stringByAppendingString:returnString];
+        ARObj = [ARObj stringByAppendingString:@".txt"];
+        
+        
+        
+        
+        
         obracompletaViewController.descripcionObra = [[NSArray alloc]
-                                               initWithObjects: 
-                                            [self.cuadroAutor objectAtIndex:[myIndexPath row]],
-                                            [self.cuadroObra objectAtIndex:[myIndexPath row]],
-                                            [self.cuadroImages objectAtIndex:[myIndexPath row]],
-                                            [self.cuadroDescripcion objectAtIndex:[myIndexPath row]],
-                                            [self.nombre_audio objectAtIndex:[myIndexPath row]],
-                                            [self.ARid objectAtIndex:[myIndexPath row]],
-                                            [self.ARType objectAtIndex:[myIndexPath row]],
-                                            [self.ARObj objectAtIndex:[myIndexPath row]],
-                                            nil];
+                                                      initWithObjects:
+                                                      autor,
+                                                      obra,
+                                                      imagen,
+                                                      texto,
+                                                      audio,
+                                                      ARid,
+                                                      ARType,
+                                                      ARObj,
+                                                      nil];
+        
+        
 
     }
 }

@@ -54,20 +54,20 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     conUpsi=true;
-    if (manual==true) {
-        
-        //CAMINO MANUAL
-        self.autor.text = [self.descripcionObra objectAtIndex:0];
-        
-        // self.obra.text = [self.descripcionObra objectAtIndex:1];
-        
-        self.imagenObra.image = [UIImage imageNamed: 
-                                 [self.descripcionObra objectAtIndex:2]];
-        self.detalle.text=[self.descripcionObra objectAtIndex:3];
-        
-        
-
-    }else {
+//    if (manual==true) {
+//        
+//        //CAMINO MANUAL
+//        self.autor.text = [self.descripcionObra objectAtIndex:0];
+//        
+//        // self.obra.text = [self.descripcionObra objectAtIndex:1];
+//        
+//        self.imagenObra.image = [UIImage imageNamed: 
+//                                 [self.descripcionObra objectAtIndex:2]];
+//        self.detalle.text=[self.descripcionObra objectAtIndex:3];
+//        
+//        
+//
+//    }else {
         //CAMINO AUTOMATICO
         
         
@@ -93,7 +93,7 @@
         textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
         text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
         self.detalle.text=text;
-    }
+//    }
     
     justLoaded=true;
     
