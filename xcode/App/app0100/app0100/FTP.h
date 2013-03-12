@@ -7,7 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@interface FTP : NSObject
-
+#import "NetworkManager.h"
+#define kContrayIp @":12345678@10.0.2.109"
+@interface FTP : NSObject{
+    NSURLConnection *connection;
+    NSString *filepath;
+    NSOutputStream *fileStream;
+    BOOL *anduvo;
+}
+@property(nonatomic, retain, readwrite) NSURLConnection *connection;
+@property(nonatomic, copy,   readwrite) NSString *filePath;
+@property(nonatomic, retain, readwrite) NSOutputStream *fileStream;
+@property BOOL anduvo;
+-(FTP*)initWithString:(NSString*)ruta yotroString:(NSString*)nombreDato ytipo:(NSString*)tipo yId:(NSString*)ide ytipo2:(NSString*)tipo2;
+-(BOOL)getSiAnduvo;
 @end

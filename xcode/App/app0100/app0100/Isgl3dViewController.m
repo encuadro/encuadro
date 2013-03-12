@@ -464,8 +464,10 @@ UIImageOrientation orientation;
     
     
     NSBundle *bundle = [NSBundle mainBundle];
-    NSString *moviePath = [bundle pathForResource:self.videoName ofType:@"mov"];
+    //NSString *moviePath = [bundle pathForResource:self.videoName ofType:@"mov"];
+    NSString *moviePath = self.videoName;
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    NSLog(@"movie: %@", moviePath);
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
     theMovie.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);

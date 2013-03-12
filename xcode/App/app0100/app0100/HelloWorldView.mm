@@ -81,9 +81,9 @@ double k;
 bool touched;
 
 
-- (id) init:(int) Ar ARType:(NSString*)ARType ARObj:(NSString*)ARObj{
+- (id) initARType:(NSString*)ARType ARObj:(NSString*)ARObj ARObj2:(NSString *)ARObj2 ARObj3:(NSString *)ARObj3 ARObj4:(NSString *)ARObj4 ARObj5:(NSString *)ARObj5{
     NSLog(@"INIT DEL HW");
-   printf("ArID desde HWORLD: %d\n",Ar);
+   //printf("ArID desde HWORLD: %d\n",Ar);
 	/*"Si el init del padre anduvo bien..."*/
 	if ((self = [super init])) {
         NSLog(@"AR TYPE HW ES: %@",ARType);
@@ -100,16 +100,16 @@ bool touched;
         
        
             
-        
-        podImporter = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"1.pod"]];
+        NSLog(@"%@",ARObj);
+        podImporter = [Isgl3dPODImporter  podImporterWithFile:ARObj];
         [podImporter buildSceneObjects];
-        podImporter2 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"2.pod"]];
+        podImporter2 = [Isgl3dPODImporter podImporterWithFile:ARObj2];
         [podImporter2 buildSceneObjects];
-        podImporter3 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"3.pod"]];
+        podImporter3 = [Isgl3dPODImporter podImporterWithFile:ARObj3];
         [podImporter3 buildSceneObjects];
-        podImporter4 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"4.pod"]];
+        podImporter4 = [Isgl3dPODImporter podImporterWithFile:ARObj4];
         [podImporter4 buildSceneObjects];
-        podImporter5 = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@"5.pod"]];
+        podImporter5 = [Isgl3dPODImporter podImporterWithFile:ARObj5];
         [podImporter5 buildSceneObjects];
         
         
@@ -168,9 +168,8 @@ bool touched;
             NSLog(@"ARType:%@\n",ARType);
             NSLog(@"ARObj:%@\n",ARObj);
 
-            Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:[ARObj stringByAppendingString:@".pod"]];
+            Isgl3dPODImporter * podImporter = [Isgl3dPODImporter podImporterWithFile:ARObj];
               
-
             node = [_container createNode];
         
             

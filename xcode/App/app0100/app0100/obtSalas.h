@@ -8,6 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-@interface obtSalas : NSObject
 
+@interface obtSalas : NSObject{
+    
+}
+@property(nonatomic,retain)NSMutableArray *autorNombre;
+@property(nonatomic,retain)NSMutableArray *autorDescripcion;
+@property(nonatomic,retain)NSMutableArray *autorImagen;
+@property(nonatomic,retain)NSMutableArray *datos2;
+-(obtSalas*)init;
+-(obtSalas*)initWithString:(NSString*)idSala;
+-(NSMutableArray*)getNom;
+-(NSMutableArray*)getDesc;
+-(NSMutableArray*)getIma;
+-(NSMutableArray*)getSalas;
 @end

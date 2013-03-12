@@ -35,7 +35,7 @@
 {
     [super viewDidLoad];
 
-    
+    /*
     self.autorNombre = [[NSArray alloc]
                         initWithObjects:
                         @"Blanes",
@@ -58,7 +58,7 @@
                          @"Pedro Figari Solari (n. Montevideo, 29 de junio de 1861 - íbidem, 24 de julio de 1938)",
                          @"Joaquín Torres García (Montevideo, 28 de julio de 1874 - Montevideo, 8 de agosto de 1949)",
                          @"Recorrido por la zona de esculturas digitales interactivas.",
-                         nil];
+                         nil];*/
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -112,27 +112,34 @@
     
     cell.obraLabel.text = [self.autorDescripcion 
                            objectAtIndex:[indexPath row]];
-    
-    UIImage *cuadroPhoto = [UIImage imageNamed: 
+    UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:
                             [self.autorImagen objectAtIndex: [indexPath row]]];
     
-    cell.cuadroImage.image = cuadroPhoto;
-    
+    cell.cuadroImage.image = cuadroPhoto;    
     
     return cell;
 }
 
+-(void)viewWillAppear:(BOOL)animated{
+    [actInd startAnimating];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        self.autorNombre = [o getNom];
+        self.autorDescripcion = [o getDesc];
+        self.autorImagen = [o getIma];
+        if(self.autorNombre != NULL){
+            [actInd stopAnimating];
+            [self.tableView reloadData];
+        }
+    });
+    
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"ObrasAutor"])
     {
         
-        
-        NSIndexPath *myIndexPath = [self.tableView 
-                                    indexPathForSelectedRow];
-           
-        opcionAutor = [myIndexPath row]+1;
+      
         
 
     }
@@ -182,6 +189,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+    NSMutableArray *salas = [o getSalas];
+    opcionAutor = [salas objectAtIndex:[myIndexPath row]];
+    oo = [[obtObras alloc] initConId:opcionAutor];
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];

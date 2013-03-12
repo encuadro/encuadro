@@ -47,7 +47,7 @@ bool fin;
 @property(nonatomic, retain) Isgl3dNode* cubito1;
 @property(nonatomic, retain) Isgl3dNode* cubito2;
 @property (nonatomic, readwrite) int ARidObra;
-- (id) init:(int) Ar ARType:(NSString*)ARType ARObj:(NSString*)ARObj;
+- (id)initARType:(NSString*)ARType ARObj:(NSString*)ARObj ARObj2:(NSString*)ARObj2 ARObj3:(NSString*)ARObj3 ARObj4:(NSString*)ARObj4 ARObj5:(NSString*)ARObj5;
 
 @end
 

@@ -429,8 +429,9 @@ bool CSourceStream::Init(const char * const pszFileName)
 {
 	m_BytesReadCount = 0;
 	if (m_pFile) delete m_pFile;
-
+ printf("AAAAA %s",pszFileName);
 	m_pFile = new CPVRTResourceFile(pszFileName);
+   
 	if (!m_pFile->IsOpen())
 	{
 		delete m_pFile;

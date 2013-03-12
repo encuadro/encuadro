@@ -23,7 +23,7 @@
 @synthesize ARid = _ARid;
 @synthesize ARType = _ARType;
 @synthesize ARObj = _ARObj;
-
+@synthesize actInd;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -37,7 +37,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-  
+    /*
      if (opcionAutor==1) {//1--> Blanes
         
         NSLog(@"OPCION AUTOR ES 1---BLANES");
@@ -500,16 +500,27 @@
         
         
     }    
-   
-                         
-                         
-                         
-                         
+   */
+                          
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [actInd startAnimating];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        self.cuadroObra = [oo getNombre];
+        self.cuadroAutor = [oo getAutor];
+        self.cuadroDescripcion = [oo getDesc];
+        self.cuadroImages = [oo getImagen];
+        if(self.cuadroObra != NULL){
+            [actInd stopAnimating];
+            [self.tableView reloadData];
+        }
+    });
 }
 
 - (void)viewDidUnload
@@ -561,22 +572,7 @@
     cell.obraLabel.text = [self.cuadroObra 
                             objectAtIndex:[indexPath row]];
     
-    NSString *nombreFotoAutor;
-    
-    if (opcionAutor==1) {//1--> Blanes
-    
-    nombreFotoAutor=@"AutorBlanes.jpeg";
-    }else if (opcionAutor==2) {//2--> Figari
-    
-    nombreFotoAutor=@"AutorFigari.jpeg";
-    }else if (opcionAutor==3) {//3--> Torres
-    
-    nombreFotoAutor=@"AutorTorres.jpeg";
-    }else if (opcionAutor==4) {//3--> Esculturas
-    nombreFotoAutor=@"esculturas.jpeg";
-    
-    }
-    UIImage *cuadroPhoto = [UIImage imageNamed:nombreFotoAutor];
+    UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:[self.cuadroImages objectAtIndex:[indexPath row]]];
     
     cell.cuadroImage.image = cuadroPhoto;
   
@@ -628,14 +624,18 @@
 {
     if ([[segue identifier] isEqualToString:@"Detalle"])
     {
-        manual=true;
-        
-        ObraCompletaViewController *obracompletaViewController = 
-        [segue destinationViewController];
-        
-        NSIndexPath *myIndexPath = [self.tableView 
-                                    indexPathForSelectedRow];
-        
+        manual=true;        
+        NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+        NSString *nombre = [[oo getNombre] objectAtIndex:[myIndexPath row]];
+        NSString *autor = [[oo getAutor] objectAtIndex:[myIndexPath row]];
+        NSString *descripcion = [[oo getDesc] objectAtIndex:[myIndexPath row]];
+        NSString *imagen = [[oo getImagen] objectAtIndex:[myIndexPath row]];
+        descripcionObra = [[NSMutableArray alloc] init];
+        [descripcionObra addObject:autor];
+        [descripcionObra addObject:nombre];
+        [descripcionObra addObject:imagen];
+        [descripcionObra addObject:descripcion];
+        oo = [[obtObras alloc] initConNombreObraParaContenidos:nombre];
 //        obracompletaViewController.descripcionObra = [[NSArray alloc]
 //                                               initWithObjects: 
 //                                            [self.cuadroAutor objectAtIndex:[myIndexPath row]],
@@ -649,7 +649,7 @@
 //                                            nil];
         
         
-        NSString* returnString=[self.cuadroImages objectAtIndex:[myIndexPath row]];
+        /*NSString* returnString=[self.cuadroImages objectAtIndex:[myIndexPath row]];
         
         
         NSString* autor = @"http://192.168.1.111/autores/";
@@ -704,7 +704,7 @@
                                                       ARid,
                                                       ARType,
                                                       ARObj,
-                                                      nil];
+                                                      nil];*/
         
         
 

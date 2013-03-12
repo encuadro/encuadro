@@ -9,8 +9,8 @@
 
 @implementation ReaderSampleViewController
 
-@synthesize resultImage, resultText,site, audioPlayer,start, backround;
-
+@synthesize resultImage, resultText,site, audioPlayer,start, backround, nombreSala;
+@synthesize string=_string;
 - (IBAction) scanButtonTapped
 {
 
@@ -89,9 +89,35 @@
     //Aca vendria la busqueda en base de datos del texto del QR
 //
     
-    NSString *string=symbol.data;
+    self.string=symbol.data;
  NSLog(@"IMAGE SYMBOL");
-    if ([string rangeOfString:@"BLANES"].location != NSNotFound) {
+    opcionAutor = self.string;
+    NSLog(@"%@",opcionAutor);
+    if(opcionAutor != NULL){
+        UIAlertView *alertWithOkButton;
+        obtSalas *os = [[obtSalas alloc]initWithString:opcionAutor];
+        alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"
+                                                       message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertWithOkButton show];
+        [alertWithOkButton release];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2  * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+            NSMutableArray *obtNombre = [os getNom];
+            NSMutableArray *obtDesc = [os getDesc];
+            NSMutableArray *obtImagen = [os getIma];
+            resultText.text = [obtDesc objectAtIndex:0];
+            room = [obtNombre objectAtIndex:0];
+            cad = [obtImagen objectAtIndex:0];
+            self.nombreSala.text = [obtNombre objectAtIndex:0];
+            [self.nombreSala setHidden:NO];
+            UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:cad];
+            resultImage.image = cuadroPhoto;
+            [reader dismissViewControllerAnimated:YES completion:nil];
+            opcionAutor = self.string;
+            NSLog(@"cambio?%@",opcionAutor);
+        });
+    }
+
+   /* if ([string rangeOfString:@"BLANES"].location != NSNotFound) {
         //zona BLANES
 
         resultText.text = symbol.data;
@@ -166,7 +192,7 @@ NSLog(@"IMAGE ANTES");
     
     
     
-    NSLog(@"opcionAutor en picker es %d",opcionAutor);
+    NSLog(@"opcionAutor en picker es %d",opcionAutor);*/
     
     //[reader release];
     
@@ -186,7 +212,8 @@ NSLog(@"IMAGE ANTES");
         [audioPlayer stop];
         click=0;
         [start setTitle:@"Start" forState:UIControlStateNormal];
-       
+        opcionAutor = self.string;
+        NSLog(@"%@",opcionAutor);
         
         
     }

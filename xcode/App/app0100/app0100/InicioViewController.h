@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "obtSalas.h"
+
+obtSalas *o;
 
 int click;
-
 @interface InicioViewController : UIViewController
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;

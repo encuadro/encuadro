@@ -10,12 +10,11 @@
 #import <AVFoundation/AVFoundation.h>
 #import "CuadroTableViewController.h"
 #import "app0100AppDelegate.h"
-
+#import "obtSalas.h"
 
 int click;
 NSString *room;
 NSString *cad;
-
 @interface ReaderSampleViewController
     : UIViewController
     // ADD: delegate protocol
@@ -24,7 +23,7 @@ NSString *cad;
 {
     UIImageView *resultImage;
     UITextView *resultText;
-
+    IBOutlet UILabel *nombreSala;
     
    // UITextView *resultSite;
 }
@@ -34,9 +33,8 @@ NSString *cad;
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) UIButton *start;
 @property (assign) IBOutlet UIImageView *backround;
-
-
-
+@property (nonatomic, retain) IBOutlet UILabel *nombreSala;
+@property (nonatomic,retain) NSString *string;
 
 - (IBAction) scanButtonTapped;
 //- (IBAction) enCuadroSite: (id) sender;  

@@ -18,7 +18,7 @@
 @synthesize url = _url;
 @synthesize read =_read;
 @synthesize image = _image;
-
+@synthesize filePath = _filePath;
 @synthesize activity;
 @synthesize mensaje;
 
@@ -37,13 +37,14 @@
 
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
-    
-    //saca la vista del controlador
     [picker dismissModalViewControllerAnimated:YES];
-    //pone imagen tomada en el objeto UIImageView
     imagenView.image=[info objectForKey:@"UIImagePickerControllerOriginalImage"];
-    
-    
+    NSData *webData = UIImagePNGRepresentation(imagenView.image);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    self.filePath = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
+    [webData writeToFile:self.filePath atomically:YES];
+    NSLog(@"%@",opcionAutor);
 }
 
 //-(IBAction)uploadImage:(id)sender
@@ -161,12 +162,26 @@
     
 }
 
+-(IBAction)subir:(id)sender{
+    NSLog(@"%@", self.filePath);
+    NSLog(@"%@",opcionAutor);
+    FTPUpload *fu = [[FTPUpload alloc]initWithString:self.filePath];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+        NSArray *nombreFoto = [self.filePath componentsSeparatedByString:@"Get"];
+        NSMutableString *nombreFoto2 = [[NSMutableString alloc] initWithString:@"Get"];
+        [nombreFoto2 appendString:[nombreFoto objectAtIndex:1]];
+        NSLog(@"%@",nombreFoto2);
+        NSString *foto = [NSString stringWithString:nombreFoto2];
+        NSLog(@"opAutor: %@",opcionAutor);
+        obtObras *op = [[obtObras alloc]initNombreIma:foto yIdSala:opcionAutor];
 
+    });
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
-   
+   /*
     
     if ([[segue identifier] isEqualToString:@"Detalle2"])
     {
@@ -238,7 +253,7 @@
         
         mensaje.text=nil;
         mensaje.backgroundColor=nil;
-    }
+    }*/
 }
 
 
@@ -255,7 +270,7 @@
     activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [self.view addSubview:activity]; // spinner is not visible until started
     activity.center = CGPointMake(160, 100);
-
+    NSLog(@"%@",opcionAutor);
 }
 
 - (void)viewDidUnload

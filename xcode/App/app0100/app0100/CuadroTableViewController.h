@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "CuadroTableViewCell.h"
 #import "ObraCompletaViewController.h"
+#import "AutorTableViewController.h"
 
-int opcionAutor;
+NSString *opcionAutor;
 /* opcionAutor
 1--> Blanes
 2--> Figari
@@ -19,7 +20,10 @@ else-->Todos los autores
  
 */
 
-@interface CuadroTableViewController : UITableViewController
+@interface CuadroTableViewController : UITableViewController{
+    IBOutlet UIActivityIndicatorView *actInd;
+    IBOutlet UITableView *tableView;
+}
 
 @property (nonatomic, retain) NSArray *cuadroImages;
 @property (nonatomic, retain) NSArray *cuadroAutor;
@@ -29,7 +33,8 @@ else-->Todos los autores
 @property (nonatomic, retain) NSArray *ARid;
 @property (nonatomic, retain) NSArray *ARType; //modelo, animacion, video
 @property (nonatomic, retain) NSArray *ARObj;
-
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *actInd;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 
 @end

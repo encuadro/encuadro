@@ -11,7 +11,7 @@
 #import "Isgl3d.h"
 #import "app0100AppDelegate.h"
 #import "HelloWorldView.h"
-
+#import "ObraCompletaViewController.h"
 #import "TouchVista.h"
 #import <Twitter/Twitter.h>
 
@@ -42,6 +42,10 @@ bool Artigas;
 @property (nonatomic, readwrite) NSNumber *ARidObra;
 @property (nonatomic, retain) NSString *ARType; //modelo, animacion, video
 @property (nonatomic, retain) NSString *ARObj;
+@property (nonatomic, retain) NSString *ARObj2;
+@property (nonatomic, retain) NSString *ARObj3;
+@property (nonatomic, retain) NSString *ARObj4;
+@property (nonatomic, retain) NSString *ARObj5;
 //@property (nonatomic, readwrite) bool *DosCubos;
 
 @property (nonatomic, retain) TouchVista *vistaTouch;
