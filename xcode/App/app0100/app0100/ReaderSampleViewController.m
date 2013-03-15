@@ -92,7 +92,6 @@
     self.string=symbol.data;
  NSLog(@"IMAGE SYMBOL");
     opcionAutor = self.string;
-    NSLog(@"%@",opcionAutor);
     if(opcionAutor != NULL){
         UIAlertView *alertWithOkButton;
         obtSalas *os = [[obtSalas alloc]initWithString:opcionAutor];
@@ -113,7 +112,6 @@
             resultImage.image = cuadroPhoto;
             [reader dismissViewControllerAnimated:YES completion:nil];
             opcionAutor = self.string;
-            NSLog(@"cambio?%@",opcionAutor);
         });
     }
 
@@ -212,10 +210,7 @@ NSLog(@"IMAGE ANTES");
         [audioPlayer stop];
         click=0;
         [start setTitle:@"Start" forState:UIControlStateNormal];
-        opcionAutor = self.string;
-        NSLog(@"%@",opcionAutor);
-        
-        
+        opcionAutor = self.string;        
     }
 }
 
@@ -223,11 +218,7 @@ NSLog(@"IMAGE ANTES");
 
     [super viewDidLoad];
     room=@"noroom";
-    
     //backround.transform = CGAffineTransformMakeScale(0.1,0.1);
-
-    
-    
     [UIView animateWithDuration:3
                           delay:0.6
                         options: UIViewAnimationCurveEaseOut
@@ -238,10 +229,6 @@ NSLog(@"IMAGE ANTES");
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
                      }];
-    
-    
-   
-    
     [UIView animateWithDuration:5 delay:3 options: UIViewAnimationCurveEaseOut animations:^{
         backround.alpha = 0.0;
     } completion:^(BOOL finished){

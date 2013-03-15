@@ -170,12 +170,39 @@
         NSArray *nombreFoto = [self.filePath componentsSeparatedByString:@"Get"];
         NSMutableString *nombreFoto2 = [[NSMutableString alloc] initWithString:@"Get"];
         [nombreFoto2 appendString:[nombreFoto objectAtIndex:1]];
-        NSLog(@"%@",nombreFoto2);
         NSString *foto = [NSString stringWithString:nombreFoto2];
-        NSLog(@"opAutor: %@",opcionAutor);
         obtObras *op = [[obtObras alloc]initNombreIma:foto yIdSala:opcionAutor];
 
     });
+}
+
+-(IBAction)tweet{
+    if([TWTweetComposeViewController canSendTweet]) {
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        UIImage *img = imagenView.image;
+        [controller addImage:img];
+        [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @encuadroAR"];
+        //UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        //[self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        //UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        //[controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];
+        //UIGraphicsEndImageContext();
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            [self dismissModalViewControllerAnimated:YES];
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    NSLog(@"Twitter Result: cancelled");
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    NSLog(@"Twitter Result: sent");
+                    break;
+                default:
+                     NSLog(@"Twitter Result: default");
+                    break;
+            }
+        };
+        [self presentModalViewController:controller animated:YES];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

@@ -19,7 +19,7 @@
 @synthesize detalle = _detalle;
 @synthesize texto = _texto;
 @synthesize audioPlayer = _audioPlayer;
-@synthesize start, AR;
+@synthesize start, AR, tw;
 @synthesize mano1;
 @synthesize mano4;
 @synthesize upsi;
@@ -245,33 +245,59 @@
     }
     else{
         if (click==0 || justLoaded) {
-        // audioPlayer=nil;
-        justLoaded=false;
-        click=1;
-            NSLog(@"%@",[descripcionObra objectAtIndex:4]);
-        NSString *estring=[descripcionObra objectAtIndex:4];
-        //NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
-       NSURL *url = [NSURL fileURLWithPath:estring];
-        //  NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
-       // NSURL *url =[NSURL fileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
-       // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"]];
-                
-        NSError *error;
-        self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-        self.audioPlayer.numberOfLoops=0;
-        [self.audioPlayer play];
-        
-        [self.start setTitle:@"Stop"/* forState:UIControlStateNormal*/];
-        
-    }else {
-        //audioPlayer=nil;
-        [self.audioPlayer stop];
-        click=0;
-        [self.start setTitle:@"Audio"/* forState:UIControlStateNormal*/];
+            // audioPlayer=nil;
+            justLoaded=false;
+            click=1;
+            NSString *estring=[descripcionObra objectAtIndex:4];
+            //NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
+            NSURL *url = [NSURL fileURLWithPath:estring];
+            //  NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
+            // NSURL *url =[NSURL fileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
+            // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"]];
+            NSError *error;
+            self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+            self.audioPlayer.numberOfLoops=0;
+            [self.audioPlayer play];
+            [self.start setTitle:@"Stop"/* forState:UIControlStateNormal*/];
+        }else {
+            //audioPlayer=nil;
+            [self.audioPlayer stop];
+            click=0;
+            [self.start setTitle:@"Audio"/* forState:UIControlStateNormal*/];
     }
     }
     
 }
+
+-(IBAction)tweet{
+    if([TWTweetComposeViewController canSendTweet]) {
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        UIImage *img = self.imagenObra.image;
+        [controller addImage:img];
+        [controller setInitialText:[NSString stringWithFormat:@"Arte Interactivo. Tweeting desde App! @encuadroAR #%@ #%@", [descripcionObra objectAtIndex:0], [descripcionObra objectAtIndex:1]]];
+        //UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        //[self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        //UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        //[controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];
+        //UIGraphicsEndImageContext();
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            [self dismissModalViewControllerAnimated:YES];
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    NSLog(@"Twitter Result: cancelled");
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    NSLog(@"Twitter Result: sent");
+                    break;
+                default:
+                    NSLog(@"Twitter Result: default");
+                    break;
+            }
+        };
+        [self presentModalViewController:controller animated:YES];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -304,6 +330,7 @@
             [self.detalle setHidden:NO];
             [self.start setEnabled:YES];
             [self.AR setEnabled:YES];
+            [self.tw setEnabled:YES];
             if(![[descripcionObra objectAtIndex:6] isEqualToString:@"null"])
                 [self.texto setHidden:NO];
         }

@@ -31,9 +31,9 @@
 }
 
 -(IBAction)TWeet:(id)sender{
-    
+    NSLog(@"hello");
     if([TWTweetComposeViewController canSendTweet]) {
-        
+        NSLog(@"entro tweet");
         TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
         [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @etchart_martin, @juanibraun, @PFloresGuridi, @MauriGoNappa, @juan_cardelino"];
         UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
@@ -62,10 +62,7 @@
         };
         
         [self presentModalViewController:controller animated:YES];
-    }
-    
-    
-    
+   }    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

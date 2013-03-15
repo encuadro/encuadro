@@ -28,6 +28,7 @@ NSMutableArray *descripcionObra;
     IBOutlet UIActivityIndicatorView *actInd;
     IBOutlet UIBarButtonItem *start;
     IBOutlet UIBarButtonItem *AR;
+    IBOutlet UIBarButtonItem *tw;
 }
 @property (retain, nonatomic) IBOutlet UILabel *autor;
 @property (retain, nonatomic) IBOutlet UILabel *obra;
@@ -42,7 +43,7 @@ NSMutableArray *descripcionObra;
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *start;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *AR;
-
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *tw;
 - (IBAction) play;
-
+-(IBAction)tweet;
 @end

@@ -463,7 +463,7 @@ UIImageOrientation orientation;
     
     
     
-    NSBundle *bundle = [NSBundle mainBundle];
+    //NSBundle *bundle = [NSBundle mainBundle];
     //NSString *moviePath = [bundle pathForResource:self.videoName ofType:@"mov"];
     NSString *moviePath = self.videoName;
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
@@ -475,7 +475,6 @@ UIImageOrientation orientation;
     theMovie.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
-    
     [self.view addSubview:theMovie.view];
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
@@ -483,7 +482,6 @@ UIImageOrientation orientation;
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
     [theMovie play];
-    
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

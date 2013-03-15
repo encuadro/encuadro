@@ -77,7 +77,7 @@
 		NSString * extension = [path pathExtension];
 		NSString * fileName = [path stringByDeletingPathExtension];
 		NSFileManager *fileManager = [NSFileManager defaultManager];
-        if ([fileManager fileExistsAtPath:path]){
+        if (![fileManager fileExistsAtPath:path]){
 		/*if (![[NSBundle mainBundle] pathForResource:fileName ofType:extension]) {*/
 			NSLog(@"iSGL3D : Error : Isgl3dPODImporter : POD file %@ does not exist.", path);
 		}

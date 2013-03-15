@@ -120,31 +120,26 @@
                 else{
                     if(f == 8){
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        //NSString *ruta = @"/private/var/mobile/Applications/84E285EB-8337-47B5-A63E-96226A8AB431/anim1.pod";
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f] ytipo:@"obras" yId:[datos objectAtIndex:0] ytipo2:@"animacion"];
                         self.anim1 = ruta;
                     }
                     if(f==9){
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        //NSString *ruta = @"/private/var/mobile/Applications/84E285EB-8337-47B5-A63E-96226A8AB431/anim2.pod";
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f] ytipo:@"obras" yId:[datos objectAtIndex:0] ytipo2:@"animacion"];
                         self.anim2 = ruta;
                     }
                     if(f==10){
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        //NSString *ruta = @"/private/var/mobile/Applications/84E285EB-8337-47B5-A63E-96226A8AB431/anim3.pod";
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f] ytipo:@"obras" yId:[datos objectAtIndex:0] ytipo2:@"animacion"];
                         self.anim3 = ruta;
                     }
                     if(f==11){
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        //NSString *ruta = @"/private/var/mobile/Applications/84E285EB-8337-47B5-A63E-96226A8AB431/anim4.pod";
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f] ytipo:@"obras" yId:[datos objectAtIndex:0] ytipo2:@"animacion"];
                         self.anim4 = ruta;
                     }
                     if(f==12){
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        //NSString *ruta = @"/private/var/mobile/Applications/84E285EB-8337-47B5-A63E-96226A8AB431/anim5.pod";
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f] ytipo:@"obras" yId:[datos objectAtIndex:0] ytipo2:@"animacion"];
                         self.anim5 = ruta;
                     }
@@ -158,12 +153,11 @@
 -(obtObras*)initNombreIma:(NSString *)nombreImagen yIdSala:(NSString*)idSala{
     self.idObra = [[NSMutableString alloc] init];
     conn *c = [[conn alloc]initConFuncion:@"getNombreObra" NombreParametro:@"nombre_archivo" yNombreIma:nombreImagen yNombreSegParam:@"id_sala" yIdSala:idSala];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 30 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-        self.idObra = [c getSoap];
-        NSLog(@"idObra: %@",self.idObra);
-        //conn *c2 = [[conn alloc]initconFunc:@"getNombreObraApartirDelID" yNomParam:@"id_obra" yParam:self.idObra];
-        
-    });
+    //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
+    //NSMutableString *ms = [c getSoap];
+    //conn *c2 = [[conn alloc]initconFunc:@"terminoDescriptor" yNomParam:@"id_descriptor" yParam:ms];
+    
+    //conn *c2 = [[conn alloc]initconFunc:@"getNombreObraApartirDelID" yNomParam:@"id_obra" yParam:self.idObra];
     return self;
 }
 

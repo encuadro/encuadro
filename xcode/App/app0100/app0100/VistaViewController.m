@@ -82,15 +82,7 @@
 
 
 -(void) desplegarVideoVista{
-    
-    
-    
-    
     /////////viendo commit
-    
-    
-    
-    
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
@@ -102,8 +94,6 @@
     self.theMovieVista.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     self.theMovieVista.scalingMode=MPMovieScalingModeFill;
-    
-    
     [self.view addSubview:self.theMovieVista.view];
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
@@ -111,18 +101,12 @@
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
     [self.theMovieVista play];
-    
-    
 }
 
 
 
 //- (IBAction)hacerRender:(id)sender
 - (void) hacerRender{
-    
-    
-    
-    
     NSLog(@"HACER RENDER VISTA");
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;

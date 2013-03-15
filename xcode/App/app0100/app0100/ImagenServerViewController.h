@@ -35,4 +35,5 @@ NSString *returnString;
 //@property (retain, nonatomic) IBOutlet UIView *vista;
 @property (retain, nonatomic) IBOutlet UILabel *mensaje;
 -(IBAction)subir:(id)sender;
+-(IBAction)tweet;
 @end
