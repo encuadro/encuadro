@@ -11,6 +11,7 @@
 enum{
     kSendBufferSize = 32768
 };
+BOOL finiteUpload;
 @interface FTPUpload : NSObject{
     NSString *filepath;
     NSOutputStream *fileStream;

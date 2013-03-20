@@ -35,9 +35,10 @@ NSString *cad;
 @property (assign) IBOutlet UIImageView *backround;
 @property (nonatomic, retain) IBOutlet UILabel *nombreSala;
 @property (nonatomic,retain) NSString *string;
-
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *identObra;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *tweet;
 - (IBAction) scanButtonTapped;
 //- (IBAction) enCuadroSite: (id) sender;  
 - (IBAction) play;
-
+-(IBAction)tweeti;
 @end

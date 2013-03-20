@@ -304,38 +304,37 @@
     NSLog(@"viewWILL APPEAR");
     self.vistaTouch.touchman=false;
     [actInd startAnimating];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-        NSMutableString *autorNombre = [[NSMutableString alloc] init];
-        [autorNombre appendString:[descripcionObra objectAtIndex:0]];
-        [autorNombre appendString:@" - "];
-        [autorNombre appendString:[descripcionObra objectAtIndex:1]];
-        self.autor.text=autorNombre;
-        self.obra.text=[descripcionObra objectAtIndex:1];
-        UIImage *imagen =  [UIImage imageWithContentsOfFile:[descripcionObra objectAtIndex:2]];
-        self.imagenObra.image=imagen;
-        self.detalle.text = [descripcionObra objectAtIndex:3];
-        [descripcionObra addObject:[oo getAudio]];
-        [descripcionObra addObject:[oo getVideo]];
-        [descripcionObra addObject:[oo getTexto]];
-        self.texto.text = [descripcionObra objectAtIndex:6];
-        [descripcionObra addObject:[oo getModelo]];
-        [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:0]];
-        [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:1]];
-        [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:2]];
-        [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:3]];
-        [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:4]];
-        if([descripcionObra objectAtIndex:12] != NULL){
-            [actInd stopAnimating];
-            [self.autor setHidden:NO];
-            [self.detalle setHidden:NO];
-            [self.start setEnabled:YES];
-            [self.AR setEnabled:YES];
-            [self.tw setEnabled:YES];
-            if(![[descripcionObra objectAtIndex:6] isEqualToString:@"null"])
-                [self.texto setHidden:NO];
-        }
-    });
-
+    NSMutableString *autorNombre = [[NSMutableString alloc] init];
+    [autorNombre appendString:[descripcionObra objectAtIndex:0]];
+    [autorNombre appendString:@" - "];
+    [autorNombre appendString:[descripcionObra objectAtIndex:1]];
+    self.autor.text=autorNombre;
+    self.obra.text=[descripcionObra objectAtIndex:1];
+    UIImage *imagen =  [UIImage imageWithContentsOfFile:[descripcionObra objectAtIndex:2]];
+    self.imagenObra.image=imagen;
+    self.detalle.text = [descripcionObra objectAtIndex:3];
+    [descripcionObra addObject:[oo getAudio]];
+    [descripcionObra addObject:[oo getVideo]];
+    [descripcionObra addObject:[oo getTexto]];
+    self.texto.text = [descripcionObra objectAtIndex:6];
+    [descripcionObra addObject:[oo getModelo]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:0]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:1]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:2]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:3]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:4]];
+    if([descripcionObra objectAtIndex:12] != NULL){
+        [actInd stopAnimating];
+        [self.imagenObra setHidden:NO];
+        [self.autor setHidden:NO];
+        [self.autor setTextAlignment:UITextAlignmentCenter];
+        [self.detalle setHidden:NO];
+        [self.start setEnabled:YES];
+        [self.AR setEnabled:YES];
+        [self.tw setEnabled:YES];
+        if(![[descripcionObra objectAtIndex:6] isEqualToString:@"null"])
+            [self.texto setHidden:NO];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated

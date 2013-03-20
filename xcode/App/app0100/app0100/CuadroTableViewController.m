@@ -37,7 +37,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    /*
+        /*
      if (opcionAutor==1) {//1--> Blanes
         
         NSLog(@"OPCION AUTOR ES 1---BLANES");
@@ -511,16 +511,18 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [actInd startAnimating];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-        self.cuadroObra = [oo getNombre];
-        self.cuadroAutor = [oo getAutor];
-        self.cuadroDescripcion = [oo getDesc];
-        self.cuadroImages = [oo getImagen];
-        if(self.cuadroObra != NULL){
-            [actInd stopAnimating];
-            [self.tableView reloadData];
-        }
-    });
+    while(!finOb) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    self.cuadroObra = [oo getNombre];
+    self.cuadroAutor = [oo getAutor];
+    self.cuadroDescripcion = [oo getDesc];
+    self.cuadroImages = [oo getImagen];
+    if(self.cuadroObra != NULL){
+        [actInd stopAnimating];
+        [self.tableView reloadData];
+    }
+
 }
 
 - (void)viewDidUnload
@@ -624,6 +626,7 @@
 {
     if ([[segue identifier] isEqualToString:@"Detalle"])
     {
+        [actInd startAnimating];
         manual=true;        
         NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
         NSString *nombre = [[oo getNombre] objectAtIndex:[myIndexPath row]];
@@ -636,6 +639,7 @@
         [descripcionObra addObject:imagen];
         [descripcionObra addObject:descripcion];
         oo = [[obtObras alloc] initConNombreObraParaContenidos:nombre];
+        [actInd stopAnimating];
 //        obracompletaViewController.descripcionObra = [[NSArray alloc]
 //                                               initWithObjects: 
 //                                            [self.cuadroAutor objectAtIndex:[myIndexPath row]],

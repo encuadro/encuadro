@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "NetworkManager.h"
 #define kContrayIp @":12345678@10.0.2.109"
+BOOL finiteFTP;
 @interface FTP : NSObject{
     NSURLConnection *connection;
     NSString *filepath;

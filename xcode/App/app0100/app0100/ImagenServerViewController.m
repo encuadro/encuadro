@@ -19,10 +19,9 @@
 @synthesize read =_read;
 @synthesize image = _image;
 @synthesize filePath = _filePath;
-@synthesize activity;
 @synthesize mensaje;
 
-@synthesize imagenView,tomarFoto;
+@synthesize imagenView,tomarFoto,enviar,twitt, load;
 
 -(IBAction)tomarFoto:(id)sender{
     
@@ -162,18 +161,30 @@
     
 }
 
--(IBAction)subir:(id)sender{
+-(void)subir{
     NSLog(@"%@", self.filePath);
     NSLog(@"%@",opcionAutor);
     FTPUpload *fu = [[FTPUpload alloc]initWithString:self.filePath];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-        NSArray *nombreFoto = [self.filePath componentsSeparatedByString:@"Get"];
-        NSMutableString *nombreFoto2 = [[NSMutableString alloc] initWithString:@"Get"];
-        [nombreFoto2 appendString:[nombreFoto objectAtIndex:1]];
-        NSString *foto = [NSString stringWithString:nombreFoto2];
-        obtObras *op = [[obtObras alloc]initNombreIma:foto yIdSala:opcionAutor];
-
-    });
+    while(!finiteUpload) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    NSArray *nombreFoto = [self.filePath componentsSeparatedByString:@"Get"];
+    NSMutableString *nombreFoto2 = [[NSMutableString alloc] initWithString:@"Get"];
+    [nombreFoto2 appendString:[nombreFoto objectAtIndex:1]];
+    NSString *foto = [NSString stringWithString:nombreFoto2];
+    oo = [[obtObras alloc]initNombreIma:foto yIdSala:opcionAutor];
+    while(!finOb) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    NSString *nombre = [[oo getNombre] objectAtIndex:0];
+    NSString *autor = [[oo getAutor] objectAtIndex:0];
+    NSString *descripcion = [[oo getDesc] objectAtIndex:0];
+    NSString *imagen = [[oo getImagen] objectAtIndex:0];
+    descripcionObra = [[NSMutableArray alloc] init];
+    [descripcionObra addObject:autor];
+    [descripcionObra addObject:nombre];
+    [descripcionObra addObject:imagen];
+    [descripcionObra addObject:descripcion];
 }
 
 -(IBAction)tweet{
@@ -182,11 +193,6 @@
         UIImage *img = imagenView.image;
         [controller addImage:img];
         [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @encuadroAR"];
-        //UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
-        //[self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-        //UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
-        //[controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];
-        //UIGraphicsEndImageContext();
         controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
             [self dismissModalViewControllerAnimated:YES];
             switch (result) {
@@ -208,8 +214,23 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
-   /*
-    
+    //[self performSelectorInBackground:@selector(animate:) withObject:nil];
+    [activity startAnimating];
+    [load setHidden:NO];
+    [imagenView setHidden:YES];
+    [tomarFoto setHidden:YES];
+    [enviar setHidden:YES];
+    [twitt setEnabled:NO];
+    [self subir];
+    manual=false;
+    ObraCompletaViewController *obracompletaViewController = [segue destinationViewController];
+    [twitt setEnabled:YES];
+    [activity stopAnimating];
+    [load setHidden:YES];
+    [imagenView setHidden:NO];
+    [tomarFoto setHidden:NO];
+    [enviar setHidden:NO];
+    /*
     if ([[segue identifier] isEqualToString:@"Detalle2"])
     {
         
@@ -293,10 +314,6 @@
     //[self presentModalViewController:picker animated:YES];
 	[self presentViewController:picker animated:YES completion:NO];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [self.view addSubview:activity]; // spinner is not visible until started
-    activity.center = CGPointMake(160, 100);
     NSLog(@"%@",opcionAutor);
 }
 

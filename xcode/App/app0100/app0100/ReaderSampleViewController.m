@@ -9,7 +9,7 @@
 
 @implementation ReaderSampleViewController
 
-@synthesize resultImage, resultText,site, audioPlayer,start, backround, nombreSala;
+@synthesize resultImage, resultText,site, audioPlayer,start, backround, nombreSala,identObra, tweet;
 @synthesize string=_string;
 - (IBAction) scanButtonTapped
 {
@@ -64,6 +64,30 @@
 
 }
 
+-(IBAction)tweeti{
+    if([TWTweetComposeViewController canSendTweet]) {
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        UIImage *img = resultImage.image;
+        [controller addImage:img];
+        [controller setInitialText:[NSString stringWithFormat:@"Arte Interactivo. Tweet desde app! En sala #%@ @encuadroAR",  self.nombreSala.text]];
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            [self dismissModalViewControllerAnimated:YES];
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    NSLog(@"Twitter Result: cancelled");
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    NSLog(@"Twitter Result: sent");
+                    break;
+                default:
+                    NSLog(@"Twitter Result: default");
+                    break;
+            }
+        };
+        [self presentModalViewController:controller animated:YES];
+    }
+
+}
 //- (IBAction) enCuadroSite:(id)sender { 
 //    
 //    NSURL *url = [ [ NSURL alloc ] initWithString:site];  
@@ -95,24 +119,28 @@
     if(opcionAutor != NULL){
         UIAlertView *alertWithOkButton;
         obtSalas *os = [[obtSalas alloc]initWithString:opcionAutor];
+        while(!finSal) {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
         alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"
                                                        message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertWithOkButton show];
-        [alertWithOkButton release];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 2  * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-            NSMutableArray *obtNombre = [os getNom];
-            NSMutableArray *obtDesc = [os getDesc];
-            NSMutableArray *obtImagen = [os getIma];
-            resultText.text = [obtDesc objectAtIndex:0];
-            room = [obtNombre objectAtIndex:0];
-            cad = [obtImagen objectAtIndex:0];
-            self.nombreSala.text = [obtNombre objectAtIndex:0];
-            [self.nombreSala setHidden:NO];
-            UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:cad];
-            resultImage.image = cuadroPhoto;
-            [reader dismissViewControllerAnimated:YES completion:nil];
-            opcionAutor = self.string;
-        });
+        //[alertWithOkButton release];
+        [identObra setEnabled:YES];
+        [tweet setEnabled:YES];
+        NSMutableArray *obtNombre = [os getNom];
+        NSMutableArray *obtDesc = [os getDesc];
+        NSMutableArray *obtImagen = [os getIma];
+        resultText.text = [obtDesc objectAtIndex:0];
+        [resultText setHidden:NO];
+        room = [obtNombre objectAtIndex:0];
+        cad = [obtImagen objectAtIndex:0];
+        self.nombreSala.text = [obtNombre objectAtIndex:0];
+        [self.nombreSala setHidden:NO];
+        UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:cad];
+        resultImage.image = cuadroPhoto;
+        [reader dismissViewControllerAnimated:YES completion:nil];
+        opcionAutor = self.string;
     }
 
    /* if ([string rangeOfString:@"BLANES"].location != NSNotFound) {

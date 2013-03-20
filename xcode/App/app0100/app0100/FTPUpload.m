@@ -19,6 +19,7 @@
 
 -(FTPUpload*)initWithString:(NSString*)file{
     NSLog(@"FTPUpload");
+    finiteUpload = NO;
     [self startSend:file];
     return self;
 }
@@ -33,6 +34,7 @@
 {
     if (statusString == nil) {
         NSLog(@"Put Succedeed");
+        finiteUpload = YES;
     }
     [[NetworkManager sharedInstance] didStopNetworkOperation];
 }

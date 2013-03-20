@@ -17,23 +17,24 @@
 NSString *returnString;
 @interface ImagenServerViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
-    
+    IBOutlet UIActivityIndicatorView *activity;
     UIImageView *imagenView;
     UIButton *tomarFoto;
-    
-    
+
 }
 
 
 @property (nonatomic,retain)IBOutlet UIImageView *imagenView;
 @property (nonatomic,retain)IBOutlet UIButton *tomarFoto;
+@property (nonatomic, retain)IBOutlet UIButton *enviar;
+@property (nonatomic, retain)IBOutlet UIBarButtonItem *twitt;
 -(IBAction)tomarFoto:(id)sender;
 
 @property(nonatomic,retain)NSString *filePath;
-@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *activity;
-
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activity;
+@property (nonatomic, retain) IBOutlet UILabel *load;
 //@property (retain, nonatomic) IBOutlet UIView *vista;
 @property (retain, nonatomic) IBOutlet UILabel *mensaje;
--(IBAction)subir:(id)sender;
+-(void)subir;
 -(IBAction)tweet;
 @end

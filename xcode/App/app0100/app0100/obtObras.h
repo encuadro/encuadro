@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-
+BOOL finOb;
 @interface obtObras : NSObject{
     
 }
@@ -31,6 +31,7 @@
 -(obtObras*)initConId:(NSString*)idSala;
 -(obtObras*)initConNombreObraParaContenidos:(NSString*)idObra;
 -(obtObras*)initNombreIma:(NSString*)nombreImagen yIdSala:(NSString*)idSala;
+-(void)obtDatosObraConNombreObra:(NSString*)nombreObra;
 -(NSMutableArray*)getNombre;
 -(NSMutableArray*)getAutor;
 -(NSMutableArray*)getDesc;
@@ -40,5 +41,5 @@
 -(NSString*)getVideo;
 -(NSString*)getModelo;
 -(NSString*)getTexto;
--(NSMutableArray*)getAnimaciones;
+-(NSMutableArray*)getAnimaciones; 
 @end

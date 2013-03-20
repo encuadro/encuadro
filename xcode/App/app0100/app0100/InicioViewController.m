@@ -114,7 +114,7 @@
         click=0;
         [start setTitle:@"Instrucciones" forState:UIControlStateNormal];
         o = [[obtSalas alloc]init];
-     // }
+// }
 }
 
 

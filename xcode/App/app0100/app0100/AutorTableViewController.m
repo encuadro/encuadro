@@ -34,7 +34,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-}
+    }
 
 - (void)viewDidUnload
 {
@@ -92,20 +92,27 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [actInd startAnimating];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 4 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
-        self.autorNombre = [o getNom];
-        self.autorDescripcion = [o getDesc];
-        self.autorImagen = [o getIma];
-        if(self.autorNombre != NULL){
-            [actInd stopAnimating];
-            [self.tableView reloadData];
-        }
-    });
-    
+    while(!finSal) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    self.autorNombre = [o getNom];
+    self.autorDescripcion = [o getDesc];
+    self.autorImagen = [o getIma];
+    if(self.autorNombre != NULL){
+        [actInd stopAnimating];
+        [self.tableView reloadData];
+    }
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSLog(@"toque");
+    [actInd startAnimating];
+    NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+    NSMutableArray *salas = [o getSalas];
+    opcionAutor = [salas objectAtIndex:[myIndexPath row]];
+    oo = [[obtObras alloc] initConId:opcionAutor];
+    [actInd stopAnimating];
     if ([[segue identifier] isEqualToString:@"ObrasAutor"])
     {
         
@@ -155,14 +162,10 @@
 }
 */
 
-#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
-    NSMutableArray *salas = [o getSalas];
-    opcionAutor = [salas objectAtIndex:[myIndexPath row]];
-    oo = [[obtObras alloc] initConId:opcionAutor];
+    
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];

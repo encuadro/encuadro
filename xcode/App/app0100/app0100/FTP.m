@@ -14,6 +14,7 @@
 @synthesize fileStream    = _fileStream;
 @synthesize anduvo = _anduvo;
 -(FTP*)initWithString:(NSString *)ruta yotroString:(NSString *)nombreDato ytipo:(NSString *)tipo yId:(NSString *)ide ytipo2:(NSString *)tipo2{
+    finiteFTP = NO;
     BOOL                success;
     NSURL *             url;
     NSURLRequest *      request;
@@ -63,6 +64,7 @@
         assert(self.filePath != nil);
         //imageview.image = [UIImage imageWithContentsOfFile:self.filePath];
         statusString = @"GET succeeded";
+        finiteFTP = YES;
     }
     //self.statusLabel.text = statusString;
     [[NetworkManager sharedInstance] didStopNetworkOperation];

@@ -9,7 +9,9 @@
 #import "conn.h"
 
 @implementation conn
--(conn*)initconFunc:(NSString *)string{
+
+-(conn *)initconFunc:(NSString *)string{
+    finish = NO;
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -18,7 +20,6 @@
                              "</%@>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",string,string,string];
-	//NSLog(@"%@",soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -30,20 +31,20 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-	NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
         NSLog(@"entro");
-        
     }
 	else{
 		NSLog(@"no entro");
     }
     return self;
-    
 }
 
+
 -(conn*)initconFunc:(NSString *)string yNomParam:(NSString *)string2 yParam:(NSString*)inti{
+    finish = NO;
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -53,7 +54,6 @@
                              "</%@>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",string,string,string2,inti,string2,string];
-	//NSLog(@"%@",soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -78,6 +78,7 @@
 }
 
 -(conn*)initConFuncion:(NSString *)nomFuncion NombreParametro:(NSString *)nombreParametro yNombreIma:(NSString *)nombreDato yNombreSegParam:(NSString *)nombreParam2 yIdSala:(NSString*)nombreDato2{
+    finish = NO;
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -88,7 +89,6 @@
                              "</%@>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",nomFuncion,nomFuncion,nombreParam2,nombreDato2,nombreParam2,nombreParametro,nombreDato,nombreParametro,nomFuncion];
-	//NSLog(@"%@",soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -105,13 +105,13 @@
     if( theConnection ){
         webData = [[NSMutableData data] retain];
         NSLog(@"entro");
-        
     }
 	else{
 		NSLog(@"no entro");
     }
     return self;
 }
+
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response{
 	[webData setLength: 0];
@@ -134,12 +134,15 @@
 	if (xmlParser){
         [xmlParser release];
     }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
+                                             (unsigned long)NULL), ^(void) {
     xmlParser = [[NSXMLParser alloc] initWithData: webData];
     [xmlParser setDelegate: self];
     [xmlParser setShouldResolveExternalEntities:YES];
-    [xmlParser parse];
+    [xmlParser  parse];
 	[connection release];
 	[webData release];
+    });
 }
 
 -(void) parser:(NSXMLParser *) parser didStartElement:(NSString *) elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *) qName attributes:(NSDictionary *) attributeDict {
@@ -159,6 +162,7 @@
 
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
     if ([elementName isEqualToString:@"return"]){
+        finish = YES;
         //---displays the country---
         //[soapResults setString:@""];
         //elementFound = FALSE;
