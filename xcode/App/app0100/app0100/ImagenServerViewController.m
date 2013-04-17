@@ -42,7 +42,7 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
     self.filePath = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-    [webData writeToFile:self.filePath atomically:YES];
+    [webData  writeToFile:self.filePath atomically:YES];
     NSLog(@"%@",opcionAutor);
 }
 

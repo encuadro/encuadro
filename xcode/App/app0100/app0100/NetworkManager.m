@@ -164,6 +164,7 @@
     // Calculate paths to both the original file and the expanded file.
     
     originalFilePath = [[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"TestImage%zu", (size_t) imageNumber] ofType:@"png"];
+    
     assert(originalFilePath != nil);
     
     bigFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"TestImage%zu.png", (size_t) imageNumber]];

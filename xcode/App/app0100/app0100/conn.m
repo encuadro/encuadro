@@ -12,6 +12,7 @@
 
 -(conn *)initconFunc:(NSString *)string{
     finish = NO;
+    worked = NO;
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -31,6 +32,7 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+    [theRequest setTimeoutInterval:50];
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
@@ -45,6 +47,7 @@
 
 -(conn*)initconFunc:(NSString *)string yNomParam:(NSString *)string2 yParam:(NSString*)inti{
     finish = NO;
+    worked = NO;
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -65,6 +68,7 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+    [theRequest setTimeoutInterval:50];
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
@@ -79,6 +83,7 @@
 
 -(conn*)initConFuncion:(NSString *)nomFuncion NombreParametro:(NSString *)nombreParametro yNombreIma:(NSString *)nombreDato yNombreSegParam:(NSString *)nombreParam2 yIdSala:(NSString*)nombreDato2{
     finish = NO;
+    worked = NO;
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -100,7 +105,7 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-    [theRequest setTimeoutInterval:80];
+    [theRequest setTimeoutInterval:50];
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
@@ -123,9 +128,12 @@
 
 -(void)connection:(NSURLConnection *) connection didFailWithError:(NSError *)error{
 	NSLog(@"%@", error);
+    worked = NO;
+    finish = YES;
 	[connection release];
 	[webData release];
 }
+
 
 -(conn *)connectionDidFinishLoading:(NSURLConnection *)connection{
 	NSLog(@"DONE. Received Bytes: %d", [webData length]);
@@ -134,15 +142,12 @@
 	if (xmlParser){
         [xmlParser release];
     }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,
-                                             (unsigned long)NULL), ^(void) {
     xmlParser = [[NSXMLParser alloc] initWithData: webData];
     [xmlParser setDelegate: self];
     [xmlParser setShouldResolveExternalEntities:YES];
     [xmlParser  parse];
 	[connection release];
 	[webData release];
-    });
 }
 
 -(void) parser:(NSXMLParser *) parser didStartElement:(NSString *) elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *) qName attributes:(NSDictionary *) attributeDict {
@@ -163,6 +168,7 @@
 -(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName{
     if ([elementName isEqualToString:@"return"]){
         finish = YES;
+        worked = YES;
         //---displays the country---
         //[soapResults setString:@""];
         //elementFound = FALSE;

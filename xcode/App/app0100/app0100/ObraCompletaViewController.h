@@ -44,6 +44,7 @@ NSMutableArray *descripcionObra;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *start;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *AR;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *tw;
+@property (nonatomic, retain) NSMutableArray *descripcionObra;
 - (IBAction) play;
 -(IBAction)tweet;
 @end

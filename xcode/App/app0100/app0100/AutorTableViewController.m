@@ -21,7 +21,7 @@
 @synthesize autorImagen = _autorImagen;
 @synthesize autorNombre = _autorNombre;
 @synthesize autorDescripcion = _autorDescripcion;
-
+@synthesize tableView, load;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -31,10 +31,9 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-    }
+}
 
 - (void)viewDidUnload
 {
@@ -90,36 +89,48 @@
     return cell;
 }
 
+
 -(void)viewWillAppear:(BOOL)animated{
     [actInd startAnimating];
+    o = [[obtSalas alloc]init];
     while(!finSal) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
-    self.autorNombre = [o getNom];
-    self.autorDescripcion = [o getDesc];
-    self.autorImagen = [o getIma];
-    if(self.autorNombre != NULL){
-        [actInd stopAnimating];
-        [self.tableView reloadData];
+    if([[[o getNom] objectAtIndex:0] isEqualToString:@"-1"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Ocurrió un error al obtener los datos o no existen salas." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else{
+        self.autorNombre = [o getNom];
+        self.autorDescripcion = [o getDesc];
+        self.autorImagen = [o getIma];
+        if(self.autorNombre != NULL){
+            [actInd stopAnimating];
+            [self.tableView reloadData];
+        }
     }
 }
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    NSLog(@"toque");
-    [actInd startAnimating];
-    NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
-    NSMutableArray *salas = [o getSalas];
-    opcionAutor = [salas objectAtIndex:[myIndexPath row]];
-    oo = [[obtObras alloc] initConId:opcionAutor];
-    [actInd stopAnimating];
-    if ([[segue identifier] isEqualToString:@"ObrasAutor"])
-    {
-        
-      
-        
-
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok"]){
+        [self.navigationController popViewControllerAnimated:YES];
     }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"ObrasAutor"]){
+        NSLog(@"toque");
+        [actInd startAnimating];
+        [load setHidden:NO];
+        [load setTextAlignment:UITextAlignmentCenter];
+        [tableView setUserInteractionEnabled:NO];
+        NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+        NSMutableArray *salas = [o getSalas];
+        opcionAutor = [salas objectAtIndex:[myIndexPath row]];
+        [tableView setUserInteractionEnabled:YES];
+        [load setHidden:YES];
+        [actInd stopAnimating];
+      }
 }
 
 

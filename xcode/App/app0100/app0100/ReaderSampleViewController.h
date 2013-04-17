@@ -37,6 +37,7 @@ NSString *cad;
 @property (nonatomic,retain) NSString *string;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *identObra;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *tweet;
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *actInd;
 - (IBAction) scanButtonTapped;
 //- (IBAction) enCuadroSite: (id) sender;  
 - (IBAction) play;

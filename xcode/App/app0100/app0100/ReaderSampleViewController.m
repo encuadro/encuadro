@@ -9,7 +9,7 @@
 
 @implementation ReaderSampleViewController
 
-@synthesize resultImage, resultText,site, audioPlayer,start, backround, nombreSala,identObra, tweet;
+@synthesize resultImage, resultText,site, audioPlayer,start, backround, nombreSala,identObra, tweet, actInd;
 @synthesize string=_string;
 - (IBAction) scanButtonTapped
 {
@@ -117,30 +117,38 @@
  NSLog(@"IMAGE SYMBOL");
     opcionAutor = self.string;
     if(opcionAutor != NULL){
-        UIAlertView *alertWithOkButton;
+        //UIAlertView *alertWithOkButton;
+        [actInd startAnimating];
         obtSalas *os = [[obtSalas alloc]initWithString:opcionAutor];
         while(!finSal) {
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
         }
-        alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"
-                                                       message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertWithOkButton show];
+        /*if([[[os getNom] objectAtIndex:0] isEqualToString:@""]){
+            UIAlertView *alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"El id del QR detectado no es una sala disponible." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertWithOkButton show];
+            [alertWithOkButton release];
+        }
+        else{*/
+        //alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"                                                       message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        //[alertWithOkButton show];
         //[alertWithOkButton release];
-        [identObra setEnabled:YES];
-        [tweet setEnabled:YES];
-        NSMutableArray *obtNombre = [os getNom];
-        NSMutableArray *obtDesc = [os getDesc];
-        NSMutableArray *obtImagen = [os getIma];
-        resultText.text = [obtDesc objectAtIndex:0];
-        [resultText setHidden:NO];
-        room = [obtNombre objectAtIndex:0];
-        cad = [obtImagen objectAtIndex:0];
-        self.nombreSala.text = [obtNombre objectAtIndex:0];
-        [self.nombreSala setHidden:NO];
-        UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:cad];
-        resultImage.image = cuadroPhoto;
-        [reader dismissViewControllerAnimated:YES completion:nil];
-        opcionAutor = self.string;
+            [identObra setEnabled:YES];
+            [tweet setEnabled:YES];
+            NSMutableArray *obtNombre = [os getNom];
+            NSMutableArray *obtDesc = [os getDesc];
+            NSMutableArray *obtImagen = [os getIma];
+            resultText.text = [obtDesc objectAtIndex:0];
+            [resultText setHidden:NO];
+            room = [obtNombre objectAtIndex:0];
+            cad = [obtImagen objectAtIndex:0];
+            self.nombreSala.text = [obtNombre objectAtIndex:0];
+            [self.nombreSala setHidden:NO];
+            UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:cad];
+            resultImage.image = cuadroPhoto;
+            [reader dismissViewControllerAnimated:YES completion:nil];
+            opcionAutor = self.string;
+            [actInd stopAnimating];
+        //}
     }
 
    /* if ([string rangeOfString:@"BLANES"].location != NSNotFound) {

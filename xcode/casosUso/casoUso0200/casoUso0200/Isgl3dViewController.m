@@ -497,11 +497,7 @@ float* luminancia;
 
 }
 -(void) desplegarVideo{
-
     /////////viendo commit
-
-    
-    
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
@@ -512,17 +508,14 @@ float* luminancia;
     theMovieMaya.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovieMaya.scalingMode=MPMovieScalingModeFill;
-    
     [self.view addSubview:theMovieMaya.view];
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
+    NSLog(@"play");
     [theMovieMaya play];
-    
-    
-    
     if (azteca){
     theMovieAzteca = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
@@ -531,18 +524,15 @@ float* luminancia;
     theMovieAzteca.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovieAzteca.scalingMode=MPMovieScalingModeFill;
-    
     [self.view addSubview:theMovieAzteca.view];
     //Resize window – a bit more practical
 //    UIWindow *moviePlayerWindow = nil;
 //    moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
-    [theMovieAzteca play];
+    NSLog(@"play2");
+        [theMovieAzteca play];
     }
-    
-    
-
 }
 
 - (void) reservarMemoria {

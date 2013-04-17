@@ -207,8 +207,9 @@
 	NSString * extension = [path pathExtension];
 	NSString * fileName = [path stringByDeletingPathExtension];
 	
-	NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
-	if (!filePath) {
+	//NSString *filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
+	NSString *filePath = fileName;
+    if (!filePath) {
 		Isgl3dLog(Error, @"Failed to load %@", path);
 		return nil;
 	}

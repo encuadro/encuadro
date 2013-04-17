@@ -169,7 +169,7 @@ UIImageOrientation orientation;
     imagen=[[UIImage alloc] initWithCGImage:ref scale:1.0 orientation:orientation];
     
     
-    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:NO];
+    [self performSelectorOnMainThread:@selector(setImage:) withObject: imagen waitUntilDone:YES];
     
     CGImageRelease(ref);
     CVPixelBufferUnlockBaseAddress(pb, 0);
@@ -458,10 +458,7 @@ UIImageOrientation orientation;
 
 
 -(void) desplegarVideo{
-    
     /////////viendo commit
-    
-    
     
     //NSBundle *bundle = [NSBundle mainBundle];
     //NSString *moviePath = [bundle pathForResource:self.videoName ofType:@"mov"];
@@ -469,20 +466,27 @@ UIImageOrientation orientation;
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
     NSLog(@"movie: %@", moviePath);
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
+    [theMovie prepareToPlay];
     //Place it in subview, else it won’t work
     theMovie.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
     //theMovie.fullscreen=YES;
-    theMovie.controlStyle=MPMovieControlStyleNone;
+    theMovie.controlStyle= MPMovieControlStyleDefault;
+    theMovie.shouldAutoplay = YES;
+    theMovie.movieSourceType = MPMovieSourceTypeFile;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
-    [self.view addSubview:theMovie.view];
+    
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
+    NSLog(@"play");
+    [self.view addSubview:theMovie.view];
     [theMovie play];
 }
+
+
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSLog(@"TOUCH ISGL3D VIEWCONTROLLER");
@@ -495,15 +499,12 @@ UIImageOrientation orientation;
 }
 
 - (void) reservarMemoria {
-    
     // printf("Reservamos memoria");
-    
     free(pixels);
     free(Rotmodern);
     free(Tras);
     free(angles1);
     free(angles2);
-    
     /*Reservamos memoria*/
     Rotmodern=(float**)malloc(3*sizeof(float*));
     for (i=0; i<3;i++) Rotmodern[i]=(float*)malloc(3*sizeof(float));
@@ -725,50 +726,30 @@ UIImageOrientation orientation;
 
 
 -(void)createVideoWindow:(UIWindow *)window{
-    
-    
     ///self.viewController=(Isgl3dViewController*)appDelegate.viewController;
-    
     UIImageView* vistaImg = [[UIImageView alloc] init];
     //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
-    
-    
     //vistaImg.transform =CGAffineTransformMake(0, 1, -1, 0, 0, 0);
     /* Se ajusta la pantalla*/
-    
     UIScreen *screen = [UIScreen mainScreen];
     CGRect fullScreenRect = screen.bounds;
-    
     printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
     [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
     [vistaImg setBounds:fullScreenRect];
-    
-    
-    
     //    [vistaImg setNeedsDisplay];
-    
-    
     [window addSubview:vistaImg];
 	[window sendSubviewToBack:vistaImg];
-    
-    
     self.videoView = vistaImg;
-    
-    
-	// Make the opengl view transparent
+ 	// Make the opengl view transparent
 	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
 	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
-    
-    
-    
-    
 }
 
 
 - (void) viewDidLoad{
     contador=0;
-    if (verbose) printf("viewDidLoad\n");
-    
+    if (verbose)
+        printf("viewDidLoad\n");
     printf("VIEWDIDLOAD ISGL\n");
     [super viewDidLoad];
     self.iPhone=false;
@@ -825,7 +806,7 @@ UIImageOrientation orientation;
     /*Comenzamos a capturar*/
     
     //NSLog(@"FORMATOS POSIBLES %@",self.frameOutput.availableVideoCVPixelFormatTypes);
-    
+    UIGraphicsBeginImageContext(self.view.frame.size); 
     [self.session startRunning];
     
 }

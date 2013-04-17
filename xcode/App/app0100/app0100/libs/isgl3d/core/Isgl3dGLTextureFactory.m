@@ -268,16 +268,16 @@ static Isgl3dGLTextureFactory * _instance = nil;
 		}
 	
 
-		NSString * filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];  
-		
+		NSString * filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
+		//NSString *filePath = fileName;
 		BOOL isHD = [Isgl3dDirector sharedInstance].retinaDisplayEnabled;
 		if (!filePath || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
 			Isgl3dLog(Error, @"Isgl3dGLTextureFactor : Compressed image file not found %@.%@", fileName, extension);
 
 			if ([Isgl3dDirector sharedInstance].retinaDisplayEnabled) {
 				fileName = origFileName;
-				filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];  
-
+				filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
+                //filePath = fileName;
 				Isgl3dLog(Info, @"Isgl3dGLTextureFactor : Trying %@...", file);
 	
 				isHD = NO;
@@ -447,13 +447,15 @@ static Isgl3dGLTextureFactory * _instance = nil;
 	}
 	
 	NSString * filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
-	if (!filePath || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+	
+    //NSString *filePath = fileName;
+    if (!filePath || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
 		Isgl3dLog(Error, @"Isgl3dGLTextureFactor : image file not found %@.%@", fileName, extension);
 
 		if ([Isgl3dDirector sharedInstance].retinaDisplayEnabled) {
 			fileName = origFileName;
-			filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];  
-
+			filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
+            //filePath = fileName;
 			Isgl3dLog(Info, @"Isgl3dGLTextureFactor : Trying %@...", path);
 
 			if (!filePath || ![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
@@ -469,7 +471,7 @@ static Isgl3dGLTextureFactory * _instance = nil;
 	
 	
 	filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
-
+    //filePath = fileName;
 	if (!filePath) {
 		Isgl3dLog(Error, @"Isgl3dGLTextureFactor : Failed to load %@.%@", fileName, extension);
 		return nil;
@@ -495,7 +497,7 @@ static Isgl3dGLTextureFactory * _instance = nil;
 	if ([Isgl3dDirector sharedInstance].retinaDisplayEnabled) {
 		fileName = [origFileName stringByAppendingString:@"-hd"];
 		NSString * filePath = [[NSBundle mainBundle] pathForResource:fileName ofType:extension];
-		
+		//NSString *filePath = fileName;
 		if (filePath && [[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
 			
 			return YES;

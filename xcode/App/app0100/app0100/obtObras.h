@@ -7,6 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "conn.h"
+#import "FTP.h"
+#import "NetworkManager.h"
 
 BOOL finOb;
 @interface obtObras : NSObject{

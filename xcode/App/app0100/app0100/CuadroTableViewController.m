@@ -23,7 +23,7 @@
 @synthesize ARid = _ARid;
 @synthesize ARType = _ARType;
 @synthesize ARObj = _ARObj;
-@synthesize actInd;
+@synthesize actInd, tableView;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -511,18 +511,30 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [actInd startAnimating];
+    oo = [[obtObras alloc] initConId:opcionAutor];
     while(!finOb) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
-    self.cuadroObra = [oo getNombre];
-    self.cuadroAutor = [oo getAutor];
-    self.cuadroDescripcion = [oo getDesc];
-    self.cuadroImages = [oo getImagen];
-    if(self.cuadroObra != NULL){
-        [actInd stopAnimating];
-        [self.tableView reloadData];
+    if([[[oo getNombre] objectAtIndex:0] isEqualToString:@"-1"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Ocurrió un error al descargar los datos o en la sala seleccionada no existen obras." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
     }
+    else{
+        self.cuadroObra = [oo getNombre];
+        self.cuadroAutor = [oo getAutor];
+        self.cuadroDescripcion = [oo getDesc];
+        self.cuadroImages = [oo getImagen];
+        if(self.cuadroObra != NULL){
+            [actInd stopAnimating];
+            [self.tableView reloadData];
+        }
+    }
+}
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)viewDidUnload
@@ -627,6 +639,7 @@
     if ([[segue identifier] isEqualToString:@"Detalle"])
     {
         [actInd startAnimating];
+        [tableView setUserInteractionEnabled:NO];
         manual=true;        
         NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
         NSString *nombre = [[oo getNombre] objectAtIndex:[myIndexPath row]];
@@ -639,6 +652,7 @@
         [descripcionObra addObject:imagen];
         [descripcionObra addObject:descripcion];
         oo = [[obtObras alloc] initConNombreObraParaContenidos:nombre];
+        [tableView setUserInteractionEnabled:YES];
         [actInd stopAnimating];
 //        obracompletaViewController.descripcionObra = [[NSArray alloc]
 //                                               initWithObjects: 

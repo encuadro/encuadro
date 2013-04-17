@@ -13,8 +13,9 @@
 @synthesize filePath      = _filePath;
 @synthesize fileStream    = _fileStream;
 @synthesize anduvo = _anduvo;
--(FTP*)initWithString:(NSString *)ruta yotroString:(NSString *)nombreDato ytipo:(NSString *)tipo yId:(NSString *)ide ytipo2:(NSString *)tipo2{
+-(FTP*)initWithString:(NSString *)ruta yotroString:(NSString *)rutaFTP{
     finiteFTP = NO;
+    anduvo = YES;
     BOOL                success;
     NSURL *             url;
     NSURLRequest *      request;
@@ -22,11 +23,12 @@
     //assert(self.fileStream == nil);         // ditto
     //assert(self.filePath == nil);           // ditto
     // First get and check the URL.
-    url = [[NetworkManager sharedInstance] smartURLForString:[NSString stringWithFormat: @"%@%@/%@/%@/%@",tipo,kContrayIp,ide,tipo2,nombreDato]];
+    url = [[NetworkManager sharedInstance] smartURLForString:rutaFTP];
     success = (url != nil);
     // If the URL is bogus, let the user know.  Otherwise kick off the connection.
     if ( ! success) {
         NSLog(@"hola");
+        finiteFTP = YES;
         anduvo = NO;
         //statusLabel.text = @"Invalid URL";
     } /*else if ( ! [[NetworkManager sharedInstance] isImageURL:url] ) {
@@ -35,7 +37,6 @@
        }*/ else {
            // Open a stream for the file we're going to receive into.
            //self.filePath = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-           anduvo = YES;
            self.filePath = ruta;
            assert(self.filePath != nil);
            self.fileStream = [NSOutputStream outputStreamToFileAtPath:self.filePath append:NO];
@@ -65,6 +66,7 @@
         //imageview.image = [UIImage imageWithContentsOfFile:self.filePath];
         statusString = @"GET succeeded";
         finiteFTP = YES;
+        anduvo = YES;
     }
     //self.statusLabel.text = statusString;
     [[NetworkManager sharedInstance] didStopNetworkOperation];
@@ -141,10 +143,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
--(BOOL)getSiAnduvo{
-    return self.anduvo;
 }
 
 @end
