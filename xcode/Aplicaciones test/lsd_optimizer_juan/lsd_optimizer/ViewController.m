@@ -40,9 +40,9 @@ int listSize;
 	/*Aca levantamos la imagen, la pasamos a nivel de grises y la desplegamos*/
     
     /*-------------------------|PARA CORRER DESDE EL IPAD|-----------------------*/
-    UIImage* uiimage = [UIImage imageNamed:@"marker_0007.png"];
+    self.uiimage = [UIImage imageNamed:@"marker_0007.png"];
     
-    CGImageRef image = [uiimage CGImage];
+    CGImageRef image = [self.uiimage CGImage];
     width = CGImageGetWidth(image);
     height = CGImageGetHeight(image);
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -159,6 +159,7 @@ int listSize;
     
     
 }
+
 - (IBAction)lsd_optimizado:(id)sender {
 
     NSLog(@"LSD_encuadro in\n");
@@ -173,6 +174,28 @@ int listSize;
 
 }
 
+- (IBAction)lsd_vimage:(id)sender
+{
+	
+	NSLog(@"LSD_vimage in\n");
+	UIImage *im=[self boxblurImage:self.uiimage  boxSize:11];
+	NSLog(@"LSD_vimage out\n");
+	self.vista.image=im;
+}
+	
+
+- (IBAction)lsd_vdsp:(id)sender
+{
+	
+	NSLog(@"LSD_vdsp in\n");
+	sampler_tests();
+	sampler_tests_2();
+		sampler_tests_3();
+	sampler_tests_imgfir();
+	NSLog(@"LSD_vdsp out\n");
+	
+	
+}
 
 
 - (void) dibujarSegmentos{
@@ -195,16 +218,94 @@ int listSize;
 
 }
 
+#import <Accelerate/Accelerate.h>
+
+-(UIImage *)boxblurImage:(UIImage *)image boxSize:(int)boxSize {
+	//Get CGImage from UIImage
+	CGImageRef img = image.CGImage;
+	
+	//setup variables
+	vImage_Buffer inBuffer, outBuffer;
+	
+	vImage_Error error;
+	
+	void *pixelBuffer;
+	
+	//create vImage_Buffer with data from CGImageRef
+	
+	//These two lines get get the data from the CGImage
+	CGDataProviderRef inProvider = CGImageGetDataProvider(img);
+	CFDataRef inBitmapData = CGDataProviderCopyData(inProvider);
+	
+	//The next three lines set up the inBuffer object based on the attributes of the CGImage
+	inBuffer.width = CGImageGetWidth(img);
+	inBuffer.height = CGImageGetHeight(img);
+	inBuffer.rowBytes = CGImageGetBytesPerRow(img);
+	
+	//This sets the pointer to the data for the inBuffer object
+	inBuffer.data = (void*)CFDataGetBytePtr(inBitmapData);
+	
+	//create vImage_Buffer for output
+	
+	//allocate a buffer for the output image and check if it exists in the next three lines
+	pixelBuffer = malloc(CGImageGetBytesPerRow(img) * CGImageGetHeight(img));
+	
+	if(pixelBuffer == NULL)
+		NSLog(@"No pixelbuffer");
+	
+	//set up the output buffer object based on the same dimensions as the input image
+	outBuffer.data = pixelBuffer;
+	outBuffer.width = CGImageGetWidth(img);
+	outBuffer.height = CGImageGetHeight(img);
+	outBuffer.rowBytes = CGImageGetBytesPerRow(img);
+	
+	//perform convolution - this is the call for our type of data
+	error = vImageBoxConvolve_ARGB8888(&inBuffer, &outBuffer, NULL, 0, 0, boxSize, boxSize, NULL, kvImageEdgeExtend);
+	
+	//check for an error in the call to perform the convolution
+	if (error) {
+		NSLog(@"error from convolution %ld", error);
+	}
+	
+	//create CGImageRef from vImage_Buffer output
+	//1 - CGBitmapContextCreateImage -
+	
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	
+	CGContextRef ctx = CGBitmapContextCreate(outBuffer.data,
+														  outBuffer.width,
+														  outBuffer.height,
+														  8,
+														  outBuffer.rowBytes,
+														  colorSpace,
+														  kCGImageAlphaNoneSkipLast);
+	CGImageRef imageRef = CGBitmapContextCreateImage (ctx);
+	
+	UIImage *returnImage = [UIImage imageWithCGImage:imageRef];
+	
+	//clean up
+	CGContextRelease(ctx);
+	CGColorSpaceRelease(colorSpace);
+	
+	free(pixelBuffer);
+	CFRelease(inBitmapData);
+	
+	CGColorSpaceRelease(colorSpace);
+	CGImageRelease(imageRef);
+	
+	return returnImage;
+}
+
 - (void) reconstruirImg: (float*)datadouble width: (int) width height: (int) height {
-    
+   
     printf("width: %d \t height: %d\n",width, height);
-    
+   
     unsigned char *result = (unsigned char *) malloc(width * height *sizeof(unsigned char) *4);
-    
+   
     // process the image back to rgb
-    
+   
     for(int i = 0; i < height * width; i++) {
-        
+       
         result[i*4]=datadouble[i];
         result[i*4+1]=datadouble[i];
         result[i*4+2]=datadouble[i];

@@ -100,6 +100,7 @@
 #include <limits.h>
 #include <float.h>
 #include "lsd_encuadro.h"
+#include <Accelerate/Accelerate.h>
 
 /** ln(10) */
 #ifndef M_LN10
@@ -563,6 +564,48 @@ static void gaussian_kernel(ntuple_list kernel, float sigma, float mean)
     if( sum >= 0.0 ) for(i=0;i<kernel->dim;i++) kernel->values[i] /= sum;
 }
 
+static void gaussian_kernel_2d(image_float kernel, float sigma)
+{
+	float sum = 0.0;
+	//float val;
+	
+	/* check parameters */
+	//  if( kernel == NULL || kernel->values == NULL )
+	//    error("gaussian_kernel: invalid n-tuple 'kernel'.");
+	//  if( sigma <= 0.0 ) error("gaussian_kernel: 'sigma' must be positive.");
+	
+	/* compute Gaussian kernel */
+
+	for(int i=0;i<kernel->xsize;i++)
+		for(int j=0;j<kernel->ysize;j++)
+	{
+		float r = 0;
+		r += i*i/sigma;
+		r += j*j/sigma;
+		r = exp(-0.5*r);
+		r /= sigma*2*M_PI;
+		
+		kernel->data[i+j*kernel->xsize] = r;
+		sum += r;
+	}
+	
+	/* normalization */
+	if( sum >= 0.0 )
+		for(int i=0;i<kernel->xsize;i++)
+		for(int j=0;j<kernel->ysize;j++)
+			kernel->data[i+j*kernel->xsize] /= sum;
+	
+	
+	/* print input */
+	for(int i=0;i<kernel->xsize;i++)
+	{
+      for(int j=0;j<kernel->ysize;j++)
+			printf("%-4.2f ",kernel->data[ i  + j  * kernel->xsize]);
+      printf("\n");
+	}
+}
+
+
 
 /*----------------------------------------------------------------------------*/
 /*---------------------------- GAUSSIAN SAMPLER ------------------------------*/
@@ -585,7 +628,9 @@ image_float gaussian_sampler( image_float in, image_float lum, float scale, floa
         error("gaussian_sampler: the output image size exceeds the handled size.");
     N = (unsigned int) ceil( in->xsize * scale );
     M = (unsigned int) ceil( in->ysize * scale );
-    
+	printf("aux size: %d %d\n",N,in->ysize);
+	printf("out size: %d %d\n",N,M);
+	
     aux = new_image_float(N,in->ysize);
 	if(!lum->data)
 		out = new_image_float(N,M);
@@ -609,6 +654,7 @@ image_float gaussian_sampler( image_float in, image_float lum, float scale, floa
     h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
     /*La funcion log() corresponde al logaritmo neperiano*/
     n = 1+2*h; /* kernel size */
+	printf("kernel size: %d\n",n);
     kernel = new_ntuple_list(n);
     
     /* auxiliary float image size variables */
@@ -617,6 +663,7 @@ image_float gaussian_sampler( image_float in, image_float lum, float scale, floa
     
     gaussian_kernel( kernel, sigma, (float) h );
     float scale_inv=1/scale;
+	printf("scale: %f\n",scale);
     
     /* First subsampling: x axis */
     for(x=3;x<aux->xsize-2;x++)
@@ -2149,7 +2196,7 @@ float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height
     image_float image;
     image_float luminancia_sub;
     float* list;
-	luminancia_sub=new_image_float_ptr;
+	luminancia_sub=new_image_float_ptr(0,0,NULL);
 	
     image = new_image_float_ptr( (unsigned int) width, (unsigned int) height, luminancia );
 
@@ -2165,3 +2212,134 @@ float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height
    
    
 }
+
+void sampler_tests_2()
+{
+	unsigned int X = 20;  /* x image size */
+	unsigned int Y = 20;  /* y image size */
+	
+	/* create a simple image: left half black, right half gray */
+	image_float image = new_image_float(X,Y);
+	for(int x=0;x<X;x++)
+		for(int y=0;y<Y;y++)
+			image->data[ x + y * image->xsize ] = x<X/2 ? 0.0 : 64.0; /* image(x,y) */
+	
+	/* print input */
+	for(int i=0;i<image->xsize;i++)
+	{
+      for(int j=0;j<image->ysize;j++)
+			printf("%-4.2f ",image->data[ i  + j  * image->xsize]);
+      printf("\n");
+	}
+	
+	/* call LSD */
+	image_float out=new_image_float_ptr(0,0, NULL);
+	out= gaussian_sampler(image, out, 0.5, 0.6);
+	
+	/* print output */
+	for(int i=0;i<out->xsize;i++)
+	{
+      for(int j=0;j<out->ysize;j++)
+			printf("%02f ",out->data[  i  + j  * out->xsize]);
+      printf("\n");
+	}
+	
+	/* free memory */
+	free_image_float(image);
+	free_image_float(out);
+	
+}
+
+image_float gaussian_sampler_imfir(image_float in, float scale, float sigma_scale)
+{
+	ntuple_list kernel;
+	unsigned int N,M,h,n,x,y,i;
+	int xc,yc,j,float_x_size,float_y_size;
+	float sigma,xx,yy,sum,prec;
+	
+	/* compute new image size and get memory for images */
+	if( in->xsize * scale > (float) UINT_MAX ||
+		in->ysize * scale > (float) UINT_MAX )
+		
+		error("gaussian_sampler: the output image size exceeds the handled size.");
+	N = (unsigned int) ceil( in->xsize * scale );
+	M = (unsigned int) ceil( in->ysize * scale );
+	printf("aux size: %d %d\n",N,in->ysize);
+	printf("out size: %d %d\n",N,M);
+	
+	
+	/* sigma, kernel size and memory for the kernel */
+	sigma = sigma_scale / scale;
+	/*Como para ingresar a este codigo scale <1 (se evalua en la funcion LineSegmentDetection),
+	 siempre se va a cumplir que sigma = sigma_scale / scale */
+	/*
+	 The size of the kernel is selected to guarantee that the
+	 the first discarded term is at least 10^prec times smaller
+	 than the central value. For that, h should be larger than x, with
+	 e^(-x^2/2sigma^2) = 1/10^prec.
+	 Then,
+	 x = sigma * sqrt( 2 * prec * ln(10) ).
+	 */
+	prec = 3.0;
+	h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );
+	/*La funcion log() corresponde al logaritmo neperiano*/
+	n = 1+2*h; /* kernel size */
+	printf("kernel size: %d\n",n);
+	kernel = new_ntuple_list(n);
+
+	static float kernel2[] =
+	{ 1/256.0f,  4/256.0f,  6/256.0f,  4/256.0f, 1/256.0f,
+		4/256.0f, 16/256.0f, 24/256.0f, 16/256.0f, 4/256.0f,
+		6/256.0f, 24/256.0f, 36/256.0f, 24/256.0f, 6/256.0f,
+		4/256.0f, 16/256.0f, 24/256.0f, 16/256.0f, 4/256.0f,
+		1/256.0f,  4/256.0f,  6/256.0f,  4/256.0f, 1/256.0f };
+	
+	image_float kernel_2d=new_image_float(5,5);
+	
+	gaussian_kernel( kernel, sigma, (float) h );
+	for(int i=0;i<kernel->size;i++)
+		printf("%-4.2f ",kernel->values[i]);
+	printf("\n");
+	float* resultAsFloat = malloc(in->ysize*in->xsize*sizeof(float));
+	//vDSP_imgfir(in->data, in->ysize, in->xsize, kernel->values, resultAsFloat, 1, kernel->size);
+	vDSP_imgfir(in->data, in->ysize, in->xsize, kernel_2d, resultAsFloat, 5, 5);
+	image_float out=new_image_float_ptr(in->xsize, in->ysize, resultAsFloat);
+	return out;
+}
+
+void sampler_tests_imgfir()
+{
+	unsigned int X = 20;  /* x image size */
+	unsigned int Y = 20;  /* y image size */
+	
+	/* create a simple image: left half black, right half gray */
+	image_float image = new_image_float(X,Y);
+	for(int x=0;x<X;x++)
+		for(int y=0;y<Y;y++)
+			image->data[ x + y * image->xsize ] = x<X/2 ? 0.0 : 64.0; /* image(x,y) */
+	
+	/* print input */
+	for(int i=0;i<image->xsize;i++)
+	{
+      for(int j=0;j<image->ysize;j++)
+			printf("%-4.2f ",image->data[ i  + j  * image->xsize]);
+      printf("\n");
+	}
+	
+	/* call LSD */
+	image_float out=gaussian_sampler_imfir(image, 0.5, 0.6);
+	
+	/* print output */
+	for(int i=0;i<out->xsize;i++)
+	{
+      for(int j=0;j<out->ysize;j++)
+			printf("%02f ",out->data[  i  + j  * out->xsize]);
+      printf("\n");
+	}
+	
+	/* free memory */
+	free_image_float(image);
+	free_image_float(out);
+	
+}
+

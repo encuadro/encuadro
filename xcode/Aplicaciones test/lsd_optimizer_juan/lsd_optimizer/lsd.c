@@ -2248,3 +2248,41 @@ double * lsd(int * n_out, double * img, int X, int Y)
   return lsd_scale(n_out,img,X,Y,scale);
 }
 /*----------------------------------------------------------------------------*/
+
+
+
+void sampler_tests_3()
+{
+	unsigned int X = 20;  /* x image size */
+	unsigned int Y = 20;  /* y image size */
+	
+	/* create a simple image: left half black, right half gray */
+	image_double image = new_image_double(X,Y);
+	for(int x=0;x<X;x++)
+		for(int y=0;y<Y;y++)
+			image->data[ x + y * image->xsize ] = x<X/2 ? 0.0 : 64.0; /* image(x,y) */
+	
+	/* print input */
+	for(int i=0;i<image->xsize;i++)
+	{
+      for(int j=0;j<image->ysize;j++)
+			printf("%04.02f ",image->data[ i  + j  * image->xsize]);
+      printf("\n");
+	}
+	
+	/* call LSD */
+	image_double out=gaussian_sampler(image, 0.5, 0.6);
+	
+	/* print output */
+	for(int i=0;i<out->xsize;i++)
+	{
+      for(int j=0;j<out->ysize;j++)
+			printf("%4.2f ",out->data[  i  + j  * out->xsize]);
+      printf("\n");
+	}
+	
+	/* free memory */
+	free_image_double(image);
+	free_image_double(out);
+	
+}
