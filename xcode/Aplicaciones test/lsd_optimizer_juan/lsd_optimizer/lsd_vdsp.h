@@ -12,6 +12,8 @@
 void sampler_tests();
 void sampler_tests_2();
 void sampler_tests_3();
+void sampler_tests_vdsp();
 void sampler_tests_imgfir();
-
+void release_test_image();
+void create_test_image();
 #endif

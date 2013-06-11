@@ -188,10 +188,13 @@ int listSize;
 {
 	
 	NSLog(@"LSD_vdsp in\n");
-	sampler_tests();
+	create_test_image();
+	//sampler_tests();
 	sampler_tests_2();
-		sampler_tests_3();
-	sampler_tests_imgfir();
+	sampler_tests_vdsp();
+	//sampler_tests_3();
+	//sampler_tests_imgfir();
+	release_test_image();
 	NSLog(@"LSD_vdsp out\n");
 	
 	

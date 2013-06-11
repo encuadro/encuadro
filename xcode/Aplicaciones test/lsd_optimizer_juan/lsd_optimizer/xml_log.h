@@ -12,19 +12,11 @@
 
 #define VERBOSE
 
-#ifdef QNM_USE_XML_OUTPUT
-#include "llibertat.h"
-#endif
 
-extern FILE *xml_output_file;
-#ifndef QNM_USE_XML_OUTPUT
 #ifdef VERBOSE
-#define xml_out(...) fprintf ( stderr , __VA_ARGS__ )
+#define xml_out(...) fprintf ( stdout , __VA_ARGS__ )
 #else
 #define xml_out(...) 
-#endif
-#else
-void xml_out(const char *fmt, ...);
 #endif
 
 #define XML_IN xml_out("<%s>\n",  __FUNCTION__)
