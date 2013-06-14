@@ -28,10 +28,10 @@ segment segmentNew(int x1, int y1, int x2, int y2, float w){
 	seg.width = w;
 /*	seg.dir[1] = seg.p1[1]-seg.p2[1] ;
 	seg.dir[2] = seg.p1[2]-seg.p2[2] ; 
-	seg.length = sqrt( pow(seg.dir[1],2) + pow(seg.dir[2],2) );
+	seg.length = sqrt( powf(seg.dir[1],2) + powf(seg.dir[2],2) );
 	seg.dir[1] = seg.dir[1]/seg.length ;
 	seg.dir[2] = seg.dir[2]/seg.length ;
-	seg.angleRad = atan2(seg.dir[1],seg.dir[2]);
+	seg.angleRad = atan2f(seg.dir[1],seg.dir[2]);
 	seg.angleDeg = seg.angleRad*180/MY_PI;
 */
 	return seg;
@@ -179,6 +179,9 @@ float** getCorners(int *listSize, float *list){
 	return imgPts;
 };
 
+
+
+
 float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float distance_thr){
 	
 	int listDim = 7;	
@@ -223,8 +226,8 @@ float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float 
 									  listIn[4+i*listDim]);
 					
 					if (!dist[0] && !dist[1])	{	//seg[0] p1 endpoint not matched yet
-						dist[0] = ( pow(seg[0].p1[0]-segi.p1[0],2) + pow(seg[0].p1[1]-segi.p1[1],2) ) < distance_thr;
-						dist[1] = ( pow(seg[0].p1[0]-segi.p2[0],2) + pow(seg[0].p1[1]-segi.p2[1],2) ) < distance_thr;
+						dist[0] = ( powf(seg[0].p1[0]-segi.p1[0],2) + powf(seg[0].p1[1]-segi.p1[1],2) ) < distance_thr;
+						dist[1] = ( powf(seg[0].p1[0]-segi.p2[0],2) + powf(seg[0].p1[1]-segi.p2[1],2) ) < distance_thr;
 						
 						if (dist[0] || dist[1])	{	// p1 match
 							seg[1] = segmentNew(listIn[0+i*listDim],
@@ -237,8 +240,8 @@ float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float 
 					}
 					
 					if (!dist[2] && !dist[3])	{	//seg[0] p2 endpoint not matched yet
-						dist[2] = ( pow(seg[0].p2[0]-segi.p1[0],2) + pow(seg[0].p2[1]-segi.p1[1],2) ) < distance_thr;
-						dist[3] = ( pow(seg[0].p2[0]-segi.p2[0],2) + pow(seg[0].p2[1]-segi.p2[1],2) ) < distance_thr;
+						dist[2] = ( powf(seg[0].p2[0]-segi.p1[0],2) + powf(seg[0].p2[1]-segi.p1[1],2) ) < distance_thr;
+						dist[3] = ( powf(seg[0].p2[0]-segi.p2[0],2) + powf(seg[0].p2[1]-segi.p2[1],2) ) < distance_thr;
 						
 						if (dist[2] || dist[3])	{	// p2 match
 							seg[2] = segmentNew(listIn[0+i*listDim],
@@ -265,28 +268,28 @@ float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float 
 											  		
 								if (dist[0] && dist[2]) { 
 									//seg[0].p1 matched seg[1].p1 and seg[0].p2 matched seg[2].p1									
-									dist3[0] = ( pow(seg[1].p2[0]-seg[3].p1[0],2) + pow(seg[1].p2[1]-seg[3].p1[1],2) ) < distance_thr;
-									dist3[1] = ( pow(seg[2].p2[0]-seg[3].p2[0],2) + pow(seg[2].p2[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[2] = ( pow(seg[1].p2[0]-seg[3].p2[0],2) + pow(seg[1].p2[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[3] = ( pow(seg[2].p2[0]-seg[3].p1[0],2) + pow(seg[2].p2[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[0] = ( powf(seg[1].p2[0]-seg[3].p1[0],2) + powf(seg[1].p2[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[1] = ( powf(seg[2].p2[0]-seg[3].p2[0],2) + powf(seg[2].p2[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[2] = ( powf(seg[1].p2[0]-seg[3].p2[0],2) + powf(seg[1].p2[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[3] = ( powf(seg[2].p2[0]-seg[3].p1[0],2) + powf(seg[2].p2[1]-seg[3].p1[1],2) ) < distance_thr;
 								} else if (dist[0] && dist[3]){
 									//seg[0].p1 matched seg[1].p1 and seg[0].p2 matched seg[2].p2
-									dist3[0] = ( pow(seg[1].p2[0]-seg[3].p1[0],2) + pow(seg[1].p2[1]-seg[3].p1[1],2) ) < distance_thr;
-									dist3[1] = ( pow(seg[2].p1[0]-seg[3].p2[0],2) + pow(seg[2].p1[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[2] = ( pow(seg[1].p2[0]-seg[3].p2[0],2) + pow(seg[1].p2[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[3] = ( pow(seg[2].p1[0]-seg[3].p1[0],2) + pow(seg[2].p1[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[0] = ( powf(seg[1].p2[0]-seg[3].p1[0],2) + powf(seg[1].p2[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[1] = ( powf(seg[2].p1[0]-seg[3].p2[0],2) + powf(seg[2].p1[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[2] = ( powf(seg[1].p2[0]-seg[3].p2[0],2) + powf(seg[1].p2[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[3] = ( powf(seg[2].p1[0]-seg[3].p1[0],2) + powf(seg[2].p1[1]-seg[3].p1[1],2) ) < distance_thr;
 								} else if (dist[1] && dist[2]){
 									//seg[0].p1 matched seg[1].p2 and seg[0].p2 matched seg[2].p1
-									dist3[0] = ( pow(seg[1].p1[0]-seg[3].p1[0],2) + pow(seg[1].p1[1]-seg[3].p1[1],2) ) < distance_thr;
-									dist3[1] = ( pow(seg[2].p2[0]-seg[3].p2[0],2) + pow(seg[2].p2[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[2] = ( pow(seg[1].p1[0]-seg[3].p2[0],2) + pow(seg[1].p1[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[3] = ( pow(seg[2].p2[0]-seg[3].p1[0],2) + pow(seg[2].p2[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[0] = ( powf(seg[1].p1[0]-seg[3].p1[0],2) + powf(seg[1].p1[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[1] = ( powf(seg[2].p2[0]-seg[3].p2[0],2) + powf(seg[2].p2[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[2] = ( powf(seg[1].p1[0]-seg[3].p2[0],2) + powf(seg[1].p1[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[3] = ( powf(seg[2].p2[0]-seg[3].p1[0],2) + powf(seg[2].p2[1]-seg[3].p1[1],2) ) < distance_thr;
 								} else if (dist[1] && dist[3]){
 									//seg[0].p1 matched seg[1].p2 and seg[0].p2 matched seg[2].p2
-									dist3[0] = ( pow(seg[1].p1[0]-seg[3].p1[0],2) + pow(seg[1].p1[1]-seg[3].p1[1],2) ) < distance_thr;
-									dist3[1] = ( pow(seg[2].p1[0]-seg[3].p2[0],2) + pow(seg[2].p1[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[2] = ( pow(seg[1].p1[0]-seg[3].p2[0],2) + pow(seg[1].p1[1]-seg[3].p2[1],2) ) < distance_thr;
-									dist3[3] = ( pow(seg[2].p1[0]-seg[3].p1[0],2) + pow(seg[2].p1[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[0] = ( powf(seg[1].p1[0]-seg[3].p1[0],2) + powf(seg[1].p1[1]-seg[3].p1[1],2) ) < distance_thr;
+									dist3[1] = ( powf(seg[2].p1[0]-seg[3].p2[0],2) + powf(seg[2].p1[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[2] = ( powf(seg[1].p1[0]-seg[3].p2[0],2) + powf(seg[1].p1[1]-seg[3].p2[1],2) ) < distance_thr;
+									dist3[3] = ( powf(seg[2].p1[0]-seg[3].p1[0],2) + powf(seg[2].p1[1]-seg[3].p1[1],2) ) < distance_thr;
 								};
 								
 								if ( (dist3[0] && dist3[1]) || (dist3[2] && dist3[3]) ) {
@@ -309,6 +312,160 @@ float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float 
 										*listOutSize = 1+(*listOutSize);
 										//burn segments used
 										listIn[4+index[l]*listDim] = marker_id; 
+										
+									}
+									break;
+								}
+							}
+							k++;
+						}
+					}
+				}
+				if (marker_found) break;
+			}
+		}
+	}
+	return listOut;
+}
+
+extern inline float p_distf2(int a[],int b[])
+{	
+	return (a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1]);
+}
+
+#define p_distf(a,b) (a[0]-b[0])*(a[0]-b[0])+(a[1]-b[1])*(a[1]-b[1])
+
+float* filterSegments2(int *listOutSize , int *listInSize , float *listIn, float distance_thr)
+{
+	
+	int listDim = 7;
+	float* listOut;
+	int i,j,k,l;
+	float dist[4], dist3[4];
+	int marker_id = 0;
+	int index[4];
+	segment seg[4];
+	segment segi;
+	int marker_found;
+	
+	/*get memory*/
+	listOut=(float *) malloc ( 100 * listDim * sizeof(float));
+	
+	/*use width field to flag marker id - initialize*/
+	for (j=0;j<*listInSize;j++) listIn[4+j*listDim] = 0;
+	
+	/*search for markers of the form of 4 conex segments*/
+	for (j=0;j<*listInSize;j++){
+		if (listIn[4+j*listDim] == 0){
+			index[0] = j;
+			
+			seg[0] = segmentNew(listIn[0+j*listDim],
+									  listIn[1+j*listDim],
+									  listIn[2+j*listDim],
+									  listIn[3+j*listDim],
+									  listIn[4+j*listDim]);
+			
+			
+			dist[0] = 0; dist[1] = 0; dist[2] = 0; dist[3] = 0;
+			
+			/*search for 2 conex segments to seg1: one for each endpoint*/
+			marker_found = 0;
+			for (i=j+1;i<*listInSize;i++){
+				if (listIn[4+i*listDim] == 0){
+					
+					segi = segmentNew(listIn[0+i*listDim],
+											listIn[1+i*listDim],
+											listIn[2+i*listDim],
+											listIn[3+i*listDim],
+											listIn[4+i*listDim]);
+					
+					if (!dist[0] && !dist[1])	{	//seg[0] p1 endpoint not matched yet
+						dist[0] = p_distf(seg[0].p1,segi.p1) < distance_thr;
+						dist[0] = p_distf(seg[0].p1,segi.p2) < distance_thr;
+						
+						if (dist[0] || dist[1])	{	// p1 match
+							seg[1] = segmentNew(listIn[0+i*listDim],
+													  listIn[1+i*listDim],
+													  listIn[2+i*listDim],
+													  listIn[3+i*listDim],
+													  listIn[4+i*listDim]);
+							index[1] = i;
+						}
+					}
+					
+					if (!dist[2] && !dist[3])	{	//seg[0] p2 endpoint not matched yet
+						dist[2] = p_distf(seg[0].p2,segi.p1) < distance_thr;
+						dist[3] = p_distf(seg[0].p2,segi.p2) < distance_thr;
+						
+						if (dist[2] || dist[3])	{	// p2 match
+							seg[2] = segmentNew(listIn[0+i*listDim],
+													  listIn[1+i*listDim],
+													  listIn[2+i*listDim],
+													  listIn[3+i*listDim],
+													  listIn[4+i*listDim]);
+							index[2] = i;
+						}
+					}
+					
+					if ( (dist[0] || dist[1]) && (dist[2] || dist[3]) ) {	//conex segments found, find the last
+						k = 0;
+						dist3[0] = 0; dist3[1] = 0; dist3[2] = 0; dist3[3] = 0;
+						/* search for one segment that matches the unmatched endpoints of seg[1] and seg[2]*/
+						while (k<*listInSize){
+							if ( (k!=index[0]) && (k!=index[1]) && (k!=index[2]) ){
+								
+								seg[3] = segmentNew(listIn[0+k*listDim],
+														  listIn[1+k*listDim],
+														  listIn[2+k*listDim],
+														  listIn[3+k*listDim],
+														  listIn[4+k*listDim]);
+								
+								if (dist[0] && dist[2]) {
+									//seg[0].p1 matched seg[1].p1 and seg[0].p2 matched seg[2].p1
+									dist3[0] = p_distf(seg[1].p2, seg[3].p1) < distance_thr;
+									dist3[1] = p_distf(seg[2].p2, seg[3].p2) < distance_thr;
+									dist3[2] = p_distf(seg[1].p2, seg[3].p2) < distance_thr;
+									dist3[3] = p_distf(seg[2].p2, seg[3].p1) < distance_thr;
+								} else if (dist[0] && dist[3]){
+									//seg[0].p1 matched seg[1].p1 and seg[0].p2 matched seg[2].p2
+									dist3[0] = p_distf(seg[1].p2, seg[3].p1) < distance_thr;
+									dist3[1] = p_distf(seg[2].p1, seg[3].p2) < distance_thr;
+									dist3[2] = p_distf(seg[1].p2, seg[3].p2) < distance_thr;
+									dist3[3] = p_distf(seg[2].p1, seg[3].p1) < distance_thr;
+								} else if (dist[1] && dist[2]){
+									//seg[0].p1 matched seg[1].p2 and seg[0].p2 matched seg[2].p1
+									dist3[0] = p_distf(seg[1].p1, seg[3].p1) < distance_thr;
+									dist3[1] = p_distf(seg[2].p2, seg[3].p2) < distance_thr;
+									dist3[2] = p_distf(seg[1].p1, seg[3].p2) < distance_thr;
+									dist3[3] = p_distf(seg[2].p2, seg[3].p1) < distance_thr;
+								} else if (dist[1] && dist[3]){
+									//seg[0].p1 matched seg[1].p2 and seg[0].p2 matched seg[2].p2
+									dist3[0] = p_distf(seg[1].p1, seg[3].p1) < distance_thr;
+									dist3[1] = p_distf(seg[2].p1, seg[3].p2) < distance_thr;
+									dist3[2] = p_distf(seg[1].p1, seg[3].p2) < distance_thr;
+									dist3[3] = p_distf(seg[2].p1, seg[3].p1) < distance_thr;
+								};
+								
+								if ( (dist3[0] && dist3[1]) || (dist3[2] && dist3[3]) ) {
+									/*success! marker found*/
+									marker_found = 1;
+									index[3] = k;
+									marker_id++;
+									for (l=0;l<4;l++){
+										
+										//add marker segments to output list
+										listOut[0+(*listOutSize)*listDim] = listIn[0+index[l]*listDim];
+										listOut[1+(*listOutSize)*listDim] = listIn[1+index[l]*listDim];
+										listOut[2+(*listOutSize)*listDim] = listIn[2+index[l]*listDim];
+										listOut[3+(*listOutSize)*listDim] = listIn[3+index[l]*listDim];
+										listOut[4+(*listOutSize)*listDim] = marker_id;
+										
+										//store orientations for manual correspondance
+										//										angleList[index[l] + listOutSize] =
+										
+										*listOutSize = 1+(*listOutSize);
+										//burn segments used
+										listIn[4+index[l]*listDim] = marker_id;
 										
 									}
 									break;

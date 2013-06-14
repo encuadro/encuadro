@@ -41,6 +41,10 @@
 @synthesize kalmanErrorGain = _kalmanErrorGain;
 @synthesize newRefPose = _newRefPose;
 @synthesize ini = _ini;
+@synthesize dt;
+@synthesize dt_mean;
+@synthesize previousTime;
+@synthesize frame_counter;
 
 /*para DIBUJAR*/
 claseDibujar *cgvista;
@@ -287,7 +291,7 @@ bool thresInit=true;
 - (void) procesamiento
 {
     
-    if((pixels[0] != INFINITY)&(height!=0))
+    if( (pixels[0] != INFINITY) && (height!=0) && (self.frame_counter<100))
     {
     if (true) {
         
@@ -317,7 +321,7 @@ bool thresInit=true;
         listFiltradaSize =0;
 //        printf("segmentFilterThresh= %f\n",_segmentFilterThres);
         /*Filtrado de segmentos detectados por el LSD */
-        listFiltrada = filterSegments(&listFiltradaSize , &listSize ,list, _segmentFilterThres);
+        listFiltrada = filterSegments2(&listFiltradaSize , &listSize ,list, _segmentFilterThres);
         
         
         /*-------------------------------------|CORRESPONDENCIAS|-------------------------------------*/
@@ -626,7 +630,7 @@ bool thresInit=true;
             printf("%f\t %f\t %f\n",Tras[0],Tras[1],Tras[2]);
         }
     
-        if (true){
+        if (verbose){
             printf("\nPrimera solucion\n");
             printf("psi1: %g\ntheta1: %g\nphi1: %g\n",(180/MY_PI)*angles1[0],(180/MY_PI)*angles1[1],(180/MY_PI)*angles1[2]);
             printf("\nSegunda solicion\n");
@@ -648,7 +652,16 @@ bool thresInit=true;
 
         
         /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
-        
+#define ENCUADRO_DEBUG 1
+#if ENCUADRO_DEBUG
+		 double currentTime = CACurrentMediaTime();
+		 if (self.previousTime!=-1)
+		 self.dt=(currentTime-self.previousTime)*1000.0;
+		 self.previousTime=currentTime;
+		 double fps=1.0/self.dt*1000.0;
+		 self.frame_counter++;
+		 NSLog(@"dt: %f fps: %4.2f",self.dt,fps);
+#endif
     }
     
 }

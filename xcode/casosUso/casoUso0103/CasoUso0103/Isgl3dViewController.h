@@ -53,6 +53,11 @@
 @property float kalmanErrorGain;
 @property bool newRefPose;
 @property bool ini;
+@property double dt;
+@property double previousTime;
+@property double dt_mean;
+@property int frame_counter;
+
 
 - (void) lsdOriginal;
 - (void) procesamiento;

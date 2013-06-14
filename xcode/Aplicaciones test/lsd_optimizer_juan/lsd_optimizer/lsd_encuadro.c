@@ -188,9 +188,9 @@ static int float_equal(float a, float b)
   /* trivial case */
   if( a == b ) return TRUE;
 
-  abs_diff = fabs(a-b);
-  aa = fabs(a);
-  bb = fabs(b);
+  abs_diff = fabsf(a-b);
+  aa = fabsf(a);
+  bb = fabsf(b);
   abs_max = aa > bb ? aa : bb;
 
   /* DBL_MIN is the smallest normalized number, thus, the smallest
@@ -212,7 +212,7 @@ static int float_equal(float a, float b)
  */
 static float dist(float x1, float y1, float x2, float y2)
 {
-  return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
+  return sqrtf( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }
 
 
@@ -683,7 +683,7 @@ image_float gaussian_sampler( image_float in, image_float lum, float scale, floa
      than the central value. For that, h should be larger than x, with
      e^(-x^2/2sigma^2) = 1/10^prec.
      Then,
-     x = sigma * sqrt( 2 * prec * ln(10) ).
+     x = sigma * sqrtf( 2 * prec * ln(10) ).
      */
     prec = 3.0;
     h = (unsigned int) ceilf( sigma * sqrtf( 2.0 * prec * logf(10.0) ) );
@@ -805,7 +805,7 @@ image_float gaussian_sampler_vdsp( image_float in, image_float lum, float scale,
 	 than the central value. For that, h should be larger than x, with
 	 e^(-x^2/2sigma^2) = 1/10^prec.
 	 Then,
-	 x = sigma * sqrt( 2 * prec * ln(10) ).
+	 x = sigma * sqrtf( 2 * prec * ln(10) ).
 	 */
 	prec = 3.0;
 	h = (unsigned int) ceilf( sigma * sqrtf( 2.0 * prec * logf(10.0) ) );
@@ -968,7 +968,7 @@ static image_float ll_angle( image_float in, float threshold,
         gx = com1+com2; /* gradient x component */
         gy = com1-com2; /* gradient y component */
 //        norm2 = gx*gx+gy*gy;
-//        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+//        norm = sqrtf( norm2 / 4.0 ); /* gradient norm */
           
           norm = sqrtf( gx*gx+gy*gy)*0.5; /* gradient norm */
 
@@ -1182,7 +1182,7 @@ static float log_gamma_windschitl(float x)
 #define TABSIZE 100000
 
 /*----------------------------------------------------------------------------*/
-/** Computes -log10(NFA).
+/** Computes -log10f(NFA).
 
     NFA stands for Number of False Alarms:
     @f[
@@ -1197,7 +1197,7 @@ static float log_gamma_windschitl(float x)
                    p^{j} (1-p)^{n-j}
     @f]
 
-    The value -log10(NFA) is equivalent but more intuitive than NFA:
+    The value -log10f(NFA) is equivalent but more intuitive than NFA:
     - -1 corresponds to 10 mean false alarms
     -  0 corresponds to 1 mean false alarm
     -  1 corresponds to 0.1 mean false alarms
@@ -1297,13 +1297,13 @@ static float nfa(int n, int k, float p, float logNT)
                          (1.0-mult_term) - 1.0 );
 
           /* One wants an error at most of tolerance*final_result, or:
-             tolerance * abs(-log10(bin_tail)-logNT).
+             tolerance * abs(-log10f(bin_tail)-logNT).
              Now, the error that can be accepted on bin_tail is
              given by tolerance*final_result divided by the derivative
-             of -log10(x) when x=bin_tail. that is:
-             tolerance * abs(-log10(bin_tail)-logNT) / (1/bin_tail)
+             of -log10f(x) when x=bin_tail. that is:
+             tolerance * abs(-log10f(bin_tail)-logNT) / (1/bin_tail)
              Finally, we truncate the tail if the error is less than:
-             tolerance * abs(-log10(bin_tail)-logNT) * bin_tail        */
+             tolerance * abs(-log10f(bin_tail)-logNT) * bin_tail        */
           if( err < tolerance * fabsf(-log10f(bin_tail)-logNT) * bin_tail ) break;
         }
     }
@@ -1693,9 +1693,9 @@ static float rect_nfa(struct rect * rec, image_float angles, float logNT)
 
     that gives:
 
-      lambda1 = ( Ixx + Iyy + sqrt( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
+      lambda1 = ( Ixx + Iyy + sqrtf( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
 
-      lambda2 = ( Ixx + Iyy - sqrt( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
+      lambda2 = ( Ixx + Iyy - sqrtf( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
 
     To get the line segment direction we want to get the angle the
     eigenvector associated to the smallest eigenvalue. We have
@@ -1745,10 +1745,10 @@ static float get_theta( struct point * reg, int reg_size, float x, float y,
     error("get_theta: null inertia matrix.");
 
   /* compute smallest eigenvalue */
-  lambda = 0.5 * ( Ixx + Iyy - sqrt( (Ixx-Iyy)*(Ixx-Iyy) + 4.0*Ixy*Ixy ) );
+  lambda = 0.5 * ( Ixx + Iyy - sqrtf( (Ixx-Iyy)*(Ixx-Iyy) + 4.0*Ixy*Ixy ) );
 
   /* compute angle */
-  theta = fabs(Ixx)>fabs(Iyy) ? atan2f(lambda-Ixx,Ixy) : atan2f(Ixy,lambda-Iyy);
+  theta = fabsf(Ixx)>fabsf(Iyy) ? atan2f(lambda-Ixx,Ixy) : atan2f(Ixy,lambda-Iyy);
 
   /* The previous procedure doesn't cares about orientation,
      so it could be wrong by 180 degrees. Here is corrected if necessary. */
@@ -2114,7 +2114,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
         }
     }
   mean_angle = sum / (float) n;
-  tau = 2.0 * sqrt( (s_sum - 2.0 * mean_angle * sum) / (float) n
+  tau = 2.0 * sqrtf( (s_sum - 2.0 * mean_angle * sum) / (float) n
                          + mean_angle*mean_angle ); /* 2 * standard deviation */
 
   /* find a new region from the same starting point and new angle tolerance */
@@ -2194,11 +2194,11 @@ float * LineSegmentDetection_encuadro( int * n_out,
      the number of tests is
        11 * (X*Y)^(5/2)
      whose logarithm value is
-       log10(11) + 5/2 * (log10(X) + log10(Y)).
+       log10f(11) + 5/2 * (log10f(X) + log10f(Y)).
   */
-  logNT = 5.0 * ( log10( (float) xsize ) + log10( (float) ysize ) ) / 2.0
-          + log10(11.0);
-  min_reg_size = (int) (-logNT/log10(p)); /* minimal number of points in region
+  logNT = 5.0 * ( log10f( (float) xsize ) + log10f( (float) ysize ) ) / 2.0
+          + log10f(11.0);
+  min_reg_size = (int) (-logNT/log10f(p)); /* minimal number of points in region
                                              that can give a meaningful event */
 
 
@@ -2332,7 +2332,7 @@ float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height
     /* float quant = 2.0;           Bound to the quantization error on the
                                     gradient norm.                                */
     /* float ang_th = 22.5;         Gradient angle tolerance in degrees.           */
-    /* float log_eps = 0.0;         Detection threshold: -log10(NFA) > log_eps     */
+    /* float log_eps = 0.0;         Detection threshold: -log10f(NFA) > log_eps     */
     /* float density_th = 0.0; (0.7)Minimal density of region points in rectangle. */
     /* int n_bins = 1024;           Number of bins in pseudo-ordering of gradient
                                     modulus.                                       */
@@ -2412,10 +2412,10 @@ image_float gaussian_sampler_imfir(image_float in, float scale, float sigma_scal
 	 than the central value. For that, h should be larger than x, with
 	 e^(-x^2/2sigma^2) = 1/10^prec.
 	 Then,
-	 x = sigma * sqrt( 2 * prec * ln(10) ).
+	 x = sigma * sqrtf( 2 * prec * ln(10) ).
 	 */
 	prec = 3.0;
-	h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * logf(10.0) ) );
+	h = (unsigned int) ceil( sigma * sqrtf( 2.0 * prec * logf(10.0) ) );
 	/*La funcion log() corresponde al logaritmo neperiano*/
 	n = 1+2*h; /* kernel size */
 	printf("kernel size: %d\n",n);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="aZa-6H-Y4G">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12D78" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="aZa-6H-Y4G">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Nav Controller-->
@@ -132,13 +132,31 @@
                                     <action selector="kalmanErrorGain:" destination="qLV-Gf-k7N" eventType="valueChanged" id="DZn-Pd-kLy"/>
                                 </connections>
                             </slider>
+                            <view hidden="YES" alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KlR-w2-Y0o" userLabel="hudView">
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="abR-ZQ-3Hc" userLabel="Label - FPS">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="abR-ZQ-3Hc" firstAttribute="leading" secondItem="KlR-w2-Y0o" secondAttribute="leading" constant="59" id="L4E-nT-DCj"/>
+                                    <constraint firstItem="abR-ZQ-3Hc" firstAttribute="top" secondItem="KlR-w2-Y0o" secondAttribute="top" constant="29" id="T2d-fB-rcG"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="FiT-2a-96f" firstAttribute="top" secondItem="5kp-nH-nOx" secondAttribute="top" type="default" id="KpL-Db-G28"/>
                             <constraint firstAttribute="bottom" secondItem="FiT-2a-96f" secondAttribute="bottom" constant="70" id="Mwe-n6-Og4"/>
                             <constraint firstAttribute="trailing" secondItem="FiT-2a-96f" secondAttribute="trailing" constant="44" id="TJd-QH-Qlf"/>
+                            <constraint firstItem="KlR-w2-Y0o" firstAttribute="leading" secondItem="i77-Lo-wFK" secondAttribute="leading" constant="839" id="Thu-sK-31P"/>
+                            <constraint firstItem="KlR-w2-Y0o" firstAttribute="trailing" secondItem="i77-Lo-wFK" secondAttribute="trailing" type="default" id="XQ7-hy-Bzt"/>
+                            <constraint firstItem="KlR-w2-Y0o" firstAttribute="top" secondItem="i77-Lo-wFK" secondAttribute="top" type="default" id="irq-6L-5PN"/>
                             <constraint firstAttribute="trailing" secondItem="5kp-nH-nOx" secondAttribute="trailing" constant="12" id="o5c-Hs-NiI"/>
+                            <constraint firstAttribute="bottom" secondItem="KlR-w2-Y0o" secondAttribute="bottom" constant="589" id="p1i-Kz-Z8A"/>
                         </constraints>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
                     </view>

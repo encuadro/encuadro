@@ -188,9 +188,9 @@ static int float_equal(float a, float b)
   /* trivial case */
   if( a == b ) return TRUE;
 
-  abs_diff = fabs(a-b);
-  aa = fabs(a);
-  bb = fabs(b);
+  abs_diff = fabsf(a-b);
+  aa = fabsf(a);
+  bb = fabsf(b);
   abs_max = aa > bb ? aa : bb;
 
   /* DBL_MIN is the smallest normalized number, thus, the smallest
@@ -212,7 +212,7 @@ static int float_equal(float a, float b)
  */
 static float dist(float x1, float y1, float x2, float y2)
 {
-  return sqrt( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
+  return sqrtf( (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) );
 }
 
 
@@ -683,7 +683,7 @@ image_float gaussian_sampler( image_float in, image_float lum, float scale, floa
      than the central value. For that, h should be larger than x, with
      e^(-x^2/2sigma^2) = 1/10^prec.
      Then,
-     x = sigma * sqrt( 2 * prec * ln(10) ).
+     x = sigma * sqrtf( 2 * prec * ln(10) ).
      */
     prec = 3.0;
     h = (unsigned int) ceilf( sigma * sqrtf( 2.0 * prec * logf(10.0) ) );
@@ -805,7 +805,7 @@ image_float gaussian_sampler_vdsp( image_float in, image_float lum, float scale,
 	 than the central value. For that, h should be larger than x, with
 	 e^(-x^2/2sigma^2) = 1/10^prec.
 	 Then,
-	 x = sigma * sqrt( 2 * prec * ln(10) ).
+	 x = sigma * sqrtf( 2 * prec * ln(10) ).
 	 */
 	prec = 3.0;
 	h = (unsigned int) ceilf( sigma * sqrtf( 2.0 * prec * logf(10.0) ) );
@@ -968,7 +968,7 @@ static image_float ll_angle( image_float in, float threshold,
         gx = com1+com2; /* gradient x component */
         gy = com1-com2; /* gradient y component */
 //        norm2 = gx*gx+gy*gy;
-//        norm = sqrt( norm2 / 4.0 ); /* gradient norm */
+//        norm = sqrtf( norm2 / 4.0 ); /* gradient norm */
           
           norm = sqrtf( gx*gx+gy*gy)*0.5; /* gradient norm */
 
@@ -1077,10 +1077,46 @@ static inline int isaligned( int x, int y, image_float angles, float theta,
   return theta <= prec;
 }
 
+static inline int isaligned2( float a, float theta,
+									 float prec )
+{
+	
+	//float a;
+	
+	/* check parameters */
+	//  if( angles == NULL || angles->data == NULL )
+	//    error("isaligned: invalid image 'angles'.");
+	//  if( x < 0 || y < 0 || x >= (int) angles->xsize || y >= (int) angles->ysize )
+	//    error("isaligned: (x,y) out of the image.");
+	//  if( prec < 0.0 ) error("isaligned: 'prec' must be positive.");
+	
+	/* angle at pixel (x,y) */
+	//a = angles->data[ x + y * angles->xsize ];
+	
+	/* pixels whose level-line angle is not defined
+	 are considered as NON-aligned */
+	if( a == NOTDEF ) return FALSE;  /* there is no need to call the function
+												 'float_equal' here because there is
+												 no risk of problems related to the
+												 comparison floats, we are only
+												 interested in the exact NOTDEF value */
+	
+	/* it is assumed that 'theta' and 'a' are in the range [-pi,pi] */
+	theta -= a;
+	if( theta < 0.0 ) theta = -theta;
+	if( theta > M_3_2_PI )
+	{
+      theta -= M_2__PI;
+      if( theta < 0.0 ) theta = -theta;
+	}
+	
+	return theta <= prec;
+}
+
 /*----------------------------------------------------------------------------*/
 /** Absolute value angle difference.
  */
-static float angle_diff(float a, float b)
+static inline float angle_diff(float a, float b)
 {
   a -= b;
   while( a <= -M_PI ) a += M_2__PI;
@@ -1092,7 +1128,7 @@ static float angle_diff(float a, float b)
 /*----------------------------------------------------------------------------*/
 /** Signed angle difference.
  */
-static float angle_diff_signed(float a, float b)
+static inline float angle_diff_signed(float a, float b)
 {
   a -= b;
   while( a <= -M_PI ) a += M_2__PI;
@@ -1163,7 +1199,7 @@ static float log_gamma_lanczos(float x)
     @f]
     This formula is a good approximation when x > 15.
  */
-static float log_gamma_windschitl(float x)
+static inline float log_gamma_windschitl(float x)
 {
   return 0.918938533204673 + (x-0.5)*logf(x) - x
          + 0.5*x*logf( x*sinhf(1/x) + 1/(810.0*powf(x,6.0)) );
@@ -1182,7 +1218,7 @@ static float log_gamma_windschitl(float x)
 #define TABSIZE 100000
 
 /*----------------------------------------------------------------------------*/
-/** Computes -log10(NFA).
+/** Computes -log10f(NFA).
 
     NFA stands for Number of False Alarms:
     @f[
@@ -1197,7 +1233,7 @@ static float log_gamma_windschitl(float x)
                    p^{j} (1-p)^{n-j}
     @f]
 
-    The value -log10(NFA) is equivalent but more intuitive than NFA:
+    The value -log10f(NFA) is equivalent but more intuitive than NFA:
     - -1 corresponds to 10 mean false alarms
     -  0 corresponds to 1 mean false alarm
     -  1 corresponds to 0.1 mean false alarms
@@ -1223,7 +1259,7 @@ static float log_gamma_windschitl(float x)
     of the terms are neglected based on a bound to the error obtained
     (an error of 10% in the result is accepted).
  */
-static float nfa(int n, int k, float p, float logNT)
+static inline float nfa(int n, int k, float p, float logNT)
 {
   static float inv[TABSIZE];   /* table to keep computed inverse values */
   float tolerance = 0.1;       /* an error of 10% in the result is accepted */
@@ -1293,17 +1329,17 @@ static float nfa(int n, int k, float p, float logNT)
              Then, the error on the binomial tail when truncated at
              the i term can be bounded by a geometric series of form
              term_i * sum mult_term_i^j.                            */
-          err = term * ( ( 1.0 - pow( mult_term, (float) (n-i+1) ) ) /
+          err = term * ( ( 1.0 - powf( mult_term, (float) (n-i+1) ) ) /
                          (1.0-mult_term) - 1.0 );
 
           /* One wants an error at most of tolerance*final_result, or:
-             tolerance * abs(-log10(bin_tail)-logNT).
+             tolerance * abs(-log10f(bin_tail)-logNT).
              Now, the error that can be accepted on bin_tail is
              given by tolerance*final_result divided by the derivative
-             of -log10(x) when x=bin_tail. that is:
-             tolerance * abs(-log10(bin_tail)-logNT) / (1/bin_tail)
+             of -log10f(x) when x=bin_tail. that is:
+             tolerance * abs(-log10f(bin_tail)-logNT) / (1/bin_tail)
              Finally, we truncate the tail if the error is less than:
-             tolerance * abs(-log10(bin_tail)-logNT) * bin_tail        */
+             tolerance * abs(-log10f(bin_tail)-logNT) * bin_tail        */
           if( err < tolerance * fabsf(-log10f(bin_tail)-logNT) * bin_tail ) break;
         }
     }
@@ -1693,9 +1729,9 @@ static float rect_nfa(struct rect * rec, image_float angles, float logNT)
 
     that gives:
 
-      lambda1 = ( Ixx + Iyy + sqrt( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
+      lambda1 = ( Ixx + Iyy + sqrtf( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
 
-      lambda2 = ( Ixx + Iyy - sqrt( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
+      lambda2 = ( Ixx + Iyy - sqrtf( (Ixx-Iyy)^2 + 4.0*Ixy*Ixy) ) / 2
 
     To get the line segment direction we want to get the angle the
     eigenvector associated to the smallest eigenvalue. We have
@@ -1745,10 +1781,10 @@ static float get_theta( struct point * reg, int reg_size, float x, float y,
     error("get_theta: null inertia matrix.");
 
   /* compute smallest eigenvalue */
-  lambda = 0.5 * ( Ixx + Iyy - sqrt( (Ixx-Iyy)*(Ixx-Iyy) + 4.0*Ixy*Ixy ) );
+  lambda = 0.5 * ( Ixx + Iyy - sqrtf( (Ixx-Iyy)*(Ixx-Iyy) + 4.0*Ixy*Ixy ) );
 
   /* compute angle */
-  theta = fabs(Ixx)>fabs(Iyy) ? atan2f(lambda-Ixx,Ixy) : atan2f(Ixy,lambda-Iyy);
+  theta = fabsf(Ixx)>fabsf(Iyy) ? atan2f(lambda-Ixx,Ixy) : atan2f(Ixy,lambda-Iyy);
 
   /* The previous procedure doesn't cares about orientation,
      so it could be wrong by 180 degrees. Here is corrected if necessary. */
@@ -1857,30 +1893,94 @@ static void region_grow( int x, int y, image_float angles, struct point * reg,
   *reg_size = 1;
   reg[0].x = x;
   reg[0].y = y;
-  *reg_angle = angles->data[x+y*angles->xsize];  /* region's angle */
-  sumdx = cosf(*reg_angle);
-  sumdy = sinf(*reg_angle);
-  used->data[x+y*used->xsize] = USED;
+	//here im assuming that angles and used are the same size
 
+	int xsize=used->xsize;
+	int ysize=used->ysize;
+	int offset=x+y*xsize;
+
+  float reg_angle_tmp = angles->data[offset];  /* region's angle */
+	sumdx = cosf(reg_angle_tmp);
+  sumdy = sinf(reg_angle_tmp);
+
+	used->data[offset] = USED;
+	//printf("used: %d angles:  %d\n",used->xsize,angles->xsize);
+	
   /* try neighbors as new region points */
   for(i=0; i<*reg_size; i++)
-    for(xx=reg[i].x-1; xx<=reg[i].x+1; xx++)
-      for(yy=reg[i].y-1; yy<=reg[i].y+1; yy++)
-        if( xx>=0 && yy>=0 && xx<(int)used->xsize && yy<(int)used->ysize &&
-            used->data[xx+yy*used->xsize] != USED &&
-            isaligned(xx,yy,angles,*reg_angle,prec) )
-          {
+  {
+	  int yl=reg[i].y-1;
+	  int yh=yl+2;
+	  int xl=reg[i].x-1;
+	  int xh=xl+2;
+    for(xx=xl; xx<=xh; xx++)
+      for(yy=yl; yy<=yh; yy++)
+		{
+			int offset_i=xx+yy*xsize;
+			float angle=angles->data[offset_i];
+			//if( xx>=0 && yy>=0 && xx<(int)used->xsize && yy<(int)used->ysize && used->data[offset_i] != USED && isaligned(xx,yy,angles,*reg_angle,prec) )
+         if( xx>=0 && yy>=0 && xx<xsize && yy<ysize && used->data[offset_i] != USED && isaligned2(angle,*reg_angle,prec) )
+			{
             /* add point */
-            used->data[xx+yy*used->xsize] = USED;
+            used->data[offset_i] = USED;
             reg[*reg_size].x = xx;
             reg[*reg_size].y = yy;
             ++(*reg_size);
 
             /* update region's angle */
-            sumdx += cosf( angles->data[xx+yy*angles->xsize] );
-            sumdy += sinf( angles->data[xx+yy*angles->xsize] );
-            *reg_angle = atan2f(sumdy,sumdx);
+            sumdx += cosf( angle );
+            sumdy += sinf( angle );
+            reg_angle_tmp = atan2f(sumdy,sumdx);
           }
+		}
+  }
+	
+	*reg_angle=reg_angle_tmp;
+}
+
+static void region_grow2( int x, int y, image_float angles, struct point * reg,
+								int * reg_size, float * reg_angle, image_char used,
+								float prec )
+{
+	float sumdx,sumdy;
+	int xx,yy,i;
+	
+	/* first point of the region */
+	*reg_size = 1;
+	reg[0].x = x;
+	reg[0].y = y;
+	//here im assuming that angles and used are the same size
+	
+	int offset=x+y*used->xsize;
+	*reg_angle = angles->data[offset];  /* region's angle */
+	sumdx = cosf(*reg_angle);
+	sumdy = sinf(*reg_angle);
+	
+	used->data[offset] = USED;
+	//printf("used: %d angles:  %d\n",used->xsize,angles->xsize);
+	
+	/* try neighbors as new region points */
+	for(i=0; i<*reg_size; i++)
+		for(xx=reg[i].x-1; xx<=reg[i].x+1; xx++)
+			for(yy=reg[i].y-1; yy<=reg[i].y+1; yy++)
+			{
+				int offset_i=xx+yy*used->xsize;
+				float angle=angles->data[offset_i];
+				//if( xx>=0 && yy>=0 && xx<(int)used->xsize && yy<(int)used->ysize && used->data[offset_i] != USED && isaligned(xx,yy,angles,*reg_angle,prec) )
+				if( xx>=0 && yy>=0 && xx<(int)used->xsize && yy<(int)used->ysize && used->data[offset_i] != USED && isaligned2(angle,*reg_angle,prec) )
+				{
+					/* add point */
+					used->data[offset_i] = USED;
+					reg[*reg_size].x = xx;
+					reg[*reg_size].y = yy;
+					++(*reg_size);
+					
+					/* update region's angle */
+					sumdx += cosf( angle );
+					sumdy += sinf( angle );
+					*reg_angle = atan2f(sumdy,sumdx);
+				}
+			}
 }
 
 /*----------------------------------------------------------------------------*/
@@ -2114,7 +2214,7 @@ static int refine( struct point * reg, int * reg_size, image_float modgrad,
         }
     }
   mean_angle = sum / (float) n;
-  tau = 2.0 * sqrt( (s_sum - 2.0 * mean_angle * sum) / (float) n
+  tau = 2.0 * sqrtf( (s_sum - 2.0 * mean_angle * sum) / (float) n
                          + mean_angle*mean_angle ); /* 2 * standard deviation */
 
   /* find a new region from the same starting point and new angle tolerance */
@@ -2172,7 +2272,7 @@ float * LineSegmentDetection_encuadro( int * n_out,
   /* angle tolerance */
   prec = M_PI * ang_th / 180.0;
   p = ang_th / 180.0;
-  rho = quant / sin(prec); /* gradient magnitude threshold */
+  rho = quant / sinf(prec); /* gradient magnitude threshold */
 
 
   /* load and scale image (if necessary) and compute angle at each pixel */
@@ -2194,11 +2294,11 @@ float * LineSegmentDetection_encuadro( int * n_out,
      the number of tests is
        11 * (X*Y)^(5/2)
      whose logarithm value is
-       log10(11) + 5/2 * (log10(X) + log10(Y)).
+       log10f(11) + 5/2 * (log10f(X) + log10f(Y)).
   */
-  logNT = 5.0 * ( log10( (float) xsize ) + log10( (float) ysize ) ) / 2.0
-          + log10(11.0);
-  min_reg_size = (int) (-logNT/log10(p)); /* minimal number of points in region
+  logNT = 5.0 * ( log10f( (float) xsize ) + log10f( (float) ysize ) ) / 2.0
+          + log10f(11.0);
+  min_reg_size = (int) (-logNT/log10f(p)); /* minimal number of points in region
                                              that can give a meaningful event */
 
 
@@ -2213,13 +2313,17 @@ float * LineSegmentDetection_encuadro( int * n_out,
 
   /* search for line segments */
   for(; list_p != NULL; list_p = list_p->next )
-    if( used->data[ list_p->x + list_p->y * used->xsize ] == NOTUSED &&
-        angles->data[ list_p->x + list_p->y * angles->xsize ] != NOTDEF )
+  {
+	  int xi=list_p->x;
+	  int yi=list_p->y;
+	  int offset_i=xi + yi * xsize;
+    if( used->data[ offset_i ] == NOTUSED &&
+        angles->data[ offset_i ] != NOTDEF )
        /* there is no risk of float comparison problems here
           because we are only interested in the exact NOTDEF value */
       {
         /* find the region of connected point and ~equal angle */
-        region_grow( list_p->x, list_p->y, angles, reg, &reg_size,
+        region_grow( xi, yi, angles, reg, &reg_size,
                      &reg_angle, used, prec );
 
         /* reject small regions */
@@ -2280,7 +2384,7 @@ float * LineSegmentDetection_encuadro( int * n_out,
           for(i=0; i<reg_size; i++)
             region->data[ reg[i].x + reg[i].y * region->xsize ] = ls_count;
       }
-
+  }
 
   /* free memory */
   free( (void *) image );   /* only the float_image structure should be freed,
@@ -2332,7 +2436,7 @@ float* lsd_encuadro(int* quantSegments, float* luminancia, int width, int height
     /* float quant = 2.0;           Bound to the quantization error on the
                                     gradient norm.                                */
     /* float ang_th = 22.5;         Gradient angle tolerance in degrees.           */
-    /* float log_eps = 0.0;         Detection threshold: -log10(NFA) > log_eps     */
+    /* float log_eps = 0.0;         Detection threshold: -log10f(NFA) > log_eps     */
     /* float density_th = 0.0; (0.7)Minimal density of region points in rectangle. */
     /* int n_bins = 1024;           Number of bins in pseudo-ordering of gradient
                                     modulus.                                       */
@@ -2412,10 +2516,10 @@ image_float gaussian_sampler_imfir(image_float in, float scale, float sigma_scal
 	 than the central value. For that, h should be larger than x, with
 	 e^(-x^2/2sigma^2) = 1/10^prec.
 	 Then,
-	 x = sigma * sqrt( 2 * prec * ln(10) ).
+	 x = sigma * sqrtf( 2 * prec * ln(10) ).
 	 */
 	prec = 3.0;
-	h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * logf(10.0) ) );
+	h = (unsigned int) ceil( sigma * sqrtf( 2.0 * prec * logf(10.0) ) );
 	/*La funcion log() corresponde al logaritmo neperiano*/
 	n = 1+2*h; /* kernel size */
 	printf("kernel size: %d\n",n);

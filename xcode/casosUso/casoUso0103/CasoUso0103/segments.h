@@ -43,6 +43,7 @@ int lineSegmentIntersection(float Ax, float Ay,
 float** getCorners(int *listSize, float *list);
 
 float* filterSegments(int *listOutSize , int *listInSize , float *listIn, float distance_thr);
+float* filterSegments2(int *listOutSize , int *listInSize , float *listIn, float distance_thr);
 
 float** getMarkerCornersAlgo(int *listSize, float *list);
 
