@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#include "segments.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *vista;
@@ -162,14 +163,26 @@ int listSize;
 
 - (IBAction)lsd_optimizado:(id)sender {
 
-    NSLog(@"LSD_encuadro in\n");
-    list = lsd_encuadro(&listSize, datadouble, width, height);
-    NSLog(@"LSD_encuadro out\n");
-
-    printf("listSize_encuadro: %d\n",listSize);
-    
-    [self reconstruirImg:datadouble width:width height:height];
-    
+	for(int i=0;i<1;i++)
+	{
+		NSLog(@"LSD_encuadro in\n");
+		list = lsd_encuadro(&listSize, datadouble, width, height);
+		NSLog(@"LSD_encuadro out\n");
+		
+		printf("listSize_encuadro: %d\n",listSize);
+		
+		int listFiltradaSize =0;
+		//        printf("segmentFilterThresh= %f\n",_segmentFilterThres);
+		/*Filtrado de segmentos detectados por el LSD */
+		float* listFiltrada = filterSegments3(&listFiltradaSize , &listSize ,list, 36);
+		printf("listSizeFiltrada_encuadro: %d\n",listFiltradaSize);
+		printf("listSizeFiltrada_ptr: %f %f\n",listFiltrada[0],listFiltrada[1]);
+		[self reconstruirImg:datadouble width:width height:height];
+		//free(list);
+		//free(listFiltrada);
+   }
+		
+	
     free(list);
 
 }

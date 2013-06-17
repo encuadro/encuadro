@@ -291,7 +291,7 @@ bool thresInit=true;
 - (void) procesamiento
 {
     
-    if( (pixels[0] != INFINITY) && (height!=0) && (self.frame_counter<100))
+    if( (pixels[0] != INFINITY) && (height!=0) && (self.frame_counter>=0))
     {
     if (true) {
         
