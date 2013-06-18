@@ -500,7 +500,9 @@ float* luminancia;
     /////////viendo commit
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"videoplayback" ofType:@"mov"];
+    NSLog(@"movie MAURI: %@", moviePath);
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+    NSLog(@"movie MAURICIO: %@", movieURL);
     theMovieMaya = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
     //Place it in subview, else it won’t work
     theMovieMaya.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);

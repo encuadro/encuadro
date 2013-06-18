@@ -32,7 +32,7 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-    [theRequest setTimeoutInterval:50];
+    [theRequest setTimeoutInterval:60];
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
@@ -68,7 +68,7 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-    [theRequest setTimeoutInterval:50];
+    [theRequest setTimeoutInterval:60];
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
@@ -105,7 +105,7 @@
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-    [theRequest setTimeoutInterval:50];
+    [theRequest setTimeoutInterval:60];
     NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
     if( theConnection ){
         webData = [[NSMutableData data] retain];
@@ -169,6 +169,7 @@
     if ([elementName isEqualToString:@"return"]){
         finish = YES;
         worked = YES;
+        NSLog(@"%@",soapResults);
         //---displays the country---
         //[soapResults setString:@""];
         //elementFound = FALSE;

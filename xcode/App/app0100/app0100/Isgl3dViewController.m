@@ -459,31 +459,29 @@ UIImageOrientation orientation;
 
 -(void) desplegarVideo{
     /////////viendo commit
-    
     //NSBundle *bundle = [NSBundle mainBundle];
     //NSString *moviePath = [bundle pathForResource:self.videoName ofType:@"mov"];
     NSString *moviePath = self.videoName;
+   //self.videoName; //[NSString stringWithContentsOfFile:
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
-    NSLog(@"movie: %@", moviePath);
     theMovie = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
-    [theMovie prepareToPlay];
     //Place it in subview, else it won’t work
-    theMovie.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
     //theMovie.fullscreen=YES;
-    theMovie.controlStyle= MPMovieControlStyleDefault;
+    theMovie.controlStyle=MPMovieControlStyleDefault;
     theMovie.shouldAutoplay = YES;
     theMovie.movieSourceType = MPMovieSourceTypeFile;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     theMovie.scalingMode=MPMovieScalingModeFill;
-    
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
     moviePlayerWindow = [[UIApplication sharedApplication] keyWindow];
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
+        theMovie.view.frame = CGRectMake(0,0,60*1024/197,60*768/148);
     // Play the movie.
     NSLog(@"play");
     [self.view addSubview:theMovie.view];
-    [theMovie play];
+    [self.theMovie prepareToPlay];
+    [self.theMovie play];
 }
 
 

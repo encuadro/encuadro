@@ -21,6 +21,7 @@
     self.autorNombre = [[NSMutableArray alloc]init];
     self.autorDescripcion = [[NSMutableArray alloc]init];
     self.autorImagen = [[NSMutableArray alloc]init];
+    NSLog(@"mauri %@",self.autorImagen);
     c = [[conn alloc] initconFunc:@"getAllDataSalas"];
     while(!finish){
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
@@ -77,24 +78,35 @@
     self.autorNombre = [[NSMutableArray alloc]init];
     self.autorDescripcion = [[NSMutableArray alloc]init];
     self.autorImagen = [[NSMutableArray alloc]init];
+    NSLog(@"mauriscan %@",self.autorImagen);
     c2 = [[conn alloc]initconFunc:@"getDataSalaId2" yNomParam:@"id_sala" yParam:idSala];
+    
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
     if(worked == YES){
         NSMutableString *n2 = [c2 getSoap];
-        NSArray *d = [n2 componentsSeparatedByString:@"=>"];
-        [self.autorNombre addObject:[d objectAtIndex:0]];
-        [self.autorDescripcion addObject:[d objectAtIndex:1]];
-        rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-        FTP *f = [[FTP alloc]initWithString:rutita yotroString:[d objectAtIndex:2]];
-        while(!finiteFTP) {
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        if(![n2 isEqualToString:@"-1"]){
+            NSArray *d = [n2 componentsSeparatedByString:@"=>"];
+            [self.autorNombre addObject:[d objectAtIndex:0]];
+            [self.autorDescripcion addObject:[d objectAtIndex:1]];
+            rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
+            FTP *f = [[FTP alloc]initWithString:rutita yotroString:[d objectAtIndex:2]];
+            while(!finiteFTP) {
+                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            }
+            if(anduvo == NO)
+                [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
+            else
+                [self.autorImagen addObject:rutita];
+
         }
-        if(anduvo == NO)
-            [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-        else
-            [self.autorImagen addObject:rutita];
+        else{
+            [self.datos2 addObject:@"-1"];
+            [self.autorNombre addObject:@"-1"];
+            [self.autorDescripcion addObject:@"-1"];
+            [self.autorImagen addObject:@"-1"];
+        }
     }
     else{
         [self.datos2 addObject:@"-1"];

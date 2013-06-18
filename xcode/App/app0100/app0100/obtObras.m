@@ -167,6 +167,7 @@
                 }
                 else{
                     if(f == 8){
+                        NSLog(@"%@", [datos objectAtIndex:f]);
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
                         while(!finiteFTP) {
@@ -178,6 +179,7 @@
                             self.anim1 = ruta;
                     }
                     if(f==9){
+                        NSLog(@"%@", [datos objectAtIndex:f]);
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
                         while(!finiteFTP) {
@@ -189,6 +191,7 @@
                             self.anim2 = ruta;
                     }
                     if(f==10){
+                        NSLog(@"%@", [datos objectAtIndex:f]);
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
                         while(!finiteFTP) {
@@ -200,6 +203,7 @@
                             self.anim3 = ruta;
                     }
                     if(f==11){
+                        NSLog(@"%@", [datos objectAtIndex:f]);
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
                         while(!finiteFTP) {
@@ -211,6 +215,7 @@
                             self.anim4 = ruta;
                     }
                     if(f==12){
+                        NSLog(@"%@", [datos objectAtIndex:f]);
                         NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
                         FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
                         while(!finiteFTP) {
@@ -252,15 +257,14 @@
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
     NSMutableString *ms = [c getSoap];
-    NSLog(@"id desc %@",ms);
-    NSString *nms = [NSString stringWithString:ms];
-    do{
+    self.idObra = ms;
+    /*do{
         conn *c2 = [[conn alloc] initconFunc:@"terminoDescriptor" yNomParam:@"id_descriptor" yParam:nms];
         while(!finish) {
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
         }
         self.idObra = [c2 getSoap];
-    }while([self.idObra isEqualToString:@"-1"] || !(self.idObra));
+    }while([self.idObra isEqualToString:@"-1"] || !(self.idObra));*/
     conn *c3 = [[conn alloc] initconFunc:@"getNombreObraApartirDelID" yNomParam:@"id_obra" yParam:self.idObra];
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];

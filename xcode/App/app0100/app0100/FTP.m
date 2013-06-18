@@ -68,6 +68,10 @@
         finiteFTP = YES;
         anduvo = YES;
     }
+    else{
+        finiteFTP = YES;
+        anduvo = NO;
+    }
     //self.statusLabel.text = statusString;
     [[NetworkManager sharedInstance] didStopNetworkOperation];
 }
@@ -123,6 +127,7 @@
     assert(theConnection == connection);
     
     [self stopReceiveWithStatus:@"Connection failed"];
+    
 }
 
 -(void)connectionDidFinishLoading:(NSURLConnection *)theConnection{

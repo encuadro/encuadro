@@ -162,8 +162,6 @@
 }
 
 -(void)subir{
-    NSLog(@"%@", self.filePath);
-    NSLog(@"%@",opcionAutor);
     FTPUpload *fu = [[FTPUpload alloc]initWithString:self.filePath];
     while(!finiteUpload) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];

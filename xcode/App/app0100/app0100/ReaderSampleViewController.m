@@ -132,6 +132,11 @@
         //alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"                                                       message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         //[alertWithOkButton show];
         //[alertWithOkButton release];
+        if([[[os getNom] objectAtIndex:0] isEqualToString:@"-1"]){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Ocurrió un error al obtener los datos o no existe la sala." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else{
             [identObra setEnabled:YES];
             [tweet setEnabled:YES];
             NSMutableArray *obtNombre = [os getNom];
@@ -148,6 +153,8 @@
             [reader dismissViewControllerAnimated:YES completion:nil];
             opcionAutor = self.string;
             [actInd stopAnimating];
+        }
+            
         //}
     }
 
@@ -232,7 +239,11 @@ NSLog(@"IMAGE ANTES");
     
 }
 
-
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 //- (void) imagePickerControllerDidCancel: (UIImagePickerController *) picker {
 //    
 //    //[[picker parentViewController] dismissModalViewControllerAnimated: YES];
