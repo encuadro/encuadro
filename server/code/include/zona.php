@@ -1,8 +1,10 @@
 <?php
-include ("config.php");
+require_once("config.php");
+ mensaje_log("ZONA");
+
 function funAltaZona($largo, $ancho, $x, $y, $nombre_obra) {
-    global $ini_array;// = parse_ini_file("/var/include/confi.ini", true);
-    
+    global $ini_array ;// = parse_ini_file("/var/include/confi.ini", true);
+    mensaje_log("FUNCION ALTA ZONA (ZONA)");
     $reg = -1;
     $directorio = $ini_array['RUTA']['zona'];
     
@@ -40,7 +42,8 @@ function funAltaZona($largo, $ancho, $x, $y, $nombre_obra) {
 
 function funborrarZona($id_zona) {
  	global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
-    $bor = -1;
+	mensaje_log("FUNCION BORRAR ZONA (ZONA)");    
+	$bor = -1;
     $query = mysql_query("SELECT id_zona FROM zona WHERE id_zona = '$id_zona'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     $id = $row['id_zona'];
@@ -60,7 +63,9 @@ function funborrarZona($id_zona) {
 }
 
 function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
-    $mod = -2;
+	
+	mensaje_log("FUNCION MODIFICAR ZONA (ZONA)");    
+	$mod = -2;
     $query = mysql_query("SELECT id_zona FROM zona WHERE id_zona='$id_zona'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     $id = $row['id_zona'];
@@ -77,6 +82,7 @@ function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
 
 function funagregarContenidoZona($id_zona, $tipo, $nombre) {
     global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+	mensaje_log("FUNCION AGREGAR CONTENIDO ZONA (ZONA)");
 	$usu = $ini_array['ftpzona']['usu'];
 	$pass = $ini_array['ftpzona']['pass'];
 	$servidor = $ini_array['ftp']['servidor'];
@@ -101,8 +107,9 @@ function funagregarContenidoZona($id_zona, $tipo, $nombre) {
 }
 
 function fungetContenidoZona($id_zona) {
-    global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
-    $usu = $ini_array['ftpzona']['usu'];
+    global $ini_array ;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+	mensaje_log("FUNCION GET CONTENIDO ZONA");
+	$usu = $ini_array['ftpzona']['usu'];
     $pass = $ini_array['ftpzona']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
     $variable = "ftp://".$usu.":".$pass."@".$servidor."/" . $id_zona . "/";
@@ -146,7 +153,9 @@ function fungetContenidoZona($id_zona) {
 }
 
 function fungetContenidoZonaNombre($nombre) {
-        $u = "";
+	
+	mensaje_log("FUNCION GET CONTENIDO ZONA POR NOMBRE (ZONA)");        
+	$u = "";
 	try {
             $query = mysql_query("SELECT * FROM zona, contenido_zona WHERE zona.id_zona=contenido_zona.id_zona AND zona.nombre_zona='$nombre'") or die(mysql_error());
             $row = mysql_fetch_array($query2);
@@ -177,7 +186,9 @@ function fungetZonaObra($nombre_obra) {
 
 //---------------------------------------------------NUEVO-------------------------------------------------------------
 function fungetZonas() {
-    $u = "";
+	
+	mensaje_log("FUNCION GET ZONAS (ZONA)");    
+	$u = "";
     $query = mysql_query("SELECT nombre_zona FROM zona") or die(mysql_error());
         while ($res = mysql_fetch_assoc($query)) {
             $u = $u . $res['nombre_zona'] . "=>";

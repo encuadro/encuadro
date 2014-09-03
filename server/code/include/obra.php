@@ -1,6 +1,6 @@
 <?php
 
-
+error_log("OBRAS");
 ////////////////////////////////////////////////////////////Juego/////////////////////////////////
 
 /*
@@ -39,12 +39,11 @@ function funAltaJuego($nombre){
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-include("config.php");
-
+require_once("config.php");
 
 function funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_obra) {
     global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
-    
+    mensaje_log("FUNCION ALTA OBRA (OBRA)");
     $reg = -1;
     $directorio = $ini_array['RUTA']['obra'];
     $query = mysql_query("SELECT nombre_obra FROM obra WHERE nombre_obra = '$nombre_obra'") or die(mysql_error());
@@ -84,7 +83,8 @@ function funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_
 
 function funborrarObra($id_obra) {
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
-    global $ini_array;    
+    global $ini_array;
+    mensaje_log("FUNCION BORRAR OBRA (OBRA)");    
     $bor = -1;
     $query = mysql_query("SELECT * FROM obra WHERE id_obra = '$id_obra'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -130,6 +130,8 @@ $u = "";
 }
 
 function funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $autor_obra) {
+    
+    mensaje_log("FUNCION MODIFICAR OBRA (OBRA)");    
     $mod = -2;
     $query = mysql_query("SELECT id_obra FROM obra WHERE id_obra = '$id_obra'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -146,7 +148,8 @@ function funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $
 
 
 function fungetObrasl($nombre) {
-
+    
+    mensaje_log("FUNCION GET NOMBRE OBRAS (OBRA)");
 	$u = "";
         $query2 = mysql_query("SELECT nombre_obra FROM obra WHERE nombre_obra LIKE '$nombre%'") or die(mysql_error());
         while ($res = mysql_fetch_assoc($query2)) {
@@ -158,6 +161,8 @@ function fungetObrasl($nombre) {
 
 
 function fungetObras() {
+    
+    mensaje_log("FUNCION GET OBRAS (OBRA)");    
     $u = "";
     $query = mysql_query("SELECT nombre_obra FROM obra LIMIT 1") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -172,7 +177,8 @@ function fungetObras() {
 
 
 function fungetDataObra($nombre_obra) {
-    global $ini_array;    
+    global $ini_array;
+    mensaje_log("FUNCION GET DATA OBRA (OBRA)");    
     $u = "";
     
     $query = mysql_query("SELECT * FROM obra WHERE nombre_obra='$nombre_obra'") or die(mysql_error());
@@ -189,6 +195,8 @@ function fungetDataObra($nombre_obra) {
     return $u;
 }
 function fungetDataObraId($id) {
+    
+    mensaje_log("FUNCION GET DATA OBRA ID (OBRA)");    
     $u = "";
     $query = mysql_query("SELECT * FROM obra WHERE id_obra='$id'") or die(mysql_error());
 
@@ -199,7 +207,8 @@ function fungetDataObraId($id) {
     return $u;
 }
 function funagregarContenidoObra($id_obra,$tipo,$nombre){ 
-        global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+        global $ini_array ;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+        mensaje_log("FUNCION AGREGAR CONTENIDO OBRA (OBRA)");        
         $usu = $ini_array['ftpobra']['usu'];
         $pass = $ini_array['ftpobra']['pass'];
         $servidor = $ini_array['ftp']['servidor'];
@@ -249,7 +258,8 @@ function funconvertirvideo($id_obra)
 {		
 	//$id_obra=180;
 	global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
-	 $dir = $ini_array['RUTA']['obra'] . $id_obra .'/'. "video" . '/';
+    mensaje_log("FUNCION CONVERTIR VIDEO (OBRA)");	
+     $dir = $ini_array['RUTA']['obra'] . $id_obra .'/'. "video" . '/';
 	
 	$query = mysql_query("SELECT * FROM contenido_obra WHERE id_obra = '$id_obra'") or die(mysql_error());
 	$res = mysql_fetch_array($query);
@@ -276,7 +286,8 @@ function funconvertirvideo($id_obra)
 
 function funconvertirimagen($id_obra)
 {
-    global $ini_array;
+    global $ini_array ;
+    mensaje_log("FUNCION CONVERTIR IMAGEN (OBRA)");
 	$dir = $ini_array['RUTA']['obra'] . $id_obra . '/' . "imagen" . '/';
 	$query = mysql_query("SELECT imagen FROM contenido_obra WHERE id_obra = $id_obra") or die(mysql_error());
 	$res = mysql_fetch_assoc($query);
@@ -292,6 +303,7 @@ function funconvertirimagen($id_obra)
 
 function funmodificarContenidoObra($id_obra, $tipo) {
     global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+    mensaje_log("FUNCION MODIFICAR CONTENIDO OBRA (OBRA)");    
     $mod = -2;
     $query = mysql_query("SELECT * FROM obra WHERE id_obra = '$id_obra'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -310,6 +322,7 @@ function funmodificarContenidoObra($id_obra, $tipo) {
 
 function fungetContenidoObra($nombre) {
     global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+    mensaje_log("FUNCION GET CONTENIDO OBRA (OBRA)");    
     $usu = $ini_array['ftpobra']['usu'];
     $pass = $ini_array['ftpobra']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
@@ -364,7 +377,9 @@ function fungetContenidoObra($nombre) {
 }
 
 function fungetObraSala($id) {
-    $u = "";
+    
+    mensaje_log("FUNCION GET OBRA SALA (OBRA)");    
+    $u = "";    
     $query = mysql_query("SELECT * FROM obra WHERE id_sala='$id'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
@@ -379,7 +394,8 @@ function fungetObraSala($id) {
 }
 
 function fungetAllDataObraSala($id) {
-    global $ini_array;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+    global $ini_array ;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+    mensaje_log("FUNCION GET ALL DATA OBRA SALA (OBRA)");    
     $usu = $ini_array['ftpobra']['usu'];
     $pass = $ini_array['ftpobra']['pass'];
     $servidor = $ini_array['ftp']['servidor'];   

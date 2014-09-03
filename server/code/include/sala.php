@@ -2,10 +2,8 @@
 
 //$ini_file = "/var/include/confi.ini";
 //$ini_array = parse_ini_file($ini_file,true);
-include("config.php");
-$enable_log = $ini_array['general']['enable_log'];
-if($enable_log)
-  error_log('INGRESO SALAS');
+require_once("config.php");
+mensaje_log('SALAS');
  
 function fungetAllDataSalas() {	    
     global $ini_array;    
@@ -34,8 +32,8 @@ function fungetListImgSalas() {
 }
 
 function funAltaSala($nombre_sala, $descripcion_sala) {
-    global $enable_log, $ini_array;    
-    if($enable_log) error_log("FUNCION ALTA SALA");	  
+    global $ini_array;    
+    mensaje_log("FUNCION ALTA SALA");	  
     //$ini_array = parse_ini_file($ini_file, true);
     $reg = -1;   
     $directorio = $ini_array['RUTA']['sala'];//"/home/server/proyecto/salas/";
@@ -72,8 +70,8 @@ function funAltaSala($nombre_sala, $descripcion_sala) {
 }
 
 function funborrarSala($id_sala) {
-    global $ini_array,$enable_log;
-    if($enable_log) error_log("FUNCION GET DATA SALA ID2");    
+    global $ini_array;
+    mensaje_log("FUNCION BORRAR SALA (SALA)");    
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $dirsala = $ini_array['RUTA']['sala'];
     $dirobra = $ini_array['RUTA']['obra'];
@@ -125,6 +123,8 @@ function funborrarSala($id_sala) {
 }
 
 function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
+    
+    mensaje_log("FUNCION MODIFICAR SALA (SALA)");
     $mod = -2;
     $query = mysql_query("SELECT id_sala FROM sala WHERE id_sala = '$id_sala'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -141,7 +141,7 @@ function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
 
 function funsetQr($id_sala, $qr) {
     global $ini_array,$enable_log;
-    if($enable_log) error_log("FUNCION SET QR");    
+    mensaje_log("FUNCION SET QR (SALA)");    
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -161,6 +161,8 @@ function funsetQr($id_sala, $qr) {
 }
 
 function fungetSalas() {
+    
+    mensaje_log("FUNCION GET SALAS (SALA)");    
     $u = "";
     $query = mysql_query("SELECT * FROM sala") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -177,6 +179,8 @@ function fungetSalas() {
 }
 
 function fungetNombreSalas() {
+     ;
+    mensaje_log("FUNCION GET NOMBRE SALAS (SALA)");    
     $u = "";
     $query = mysql_query("SELECT nombre_sala FROM sala") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -190,8 +194,8 @@ function fungetNombreSalas() {
 }
 
 function fungetDataSalaId($id_sala) {
-    global $enable_log;
-    if($enable_log) error_log("FUNCION GET DATA SALA ID");
+    
+    mensaje_log("FUNCION GET DATA SALA ID (SALA)");
     $u = "";
     $query = mysql_query("SELECT * FROM sala WHERE id_sala='$id_sala'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -203,8 +207,8 @@ function fungetDataSalaId($id_sala) {
 
 
 function fungetDataSalaId2($id_sala){   
-    global $ini_array,$enable_log;
-    if($enable_log) error_log("FUNCION GET DATA SALA ID2");    
+    global $ini_array;
+    mensaje_log("FUNCION GET DATA SALA ID2 (SALA)");    
     $u = "-1";
 	//$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
@@ -230,6 +234,8 @@ function fungetDataSalaId2($id_sala){
  }
 
 function fungetDataSalaNombre($nombre) {
+     
+    mensaje_log("FUNCION GET DATA SALA NOMBRE (SALA)");
     $u = "";
     $query = mysql_query("SELECT * FROM sala WHERE nombre_sala='$nombre'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -241,6 +247,8 @@ function fungetDataSalaNombre($nombre) {
 
 function fungetDataSalaNombreImagen($nombre){
      //conectar();
+     ;
+    mensaje_log("FUNCION GET DATA SALA NOMBRE IMAGEN (SALA)");
      $u = "";
 	try{
 	    $query = mysql_query("SELECT sala.id_sala, sala.nombre_sala, sala.descripcion_sala, contenido_sala.imagen FROM sala, contenido_sala WHERE  sala.nombre_sala='$nombre' AND sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
@@ -257,6 +265,8 @@ function fungetDataSalaNombreImagen($nombre){
 
 function fungetDataSalaIdImagen($id){
      //conectar();
+    
+    mensaje_log("FUNCION GET DATA SALA ID IMAGEN (SALA)");
      $u = "";
 	try{
 	    $query = mysql_query("SELECT sala.id_sala, sala.nombre_sala, sala.descripcion_sala, contenido_sala.imagen FROM sala, contenido_sala WHERE  sala.id_sala='$id' AND sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
@@ -272,6 +282,8 @@ function fungetDataSalaIdImagen($id){
  }
 function fungetVideoSalaId($id){
      //conectar();
+     
+    mensaje_log("FUNCION GET VIDEO SALA ID (SALA)");
      $u = "0";
 	try{
 	    $query = mysql_query("SELECT contenido_sala.video FROM sala, contenido_sala WHERE  sala.id_sala='$id' AND sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
@@ -287,6 +299,8 @@ function fungetVideoSalaId($id){
  }
 //-----------------------------------------------------NUEVO----------------------------
 function fungetSalasl($nombre) {
+     
+    mensaje_log("FUNCION GET SALAS LIKE (SALA)");
 
 	$u = "";
         $query2 = mysql_query("SELECT nombre_sala FROM sala WHERE nombre_sala LIKE '$nombre%'") or die(mysql_error());
@@ -300,8 +314,8 @@ function fungetSalasl($nombre) {
 
 //-----------------------------------------------------NUEVO----------------------------
 function funagregarContenidoSala($id_sala, $tipo, $nombre) {
-    global $ini_array,$enable_log;
-    if($enable_log) error_log("FUNCION AGREGAR CONTENIDO SALA");    
+    global $ini_array;
+    mensaje_log("FUNCION AGREGAR CONTENIDO SALA");    
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -331,6 +345,8 @@ function funagregarContenidoSala($id_sala, $tipo, $nombre) {
 }
 
 function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
+    
+    mensaje_log("FUNCION AGREGAR CONTENIDO SALA 2 (SALA)");
     $mod = -2;
     $query = mysql_query("SELECT id_sala FROM sala WHERE id_sala = '$id_sala'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -348,8 +364,8 @@ function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
 }
 
 function fungetContenidoSala($id) {
-    global $ini_array,$enable_log;
-    if($enable_log) error_log("FUNCION GET DATA SALA ID2");    
+    global $ini_array;
+    mensaje_log("FUNCION GET CONTENIDO SALA SALA (SALA)");    
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -385,6 +401,8 @@ function fungetContenidoSala($id) {
 }
 
 function funexisteSala($id) {
+    
+    mensaje_log("FUNCION EXISTE SALA (SALA)");
     $u = 0;
     $query = mysql_query("SELECT id_sala FROM sala WHERE id_sala='$id'") or die(mysql_error());
     $row = mysql_fetch_array($query);

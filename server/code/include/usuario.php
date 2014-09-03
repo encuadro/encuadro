@@ -1,10 +1,12 @@
 <?php
-include("config.php");//$ini_array = parse_ini_file("/var/include/confi.ini", true);
+require_once("config.php");//$ini_array = parse_ini_file("/var/include/confi.ini", true);
 $ruta = $ini_array['RUTA']['include'];
 //include($ruta."funciones.php");
 
 //-----------------------------------JUEGO------------------------------------
 function funAltaJuego($nombre) {
+     
+    mensaje_log("FUNCION ALTA JUEGO (USUARIO)");
     $reg = -1;
 	try {
 		$query = mysql_query("INSERT INTO Juego(nombre) VALUES ('$nombre')") or die(mysql_error());
