@@ -1,0 +1,1652 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://10.0.2.109/server_php/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://10.0.2.109/server_php/">
+<types>
+<xsd:schema targetNamespace="http://10.0.2.109/server_php/"
+>
+ <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+ <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+</xsd:schema>
+</types>
+<message name="pruebaEscribirRequest"></message>
+<message name="pruebaEscribirResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="BusquedaPistaRequest">
+  <part name="id_Obra" type="xsd:int" />
+  <part name="id_Juego" type="xsd:int" /></message>
+<message name="BusquedaPistaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="ModificarPistaRequest">
+  <part name="id_Obra" type="xsd:int" />
+  <part name="id_Juego" type="xsd:int" />
+  <part name="Pista" type="xsd:string" /></message>
+<message name="ModificarPistaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AltaJuegoRequest">
+  <part name="nombre" type="xsd:string" /></message>
+<message name="AltaJuegoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="CantidadObrasJuegoRequest">
+  <part name="id_juego" type="xsd:int" /></message>
+<message name="CantidadObrasJuegoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AgregarPistaRequest">
+  <part name="nomObra" type="xsd:string" /></message>
+<message name="AgregarPistaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="ObraPerteneceAJuegoRequest">
+  <part name="id_Obra" type="xsd:int" /></message>
+<message name="ObraPerteneceAJuegoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getalgoRequest">
+  <part name="nombre" type="xsd:string" />
+  <part name="nomProx" type="xsd:string" />
+  <part name="idjuego" type="xsd:int" />
+  <part name="pista" type="xsd:string" /></message>
+<message name="getalgoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="convertirvideoRequest">
+  <part name="id_obra" type="xsd:int" /></message>
+<message name="convertirvideoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="convertirimagenRequest">
+  <part name="id_obra" type="xsd:int" /></message>
+<message name="convertirimagenResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="gethoraRequest"></message>
+<message name="gethoraResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getpuntajeRequest">
+  <part name="id_visitante" type="xsd:int" />
+  <part name="id_juego" type="xsd:int" /></message>
+<message name="getpuntajeResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getpuntajesRequest"></message>
+<message name="getpuntajesResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getposicionRequest">
+  <part name="id_visitante" type="xsd:int" /></message>
+<message name="getposicionResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="finJuegoRequest">
+  <part name="id_visitante" type="xsd:int" />
+  <part name="id_juego" type="xsd:int" />
+  <part name="puntajes" type="xsd:int" />
+  <part name="nick_name" type="xsd:string" /></message>
+<message name="finJuegoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="loginRequest">
+  <part name="user" type="xsd:string" />
+  <part name="pass" type="xsd:string" /></message>
+<message name="loginResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AltaUsuarioRequest">
+  <part name="nombre" type="xsd:string" />
+  <part name="apellido" type="xsd:string" />
+  <part name="cedula" type="xsd:string" />
+  <part name="email" type="xsd:string" />
+  <part name="tipoUs" type="xsd:int" />
+  <part name="nick" type="xsd:string" />
+  <part name="pass" type="xsd:string" /></message>
+<message name="AltaUsuarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="modificarUsuarioRequest">
+  <part name="nombre" type="xsd:string" />
+  <part name="apellido" type="xsd:string" />
+  <part name="cedula" type="xsd:string" />
+  <part name="email" type="xsd:string" />
+  <part name="tipoUs" type="xsd:int" />
+  <part name="nick" type="xsd:string" />
+  <part name="pass" type="xsd:string" />
+  <part name="idUsuario" type="xsd:int" /></message>
+<message name="modificarUsuarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="borrarUsuarioRequest">
+  <part name="idUsuario" type="xsd:int" /></message>
+<message name="borrarUsuarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="passwdRequest">
+  <part name="nick" type="xsd:string" />
+  <part name="pass" type="xsd:string" /></message>
+<message name="passwdResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="getUsuariosRequest"></message>
+<message name="getUsuariosResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getUsuariosAdminRequest"></message>
+<message name="getUsuariosAdminResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getUsuariosEmpleadoRequest"></message>
+<message name="getUsuariosEmpleadoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataUsuarioRequest">
+  <part name="nick" type="xsd:string" /></message>
+<message name="getDataUsuarioResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="tipoUsuarioRequest">
+  <part name="nick" type="xsd:string" /></message>
+<message name="tipoUsuarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="temporalRequest">
+  <part name="nick" type="xsd:string" /></message>
+<message name="temporalResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="getAllDataSalasRequest"></message>
+<message name="getAllDataSalasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AltaSalaRequest">
+  <part name="nombre_sala" type="xsd:string" />
+  <part name="descripcion_sala" type="xsd:string" /></message>
+<message name="AltaSalaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="agregarContenidoSalaRequest">
+  <part name="id_sala" type="xsd:int" />
+  <part name="tipo" type="xsd:string" />
+  <part name="nombre" type="xsd:string" /></message>
+<message name="agregarContenidoSalaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="borrarSalaRequest">
+  <part name="id_sala" type="xsd:int" /></message>
+<message name="borrarSalaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="modificarSalaRequest">
+  <part name="id_sala" type="xsd:int" />
+  <part name="nombre_sala" type="xsd:string" />
+  <part name="descripcion_sala" type="xsd:string" /></message>
+<message name="modificarSalaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="getSalasRequest"></message>
+<message name="getSalasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getNombreSalasRequest"></message>
+<message name="getNombreSalasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataSalaIdRequest">
+  <part name="id_sala" type="xsd:int" /></message>
+<message name="getDataSalaIdResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataSalaId2Request">
+  <part name="id_sala" type="xsd:int" /></message>
+<message name="getDataSalaId2Response">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataSalaNombreRequest">
+  <part name="nombre" type="xsd:string" /></message>
+<message name="getDataSalaNombreResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataSalaNombreImagenRequest">
+  <part name="nombre" type="xsd:string" /></message>
+<message name="getDataSalaNombreImagenResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataSalaIdImagenRequest">
+  <part name="id" type="xsd:string" /></message>
+<message name="getDataSalaIdImagenResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getVideoSalaIdRequest">
+  <part name="id" type="xsd:string" /></message>
+<message name="getVideoSalaIdResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AltavisitaRequest">
+  <part name="nacionalidad" type="xsd:string" />
+  <part name="sexo" type="xsd:string" />
+  <part name="tipo_visita" type="xsd:string" />
+  <part name="rango_edad" type="xsd:string" /></message>
+<message name="AltavisitaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getSalaslRequest">
+  <part name="nombre_sala" type="xsd:string" /></message>
+<message name="getSalaslResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getListImgSalas()Request"></message>
+<message name="getListImgSalas()Response">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDatosVisitaRequest"></message>
+<message name="getDatosVisitaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getContenidoSalaRequest">
+  <part name="id" type="xsd:int" /></message>
+<message name="getContenidoSalaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getContenidoSalaNombreRequest">
+  <part name="nombre" type="xsd:int" /></message>
+<message name="getContenidoSalaNombreResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="setQrRequest">
+  <part name="id_sala" type="xsd:int" />
+  <part name="qr" type="xsd:string" /></message>
+<message name="setQrResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="existeSalaRequest">
+  <part name="id" type="xsd:int" /></message>
+<message name="existeSalaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AltaObraRequest">
+  <part name="nombre_sala" type="xsd:string" />
+  <part name="descripcion_sala" type="xsd:string" />
+  <part name="imagen" type="xsd:string" />
+  <part name="id_sala" type="xsd:string" />
+  <part name="autor_obra" type="xsd:string" /></message>
+<message name="AltaObraResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="modificarObraRequest">
+  <part name="id_obra" type="xsd:int" />
+  <part name="nombre_obra" type="xsd:string" />
+  <part name="descripcion_obra" type="xsd:string" />
+  <part name="id_sala" type="xsd:int" />
+  <part name="autor_obra" type="xsd:string" /></message>
+<message name="modificarObraResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="borrarObraRequest">
+  <part name="id_obra" type="xsd:int" /></message>
+<message name="borrarObraResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="agregarContenidoObraRequest">
+  <part name="id_obra" type="xsd:int" />
+  <part name="tipo" type="xsd:string" />
+  <part name="nombre" type="xsd:string" /></message>
+<message name="agregarContenidoObraResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="modificarContenidoObraRequest">
+  <part name="id_obra" type="xsd:int" />
+  <part name="tipo" type="xsd:string" /></message>
+<message name="modificarContenidoObraResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="getContenidoObraRequest">
+  <part name="nombre" type="xsd:string" /></message>
+<message name="getContenidoObraResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getObraSalaRequest">
+  <part name="id" type="xsd:int" /></message>
+<message name="getObraSalaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataObraRequest">
+  <part name="nombre_obra" type="xsd:string" /></message>
+<message name="getDataObraResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="respRequest">
+  <part name="id" type="xsd:int" /></message>
+<message name="respResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="respcerradaRequest">
+  <part name="id" type="xsd:int" /></message>
+<message name="respcerradaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataObraIdRequest">
+  <part name="id_obra" type="xsd:string" /></message>
+<message name="getDataObraIdResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getDataObraLikeRequest">
+  <part name="nombre_obra" type="xsd:string" /></message>
+<message name="getDataObraLikeResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getNombreObraLikeRequest"></message>
+<message name="getNombreObraLikeResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getZonasRequest"></message>
+<message name="getZonasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getAllDataObraSalaRequest">
+  <part name="id" type="xsd:int" /></message>
+<message name="getAllDataObraSalaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getNombreObraApartirDelIDRequest">
+  <part name="id_obra" type="xsd:int" /></message>
+<message name="getNombreObraApartirDelIDResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getObrasRequest"></message>
+<message name="getObrasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getObraslRequest">
+  <part name="nombre_obra" type="xsd:string" /></message>
+<message name="getObraslResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AltaZonaRequest">
+  <part name="largo" type="xsd:int" />
+  <part name="ancho" type="xsd:int" />
+  <part name="x" type="xsd:int" />
+  <part name="y" type="xsd:int" />
+  <part name="nombre_obra" type="xsd:string" /></message>
+<message name="AltaZonaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="modificarZonaRequest">
+  <part name="id_zona" type="xsd:int" />
+  <part name="largo" type="xsd:int" />
+  <part name="ancho" type="xsd:int" />
+  <part name="x" type="xsd:int" />
+  <part name="y" type="xsd:int" /></message>
+<message name="modificarZonaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="borrarZonaRequest">
+  <part name="id_zona" type="xsd:int" /></message>
+<message name="borrarZonaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="agregarContenidoZonaRequest">
+  <part name="id_zona" type="xsd:int" />
+  <part name="tipo" type="xsd:string" />
+  <part name="nombre" type="xsd:string" /></message>
+<message name="agregarContenidoZonaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getContenidoZonaRequest">
+  <part name="id_zona" type="xsd:int" /></message>
+<message name="getContenidoZonaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getContenidoZonaNombreRequest">
+  <part name="nombre_zona" type="xsd:int" /></message>
+<message name="getContenidoZonaNombreResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getZonaObraRequest">
+  <part name="nombre_obra" type="xsd:string" /></message>
+<message name="getZonaObraResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getNombreObraRequest">
+  <part name="id_sala" type="xsd:int" />
+  <part name="nombre_archivo" type="xsd:string" /></message>
+<message name="getNombreObraResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="getNombreObra2Request">
+  <part name="nombre_archivo" type="xsd:string" /></message>
+<message name="getNombreObra2Response">
+  <part name="return" type="xsd:int" /></message>
+<message name="generarDescriptorRequest">
+  <part name="id_sala" type="xsd:int" />
+  <part name="id_obra" type="xsd:int" />
+  <part name="nombre_archivo" type="xsd:string" /></message>
+<message name="generarDescriptorResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="PrimeraDeJuegoRequest">
+  <part name="id_juego" type="xsd:int" />
+  <part name="nom_obra" type="xsd:string" /></message>
+<message name="PrimeraDeJuegoResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="getJuegosRequest"></message>
+<message name="getJuegosResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AgregarCuestionarioRequest">
+  <part name="nombre" type="xsd:string" />
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="AgregarCuestionarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="ActivarJuegoRequest">
+  <part name="id_juego" type="xsd:int" /></message>
+<message name="ActivarJuegoResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="RecorridoJuegoRequest">
+  <part name="id_juego" type="xsd:int" />
+  <part name="recorrido" type="xsd:int" /></message>
+<message name="RecorridoJuegoResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="SetJuegoBorradoRequest">
+  <part name="id_juego" type="xsd:int" /></message>
+<message name="SetJuegoBorradoResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetObrasDeJuegoRequest">
+  <part name="id_juego" type="xsd:int" /></message>
+<message name="GetObrasDeJuegoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="SetJuegoRequest">
+  <part name="id_juego" type="xsd:int" />
+  <part name="nombre" type="xsd:string" />
+  <part name="recorrido" type="xsd:int" /></message>
+<message name="SetJuegoResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetPistasRequest">
+  <part name="id_juego" type="xsd:int" /></message>
+<message name="GetPistasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetNombreJuegoActivoRequest"></message>
+<message name="GetNombreJuegoActivoResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="AgregarCuestionariooRequest">
+  <part name="nombre" type="xsd:string" />
+  <part name="descripcion" type="xsd:string" />
+  <part name="fecha_creacion" type="xsd:string" />
+  <part name="id_creador" type="xsd:int" /></message>
+<message name="AgregarCuestionariooResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AgregarValorOpcionRequest">
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="AgregarValorOpcionResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AgregarPreguntaRequest">
+  <part name="descripcion" type="xsd:string" />
+  <part name="tipo" type="xsd:int" /></message>
+<message name="AgregarPreguntaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AsociarPreguntaConOpcionRequest">
+  <part name="id_preg" type="xsd:int" />
+  <part name="id_op" type="xsd:int" /></message>
+<message name="AsociarPreguntaConOpcionResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AsociarPreguntaConCuestionarioRequest">
+  <part name="id_preg" type="xsd:int" />
+  <part name="id_cuest" type="xsd:int" />
+  <part name="indice" type="xsd:int" /></message>
+<message name="AsociarPreguntaConCuestionarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetCuestionariosRequest"></message>
+<message name="GetCuestionariosResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetPreguntasRequest">
+  <part name="id_cuest" type="xsd:int" /></message>
+<message name="GetPreguntasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="setCuestionarioVisitanteRequest">
+  <part name="id_visitante" type="xsd:int" />
+  <part name="result" type="xsd:string" /></message>
+<message name="setCuestionarioVisitanteResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="getfrutamadreRequest"></message>
+<message name="getfrutamadreResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetTextPreguntasRequest">
+  <part name="id_cuest" type="xsd:int" /></message>
+<message name="GetTextPreguntasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetRespPreguntasRequest">
+  <part name="id_preg" type="xsd:int" /></message>
+<message name="GetRespPreguntasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="SetOpcionRequest">
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="SetOpcionResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AsociarOpcionesConValoresRequest">
+  <part name="id_opc" type="xsd:int" />
+  <part name="valor" type="xsd:int" /></message>
+<message name="AsociarOpcionesConValoresResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="AgregarPregunta2Request">
+  <part name="descripcion" type="xsd:string" />
+  <part name="tipo" type="xsd:int" />
+  <part name="id_opciones" type="xsd:int" /></message>
+<message name="AgregarPregunta2Response">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetOpcionesRequest"></message>
+<message name="GetOpcionesResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetValoresDeOpcionRequest">
+  <part name="id_opcion" type="xsd:int" /></message>
+<message name="GetValoresDeOpcionResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetValoresDeOpcionesRequest"></message>
+<message name="GetValoresDeOpcionesResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="SetValorOpccRequest">
+  <part name="id_val" type="xsd:string" />
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="SetValorOpccResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="IsValorAsociadoAOpcionRequest">
+  <part name="id_valor" type="xsd:string" /></message>
+<message name="IsValorAsociadoAOpcionResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="BorrarValorOpcRequest">
+  <part name="idValor" type="xsd:int" /></message>
+<message name="BorrarValorOpcResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="IsGrupoOpcAsociadoAPreguntasRequest">
+  <part name="id_grupo" type="xsd:string" /></message>
+<message name="IsGrupoOpcAsociadoAPreguntasResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="SetOpcionnRequest">
+  <part name="id_opc" type="xsd:string" />
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="SetOpcionnResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="BorrarOpcionRequest">
+  <part name="idOpcion" type="xsd:int" /></message>
+<message name="BorrarOpcionResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="IsPreguntaAsociadaACuestionarioRequest">
+  <part name="id_preg" type="xsd:string" /></message>
+<message name="IsPreguntaAsociadaACuestionarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="BorrarPreguntaRequest">
+  <part name="idpreg" type="xsd:int" /></message>
+<message name="BorrarPreguntaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetDatosPreguntaRequest">
+  <part name="id_cuest" type="xsd:int" /></message>
+<message name="GetDatosPreguntaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="SetCuestionariioRequest">
+  <part name="id_cuest" type="xsd:int" />
+  <part name="nombre" type="xsd:string" />
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="SetCuestionariioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="BorrarRelacionPreguntasCuestionarioRequest">
+  <part name="idCuest" type="xsd:int" /></message>
+<message name="BorrarRelacionPreguntasCuestionarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="IsCuestionarioEnUsoRequest">
+  <part name="id_cuest" type="xsd:string" /></message>
+<message name="IsCuestionarioEnUsoResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="BorrarCuestionarioRequest">
+  <part name="idCuest" type="xsd:int" /></message>
+<message name="BorrarCuestionarioResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetDatosOpcionRequest">
+  <part name="id_opcion" type="xsd:int" /></message>
+<message name="GetDatosOpcionResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="BorrarRelacionOpcionesValorRequest">
+  <part name="idOpc" type="xsd:int" /></message>
+<message name="BorrarRelacionOpcionesValorResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetDataPreguntaRequest">
+  <part name="id_preg" type="xsd:int" /></message>
+<message name="GetDataPreguntaResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="SetPreguntaRequest">
+  <part name="id_preg" type="xsd:int" />
+  <part name="id_op" type="xsd:int" />
+  <part name="descripcion" type="xsd:string" /></message>
+<message name="SetPreguntaResponse">
+  <part name="return" type="xsd:int" /></message>
+<message name="GetTextAllPreguntasRequest"></message>
+<message name="GetTextAllPreguntasResponse">
+  <part name="return" type="xsd:string" /></message>
+<message name="GetOpcPreguntaRequest">
+  <part name="id_preg" type="xsd:int" /></message>
+<message name="GetOpcPreguntaResponse">
+  <part name="return" type="xsd:string" /></message>
+<portType name="comisionPortType">
+  <operation name="pruebaEscribir">
+    <input message="tns:pruebaEscribirRequest"/>
+    <output message="tns:pruebaEscribirResponse"/>
+  </operation>
+  <operation name="BusquedaPista">
+    <input message="tns:BusquedaPistaRequest"/>
+    <output message="tns:BusquedaPistaResponse"/>
+  </operation>
+  <operation name="ModificarPista">
+    <input message="tns:ModificarPistaRequest"/>
+    <output message="tns:ModificarPistaResponse"/>
+  </operation>
+  <operation name="AltaJuego">
+    <input message="tns:AltaJuegoRequest"/>
+    <output message="tns:AltaJuegoResponse"/>
+  </operation>
+  <operation name="CantidadObrasJuego">
+    <input message="tns:CantidadObrasJuegoRequest"/>
+    <output message="tns:CantidadObrasJuegoResponse"/>
+  </operation>
+  <operation name="AgregarPista">
+    <input message="tns:AgregarPistaRequest"/>
+    <output message="tns:AgregarPistaResponse"/>
+  </operation>
+  <operation name="ObraPerteneceAJuego">
+    <input message="tns:ObraPerteneceAJuegoRequest"/>
+    <output message="tns:ObraPerteneceAJuegoResponse"/>
+  </operation>
+  <operation name="getalgo">
+    <input message="tns:getalgoRequest"/>
+    <output message="tns:getalgoResponse"/>
+  </operation>
+  <operation name="convertirvideo">
+    <input message="tns:convertirvideoRequest"/>
+    <output message="tns:convertirvideoResponse"/>
+  </operation>
+  <operation name="convertirimagen">
+    <input message="tns:convertirimagenRequest"/>
+    <output message="tns:convertirimagenResponse"/>
+  </operation>
+  <operation name="gethora">
+    <input message="tns:gethoraRequest"/>
+    <output message="tns:gethoraResponse"/>
+  </operation>
+  <operation name="getpuntaje">
+    <input message="tns:getpuntajeRequest"/>
+    <output message="tns:getpuntajeResponse"/>
+  </operation>
+  <operation name="getpuntajes">
+    <input message="tns:getpuntajesRequest"/>
+    <output message="tns:getpuntajesResponse"/>
+  </operation>
+  <operation name="getposicion">
+    <input message="tns:getposicionRequest"/>
+    <output message="tns:getposicionResponse"/>
+  </operation>
+  <operation name="finJuego">
+    <input message="tns:finJuegoRequest"/>
+    <output message="tns:finJuegoResponse"/>
+  </operation>
+  <operation name="login">
+    <input message="tns:loginRequest"/>
+    <output message="tns:loginResponse"/>
+  </operation>
+  <operation name="AltaUsuario">
+    <input message="tns:AltaUsuarioRequest"/>
+    <output message="tns:AltaUsuarioResponse"/>
+  </operation>
+  <operation name="modificarUsuario">
+    <input message="tns:modificarUsuarioRequest"/>
+    <output message="tns:modificarUsuarioResponse"/>
+  </operation>
+  <operation name="borrarUsuario">
+    <input message="tns:borrarUsuarioRequest"/>
+    <output message="tns:borrarUsuarioResponse"/>
+  </operation>
+  <operation name="passwd">
+    <input message="tns:passwdRequest"/>
+    <output message="tns:passwdResponse"/>
+  </operation>
+  <operation name="getUsuarios">
+    <input message="tns:getUsuariosRequest"/>
+    <output message="tns:getUsuariosResponse"/>
+  </operation>
+  <operation name="getUsuariosAdmin">
+    <input message="tns:getUsuariosAdminRequest"/>
+    <output message="tns:getUsuariosAdminResponse"/>
+  </operation>
+  <operation name="getUsuariosEmpleado">
+    <input message="tns:getUsuariosEmpleadoRequest"/>
+    <output message="tns:getUsuariosEmpleadoResponse"/>
+  </operation>
+  <operation name="getDataUsuario">
+    <input message="tns:getDataUsuarioRequest"/>
+    <output message="tns:getDataUsuarioResponse"/>
+  </operation>
+  <operation name="tipoUsuario">
+    <input message="tns:tipoUsuarioRequest"/>
+    <output message="tns:tipoUsuarioResponse"/>
+  </operation>
+  <operation name="temporal">
+    <input message="tns:temporalRequest"/>
+    <output message="tns:temporalResponse"/>
+  </operation>
+  <operation name="getAllDataSalas">
+    <input message="tns:getAllDataSalasRequest"/>
+    <output message="tns:getAllDataSalasResponse"/>
+  </operation>
+  <operation name="AltaSala">
+    <input message="tns:AltaSalaRequest"/>
+    <output message="tns:AltaSalaResponse"/>
+  </operation>
+  <operation name="agregarContenidoSala">
+    <input message="tns:agregarContenidoSalaRequest"/>
+    <output message="tns:agregarContenidoSalaResponse"/>
+  </operation>
+  <operation name="borrarSala">
+    <input message="tns:borrarSalaRequest"/>
+    <output message="tns:borrarSalaResponse"/>
+  </operation>
+  <operation name="modificarSala">
+    <input message="tns:modificarSalaRequest"/>
+    <output message="tns:modificarSalaResponse"/>
+  </operation>
+  <operation name="getSalas">
+    <input message="tns:getSalasRequest"/>
+    <output message="tns:getSalasResponse"/>
+  </operation>
+  <operation name="getNombreSalas">
+    <input message="tns:getNombreSalasRequest"/>
+    <output message="tns:getNombreSalasResponse"/>
+  </operation>
+  <operation name="getDataSalaId">
+    <input message="tns:getDataSalaIdRequest"/>
+    <output message="tns:getDataSalaIdResponse"/>
+  </operation>
+  <operation name="getDataSalaId2">
+    <input message="tns:getDataSalaId2Request"/>
+    <output message="tns:getDataSalaId2Response"/>
+  </operation>
+  <operation name="getDataSalaNombre">
+    <input message="tns:getDataSalaNombreRequest"/>
+    <output message="tns:getDataSalaNombreResponse"/>
+  </operation>
+  <operation name="getDataSalaNombreImagen">
+    <input message="tns:getDataSalaNombreImagenRequest"/>
+    <output message="tns:getDataSalaNombreImagenResponse"/>
+  </operation>
+  <operation name="getDataSalaIdImagen">
+    <input message="tns:getDataSalaIdImagenRequest"/>
+    <output message="tns:getDataSalaIdImagenResponse"/>
+  </operation>
+  <operation name="getVideoSalaId">
+    <input message="tns:getVideoSalaIdRequest"/>
+    <output message="tns:getVideoSalaIdResponse"/>
+  </operation>
+  <operation name="Altavisita">
+    <input message="tns:AltavisitaRequest"/>
+    <output message="tns:AltavisitaResponse"/>
+  </operation>
+  <operation name="getSalasl">
+    <input message="tns:getSalaslRequest"/>
+    <output message="tns:getSalaslResponse"/>
+  </operation>
+  <operation name="getListImgSalas()">
+    <input message="tns:getListImgSalas()Request"/>
+    <output message="tns:getListImgSalas()Response"/>
+  </operation>
+  <operation name="getDatosVisita">
+    <input message="tns:getDatosVisitaRequest"/>
+    <output message="tns:getDatosVisitaResponse"/>
+  </operation>
+  <operation name="getContenidoSala">
+    <input message="tns:getContenidoSalaRequest"/>
+    <output message="tns:getContenidoSalaResponse"/>
+  </operation>
+  <operation name="getContenidoSalaNombre">
+    <input message="tns:getContenidoSalaNombreRequest"/>
+    <output message="tns:getContenidoSalaNombreResponse"/>
+  </operation>
+  <operation name="setQr">
+    <input message="tns:setQrRequest"/>
+    <output message="tns:setQrResponse"/>
+  </operation>
+  <operation name="existeSala">
+    <input message="tns:existeSalaRequest"/>
+    <output message="tns:existeSalaResponse"/>
+  </operation>
+  <operation name="AltaObra">
+    <input message="tns:AltaObraRequest"/>
+    <output message="tns:AltaObraResponse"/>
+  </operation>
+  <operation name="modificarObra">
+    <input message="tns:modificarObraRequest"/>
+    <output message="tns:modificarObraResponse"/>
+  </operation>
+  <operation name="borrarObra">
+    <input message="tns:borrarObraRequest"/>
+    <output message="tns:borrarObraResponse"/>
+  </operation>
+  <operation name="agregarContenidoObra">
+    <input message="tns:agregarContenidoObraRequest"/>
+    <output message="tns:agregarContenidoObraResponse"/>
+  </operation>
+  <operation name="modificarContenidoObra">
+    <input message="tns:modificarContenidoObraRequest"/>
+    <output message="tns:modificarContenidoObraResponse"/>
+  </operation>
+  <operation name="getContenidoObra">
+    <input message="tns:getContenidoObraRequest"/>
+    <output message="tns:getContenidoObraResponse"/>
+  </operation>
+  <operation name="getObraSala">
+    <input message="tns:getObraSalaRequest"/>
+    <output message="tns:getObraSalaResponse"/>
+  </operation>
+  <operation name="getDataObra">
+    <input message="tns:getDataObraRequest"/>
+    <output message="tns:getDataObraResponse"/>
+  </operation>
+  <operation name="resp">
+    <input message="tns:respRequest"/>
+    <output message="tns:respResponse"/>
+  </operation>
+  <operation name="respcerrada">
+    <input message="tns:respcerradaRequest"/>
+    <output message="tns:respcerradaResponse"/>
+  </operation>
+  <operation name="getDataObraId">
+    <input message="tns:getDataObraIdRequest"/>
+    <output message="tns:getDataObraIdResponse"/>
+  </operation>
+  <operation name="getDataObraLike">
+    <input message="tns:getDataObraLikeRequest"/>
+    <output message="tns:getDataObraLikeResponse"/>
+  </operation>
+  <operation name="getNombreObraLike">
+    <input message="tns:getNombreObraLikeRequest"/>
+    <output message="tns:getNombreObraLikeResponse"/>
+  </operation>
+  <operation name="getZonas">
+    <input message="tns:getZonasRequest"/>
+    <output message="tns:getZonasResponse"/>
+  </operation>
+  <operation name="getAllDataObraSala">
+    <input message="tns:getAllDataObraSalaRequest"/>
+    <output message="tns:getAllDataObraSalaResponse"/>
+  </operation>
+  <operation name="getNombreObraApartirDelID">
+    <input message="tns:getNombreObraApartirDelIDRequest"/>
+    <output message="tns:getNombreObraApartirDelIDResponse"/>
+  </operation>
+  <operation name="getObras">
+    <input message="tns:getObrasRequest"/>
+    <output message="tns:getObrasResponse"/>
+  </operation>
+  <operation name="getObrasl">
+    <input message="tns:getObraslRequest"/>
+    <output message="tns:getObraslResponse"/>
+  </operation>
+  <operation name="AltaZona">
+    <input message="tns:AltaZonaRequest"/>
+    <output message="tns:AltaZonaResponse"/>
+  </operation>
+  <operation name="modificarZona">
+    <input message="tns:modificarZonaRequest"/>
+    <output message="tns:modificarZonaResponse"/>
+  </operation>
+  <operation name="borrarZona">
+    <input message="tns:borrarZonaRequest"/>
+    <output message="tns:borrarZonaResponse"/>
+  </operation>
+  <operation name="agregarContenidoZona">
+    <input message="tns:agregarContenidoZonaRequest"/>
+    <output message="tns:agregarContenidoZonaResponse"/>
+  </operation>
+  <operation name="getContenidoZona">
+    <input message="tns:getContenidoZonaRequest"/>
+    <output message="tns:getContenidoZonaResponse"/>
+  </operation>
+  <operation name="getContenidoZonaNombre">
+    <input message="tns:getContenidoZonaNombreRequest"/>
+    <output message="tns:getContenidoZonaNombreResponse"/>
+  </operation>
+  <operation name="getZonaObra">
+    <input message="tns:getZonaObraRequest"/>
+    <output message="tns:getZonaObraResponse"/>
+  </operation>
+  <operation name="getNombreObra">
+    <input message="tns:getNombreObraRequest"/>
+    <output message="tns:getNombreObraResponse"/>
+  </operation>
+  <operation name="getNombreObra2">
+    <input message="tns:getNombreObra2Request"/>
+    <output message="tns:getNombreObra2Response"/>
+  </operation>
+  <operation name="generarDescriptor">
+    <input message="tns:generarDescriptorRequest"/>
+    <output message="tns:generarDescriptorResponse"/>
+  </operation>
+  <operation name="PrimeraDeJuego">
+    <input message="tns:PrimeraDeJuegoRequest"/>
+    <output message="tns:PrimeraDeJuegoResponse"/>
+  </operation>
+  <operation name="getJuegos">
+    <input message="tns:getJuegosRequest"/>
+    <output message="tns:getJuegosResponse"/>
+  </operation>
+  <operation name="AgregarCuestionario">
+    <input message="tns:AgregarCuestionarioRequest"/>
+    <output message="tns:AgregarCuestionarioResponse"/>
+  </operation>
+  <operation name="ActivarJuego">
+    <input message="tns:ActivarJuegoRequest"/>
+    <output message="tns:ActivarJuegoResponse"/>
+  </operation>
+  <operation name="RecorridoJuego">
+    <input message="tns:RecorridoJuegoRequest"/>
+    <output message="tns:RecorridoJuegoResponse"/>
+  </operation>
+  <operation name="SetJuegoBorrado">
+    <input message="tns:SetJuegoBorradoRequest"/>
+    <output message="tns:SetJuegoBorradoResponse"/>
+  </operation>
+  <operation name="GetObrasDeJuego">
+    <input message="tns:GetObrasDeJuegoRequest"/>
+    <output message="tns:GetObrasDeJuegoResponse"/>
+  </operation>
+  <operation name="SetJuego">
+    <input message="tns:SetJuegoRequest"/>
+    <output message="tns:SetJuegoResponse"/>
+  </operation>
+  <operation name="GetPistas">
+    <input message="tns:GetPistasRequest"/>
+    <output message="tns:GetPistasResponse"/>
+  </operation>
+  <operation name="GetNombreJuegoActivo">
+    <input message="tns:GetNombreJuegoActivoRequest"/>
+    <output message="tns:GetNombreJuegoActivoResponse"/>
+  </operation>
+  <operation name="AgregarCuestionarioo">
+    <input message="tns:AgregarCuestionariooRequest"/>
+    <output message="tns:AgregarCuestionariooResponse"/>
+  </operation>
+  <operation name="AgregarValorOpcion">
+    <input message="tns:AgregarValorOpcionRequest"/>
+    <output message="tns:AgregarValorOpcionResponse"/>
+  </operation>
+  <operation name="AgregarPregunta">
+    <input message="tns:AgregarPreguntaRequest"/>
+    <output message="tns:AgregarPreguntaResponse"/>
+  </operation>
+  <operation name="AsociarPreguntaConOpcion">
+    <input message="tns:AsociarPreguntaConOpcionRequest"/>
+    <output message="tns:AsociarPreguntaConOpcionResponse"/>
+  </operation>
+  <operation name="AsociarPreguntaConCuestionario">
+    <input message="tns:AsociarPreguntaConCuestionarioRequest"/>
+    <output message="tns:AsociarPreguntaConCuestionarioResponse"/>
+  </operation>
+  <operation name="GetCuestionarios">
+    <input message="tns:GetCuestionariosRequest"/>
+    <output message="tns:GetCuestionariosResponse"/>
+  </operation>
+  <operation name="GetPreguntas">
+    <input message="tns:GetPreguntasRequest"/>
+    <output message="tns:GetPreguntasResponse"/>
+  </operation>
+  <operation name="setCuestionarioVisitante">
+    <input message="tns:setCuestionarioVisitanteRequest"/>
+    <output message="tns:setCuestionarioVisitanteResponse"/>
+  </operation>
+  <operation name="getfrutamadre">
+    <input message="tns:getfrutamadreRequest"/>
+    <output message="tns:getfrutamadreResponse"/>
+  </operation>
+  <operation name="GetTextPreguntas">
+    <input message="tns:GetTextPreguntasRequest"/>
+    <output message="tns:GetTextPreguntasResponse"/>
+  </operation>
+  <operation name="GetRespPreguntas">
+    <input message="tns:GetRespPreguntasRequest"/>
+    <output message="tns:GetRespPreguntasResponse"/>
+  </operation>
+  <operation name="SetOpcion">
+    <input message="tns:SetOpcionRequest"/>
+    <output message="tns:SetOpcionResponse"/>
+  </operation>
+  <operation name="AsociarOpcionesConValores">
+    <input message="tns:AsociarOpcionesConValoresRequest"/>
+    <output message="tns:AsociarOpcionesConValoresResponse"/>
+  </operation>
+  <operation name="AgregarPregunta2">
+    <input message="tns:AgregarPregunta2Request"/>
+    <output message="tns:AgregarPregunta2Response"/>
+  </operation>
+  <operation name="GetOpciones">
+    <input message="tns:GetOpcionesRequest"/>
+    <output message="tns:GetOpcionesResponse"/>
+  </operation>
+  <operation name="GetValoresDeOpcion">
+    <input message="tns:GetValoresDeOpcionRequest"/>
+    <output message="tns:GetValoresDeOpcionResponse"/>
+  </operation>
+  <operation name="GetValoresDeOpciones">
+    <input message="tns:GetValoresDeOpcionesRequest"/>
+    <output message="tns:GetValoresDeOpcionesResponse"/>
+  </operation>
+  <operation name="SetValorOpcc">
+    <input message="tns:SetValorOpccRequest"/>
+    <output message="tns:SetValorOpccResponse"/>
+  </operation>
+  <operation name="IsValorAsociadoAOpcion">
+    <input message="tns:IsValorAsociadoAOpcionRequest"/>
+    <output message="tns:IsValorAsociadoAOpcionResponse"/>
+  </operation>
+  <operation name="BorrarValorOpc">
+    <input message="tns:BorrarValorOpcRequest"/>
+    <output message="tns:BorrarValorOpcResponse"/>
+  </operation>
+  <operation name="IsGrupoOpcAsociadoAPreguntas">
+    <input message="tns:IsGrupoOpcAsociadoAPreguntasRequest"/>
+    <output message="tns:IsGrupoOpcAsociadoAPreguntasResponse"/>
+  </operation>
+  <operation name="SetOpcionn">
+    <input message="tns:SetOpcionnRequest"/>
+    <output message="tns:SetOpcionnResponse"/>
+  </operation>
+  <operation name="BorrarOpcion">
+    <input message="tns:BorrarOpcionRequest"/>
+    <output message="tns:BorrarOpcionResponse"/>
+  </operation>
+  <operation name="IsPreguntaAsociadaACuestionario">
+    <input message="tns:IsPreguntaAsociadaACuestionarioRequest"/>
+    <output message="tns:IsPreguntaAsociadaACuestionarioResponse"/>
+  </operation>
+  <operation name="BorrarPregunta">
+    <input message="tns:BorrarPreguntaRequest"/>
+    <output message="tns:BorrarPreguntaResponse"/>
+  </operation>
+  <operation name="GetDatosPregunta">
+    <input message="tns:GetDatosPreguntaRequest"/>
+    <output message="tns:GetDatosPreguntaResponse"/>
+  </operation>
+  <operation name="SetCuestionariio">
+    <input message="tns:SetCuestionariioRequest"/>
+    <output message="tns:SetCuestionariioResponse"/>
+  </operation>
+  <operation name="BorrarRelacionPreguntasCuestionario">
+    <input message="tns:BorrarRelacionPreguntasCuestionarioRequest"/>
+    <output message="tns:BorrarRelacionPreguntasCuestionarioResponse"/>
+  </operation>
+  <operation name="IsCuestionarioEnUso">
+    <input message="tns:IsCuestionarioEnUsoRequest"/>
+    <output message="tns:IsCuestionarioEnUsoResponse"/>
+  </operation>
+  <operation name="BorrarCuestionario">
+    <input message="tns:BorrarCuestionarioRequest"/>
+    <output message="tns:BorrarCuestionarioResponse"/>
+  </operation>
+  <operation name="GetDatosOpcion">
+    <input message="tns:GetDatosOpcionRequest"/>
+    <output message="tns:GetDatosOpcionResponse"/>
+  </operation>
+  <operation name="BorrarRelacionOpcionesValor">
+    <input message="tns:BorrarRelacionOpcionesValorRequest"/>
+    <output message="tns:BorrarRelacionOpcionesValorResponse"/>
+  </operation>
+  <operation name="GetDataPregunta">
+    <input message="tns:GetDataPreguntaRequest"/>
+    <output message="tns:GetDataPreguntaResponse"/>
+  </operation>
+  <operation name="SetPregunta">
+    <input message="tns:SetPreguntaRequest"/>
+    <output message="tns:SetPreguntaResponse"/>
+  </operation>
+  <operation name="GetTextAllPreguntas">
+    <input message="tns:GetTextAllPreguntasRequest"/>
+    <output message="tns:GetTextAllPreguntasResponse"/>
+  </operation>
+  <operation name="GetOpcPregunta">
+    <input message="tns:GetOpcPreguntaRequest"/>
+    <output message="tns:GetOpcPreguntaResponse"/>
+  </operation>
+</portType>
+<binding name="comisionBinding" type="tns:comisionPortType">
+  <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+  <operation name="pruebaEscribir">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/pruebaEscribir" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BusquedaPista">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BusquedaPista" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="ModificarPista">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/ModificarPista" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AltaJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AltaJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="CantidadObrasJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/CantidadObrasJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AgregarPista">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AgregarPista" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="ObraPerteneceAJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/ObraPerteneceAJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getalgo">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getalgo" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="convertirvideo">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/convertirvideo" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="convertirimagen">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/convertirimagen" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="gethora">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/gethora" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getpuntaje">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getpuntaje" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getpuntajes">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getpuntajes" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getposicion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getposicion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="finJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/finJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="login">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/login" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AltaUsuario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AltaUsuario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="modificarUsuario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/modificarUsuario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="borrarUsuario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/borrarUsuario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="passwd">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/passwd" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getUsuarios">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getUsuarios" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getUsuariosAdmin">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getUsuariosAdmin" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getUsuariosEmpleado">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getUsuariosEmpleado" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataUsuario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataUsuario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="tipoUsuario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/tipoUsuario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="temporal">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/temporal" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getAllDataSalas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getAllDataSalas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AltaSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AltaSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="agregarContenidoSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/agregarContenidoSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="borrarSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/borrarSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="modificarSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/modificarSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getSalas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getSalas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getNombreSalas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getNombreSalas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataSalaId">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataSalaId" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataSalaId2">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataSalaId2" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataSalaNombre">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataSalaNombre" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataSalaNombreImagen">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataSalaNombreImagen" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataSalaIdImagen">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataSalaIdImagen" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getVideoSalaId">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getVideoSalaId" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="Altavisita">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/Altavisita" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getSalasl">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getSalasl" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getListImgSalas()">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getListImgSalas()" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDatosVisita">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDatosVisita" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getContenidoSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getContenidoSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getContenidoSalaNombre">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getContenidoSalaNombre" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="setQr">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/setQr" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="existeSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/existeSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AltaObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AltaObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="modificarObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/modificarObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="borrarObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/borrarObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="agregarContenidoObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/agregarContenidoObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="modificarContenidoObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/modificarContenidoObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getContenidoObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getContenidoObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getObraSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getObraSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="resp">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/resp" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="respcerrada">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/respcerrada" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataObraId">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataObraId" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getDataObraLike">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getDataObraLike" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getNombreObraLike">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getNombreObraLike" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getZonas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getZonas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getAllDataObraSala">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getAllDataObraSala" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getNombreObraApartirDelID">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getNombreObraApartirDelID" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getObras">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getObras" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getObrasl">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getObrasl" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AltaZona">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AltaZona" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="modificarZona">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/modificarZona" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="borrarZona">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/borrarZona" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="agregarContenidoZona">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/agregarContenidoZona" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getContenidoZona">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getContenidoZona" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getContenidoZonaNombre">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getContenidoZonaNombre" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getZonaObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getZonaObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getNombreObra">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getNombreObra" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getNombreObra2">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getNombreObra2" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="generarDescriptor">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/generarDescriptor" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="PrimeraDeJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/PrimeraDeJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getJuegos">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getJuegos" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AgregarCuestionario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AgregarCuestionario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="ActivarJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/ActivarJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="RecorridoJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/RecorridoJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetJuegoBorrado">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetJuegoBorrado" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetObrasDeJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetObrasDeJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetJuego">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetJuego" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetPistas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetPistas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetNombreJuegoActivo">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetNombreJuegoActivo" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AgregarCuestionarioo">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AgregarCuestionarioo" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AgregarValorOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AgregarValorOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AgregarPregunta">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AgregarPregunta" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AsociarPreguntaConOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AsociarPreguntaConOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AsociarPreguntaConCuestionario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AsociarPreguntaConCuestionario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetCuestionarios">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetCuestionarios" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetPreguntas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetPreguntas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="setCuestionarioVisitante">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/setCuestionarioVisitante" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="getfrutamadre">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/getfrutamadre" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetTextPreguntas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetTextPreguntas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetRespPreguntas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetRespPreguntas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AsociarOpcionesConValores">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AsociarOpcionesConValores" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="AgregarPregunta2">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/AgregarPregunta2" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetOpciones">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetOpciones" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetValoresDeOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetValoresDeOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetValoresDeOpciones">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetValoresDeOpciones" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetValorOpcc">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetValorOpcc" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="IsValorAsociadoAOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/IsValorAsociadoAOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BorrarValorOpc">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BorrarValorOpc" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="IsGrupoOpcAsociadoAPreguntas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/IsGrupoOpcAsociadoAPreguntas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetOpcionn">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetOpcionn" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BorrarOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BorrarOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="IsPreguntaAsociadaACuestionario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/IsPreguntaAsociadaACuestionario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BorrarPregunta">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BorrarPregunta" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetDatosPregunta">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetDatosPregunta" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetCuestionariio">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetCuestionariio" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BorrarRelacionPreguntasCuestionario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BorrarRelacionPreguntasCuestionario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="IsCuestionarioEnUso">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/IsCuestionarioEnUso" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BorrarCuestionario">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BorrarCuestionario" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetDatosOpcion">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetDatosOpcion" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="BorrarRelacionOpcionesValor">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/BorrarRelacionOpcionesValor" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetDataPregunta">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetDataPregunta" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="SetPregunta">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/SetPregunta" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetTextAllPreguntas">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetTextAllPreguntas" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+  <operation name="GetOpcPregunta">
+    <soap:operation soapAction="http://10.0.2.109/server_php/server_php.php/GetOpcPregunta" style="rpc"/>
+    <input><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></input>
+    <output><soap:body use="literal" namespace="http://10.0.2.109/server_php/"/></output>
+  </operation>
+</binding>
+<service name="comision">
+  <port name="comisionPort" binding="tns:comisionBinding">
+    <soap:address location="http://10.0.2.109/server_php/server_php.php"/>
+  </port>
+</service>
+</definitions>

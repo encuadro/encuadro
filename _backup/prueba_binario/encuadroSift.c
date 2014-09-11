@@ -347,17 +347,7 @@ int buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,const char
      
     int vecesloop=0;  
 
-   /* FILE *pf;
-	pf = fopen("caca.txt","w");
-	fprintf(pf,"%s","aca van los matches");
-	fclose(pf);
-    
-*/
-	/*//--------------AGREGADO-------------------------
-	char* filename="coincidencias.txt";
-	FILE* fid=fopen(filename,"w+");
-	fprintf(fid,"cantidad matches:");
-	fclose(fid);*/
+	/*//--------------AGREGADO-------------------------*/
 
 	MYSQL *conn; //variable de conexion para mysql
 	MYSQL_RES *res; // variable que contendra el resultado de la consuta
