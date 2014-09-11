@@ -4,22 +4,23 @@ $sift = $ini_array["RUTA"]["encuadro"];
 $obras = $ini_array["RUTA"]["obra"];
 function fungetNombreObra ($id_sala, $nombre_archivo)
 {
-global $ini_array ,$obras;
+global $ini_array ,$obras, $sift;
+mensaje_log("FUNCION GET NOMBRE OBRA (DESCRIPTORES)");
 $host = $ini_array['BD']['servidor'];
 $username = $ini_array['BD']['usuario'];
 $userpass = $ini_array['BD']['passbd'];
 $name = $ini_array['BD']['nombase'];
-mensaje_log("FUNCION GET NOMBRE OBRA (DESCRIPTORES)");
-    
-exec("convert -scale 100% /var/www/obras/".$nombre_archivo." /var/www/obras/".$nombre_archivo.".pgm");
+exec("convert -scale 100% ".$obras.$nombre_archivo." ".$obras.$nombre_archivo.".pgm");
+mensaje_log("CONVERT FILE OK");
+//exec("convert -scale 100% /var/www/obras/".$nombre_archivo." /var/www/obras/".$nombre_archivo.".pgm");
 //exec("convert /home/server/proyecto/obras/".$nombre_archivo." /home/server/proyecto/obras/".$nombre_archivo.".pgm");
-global $sift,$obras; 
 $u=-1;
 //$u = exec("/home/encuadro/proyecto/prueba_binario/./encuadroSift /var/www/obras/".$nombre_archivo.".pgm ".$id_sala." ".$host." ".$username." ".$userpass." ".$name);
+mensaje_log($sift." ".$obras.$nombre_archivo.".pgm ".$id_sala." ".$host." ".$username." ".$userpass." ".$name);
 $u = exec($sift." ".$obras.$nombre_archivo.".pgm ".$id_sala." ".$host." ".$username." ".$userpass." ".$name);	
 
 //exec("rm /var/www/obras/".$nombre_archivo." /var/www/obras/".$nombre_archivo.".pgm");
-exec("rm ".$obras.$nombre_archivo." ".$obras.$nombre_archivo.".pgm");
+//exec("rm ".$obras.$nombre_archivo." ".$obras.$nombre_archivo.".pgm");
 return $u;
 
 }

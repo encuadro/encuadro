@@ -327,7 +327,7 @@ int* levantarDescBD(char *id_obra, int* nKeyPoints){ //levanta el descriptor des
 	return descr;
 }
 
-const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,const char* nombresala)
+int buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,const char* nombresala)
 
 {
 	
@@ -335,6 +335,7 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,co
 	long int kb = 0;	  	
     int* nKeyPoints_base =kb;
     int* descriptors_base = 0;
+    int id_obra = 0;
     long int correspondences, final_matches;
     Pair* pairs_iterator = (Pair*) malloc(sizeof(Pair) * (nKeyPoints+nKeyPoints));
 	char im[200]="";
@@ -346,11 +347,12 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,co
      
     int vecesloop=0;  
 
-FILE *pf;
+   /* FILE *pf;
 	pf = fopen("caca.txt","w");
 	fprintf(pf,"%s","aca van los matches");
 	fclose(pf);
     
+*/
 	/*//--------------AGREGADO-------------------------
 	char* filename="coincidencias.txt";
 	FILE* fid=fopen(filename,"w+");
@@ -398,7 +400,7 @@ FILE *pf;
     			
 
 			strcpy(imagen, row[0]);
-
+            sscanf(row[0],"%d",&id_obra);
 			char hola3[100];
 			sprintf(hola3,"%ld",correspondences);
                         strcat(hola3," primera corresp, obra ");
@@ -407,7 +409,9 @@ FILE *pf;
 			insert_nan(pepe3);
 
     			final_matches = correspondences;
-			//printf("0 final matches %ld \n",final_matches);
+			fprintf(stderr,"loop 0 final matches %ld id_obra: %s\n",final_matches, row[0]);
+           fprintf(stderr,"imagen: %s\n",imagen);
+             fprintf(stderr,"id_obra: %d\n",id_obra);
 			vecesloop++;
     			
     		}
@@ -424,14 +428,16 @@ FILE *pf;
 			strcat(hola2,row[0]);
 	                char* pepe2=hola2;
 			insert_nan(pepe2);
-    			//printf("correspondences %d id obra %s \n",correspondences, row[0]);
+    			fprintf(stderr,"correspondences %d id_obra %s \n",correspondences, row[0]);
     	       		if (correspondences>final_matches)
     			{   
+                    fprintf(stderr,"sobreescribiendo id_obra\n");
 					//--------------AGREGADO-------------------------
     				//Asumo que acá compara, luego borrar las lineas.
     				coincidencias++;
     				//--------------AGREGADO-------------------------
 				    strcpy(imagen, row[0]);
+                    sscanf(row[0],"%d",&id_obra);
     				final_matches = correspondences;
     				
     			}  		
@@ -440,8 +446,8 @@ FILE *pf;
     		free(descriptors_base);	
 		
 	}
-	//printf("final matches %ld \n",final_matches);
-	
+	fprintf(stderr,"final matches %ld \n",final_matches); 
+	fprintf(stderr,"imagen: %s\n",imagen);
 
 		
 
@@ -460,13 +466,14 @@ FILE *pf;
 	mysql_close(conn); 
 	
 	char* nana="0";
-	//printf("-->final matches %ld \n",final_matches);
+
 	if(final_matches<17)
 	{
-	return nana;
+    fprintf(stderr,"No encontrado\n");
+	return 0;
 	}
 	else
-	{return imagen;}
+	{return id_obra;}
 
 	
 
@@ -758,10 +765,15 @@ int main(int argc,char * argv[])
     const char* direccion = argv[1];
     
         //----------------------------Levantamos la imagen PNG y obtenemos los pixels----------------------------------
-    
-	 
-    in = fopen (direccion, "rb") ;
+        fprintf(stderr,"inicio\n");
 
+    in = fopen (direccion, "rb") ;
+    if(in == NULL){
+        fprintf(stderr," No pude abrir %s\n",direccion);        
+        return 1;    
+    }
+             
+    
     // read PGM header 
     err = vl_pgm_extract_head (in, &pim) ;
     
@@ -786,7 +798,7 @@ int main(int argc,char * argv[])
     int height = pim.height;
    
     
-    
+    fprintf(stderr,"sift\n");
     //Calculamos los descriptores de la imagen de entrada
     sift(fdata, width, height,&nKeyPoints,&keyPoints,&descriptors);
     int r=0;
@@ -817,13 +829,15 @@ int main(int argc,char * argv[])
     {
 	 //printf("Buscando...\n");
        	char resultado_char[100]="";	
+    int id_obra = 0;    
+    fprintf(stderr," Buscando...\n");    
 	nombsala=argv[2];
-        image_out = buscarBaseDeDatos(nKeyPoints, descriptors,0,nombsala);
-       
-	strcpy(resultado_char,image_out);
+        id_obra = buscarBaseDeDatos(nKeyPoints, descriptors,0,nombsala);
+    //fprintf(stderr,"image_out: %s\n",image_out);   
+	//strcpy(resultado_char,image_out);
 	 //printf("%s",resultado_char);
-	sscanf(resultado_char,"%d",&r);
-	 printf("%d",r);
+	//sscanf(resultado_char,"%d",&r);
+	 printf("%d",id_obra);
     }
     else if (argc==8)
     {
@@ -836,7 +850,6 @@ int main(int argc,char * argv[])
         }	   
         
     }
-   
 
     return 1;
 }

@@ -12,7 +12,7 @@ function fungetAllDataSalas() {
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
-    
+    mensaje_log("QUERY TODOS LOS DATOS DE LAS SALAS");
     $query = mysql_query("SELECT * FROM sala,contenido_sala WHERE sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
     while ($row = mysql_fetch_assoc($query)) {
         if ($u == "-1")
@@ -24,6 +24,7 @@ function fungetAllDataSalas() {
 }
 function fungetListImgSalas() {  
     $u = "-1";
+    mensaje_log("QUERY LISTA DE IMAGENES DE SALA");
     $query = mysql_query("SELECT * FROM sala,contenido_sala WHERE sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
     while ($row = mysql_fetch_assoc($query)) {
         $u = $row['nombre_sala'] . "=>" .$row['imagen'] . "=>";
@@ -33,7 +34,7 @@ function fungetListImgSalas() {
 
 function funAltaSala($nombre_sala, $descripcion_sala) {
     global $ini_array;    
-    mensaje_log("FUNCION ALTA SALA");	  
+    mensaje_log("ALTA SALA");	  
     //$ini_array = parse_ini_file($ini_file, true);
     $reg = -1;   
     $directorio = $ini_array['RUTA']['sala'];//"/home/server/proyecto/salas/";
@@ -63,9 +64,11 @@ function funAltaSala($nombre_sala, $descripcion_sala) {
             chmod($dir, 0777);                     
             $reg = $row2['id_sala'];
         } catch (Exception $e) {
-            $reg = -1;
+                mensaje_log($e->getMessage(),3);                
+                $reg = -1;
         }
     }
+    mesaje_log("SE CREO UNA NUEVA SALA DE NOMBRE=".$nombre_sala.", DESCRIPCION=".$descripcion_sala,1);
     return $reg;
 }
 
@@ -87,11 +90,14 @@ function funborrarSala($id_sala) {
             $dir = $dirsala . $id_sala;
             rrmdir($dir);
             $bor = 0;
+            mensaje_log("SE ELIMINO LA SALA:".$id_sala,1);
         } catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $bor = -1;
         }
 ////////////////////borra obras de la sala
         try {
+            mensaje_log("ELIMINANDO TODAS LAS OBRAS DE LA SALA ".$id_sala." ...",1);
             $query2 = mysql_query("SELECT * FROM obra WHERE id_sala='$id_sala'") or die(mysql_error());
 
             while ($res = mysql_fetch_assoc($query2)) {
@@ -100,12 +106,13 @@ function funborrarSala($id_sala) {
 
                 $query = mysql_query("DELETE FROM obra WHERE id_obra = '$id_obra'") or die(mysql_error());
                 $query = mysql_query("DELETE FROM contenido_obra WHERE id_obra = '$id_obra'") or die(mysql_error());
+                mensaje_log("SE ELIMINO LA OBRA".$id_obra,2);
 
                 $dir = $dirobra . $id_obra;
                 rrmdir($dir);
 /////borra zonas de la obra
                 $query3 = mysql_query("SELECT * FROM zona WHERE nombre_obra='$nombre_obra'") or die(mysql_error());
-
+                mensaje_log("ELIMINANDO TODAS LAS ZONAS DE LA OBRA ".$id_obra." ...",1);
                 while ($res2 = mysql_fetch_assoc($query3)) {
                     $id_zona = $res2['id_zona'];
                     $query = mysql_query("DELETE FROM zona WHERE id_zona = '$id_zona'") or die(mysql_error());
@@ -113,9 +120,11 @@ function funborrarSala($id_sala) {
 
                     $dir = $dirzona . $id_zona;
                     rrmdir($dir);
+                    mensaje_log("ELIMINANDO ZONA ".$id_zona,2);
                 }
             }
         } catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $bor = -2;
         }
     }
@@ -132,7 +141,9 @@ function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
         try {
             $query = mysql_query("UPDATE sala SET nombre_sala='$nombre_sala', descripcion_sala='$descripcion_sala' WHERE id_sala='$id_sala'") or die(mysql_error());
             $mod = 0;
+            mensaje_log("SE MODIFICARON LOS DATOS DE LA SALA DE ID=".$id_sala." NUEVO NOMBRE=".$nombre_sala.", NUEVA DESCRIPCION=".$descripcion_sala,1);
         } catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $mod = -1;
         }
     }
@@ -153,7 +164,9 @@ function funsetQr($id_sala, $qr) {
         try {
             $query = mysql_query("UPDATE sala SET qr='$qr' WHERE id_sala='$id_sala'") or die(mysql_error());
             $mod = "ftp://".$usu.":".$pass."@".$servidor."/". $id_sala . "/imagen/" . $qr;
+            mensaje_log("SE LE ASIGNO UN NUEVO QR A LA SALA=".$id_sala,1);
         } catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $mod = -1;
         }
     }
@@ -201,6 +214,7 @@ function fungetDataSalaId($id_sala) {
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = $row['nombre_sala'] . "=>" . $row['descripcion_sala'] . "=>";
+        mensaje_log("RETORNANDO DATOS DE SALA DE ID=".$id_sala,1);
     }
     return $u;
 }
@@ -220,7 +234,8 @@ function fungetDataSalaId2($id_sala){
      if ($row != NULL) {
 	if($u=="-1")
 	    $u="";
-        $u = $row['nombre_sala']."=>".$row['descripcion_sala']."=>"; 
+        $u = $row['nombre_sala']."=>".$row['descripcion_sala']."=>";
+        mensaje_log("RETORNANDO DATOS DE SALA DE ID=".$id_sala,1);
       }
      $query = mysql_query("SELECT * FROM contenido_sala WHERE id_sala='$id_sala'") or die(mysql_error());
      $row = mysql_fetch_array($query);
@@ -241,6 +256,7 @@ function fungetDataSalaNombre($nombre) {
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = $row['id_sala'] . "=>" . $row['descripcion_sala'] . "=>";
+        mensaje_log("RETORNANDO DATOS DE SALA DE NOMBRE=".$nombre,1);
     }
     return $u;
 }
@@ -255,8 +271,10 @@ function fungetDataSalaNombreImagen($nombre){
      	    $row = mysql_fetch_array($query);
             if ($row != NULL) {
                 $u = $row['id_sala']."=>".$row['nombre_sala']."=>".$row['descripcion_sala']."=>".$row['imagen']."=>"; 
+                mensaje_log("RETORNANDO DATOS DE SALA DE NOMBRE=".$nombre,1);       
             }
 	} catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $u = "PHP se la come=>";
         }
 
@@ -273,8 +291,10 @@ function fungetDataSalaIdImagen($id){
      	    $row = mysql_fetch_array($query);
             if ($row != NULL) {
                 $u = $row['id_sala']."=>".$row['nombre_sala']."=>".$row['descripcion_sala']."=>".$row['imagen']."=>"; 
+                mensaje_log("RETORNANDO DATOS DE SALA ID=".$id,1);
             }
 	} catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $u = "PHP se la come=>".$e;
         }
 
@@ -290,9 +310,11 @@ function fungetVideoSalaId($id){
      	    $row = mysql_fetch_array($query);
             if ($row != NULL) {
                 $u = $row['video']; 
+                mensaje_log("RETORNANDO VIDEO DE SALA ID=".$id,1);
             }
 	} catch (Exception $e) {
-            $u = "-1".$e;
+          mensaje_log($e->getMessage(),3);  
+          $u = "-1".$e;
         }
 
     return $u;     
@@ -307,6 +329,7 @@ function fungetSalasl($nombre) {
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nombre_sala'] . "=>";
         }
+    mensaje_log("SALAS ENCONTRADAS= ".$u,1);    
 
     return $u;
 
@@ -315,7 +338,7 @@ function fungetSalasl($nombre) {
 //-----------------------------------------------------NUEVO----------------------------
 function funagregarContenidoSala($id_sala, $tipo, $nombre) {
     global $ini_array;
-    mensaje_log("FUNCION AGREGAR CONTENIDO SALA");    
+    mensaje_log("FUNCION AGREGAR CONTENIDO SALA (SALA)");    
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -329,6 +352,7 @@ function funagregarContenidoSala($id_sala, $tipo, $nombre) {
             $variable = $nombre;
             
             $query = mysql_query("UPDATE contenido_sala SET $tipo = '$variable' WHERE id_sala = '$id'") or die(mysql_error());
+            mensaje_log("AGREGANDO CONTENIDO A LA SALA ID=".$id_sala." ".$tipo." = ".$nombre,1);
 	    if ($tipo != "texto") {
                 $variable = "ftp://".$usu.":".$pass."@".$servidor."/" . $id . "/" . $tipo . "/" . $nombre;
             }
@@ -338,8 +362,10 @@ function funagregarContenidoSala($id_sala, $tipo, $nombre) {
                 $mod = $variable;
             }
         } catch (Exception $e) {
-            $mod = "-1";
+           mensaje_log($e->getMessage(),3);
+           $mod = "-1";
         }
+            
     }
     return $mod;
 }
@@ -355,8 +381,10 @@ function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
             $id = $row['id_sala'];
             $variable = $nombre;
             $query = mysql_query("UPDATE contenido_sala SET $tipo = '$variable' WHERE id_sala = '$id'") or die(mysql_error());
+            mensaje_log("AGREGANDO CONTENIDO A LA SALA ID=".$id_sala." ".$tipo." = ".$nombre,1);
             $mod = 0;
         } catch (Exception $e) {
+            mensaje_log($e->getMessage(),3);
             $mod = -1;
         }
     }
@@ -365,7 +393,7 @@ function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
 
 function fungetContenidoSala($id) {
     global $ini_array;
-    mensaje_log("FUNCION GET CONTENIDO SALA SALA (SALA)");    
+    mensaje_log("FUNCION GET CONTENIDO SALA (SALA)");    
     //$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -397,6 +425,7 @@ function fungetContenidoSala($id) {
 	$u = $audio . "=>" .$video . "=>" . $row['texto'] . "=>" .$modelo. "=>" .$imagen. "=>";
 
     }
+    mensaje_log("RETORNANDO EL CONTENIDO DE LA SALA ID=".$id,1);    
     return $u;
 }
 
@@ -408,7 +437,8 @@ function funexisteSala($id) {
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = 1;
-    }
+        mensaje_log("LA SALA DE ID =".$id." EXISTE",1);
+    }else {mensaje_log("LA SALA DE ID =".$id." NO EXISTE",1);}
     return $u;
 }
 

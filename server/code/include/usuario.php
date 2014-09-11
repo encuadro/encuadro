@@ -13,6 +13,7 @@ function funAltaJuego($nombre) {
 		$query2 = mysql_query("SELECT idjuego from Juego where nombre='$nombre'") or die(mysql_error());
 		$res = mysql_fetch_array($query2);
 		$reg=$res['idjuego'];
+        mensaje_log("SE CREO UN JUEGO DE ID=".$reg." Y NOMBRE=".$nombre,1);
 	} catch (Exception $e) {
 		$reg = -1;
 	}
@@ -20,7 +21,8 @@ function funAltaJuego($nombre) {
 }
 
 function funCantidadObrasJuego($id_juego) {
-	$u = 0;
+	mensaje_log("FUNCION CANTIDAD DE OBRAS DE JUEGO (USUARIO)");
+    $u = 0;
 	try {
 		$query = mysql_query("SELECT COUNT(*) as total  from Pista where id_juego='$id_juego'") or die(mysql_error());
 		$res = mysql_fetch_array($query);
@@ -32,6 +34,8 @@ function funCantidadObrasJuego($id_juego) {
 }
 
 function funBusquedaPista($idObra,$idjuego) {
+    mensaje_log("FUNCION BUSQUEDA DE PISTAS (USUARIO)");    
+    mensaje_log("BUSCANDO PISTAS PARA LA OBRA=".$id_obra." Y EL JUEGO=".$id_juego,1);
     $u = "0";
  	try {
 		$query = mysql_query("SELECT id_proxima, pista FROM Pista WHERE id_juego='$idjuego' and id_obra='$idObra'") or die(mysql_error());
@@ -48,6 +52,8 @@ function funBusquedaPista($idObra,$idjuego) {
 
 function funObraPerteneceAJuego($idObra) {
 	//MODIFICADA EL 24/03/14
+    mensaje_log("FUNCION OBRA PERTENECE A JUEGO (USUARIO)");
+    mensaje_log("QUERY OBRA PERTENECE AL JUEGO, OBRA ID=".$idObra,1);
 	$query = mysql_query("SELECT idjuego FROM Juego WHERE activo=1 AND id_obra1='$idObra' AND borrado=0  AND ciclico=0") or die(mysql_error());
 	//$query = mysql_query("SELECT idjuego, pista, id_proxima FROM Juego, Pista WHERE Juego.id_obra1='$idObra' and Juego.id_obra1=Pista.id_obra") or die(mysql_error());
 	$res = mysql_fetch_assoc($query);

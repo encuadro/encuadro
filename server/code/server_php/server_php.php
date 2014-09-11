@@ -4,15 +4,15 @@ $ini_array = parse_ini_file("/var/www/include/confi.ini", true);
 $ruta = $ini_array['RUTA']['include'];
 require_once($ruta."lib/nusoap.php");
 
+require_once($ruta."config.php");
 
-
-include($ruta."Juego.php");
-include($ruta."usuario.php");
-include($ruta."sala.php");
-include($ruta."obra.php");
-include($ruta."zona.php");
-include($ruta."descriptor.php");
-include($ruta."directorios.php");
+require_once($ruta."Juego.php");
+require_once($ruta."usuario.php");
+require_once($ruta."sala.php");
+require_once($ruta."obra.php");
+require_once($ruta."zona.php");
+require_once($ruta."descriptor.php");
+require_once($ruta."directorios.php");
 
 
 
@@ -802,6 +802,7 @@ function getNombreObraApartirDelID($id_obra) {
 }
 
 function getNombreObra($id_sala, $nombre_archivo) {
+    mensaje_log("FUNCION GET NOMBRE OBRA DE SERVER PHP");
     $u = fungetNombreObra($id_sala, $nombre_archivo);
 
     return new soapval('return', 'xsd:int', $u);
