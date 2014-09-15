@@ -1,0 +1,91 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ContenidoObras" >
+
+
+  <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="3dp"
+        android:layout_gravity="center|top"
+        android:layout_weight="4"
+        android:src="@drawable/ic_launcher" />
+            
+<LinearLayout 	    
+    	android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" 
+	    android:layout_weight="6"
+	    android:orientation="vertical">
+         
+	  <TextView
+	      android:id="@+id/textView1"
+	      android:layout_width="fill_parent"
+	      android:layout_height="wrap_content"
+	      android:layout_marginLeft="5dp"
+	      android:text="Nombre: "
+	      android:textAppearance="?android:attr/textAppearanceLarge"
+	      android:textStyle="bold" />
+	  
+	  <TextView
+	      android:id="@+id/textView2"
+	      android:layout_width="fill_parent"
+	      android:layout_height="wrap_content"
+	      android:layout_marginLeft="5dp"
+	      android:text="Autor: " />
+		    
+  </LinearLayout>
+     <ScrollView
+         android:id="@+id/textAreaScroller"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent"
+         android:layout_weight="5"
+         android:layout_margin="5dp"
+         android:background="@drawable/gradient_box"
+         android:scrollbars="vertical" >
+	    
+	    <TextView
+	        android:id="@+id/textView3"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1"
+	        android:text="@string/descripcion" />
+	    
+ 	</ScrollView>
+
+    
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" 
+	    android:layout_weight="6">
+
+	     <Button
+	        android:id="@+id/btnPlay"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_weight="1"
+	        android:layout_gravity="center"
+	        android:textSize="25sp"
+	        android:text="Play" 
+	        android:background="@drawable/lucky_button"/>
+	
+	    <Button
+	        android:id="@+id/btnVideo"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_weight="1"
+	        android:textSize="25sp"
+	        android:layout_gravity="center"
+	        android:text="Video" 
+	        android:background="@drawable/lucky_button"/>	 
+	           
+	</LinearLayout>
+	 
+</LinearLayout>
