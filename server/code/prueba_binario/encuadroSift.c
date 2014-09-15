@@ -9,8 +9,8 @@
 
 #include <stdio.h>
 #include "encuadroSift.h"
+#include <time.h>
 #include <mysql.h>
-
 
 /* estas librerias son para recorrer los directorios */
 
@@ -120,7 +120,8 @@ void sift(float* fdata, int width, int height, int* nKeyPoints, double** keyPoin
             nangles = vl_sift_calc_keypoint_orientations(filtroSift, angles, k) ;
             
             /* For each orientation ................................... */
-            for (int q = 0 ; q < nangles ; ++q) {
+            int q;
+            for ( q= 0 ; q < nangles ; ++q) {
                 vl_sift_pix  buf [128] ;
                 vl_sift_pix rbuf [128] ;
                 
@@ -142,9 +143,9 @@ void sift(float* fdata, int width, int height, int* nKeyPoints, double** keyPoin
                 frames [4 * nframes + 1] = k -> x + 1 ;
                 frames [4 * nframes + 2] = k -> sigma ;
                 frames [4 * nframes + 3] = VL_PI / 2 - angles [q] ;
+                int j;
                 
-                
-                for (int j = 0 ; j < 128 ; ++j) {
+                for (j = 0 ; j < 128 ; ++j) {
                     float x = 512.0F * rbuf [j] ;
                     x = (x < 255.0F) ? x : 255.0F ;
                     ((int*)descr) [128 * nframes + j] = (int) x ;
@@ -184,7 +185,7 @@ void transposeDescriptor (vl_sift_pix* dst, vl_sift_pix* src)
 }
 
 
-void compare (Pair* pairs_iterator, int * L1_pt, int * L2_pt, int K1, int K2, int ND, float thresh, int* matches)
+void compare (Pair* pairs_iterator, int * L1_pt, int * L2_pt, int K1, int K2, int ND, float thresh, long int* matches)
 {
     // L1_pt la lista de descriptores de la imagen 1
     // L2_pt la lista de descriptores de la imagen 2
@@ -296,9 +297,6 @@ int* levantarDescBD(char *id_obra, int* nKeyPoints){ //levanta el descriptor des
 	
 	
 	while ((row = mysql_fetch_row(res)) != NULL){ // recorrer la variable res con todos los registros obtenidos para su uso
-		
-        	//printf("\nid_descriptor %s", row[0]);
-		//char str[] = "now # is the time for all # good men to come to the # aid of their country";
 		char delims[] = "\n";
 		char *result = NULL;
 		char aux[100]="";
@@ -316,17 +314,181 @@ int* levantarDescBD(char *id_obra, int* nKeyPoints){ //levanta el descriptor des
 			
 			
 		}
-		//printf("entro al while que lelna descr tantas veces esto\n");		
 		
 	};
-	//escribirDescriptorPrueba("prueba.txt", descr, largo);	
 	mysql_free_result(res);
 	mysql_close(conn);
-	//printf("descr pos 9 = %d",descr[9]);
 	return descr;
 }
 
-const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,const char* nombresala)
+int buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,const char* nombresala)
+
+{
+	
+	
+	long int kb = 0;	  	
+    int* nKeyPoints_base =kb;
+    int* descriptors_base = 0;
+    int id_obra = 0;
+    long int correspondences, final_matches;
+    Pair* pairs_iterator = (Pair*) malloc(sizeof(Pair) * (nKeyPoints+nKeyPoints));
+	char im[200]="";
+	
+    char* imagen= im;   
+    
+    int i;
+    int j;    
+     
+    int vecesloop=0;  
+
+	/*//--------------AGREGADO-------------------------*/
+
+	MYSQL *conn; //variable de conexion para mysql
+	MYSQL_RES *res; // variable que contendra el resultado de la consuta
+	MYSQL_ROW row; //variable que contendra los campos por cada registro consultado
+	
+	conn = mysql_init(NULL); //inicializacion a nula la conexion
+	
+	
+	/* Connect to database */
+	if (!mysql_real_connect(conn, server,
+	user, password, database, 0, NULL, 0)) { // definir los arametros de la conexion antes establecidos
+	fprintf(stderr, "%s\n", mysql_error(conn)); // si hay un error definir cual fue dicho error
+	exit(1);
+	}
+
+	char sql[100];
+	strcpy(sql,"select id_obra from obra where obra.id_sala ='");
+	strcat(sql,nombresala);
+	strcat(sql,"'");
+	// send SQL query 
+	if (mysql_query(conn, sql)) {// definicion de la consulta y el origen de la conexion
+	fprintf(stderr, "%s\n", mysql_error(conn));
+	exit(1);
+	}
+	res = mysql_use_result(conn);
+	
+	//-------------------------AGREGADO-------------------------------------
+	int coincidencias=0;
+	//-------------------------AGREGADO-------------------------------------
+	
+	while ((row = mysql_fetch_row(res)) != NULL) {
+		if (vecesloop==0){
+    			
+    		descriptors_base = levantarDescBD(row[0], &nKeyPoints_base);    			
+    		compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);	
+			strcpy(imagen, row[0]);
+            sscanf(row[0],"%d",&id_obra);
+			char hola3[100];
+			sprintf(hola3,"%ld",correspondences);
+                        strcat(hola3," primera corresp, obra ");
+			strcat(hola3,row[0]);
+	                char* pepe3=hola3;
+			insert_nan(pepe3);
+
+    	    final_matches = correspondences;
+		    fprintf(stderr,"loop 0 final matches %ld id_obra: %s\n",final_matches, row[0]);
+            fprintf(stderr,"imagen: %s\n",imagen);
+            fprintf(stderr,"id_obra: %d\n",id_obra);
+			vecesloop++;
+    			
+    		}
+    		else{
+    			
+    			descriptors_base = levantarDescBD(row[0], &nKeyPoints_base);
+    			
+
+     	   		compare (pairs_iterator, descriptors, descriptors_base,nKeyPoints,nKeyPoints_base, 128, 2   ,&correspondences);
+
+			    char hola2[100];
+			    sprintf(hola2,"%ld",correspondences);
+                strcat(hola2," corresp, obra ");
+			    strcat(hola2,row[0]);
+	            char* pepe2=hola2;
+			    insert_nan(pepe2);
+        		fprintf(stderr,"correspondences %d id_obra %s \n",correspondences, row[0]);
+        	       		if (correspondences>final_matches)
+            			{   
+                            fprintf(stderr,"sobreescribiendo id_obra\n");
+					        //--------------AGREGADO-------------------------
+            				//Asumo que acá compara, luego borrar las lineas.
+            				coincidencias++;
+            				//--------------AGREGADO-------------------------
+				            strcpy(imagen, row[0]);
+                            sscanf(row[0],"%d",&id_obra);
+            				final_matches = correspondences;
+            				
+            			}  		
+        		}
+		
+    		free(descriptors_base);	
+		
+	}
+	fprintf(stderr,"final matches %ld \n",final_matches); 
+	fprintf(stderr,"imagen: %s\n",imagen);
+
+		
+
+		
+
+        //--------------AGREGADO-------------------------
+	
+	char hola[100];
+	//strchr(hola,final_matches);
+	//strcat(hola,final_matches);
+	
+	sprintf(hola,"%ld",final_matches);
+
+	char* pepe=hola;
+	mysql_free_result(res);
+	mysql_close(conn); 
+
+	if(final_matches<17)
+	{
+    fprintf(stderr,"No encontrado\n");
+	return 0;
+	}
+	else
+	{return id_obra;}
+
+}
+
+
+
+void insert_nan(char *texto)
+{
+
+	MYSQL *conn1; //variable de conexion para mysql
+	MYSQL_RES *res1; // variable que contendra el resultado de la consuta
+	MYSQL_ROW row1; //variable que contendra los campos por cada registro consultado
+	
+	
+	conn1 = mysql_init(NULL); //inicializacion a nula la conexion
+
+	/* Connect to database */
+	if (!mysql_real_connect(conn1, server,
+	user, password, database, 0, NULL, 0)) { // definir los arametros de la conexion antes establecidos
+	fprintf(stderr, "%s\n", mysql_error(conn1)); // si hay un error definir cual fue dicho error
+	exit(1);
+	}
+
+	char sql1[50000];
+	strcpy(sql1,"insert into proyecto.nan(texto) values ('");
+	strcat(sql1,texto);
+	strcat(sql1,"')");
+	
+	if (mysql_query(conn1, sql1)) { // definicion de la consulta y el origen de la conexion
+	fprintf(stderr, "%s\n", mysql_error(conn1));
+	exit(1);
+	}
+	res1 = mysql_use_result(conn1);
+	mysql_free_result(res1);
+	mysql_close(conn1);
+
+
+}
+
+const char* buscarBaseDeDatos2(int nKeyPoints, int* descriptors, vl_bool ranking)
 
 {
 	
@@ -344,11 +506,6 @@ const char* buscarBaseDeDatos(int nKeyPoints, int* descriptors, vl_bool rankg,co
     int j;    
      
     int vecesloop=0;  
-
-FILE *pf;
-	pf = fopen("caca.txt","w");
-	fprintf(pf,"%s","aca van los matches");
-	fclose(pf);
     
 	/*//--------------AGREGADO-------------------------
 	char* filename="coincidencias.txt";
@@ -371,9 +528,7 @@ FILE *pf;
 	}
 
 	char sql[100];
-	strcpy(sql,"select id_obra from obra where obra.id_sala ='");
-	strcat(sql,nombresala);
-	strcat(sql,"'");
+	strcpy(sql,"select id_obra from obra");
 	//printf("sql es %s",sql);
 	//printf("termino sql");
 	// send SQL query 
@@ -423,7 +578,7 @@ FILE *pf;
 			strcat(hola2,row[0]);
 	                char* pepe2=hola2;
 			insert_nan(pepe2);
-    			printf("correspondences %d id obra %s \n",correspondences, row[0]);
+    			//printf("correspondences %d id obra %s \n",correspondences, row[0]);
     	       		if (correspondences>final_matches)
     			{   
 					//--------------AGREGADO-------------------------
@@ -439,11 +594,7 @@ FILE *pf;
     		free(descriptors_base);	
 		
 	}
-	
-        //printf("final matches %d \n",final_matches);
-	
 
-		
 
 		
 
@@ -477,38 +628,11 @@ FILE *pf;
 		
 
 }
-void insert_nan(char *texto)
-{
-
-	MYSQL *conn1; //variable de conexion para mysql
-	MYSQL_RES *res1; // variable que contendra el resultado de la consuta
-	MYSQL_ROW row1; //variable que contendra los campos por cada registro consultado
-	
-	
-	conn1 = mysql_init(NULL); //inicializacion a nula la conexion
-
-	/* Connect to database */
-	if (!mysql_real_connect(conn1, server,
-	user, password, database, 0, NULL, 0)) { // definir los arametros de la conexion antes establecidos
-	fprintf(stderr, "%s\n", mysql_error(conn1)); // si hay un error definir cual fue dicho error
-	exit(1);
-	}
-
-	char sql1[50000];
-	strcpy(sql1,"insert into proyecto.nan(texto) values ('");
-	strcat(sql1,texto);
-	strcat(sql1,"')");
-	
-	if (mysql_query(conn1, sql1)) { // definicion de la consulta y el origen de la conexion
-	fprintf(stderr, "%s\n", mysql_error(conn1));
-	exit(1);
-	}
-	res1 = mysql_use_result(conn1);
-	mysql_free_result(res1);
-	mysql_close(conn1);
 
 
-}
+
+
+
 
 void escribirDescBD(char *desc,char *id_obra){ //escribe el descriptor desc en la base de datos
 	
@@ -553,9 +677,7 @@ void escribirDescriptor(char* id_obra, int* descriptor, long int largo)
         char *a=aux;
 	char *a2 = aux2;
     
-   	// sprintf(aux2,"%ld\n \n",largo); voy a probar poner la primera fila con el numero de descriptores
-        //printf("\nlargo %ld",largo);
-	sprintf(aux2,"%ld\n \n",largo);
+  	sprintf(aux2,"%ld\n \n",largo);
 	escribirDescBD(aux2,id_obra);
 	strcpy(aux2,"");
 	
@@ -586,7 +708,7 @@ int main(int argc,char * argv[])
     int largosala;	
     int largoarchivo; 	
     int largoruta;	
- 
+  
 	
     int j;	
 	
@@ -600,9 +722,15 @@ int main(int argc,char * argv[])
     const char* direccion = argv[1];
     
         //----------------------------Levantamos la imagen PNG y obtenemos los pixels----------------------------------
-    
-    in = fopen (direccion, "rb") ;
+        fprintf(stderr,"inicio\n");
 
+    in = fopen (direccion, "rb") ;
+    if(in == NULL){
+        fprintf(stderr," No pude abrir %s\n",direccion);        
+        return 1;    
+    }
+             
+    
     // read PGM header 
     err = vl_pgm_extract_head (in, &pim) ;
     
@@ -616,7 +744,8 @@ int main(int argc,char * argv[])
     err  = vl_pgm_extract_data (in, &pim, data) ;
     
     // convert data type 
-    for (int q = 0 ; q < (unsigned) (pim.width * pim.height) ; ++q) {
+    int q;
+    for (q = 0 ; q < (unsigned) (pim.width * pim.height) ; ++q) {
         fdata [q] = data [q] ;
     }
     
@@ -626,7 +755,7 @@ int main(int argc,char * argv[])
     int height = pim.height;
    
     
-    
+    fprintf(stderr,"sift\n");
     //Calculamos los descriptores de la imagen de entrada
     sift(fdata, width, height,&nKeyPoints,&keyPoints,&descriptors);
     int r=0;
@@ -638,32 +767,28 @@ int main(int argc,char * argv[])
     user = argv[4]; //usuario para consultar la base de datos
     password = argv[5]; // contraseña para el usuario en cuestion
     database = argv[6]; //nombre de la base de datos a consultar
-	
-    if (argc==7)
+
+  if (argc==7)
     {
-	
+	 //printf("Buscando...\n");
        	char resultado_char[100]="";	
+    int id_obra = 0;    
+    fprintf(stderr," Buscando...\n");    
 	nombsala=argv[2];
-        image_out = buscarBaseDeDatos(nKeyPoints, descriptors,0,nombsala);
-       
-	strcpy(resultado_char,image_out);
-	 
-	sscanf(resultado_char,"%d",&r);
-	 printf("%d",r);
+        id_obra = buscarBaseDeDatos(nKeyPoints, descriptors,0,nombsala);
+	 printf("%d",id_obra);
     }
     else if (argc==8)
     {
     	     
         if(strcmp(argv[7],"generar")==0){ 
-	     
+	//printf("Generando...\n");     
              escribirDescriptor(argv[2], descriptors, nKeyPoints*128);
 	     printf("1");
              
         }	   
         
     }
-   
 
     return 1;
 }
-
