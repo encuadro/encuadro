@@ -1038,13 +1038,154 @@ static image_float ll_angle( image_float in, float threshold,
   return g;
 }
 
+static image_float ll_angle_int( image_float in, float threshold,
+									 struct coorlist ** list_p, void ** mem_p,
+									 image_float * modgrad, unsigned int n_bins )
+{
+	image_float g;
+	unsigned int n,p,x,y,adr,i;
+	float com1,com2,gx,gy,norm;//norm2;
+	/* the rest of the variables are used for pseudo-ordering
+	 the gradient magnitude values */
+	int list_count = 0;
+	struct coorlist * list;
+	struct coorlist ** range_l_s; /* array of pointers to start of bin list */
+	struct coorlist ** range_l_e; /* array of pointers to end of bin list */
+	struct coorlist * start;
+	struct coorlist * end;
+	float max_grad = 0.0;
+
+	/* image size shortcuts */
+	n = in->ysize;
+	p = in->xsize;
+
+	/* allocate output image */
+	g = new_image_float(in->xsize,in->ysize);
+
+	/* get memory for the image of gradient modulus */
+	*modgrad = new_image_float(in->xsize,in->ysize);
+
+	/* get memory for "ordered" list of pixels */
+	list = (struct coorlist *) calloc( (size_t) (n*p), sizeof(struct coorlist) );
+	*mem_p = (void *) list;
+	range_l_s = (struct coorlist **) calloc( (size_t) n_bins,
+                                           sizeof(struct coorlist *) );
+	range_l_e = (struct coorlist **) calloc( (size_t) n_bins,
+                                           sizeof(struct coorlist *) );
+
+	for(i=0;i<n_bins;i++) range_l_s[i] = range_l_e[i] = NULL;
+
+	/* 'undefined' on the down and right boundaries */
+	/* 'undefined' on the rows {0,1,2} and {n-1,n-2,n-3} and in the columns{0,1,2} {p-1,p-2,p-3}*/
+	for(x=0;x<p;x++) g->data[(n-1)*p+x] = g->data[(n-2)*p+x] = g->data[(n-3)*p+x] = g->data[x] = g->data[p+x] =  g->data[p*2+x]=NOTDEF;
+	for(y=0;y<n;y++) g->data[p*y+p-1] =  g->data[p*y+p-2]   = g->data[p*y+p-3] =  g->data[p*y] =  g->data[p*y+1] = g->data[p*y+2]  = NOTDEF;
+
+	//    for(x=0;x<p;x++) g->data[(n-1)*p+x] = NOTDEF;
+	//    for(y=0;y<n;y++) g->data[p*y+p-1]   = NOTDEF;
+
+	/* compute gradient on the remaining pixels */
+	//    for(x=0;x<p-1;x++)
+	//    for(y=0;y<n-1;y++)
+	for(x=3;x<p-3;x++)
+		for(y=3;y<n-3;y++)
+      {
+			adr = y*p+x;
+
+			/*
+			 Norm 2 computation using 2x2 pixel window:
+			 A B
+			 C D
+			 and
+			 com1 = D-A,  com2 = B-C.
+			 Then
+			 gx = B+D - (A+C)   horizontal difference
+			 gy = C+D - (A+B)   vertical difference
+			 com1 and com2 are just to avoid 2 additions.
+			 */
+			com1 = in->data[adr+p+1] - in->data[adr];
+			com2 = in->data[adr+1]   - in->data[adr+p];
+
+			gx = com1+com2; /* gradient x component */
+			gy = com1-com2; /* gradient y component */
+			//        norm2 = gx*gx+gy*gy;
+			//        norm = sqrtf( norm2 / 4.0 ); /* gradient norm */
+
+			norm = sqrtf( gx*gx+gy*gy)*0.5; /* gradient norm */
+
+			(*modgrad)->data[adr] = norm; /* store gradient norm */
+
+			if( norm <= threshold ) /* norm too small, gradient no defined */
+				g->data[adr] = NOTDEF; /* gradient angle not defined */
+			else
+			{
+            /* gradient angle computation */
+            g->data[adr] = atan2f(gx,-gy);
+
+            /* look for the maximum of the gradient */
+            if( norm > max_grad ) max_grad = norm;
+			}
+      }
+
+
+	/* compute histogram of gradient values */
+	//    for(x=0;x<p-1;x++)
+	//    for(y=0;y<n-1;y++)
+	for(x=3;x<p-3;x++)
+		for(y=3;y<n-3;y++)
+
+		{
+			norm = (*modgrad)->data[y*p+x];
+
+			/* store the point in the right bin according to its norm */
+			i = (unsigned int) (norm * (float) n_bins / 175);
+			if( i >= n_bins ) i = n_bins-1;
+			if( range_l_e[i] == NULL )
+				range_l_s[i] = range_l_e[i] = list+list_count++;
+			else
+			{
+            range_l_e[i]->next = list+list_count;
+            range_l_e[i] = list+list_count++;
+			}
+			range_l_e[i]->x = (int) x;
+			range_l_e[i]->y = (int) y;
+			range_l_e[i]->next = NULL;
+      }
+
+	/* Make the list of pixels (almost) ordered by norm value.
+	 It starts by the larger bin, so the list starts by the
+	 pixels with the highest gradient value. Pixels would be ordered
+	 by norm value, up to a precision given by max_grad/n_bins.
+	 */
+	for(i=n_bins-1; i>0 && range_l_s[i]==NULL; i--);
+	start = range_l_s[i];
+	end = range_l_e[i];
+	if( start != NULL )
+		while(i>0)
+      {
+			--i;
+			if( range_l_s[i] != NULL )
+			{
+            end->next = range_l_s[i];
+            end = range_l_e[i];
+			}
+      }
+	*list_p = start;
+
+	/* free memory */
+	free( (void *) range_l_s );
+	free( (void *) range_l_e );
+
+	return g;
+}
+
+
 /*----------------------------------------------------------------------------*/
 /** Is point (x,y) aligned to angle theta, up to precision 'prec'?
  */
 static inline int isaligned( int x, int y, image_float angles, float theta,
                       float prec )
 {
- 
+
   float a;
 
   /* check parameters */

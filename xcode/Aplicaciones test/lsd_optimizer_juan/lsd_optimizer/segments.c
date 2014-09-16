@@ -501,7 +501,7 @@ float* filterSegments3(int *listOutSize , int *listInSize , float *listIn, float
 	
 	/*get memory*/
 	listOut=(float *) malloc ( 100 * listDim * sizeof(float));
-	float* lengths=(float *) alloca ( 100 * sizeof(float));
+	float* lengths=(float *) alloca ( *listInSize * sizeof(float));
 	
 	float* seg0_p1;
 	float* seg0_p2;
