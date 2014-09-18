@@ -13,9 +13,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class MyFTP {
+	public static String _HOST = "10.0.2.109"; 
 	private boolean isObraLogin = false, isSalaLogin = false, isZonaLogin = false;
 	public FTPClient salaClient = null, obraClient = null, zonaClient = null;
-	String host = "10.0.2.109";
+	String host = _HOST;//"10.0.2.109";
 	//Salas
 	String sUser = "salas", sPassword = "12345678";
 	//Obras

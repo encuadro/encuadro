@@ -335,7 +335,7 @@ public class ContenidoObras extends Activity {
 				String[] videosinformato = videoconformato.split("\\.");
 				
 				
-				String url="http://10.0.2.109/obras/"+idObra+"/video/"+videosinformato[0]+".mp4";
+				String url="http://"+MyFTP._HOST+"/obras/"+idObra+"/video/"+videosinformato[0]+".mp4";
 				Intent i= new Intent(ContenidoObras.this, ReproducirVideo.class);
 				i.putExtra("video",url);
 				startActivity(i);

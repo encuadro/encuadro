@@ -367,7 +367,7 @@ public class ContenidoSalas extends Activity {
 //				El resto esta comentado por que no existe video en BD	
 				Toast.makeText(getApplicationContext(), "Return: " + video, Toast.LENGTH_SHORT).show();
 				
-				String url="http://10.0.2.109/salas/"+idsala+"/video/"+video+".mp4";
+				String url="http://"+MyFTP._HOST+"/salas/"+idsala+"/video/"+video+".mp4";
 				Intent i= new Intent(ContenidoSalas.this, ReproducirVideo.class);
 				i.putExtra("video",url);
 				startActivity(i);
