@@ -73,6 +73,7 @@ function funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_
             chmod($dir, 0777);
             $reg = $row2['id_obra'];
             $query3 = mysql_query("INSERT INTO contenido_obra (id_obra) VALUES ('$id')") or die(mysql_error());
+            mensaje_log("SE CREO UNA NUEVA OBRA CON ID".$id_sala);
         } catch (Exception $e) {
             $reg = -1;
         }
@@ -239,6 +240,7 @@ function funagregarContenidoObra($id_obra,$tipo,$nombre){
 			
 			}			
 			else{
+                mensaje_log("AGREGANDO VIDEO A LA OBRA ID=".$id_obra);
 				$mod  = "ftp://".$usu.":".$pass."@".$servidor."/".$id_obra."/".$tipo."/".$variable;
 				funconvertirvideo($id_obra);
 			}
@@ -264,21 +266,19 @@ function funconvertirvideo($id_obra)
 	$res = mysql_fetch_array($query);
 	$u = $dir.$res['video'];
 	$temp=strpos($u,".");
-	
+	mensaje_log("CONVIRTIENDO VIDEO:".$u);
 	//$extension=substr($u,$temp);//$u[$temp];
 	$rutasinext=substr($u,0,$temp);
-	
-
 		
 	$salida=$rutasinext.'.mp4';
 	$salida2=$rutasinext.'.mov';
-	
+	if(file_exists($u))mensaje_log("Existe el archivo");
+    else mensaje_log("No existe el archivo");
 
-		
 	//echo "Starting ffmpeg...\n\n";
-	shell_exec("ffmpeg -i $u -s 640x480 -acodec aac -ac 2 -strict experimental -vcodec libx264 -level 30 -ab 128k $salida");
-	shell_exec("ffmpeg -i $u -s 640x480 -acodec aac -ac 2 -strict experimental -vcodec libx264 -level 30 -ab 128k $salida2");
-	
+	shell_exec("ffmpeg -i $u -s 640x480 -acodec aac -ac 2 -strict experimental -vcodec libx264 -level 30 -ab 128k $salida ");
+	shell_exec("ffmpeg -i $u -s 640x480 -acodec aac -ac 2 -strict experimental -vcodec libx264 -level 30 -ab 128k $salida2 ");
+	mensaje_log("TERMINO LA FUNCION DE CONVERTIR ");
 	//echo "Done.\n";
 	return $id_obra;
 }

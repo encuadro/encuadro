@@ -63,12 +63,13 @@ function funAltaSala($nombre_sala, $descripcion_sala) {
             mkdir($dir, 0777, true);
             chmod($dir, 0777);                     
             $reg = $row2['id_sala'];
+            mensaje_log("SE CREO UNA NUEVA SALA DE NOMBRE=".$nombre_sala.", DESCRIPCION=".$descripcion_sala,1);
         } catch (Exception $e) {
                 mensaje_log($e->getMessage(),3);                
                 $reg = -1;
         }
     }
-    mesaje_log("SE CREO UNA NUEVA SALA DE NOMBRE=".$nombre_sala.", DESCRIPCION=".$descripcion_sala,1);
+    
     return $reg;
 }
 

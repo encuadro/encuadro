@@ -33,6 +33,7 @@ function funAltaZona($largo, $ancho, $x, $y, $nombre_obra) {
             chmod($dir, 0777);
             $reg = $row2['id_zona'];
             $query3 = mysql_query("INSERT INTO contenido_zona (id_zona) VALUES ('$id')") or die(mysql_error());
+            
         } catch (Exception $e) {
             $reg = -1;
         }
