@@ -213,6 +213,7 @@
 		053AFE3A1683392E00363636 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 053AFE391683392E00363636 /* AVFoundation.framework */; };
 		05E8A7EC168342CC00B6BBFA /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E8A7EB168342CB00B6BBFA /* Icon-72.png */; };
 		05E8A7EF168342DD00B6BBFA /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 05E8A7EE168342DD00B6BBFA /* Icon.png */; };
+		0D9E85DC1767D2580051B42C /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D9E85DB1767D2580051B42C /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -616,6 +617,8 @@
 		053AFE391683392E00363636 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		05E8A7EB168342CB00B6BBFA /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = SOURCE_ROOT; };
 		05E8A7EE168342DD00B6BBFA /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		0D9E85DA1767D1D80051B42C /* xml_log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xml_log.h; sourceTree = "<group>"; };
+		0D9E85DB1767D2580051B42C /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -623,6 +626,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D9E85DC1767D2580051B42C /* Accelerate.framework in Frameworks */,
 				053AFE3A1683392E00363636 /* AVFoundation.framework in Frameworks */,
 				053AFE381683391900363636 /* CoreMotion.framework in Frameworks */,
 				053AFE361683391000363636 /* CoreMedia.framework in Frameworks */,
@@ -642,11 +646,6 @@
 		053AFB8A168334EB00363636 = {
 			isa = PBXGroup;
 			children = (
-				053AFE391683392E00363636 /* AVFoundation.framework */,
-				053AFE371683391900363636 /* CoreMotion.framework */,
-				053AFE351683391000363636 /* CoreMedia.framework */,
-				053AFE331683390800363636 /* CoreImage.framework */,
-				053AFE311683390100363636 /* CoreVideo.framework */,
 				053AFBA3168334EB00363636 /* CasoUso0103 */,
 				053AFB98168334EB00363636 /* Frameworks */,
 				053AFB96168334EB00363636 /* Products */,
@@ -664,6 +663,12 @@
 		053AFB98168334EB00363636 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0D9E85DB1767D2580051B42C /* Accelerate.framework */,
+				053AFE391683392E00363636 /* AVFoundation.framework */,
+				053AFE371683391900363636 /* CoreMotion.framework */,
+				053AFE351683391000363636 /* CoreMedia.framework */,
+				053AFE331683390800363636 /* CoreImage.framework */,
+				053AFE311683390100363636 /* CoreVideo.framework */,
 				053AFB99168334EB00363636 /* QuartzCore.framework */,
 				053AFB9B168334EB00363636 /* OpenGLES.framework */,
 				053AFB9D168334EB00363636 /* CoreGraphics.framework */,
@@ -1308,6 +1313,7 @@
 		057B7FD816837015006D0D14 /* FuncionesC */ = {
 			isa = PBXGroup;
 			children = (
+				0D9E85DA1767D1D80051B42C /* xml_log.h */,
 				053AFE07168335CE00363636 /* vvector.h */,
 				057B7FDF1683709D006D0D14 /* SVD */,
 				057B7FDE16837075006D0D14 /* FilterSegments */,
@@ -1695,8 +1701,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
@@ -1705,8 +1711,8 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PROVISIONING_PROFILE = "EC6ABC6D-4660-4014-8626-EFBED5D6A5FE";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EC6ABC6D-4660-4014-8626-EFBED5D6A5FE";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1715,8 +1721,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = NDEBUG;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
@@ -1724,8 +1730,9 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "EC6ABC6D-4660-4014-8626-EFBED5D6A5FE";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EC6ABC6D-4660-4014-8626-EFBED5D6A5FE";
+				"OTHER_CFLAGS[arch=*]" = "-Winline";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Release;
@@ -1734,8 +1741,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1744,8 +1751,8 @@
 				INFOPLIST_FILE = CasoUso0103/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3550E339-0104-4EA9-8C82-46138591CDA2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3550E339-0104-4EA9-8C82-46138591CDA2";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1755,8 +1762,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pablo Flores Guridi (F4JX2MYU5B)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CasoUso0103/Prefix.pch;
@@ -1764,8 +1771,8 @@
 				INFOPLIST_FILE = CasoUso0103/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3550E339-0104-4EA9-8C82-46138591CDA2";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "3550E339-0104-4EA9-8C82-46138591CDA2";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;

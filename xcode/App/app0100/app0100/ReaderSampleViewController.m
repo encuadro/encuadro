@@ -9,8 +9,8 @@
 
 @implementation ReaderSampleViewController
 
-@synthesize resultImage, resultText,site, audioPlayer,start, backround;
-
+@synthesize resultImage, resultText,site, audioPlayer,start, backround, nombreSala,identObra, tweet, actInd;
+@synthesize string=_string;
 - (IBAction) scanButtonTapped
 {
 
@@ -64,6 +64,30 @@
 
 }
 
+-(IBAction)tweeti{
+    if([TWTweetComposeViewController canSendTweet]) {
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        UIImage *img = resultImage.image;
+        [controller addImage:img];
+        [controller setInitialText:[NSString stringWithFormat:@"Arte Interactivo. Tweet desde app! En sala #%@ @encuadroAR",  self.nombreSala.text]];
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            [self dismissModalViewControllerAnimated:YES];
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    NSLog(@"Twitter Result: cancelled");
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    NSLog(@"Twitter Result: sent");
+                    break;
+                default:
+                    NSLog(@"Twitter Result: default");
+                    break;
+            }
+        };
+        [self presentModalViewController:controller animated:YES];
+    }
+
+}
 //- (IBAction) enCuadroSite:(id)sender { 
 //    
 //    NSURL *url = [ [ NSURL alloc ] initWithString:site];  
@@ -89,9 +113,52 @@
     //Aca vendria la busqueda en base de datos del texto del QR
 //
     
-    NSString *string=symbol.data;
+    self.string=symbol.data;
  NSLog(@"IMAGE SYMBOL");
-    if ([string rangeOfString:@"BLANES"].location != NSNotFound) {
+    opcionAutor = self.string;
+    if(opcionAutor != NULL){
+        //UIAlertView *alertWithOkButton;
+        [actInd startAnimating];
+        obtSalas *os = [[obtSalas alloc]initWithString:opcionAutor];
+        while(!finSal) {
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
+        /*if([[[os getNom] objectAtIndex:0] isEqualToString:@""]){
+            UIAlertView *alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"El id del QR detectado no es una sala disponible." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertWithOkButton show];
+            [alertWithOkButton release];
+        }
+        else{*/
+        //alertWithOkButton = [[UIAlertView alloc] initWithTitle:@"QR Detectado!"                                                       message:@"Presione Foward para reconocer cuadro" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        //[alertWithOkButton show];
+        //[alertWithOkButton release];
+        if([[[os getNom] objectAtIndex:0] isEqualToString:@"-1"]){
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Ocurrió un error al obtener los datos o no existe la sala." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        else{
+            [identObra setEnabled:YES];
+            [tweet setEnabled:YES];
+            NSMutableArray *obtNombre = [os getNom];
+            NSMutableArray *obtDesc = [os getDesc];
+            NSMutableArray *obtImagen = [os getIma];
+            resultText.text = [obtDesc objectAtIndex:0];
+            [resultText setHidden:NO];
+            room = [obtNombre objectAtIndex:0];
+            cad = [obtImagen objectAtIndex:0];
+            self.nombreSala.text = [obtNombre objectAtIndex:0];
+            [self.nombreSala setHidden:NO];
+            UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:cad];
+            resultImage.image = cuadroPhoto;
+            [reader dismissViewControllerAnimated:YES completion:nil];
+            opcionAutor = self.string;
+            [actInd stopAnimating];
+        }
+            
+        //}
+    }
+
+   /* if ([string rangeOfString:@"BLANES"].location != NSNotFound) {
         //zona BLANES
 
         resultText.text = symbol.data;
@@ -166,13 +233,17 @@ NSLog(@"IMAGE ANTES");
     
     
     
-    NSLog(@"opcionAutor en picker es %d",opcionAutor);
+    NSLog(@"opcionAutor en picker es %d",opcionAutor);*/
     
     //[reader release];
     
 }
 
-
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 //- (void) imagePickerControllerDidCancel: (UIImagePickerController *) picker {
 //    
 //    //[[picker parentViewController] dismissModalViewControllerAnimated: YES];
@@ -186,9 +257,7 @@ NSLog(@"IMAGE ANTES");
         [audioPlayer stop];
         click=0;
         [start setTitle:@"Start" forState:UIControlStateNormal];
-       
-        
-        
+        opcionAutor = self.string;        
     }
 }
 
@@ -196,11 +265,7 @@ NSLog(@"IMAGE ANTES");
 
     [super viewDidLoad];
     room=@"noroom";
-    
     //backround.transform = CGAffineTransformMakeScale(0.1,0.1);
-
-    
-    
     [UIView animateWithDuration:3
                           delay:0.6
                         options: UIViewAnimationCurveEaseOut
@@ -211,10 +276,6 @@ NSLog(@"IMAGE ANTES");
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
                      }];
-    
-    
-   
-    
     [UIView animateWithDuration:5 delay:3 options: UIViewAnimationCurveEaseOut animations:^{
         backround.alpha = 0.0;
     } completion:^(BOOL finished){

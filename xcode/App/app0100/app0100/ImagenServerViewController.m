@@ -18,11 +18,10 @@
 @synthesize url = _url;
 @synthesize read =_read;
 @synthesize image = _image;
-
-@synthesize activity;
+@synthesize filePath = _filePath;
 @synthesize mensaje;
 
-@synthesize imagenView,tomarFoto;
+@synthesize imagenView,tomarFoto,enviar,twitt, load;
 
 -(IBAction)tomarFoto:(id)sender{
     
@@ -37,13 +36,14 @@
 
 
 -(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info{
-    
-    //saca la vista del controlador
     [picker dismissModalViewControllerAnimated:YES];
-    //pone imagen tomada en el objeto UIImageView
     imagenView.image=[info objectForKey:@"UIImagePickerControllerOriginalImage"];
-    
-    
+    NSData *webData = UIImagePNGRepresentation(imagenView.image);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    self.filePath = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
+    [webData  writeToFile:self.filePath atomically:YES];
+    NSLog(@"%@",opcionAutor);
 }
 
 //-(IBAction)uploadImage:(id)sender
@@ -161,13 +161,74 @@
     
 }
 
+-(void)subir{
+    FTPUpload *fu = [[FTPUpload alloc]initWithString:self.filePath];
+    while(!finiteUpload) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    NSArray *nombreFoto = [self.filePath componentsSeparatedByString:@"Get"];
+    NSMutableString *nombreFoto2 = [[NSMutableString alloc] initWithString:@"Get"];
+    [nombreFoto2 appendString:[nombreFoto objectAtIndex:1]];
+    NSString *foto = [NSString stringWithString:nombreFoto2];
+    oo = [[obtObras alloc]initNombreIma:foto yIdSala:opcionAutor];
+    while(!finOb) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    NSString *nombre = [[oo getNombre] objectAtIndex:0];
+    NSString *autor = [[oo getAutor] objectAtIndex:0];
+    NSString *descripcion = [[oo getDesc] objectAtIndex:0];
+    NSString *imagen = [[oo getImagen] objectAtIndex:0];
+    descripcionObra = [[NSMutableArray alloc] init];
+    [descripcionObra addObject:autor];
+    [descripcionObra addObject:nombre];
+    [descripcionObra addObject:imagen];
+    [descripcionObra addObject:descripcion];
+}
 
+-(IBAction)tweet{
+    if([TWTweetComposeViewController canSendTweet]) {
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        UIImage *img = imagenView.image;
+        [controller addImage:img];
+        [controller setInitialText:@"Arte Interactivo. Lienzo libre desde App! @encuadroAR"];
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            [self dismissModalViewControllerAnimated:YES];
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    NSLog(@"Twitter Result: cancelled");
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    NSLog(@"Twitter Result: sent");
+                    break;
+                default:
+                     NSLog(@"Twitter Result: default");
+                    break;
+            }
+        };
+        [self presentModalViewController:controller animated:YES];
+    }
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
-   
-    
+    //[self performSelectorInBackground:@selector(animate:) withObject:nil];
+    [activity startAnimating];
+    [load setHidden:NO];
+    [imagenView setHidden:YES];
+    [tomarFoto setHidden:YES];
+    [enviar setHidden:YES];
+    [twitt setEnabled:NO];
+    [self subir];
+    manual=false;
+    ObraCompletaViewController *obracompletaViewController = [segue destinationViewController];
+    [twitt setEnabled:YES];
+    [activity stopAnimating];
+    [load setHidden:YES];
+    [imagenView setHidden:NO];
+    [tomarFoto setHidden:NO];
+    [enviar setHidden:NO];
+    /*
     if ([[segue identifier] isEqualToString:@"Detalle2"])
     {
         
@@ -238,7 +299,7 @@
         
         mensaje.text=nil;
         mensaje.backgroundColor=nil;
-    }
+    }*/
 }
 
 
@@ -251,11 +312,7 @@
     //[self presentModalViewController:picker animated:YES];
 	[self presentViewController:picker animated:YES completion:NO];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    [self.view addSubview:activity]; // spinner is not visible until started
-    activity.center = CGPointMake(160, 100);
-
+    NSLog(@"%@",opcionAutor);
 }
 
 - (void)viewDidUnload

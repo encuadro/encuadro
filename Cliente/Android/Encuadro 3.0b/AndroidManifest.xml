@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.qr"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:requiredForAllUsers="true"
+        android:theme="@style/AppTheme" 
+        android:screenOrientation="locked">
+        <activity
+            android:name="com.Encuadro.Loader"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.google.zxing.client.android.CaptureActivity"
+            android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="landscape"
+            android:stateNotNeeded="true"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysHidden" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.example.qr.SCAN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.Encuadro.ContenidoObras"
+            android:label="@string/title_activity_contenido_obras"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.MenPpal"
+            android:label="@string/title_activity_men_ppal">
+        </activity>
+        <activity
+            android:name="com.Encuadro.ContenidoSalas"
+            android:label="@string/title_activity_contenido_salas"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.ListaObras"
+            android:label="@string/title_activity_lista_obras"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.ListaSalas"
+            android:label="@string/title_activity_lista_salas"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.ListaZonas"
+            android:label="@string/title_activity_lista_zonas"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.MenPpalAuto"
+            android:label="@string/title_activity_men_ppal_auto"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.ReproducirVideo"
+            android:configChanges="orientation|keyboardHidden"
+            android:label="@string/title_activity_reproducir_video"
+            android:screenOrientation="locked" >
+<!--             android:screenOrientation="landscape" -->
+        </activity>
+        <activity
+            android:name="com.Encuadro.RAObra"
+            android:label="@string/title_activity_raobra"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.RASala"
+            android:label="@string/title_activity_rasala"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.Estadistica"
+            android:label="@string/title_activity_estadistica"
+            android:screenOrientation="locked" >
+        </activity>
+        <activity
+            android:name="com.Encuadro.Progreso"
+            android:label="@string/title_activity_progreso">
+        </activity>
+        <activity
+            android:name="com.Encuadro.Puntajes"
+            android:label="@string/title_activity_puntajes">
+        </activity>
+        <activity
+            android:name="com.Encuadro.CuetionarioFinal"
+            android:label="@string/title_activity_cuetionario_final" >
+        </activity>
+    </application>
+
+</manifest>

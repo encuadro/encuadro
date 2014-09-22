@@ -1,0 +1,111 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ContenidoObras" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/imageView1"
+        android:text="Nombre:" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="80px"
+        android:layout_height="80px"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_launcher" />
+
+    <ScrollView
+        android:id="@+id/textAreaScroller"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout1"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gradient_box"
+        android:scrollbars="vertical" >
+<!--         android:background="#f8fcff" -->
+
+        <TextView
+            android:id="@+id/tvDescripcionSala"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="Descripción:" />
+    </ScrollView>
+    
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnObrasSala"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" 
+                android:layout_weight="1" 
+                android:textSize="20sp"    
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="1dp"
+                android:text="Obras" 
+            	android:background="@drawable/lucky_button"/>
+
+            <Button
+                android:id="@+id/btnVideo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" 
+                android:layout_weight="1" 
+                android:textSize="20sp"              
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="1dp"
+                android:text="Video" 
+            	android:background="@drawable/lucky_button"/>
+
+            <Button
+                android:id="@+id/btnAudio"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" 
+                android:textSize="20sp"             
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:text="Audio" 
+            android:background="@drawable/lucky_button"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnREC"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="2dp"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:text="Rec Img" 
+            android:background="@drawable/lucky_button"/>
+    </LinearLayout>
+
+
+
+</RelativeLayout>

@@ -21,7 +21,7 @@
 @synthesize autorImagen = _autorImagen;
 @synthesize autorNombre = _autorNombre;
 @synthesize autorDescripcion = _autorDescripcion;
-
+@synthesize tableView, load;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -31,39 +31,8 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-
-    
-    self.autorNombre = [[NSArray alloc]
-                        initWithObjects:
-                        @"Blanes",
-                        @"Figari",
-                        @"Torres Garcia",
-                        @"Esculturas",
-                        nil];
-    
-    self.autorImagen = [[NSArray alloc]
-                       initWithObjects:
-                       @"AutorBlanes.jpeg",
-                       @"AutorFigari.jpeg",
-                       @"AutorTorres.jpeg",
-                       @"esculturas.jpeg",
-                       nil];
-    
-    self.autorDescripcion = [[NSArray alloc]
-                         initWithObjects:
-                         @"Juan Manuel Blanes (Montevideo, 8 de junio de 1830 — Pisa, Italia, 15 de abril de 1901)",
-                         @"Pedro Figari Solari (n. Montevideo, 29 de junio de 1861 - íbidem, 24 de julio de 1938)",
-                         @"Joaquín Torres García (Montevideo, 28 de julio de 1874 - Montevideo, 8 de agosto de 1949)",
-                         @"Recorrido por la zona de esculturas digitales interactivas.",
-                         nil];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
@@ -112,30 +81,56 @@
     
     cell.obraLabel.text = [self.autorDescripcion 
                            objectAtIndex:[indexPath row]];
-    
-    UIImage *cuadroPhoto = [UIImage imageNamed: 
+    UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:
                             [self.autorImagen objectAtIndex: [indexPath row]]];
     
-    cell.cuadroImage.image = cuadroPhoto;
-    
+    cell.cuadroImage.image = cuadroPhoto;    
     
     return cell;
 }
 
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"ObrasAutor"])
-    {
-        
-        
-        NSIndexPath *myIndexPath = [self.tableView 
-                                    indexPathForSelectedRow];
-           
-        opcionAutor = [myIndexPath row]+1;
-        
-
+-(void)viewWillAppear:(BOOL)animated{
+    [actInd startAnimating];
+    o = [[obtSalas alloc]init];
+    while(!finSal) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
+    if([[[o getNom] objectAtIndex:0] isEqualToString:@"-1"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Ocurrió un error al obtener los datos o no existen salas." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else{
+        self.autorNombre = [o getNom];
+        self.autorDescripcion = [o getDesc];
+        self.autorImagen = [o getIma];
+        if(self.autorNombre != NULL){
+            [actInd stopAnimating];
+            [self.tableView reloadData];
+        }
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
+    if ([[segue identifier] isEqualToString:@"ObrasAutor"]){
+        NSLog(@"toque");
+        [actInd startAnimating];
+        [load setHidden:NO];
+        [load setTextAlignment:UITextAlignmentCenter];
+        [tableView setUserInteractionEnabled:NO];
+        NSIndexPath *myIndexPath = [self.tableView indexPathForSelectedRow];
+        NSMutableArray *salas = [o getSalas];
+        opcionAutor = [salas objectAtIndex:[myIndexPath row]];
+        [tableView setUserInteractionEnabled:YES];
+        [load setHidden:YES];
+        [actInd stopAnimating];
+      }
 }
 
 
@@ -178,10 +173,10 @@
 }
 */
 
-#pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     // Navigation logic may go here. Create and push another view controller.
     /*
      <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];

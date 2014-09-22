@@ -1,0 +1,231 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".Estadistica" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+		<ScrollView
+	        android:id="@+id/scrollView1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent" 
+	        android:layout_weight="1"
+	        android:background="@drawable/gradient_box">
+	
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent"
+	            android:orientation="vertical" >
+		        <LinearLayout
+		            android:layout_width="fill_parent"
+		            android:layout_weight="1"
+		            android:layout_height="wrap_content" >
+		
+		            <TextView
+		                android:id="@+id/textView1"
+		                 android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content"
+		                android:text="Visita:" />
+		
+		            <RadioGroup
+		                android:id="@+id/rdgVisita"
+		                android:layout_width="fill_parent"
+		                android:layout_height="wrap_content"
+		                android:layout_weight="1" >
+		
+		                <RadioButton
+		                    android:id="@+id/radio0"
+		                    android:layout_width="fill_parent"
+		                    android:layout_height="wrap_content"
+		                    android:layout_weight="1"
+		                    android:text="Grupal" />
+		
+		                <RadioButton
+		                    android:id="@+id/radio1"
+		                    android:layout_width="fill_parent"
+		                    android:layout_height="wrap_content"
+		                    android:layout_weight="1"
+		                    android:text="Individual" />
+		            </RadioGroup>
+		        </LinearLayout>
+		        
+				<View
+			        android:layout_width="fill_parent"
+			        android:layout_height="3dp"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="5dp"
+			        android:layout_marginLeft="20dp"
+			        android:layout_marginRight="20dp"
+			        android:background="#979797"/>
+		
+		        <LinearLayout
+		            android:layout_width="fill_parent"
+		            android:layout_weight="1"
+		            android:layout_height="wrap_content" >
+		
+		            <TextView
+		                android:id="@+id/textView2"
+		                 android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content"
+		                android:text="Nacionalidad:" />
+		
+		            <RadioGroup
+		                android:id="@+id/rdgNacio"
+		                android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content" >
+		
+		                <RadioButton
+		                    android:id="@+id/radio0"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="Uruguaya" />
+		
+		                <RadioButton
+		                    android:id="@+id/radio1"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="Extranjera" />
+		            </RadioGroup>
+		        </LinearLayout>
+		
+		        <View
+			        android:layout_width="fill_parent"
+			        android:layout_height="3dp"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="5dp"
+			        android:layout_marginLeft="20dp"
+			        android:layout_marginRight="20dp"
+			        android:background="#979797"/>
+		        
+		        <LinearLayout
+		            android:layout_width="fill_parent"
+		            android:layout_weight="1"
+		            android:layout_height="wrap_content" >
+		
+		            <TextView
+		                android:id="@+id/textView3"
+		                android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content"
+		                android:text="Sexo:" />
+		
+		            <RadioGroup
+		                android:id="@+id/rdgSexo"
+		                android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content" >
+		
+		                <RadioButton
+		                    android:id="@+id/radio0"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="Masculino" />
+		
+		                <RadioButton
+		                    android:id="@+id/radio1"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="Femenino" />
+		            </RadioGroup>
+		        </LinearLayout>
+		
+		        <View
+			        android:layout_width="fill_parent"
+			        android:layout_height="3dp"
+			        android:layout_marginTop="5dp"
+			        android:layout_marginBottom="5dp"
+			        android:layout_marginLeft="20dp"
+			        android:layout_marginRight="20dp"
+			        android:background="#979797"/>
+		        
+		        <LinearLayout
+		            android:layout_width="fill_parent"
+		            android:layout_height="wrap_content" >
+		
+		            <TextView
+		                android:id="@+id/textView4"
+		                android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content"
+		                android:text="Edad:" />
+		
+		            <RadioGroup
+		                android:id="@+id/rdgEd"
+		                android:layout_width="fill_parent"
+		                android:layout_weight="1"
+		                android:layout_height="wrap_content" >
+		
+		                <RadioButton
+		                    android:id="@+id/radio0"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="- de 12" />
+		
+		                <RadioButton
+		                    android:id="@+id/radio1"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="13 a 15" />
+		
+		                <RadioButton
+		                    android:id="@+id/radio2"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="16 a 18" />
+		
+		                <RadioButton
+		                    android:id="@+id/radio3"
+		                    android:layout_width="fill_parent"
+		                    android:layout_weight="1"
+		                    android:layout_height="wrap_content"
+		                    android:text="+ de 18" />
+		            </RadioGroup>
+		        </LinearLayout>
+		    </LinearLayout>
+    	</ScrollView>
+    	
+    	<LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" 
+            android:layout_weight="6">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Enviar" 
+            	android:background="@drawable/lucky_button"
+            	android:layout_gravity="bottom"/>
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:text="Omitir" 
+                android:background="@drawable/lucky_button"
+                android:layout_gravity="bottom"/>
+
+        </LinearLayout>
+        
+    </LinearLayout>
+</RelativeLayout>

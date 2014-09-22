@@ -23,7 +23,10 @@
 @synthesize ARidObra = _ARidObra;
 @synthesize ARType = _ARType;
 @synthesize ARObj = _ARObj;
-
+@synthesize ARObj2 = _ARObj2;
+@synthesize ARObj3 = _ARObj3;
+@synthesize ARObj4 = _ARObj4;
+@synthesize ARObj5 = _ARObj5;
 @synthesize vistaTouch = _vistaTouch;
 @synthesize theMovieVista = _theMovieVista;
 
@@ -79,15 +82,7 @@
 
 
 -(void) desplegarVideoVista{
-    
-    
-    
-    
     /////////viendo commit
-    
-    
-    
-    
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
@@ -99,8 +94,6 @@
     self.theMovieVista.controlStyle=MPMovieControlStyleNone;
     //theMovie.view.contentMode=UIViewContentModeScaleToFill;
     self.theMovieVista.scalingMode=MPMovieScalingModeFill;
-    
-    
     [self.view addSubview:self.theMovieVista.view];
     //Resize window – a bit more practical
     UIWindow *moviePlayerWindow = nil;
@@ -108,18 +101,12 @@
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
     [self.theMovieVista play];
-    
-    
 }
 
 
 
 //- (IBAction)hacerRender:(id)sender
 - (void) hacerRender{
-    
-    
-    
-    
     NSLog(@"HACER RENDER VISTA");
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.viewController=(Isgl3dViewController*)appDelegate.viewController;
@@ -244,7 +231,7 @@
     NSLog(@"POST INSTANCIA [HELLOWORLD VIEW]");
     printf("ArID desde VISTAVIEWCTRL: %d\n",[self.ARidObra intValue]);
     
-    _viewController.isgl3DView =  [[HelloWorldView alloc] init:[self.ARidObra intValue] ARType:self.ARType ARObj:self.ARObj];
+    _viewController.isgl3DView =  [[HelloWorldView alloc] initARType:self.ARType ARObj:self.ARObj ARObj2:self.ARObj2 ARObj3:self.ARObj3 ARObj4:self.ARObj4 ARObj5:self.ARObj5];
     
     [[Isgl3dDirector sharedInstance] addView:_viewController.isgl3DView];
     
@@ -357,12 +344,87 @@ _button=nil;
 {
     NSLog(@"VIEW WILL APPEAR VISTA");
     [super viewWillAppear:animated];
-   
-    [self hacerRender];
+    [self selecTipo];
     
    // [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
+-(void)selecTipo{
+    if([[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención!" message:@"No existe ninguna realidad aumentada para esta obra." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+        //[alert release];
+    }
+    if(![[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Video",@"Modelo 3D",@"Animación", nil];
+        [alert show];
+    }
+    if(![[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Video", nil];
+        [alert show];
+    }
+    if([[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Modelo 3D", nil];
+        [alert show];
+    }
+    if([[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Animación", nil];
+        [alert show];
+    }
+    if(![[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Video",@"Modelo 3D", nil];
+        [alert show];
+    }
+    if(![[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && [[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Video",@"Animación", nil];
+        [alert show];
+    }
+    if([[descripcionObra objectAtIndex:5] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:7] isEqualToString:@"null"] && ![[descripcionObra objectAtIndex:8] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Atención!" message:@"Seleccione la realidad aumentada desea ver." delegate:self cancelButtonTitle:nil otherButtonTitles:@"Modelo 3D",@"Animación", nil];
+        [alert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSFileManager *gestorArchivos = [NSFileManager defaultManager];
+    if([gestorArchivos fileExistsAtPath:[descripcionObra objectAtIndex:5]]){
+        NSLog(@"existe");
+    }
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Ok"]){
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Video"]){
+        self.ARType = @"video";
+        self.ARObj = [descripcionObra objectAtIndex:5];
+        NSLog(@"Tipo: %@",self.ARType);
+        NSLog(@"objeto: %@",self.ARObj);
+        [self hacerRender];
+    }
+    if ([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Modelo 3D"]){
+        self.ARType = @"modelo";
+        self.ARObj = [descripcionObra objectAtIndex:7];
+        self.ARObj2 = @"null";
+        self.ARObj3 = @"null";
+        self.ARObj4 = @"null";
+        self.ARObj5 = @"null";
+        NSLog(@"Tipo: %@",self.ARType);
+        NSLog(@"objeto: %@",self.ARObj);
+        [self hacerRender];
+        
+    }
+    if([[alertView buttonTitleAtIndex:buttonIndex] isEqualToString:@"Animación"]){
+        self.ARType = @"animacion";
+        self.ARObj = [descripcionObra objectAtIndex:8];
+        self.ARObj2 = [descripcionObra objectAtIndex:9];
+        self.ARObj3 = [descripcionObra objectAtIndex:10];
+        self.ARObj4 = [descripcionObra objectAtIndex:11];
+        self.ARObj5 = [descripcionObra objectAtIndex:12];
+        NSLog(@"Tipo: %@",self.ARType);
+        NSLog(@"objeto: %@",self.ARObj);
+        [self hacerRender];
+    }
+}
 
 
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {

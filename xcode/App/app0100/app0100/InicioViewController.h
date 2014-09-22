@@ -10,7 +10,6 @@
 #import <AVFoundation/AVFoundation.h>
 
 int click;
-
 @interface InicioViewController : UIViewController
 
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;

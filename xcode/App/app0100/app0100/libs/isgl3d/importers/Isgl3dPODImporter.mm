@@ -76,16 +76,22 @@
 		// cut filename into name and extension
 		NSString * extension = [path pathExtension];
 		NSString * fileName = [path stringByDeletingPathExtension];
-		
-		if (![[NSBundle mainBundle] pathForResource:fileName ofType:extension]) {
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+        if (![fileManager fileExistsAtPath:path]){
+		/*if (![[NSBundle mainBundle] pathForResource:fileName ofType:extension]) {*/
 			NSLog(@"iSGL3D : Error : Isgl3dPODImporter : POD file %@ does not exist.", path);
 		}
 		
-		if (_podScene->ReadFromFile([[[NSBundle mainBundle] pathForResource:fileName ofType:extension] UTF8String]) != PVR_SUCCESS) {
+		/*if (_podScene->ReadFromFile([[[NSBundle mainBundle] pathForResource:fileName ofType:extension] UTF8String]) != PVR_SUCCESS) {
 			NSLog(@"iSGL3D : Error : Isgl3dPODImporter : Unable to parse POD file %@", path);
 			delete _podScene;
 			return nil;
-		}
+		}*/
+        if(_podScene->ReadFromFile([path UTF8String]) != PVR_SUCCESS){
+            NSLog(@"iSGL3D : Error : Isgl3dPODImporter : Unable to parse POD file %@", path);
+			delete _podScene;
+			return nil;
+        }
 		
 		_podPath = path;
 

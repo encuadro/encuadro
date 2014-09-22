@@ -17,28 +17,34 @@
 
 #import "TouchVista.h"
 #import "DrawSign.h"
+#import "AutorTableViewController.h"
 
 int click;
 bool justLoaded;
 bool manual;
 bool conUpsi;
-@interface ObraCompletaViewController : UIViewController
-
-@property (retain, nonatomic) NSArray *descripcionObra;
+NSMutableArray *descripcionObra;
+@interface ObraCompletaViewController : UIViewController{
+    IBOutlet UIActivityIndicatorView *actInd;
+    IBOutlet UIBarButtonItem *start;
+    IBOutlet UIBarButtonItem *AR;
+    IBOutlet UIBarButtonItem *tw;
+}
 @property (retain, nonatomic) IBOutlet UILabel *autor;
 @property (retain, nonatomic) IBOutlet UILabel *obra;
 @property (retain, nonatomic) IBOutlet UITextView *detalle;
+@property (retain, nonatomic) IBOutlet UITextView *texto;
 @property (retain, nonatomic) IBOutlet UIImageView *imagenObra;
-
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *actInd;
 @property (assign) IBOutlet UIImageView *mano1;
 @property (assign) IBOutlet UIImageView *mano4;
 @property (assign) IBOutlet UIImageView *upsi;
 @property (nonatomic, retain) TouchVista *vistaTouch;
-
 @property (nonatomic, retain) AVAudioPlayer *audioPlayer;
-@property (nonatomic, retain) IBOutlet UIButton *start;
-
-
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *start;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *AR;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *tw;
+@property (nonatomic, retain) NSMutableArray *descripcionObra;
 - (IBAction) play;
-
+-(IBAction)tweet;
 @end

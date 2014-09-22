@@ -16,10 +16,10 @@
 @synthesize obra = _obra;
 @synthesize autor = _autor;
 @synthesize imagenObra = _imagenObra;
-@synthesize descripcionObra = _descripcionObra;
 @synthesize detalle = _detalle;
+@synthesize texto = _texto;
 @synthesize audioPlayer = _audioPlayer;
-@synthesize start = _start;
+@synthesize start, AR, tw;
 @synthesize mano1;
 @synthesize mano4;
 @synthesize upsi;
@@ -72,7 +72,7 @@
         
         
         
-        NSString *filePath = [self.descripcionObra objectAtIndex:0];
+        /*NSString *filePath = [self.descripcionObra objectAtIndex:0];
         NSData* textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
         NSString* text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
         self.autor.text=text;
@@ -92,7 +92,7 @@
         filePath= [self.descripcionObra objectAtIndex:3];
         textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
         text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
-        self.detalle.text=text;
+        self.detalle.text=text;*/
 //    }
     
     justLoaded=true;
@@ -239,40 +239,102 @@
 
 
 - (IBAction) play{
-    
-    if (click==0 || justLoaded) {
-        // audioPlayer=nil;
-        justLoaded=false;
-        click=1;
-        NSString *estring=[self.descripcionObra objectAtIndex:4];
-        
-        NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
-       
-        //  NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
-       // NSURL *url =[NSURL fileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
-       // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"]];
-                
-        NSError *error;
-        self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-        self.audioPlayer.numberOfLoops=0;
-        [self.audioPlayer play];
-        
-        [self.start setTitle:@"Stop" forState:UIControlStateNormal];
-        
-    }else {
-        //audioPlayer=nil;
-        [self.audioPlayer stop];
-        click=0;
-        [self.start setTitle:@"Audio" forState:UIControlStateNormal];
+    if([[descripcionObra objectAtIndex:4] isEqualToString:@"null"]){
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Atención!" message:@"No esta disponible ningun audio para esta obra." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+    else{
+        if (click==0 || justLoaded) {
+            // audioPlayer=nil;
+            justLoaded=false;
+            click=1;
+            NSString *estring=[descripcionObra objectAtIndex:4];
+            //NSURL *url =[NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/%@", [[NSBundle mainBundle] resourcePath],estring]];
+            NSURL *url = [NSURL fileURLWithPath:estring];
+            //  NSURL *url = [[NSURL alloc] initFileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
+            // NSURL *url =[NSURL fileURLWithPath:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"];
+            // NSURL *url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"/Users/encuadro/Music/CAMPO/02 1987.mp3"]];
+            NSError *error;
+            self.audioPlayer =[[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+            self.audioPlayer.numberOfLoops=0;
+            [self.audioPlayer play];
+            [self.start setTitle:@"Stop"/* forState:UIControlStateNormal*/];
+        }else {
+            //audioPlayer=nil;
+            [self.audioPlayer stop];
+            click=0;
+            [self.start setTitle:@"Audio"/* forState:UIControlStateNormal*/];
+    }
     }
     
-    
 }
+
+-(IBAction)tweet{
+    if([TWTweetComposeViewController canSendTweet]) {
+        TWTweetComposeViewController *controller = [[TWTweetComposeViewController alloc] init];
+        UIImage *img = self.imagenObra.image;
+        [controller addImage:img];
+        [controller setInitialText:[NSString stringWithFormat:@"Arte Interactivo. Tweeting desde App! @encuadroAR #%@ #%@", [descripcionObra objectAtIndex:0], [descripcionObra objectAtIndex:1]]];
+        //UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, self.view.opaque, 0.0);
+        //[self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+        //UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+        //[controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];
+        //UIGraphicsEndImageContext();
+        controller.completionHandler = ^(TWTweetComposeViewControllerResult result)  {
+            [self dismissModalViewControllerAnimated:YES];
+            switch (result) {
+                case TWTweetComposeViewControllerResultCancelled:
+                    NSLog(@"Twitter Result: cancelled");
+                    break;
+                case TWTweetComposeViewControllerResultDone:
+                    NSLog(@"Twitter Result: sent");
+                    break;
+                default:
+                    NSLog(@"Twitter Result: default");
+                    break;
+            }
+        };
+        [self presentModalViewController:controller animated:YES];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"viewWILL APPEAR");
     self.vistaTouch.touchman=false;
+    [actInd startAnimating];
+    NSMutableString *autorNombre = [[NSMutableString alloc] init];
+    [autorNombre appendString:[descripcionObra objectAtIndex:0]];
+    [autorNombre appendString:@" - "];
+    [autorNombre appendString:[descripcionObra objectAtIndex:1]];
+    self.autor.text=autorNombre;
+    self.obra.text=[descripcionObra objectAtIndex:1];
+    UIImage *imagen =  [UIImage imageWithContentsOfFile:[descripcionObra objectAtIndex:2]];
+    self.imagenObra.image=imagen;
+    self.detalle.text = [descripcionObra objectAtIndex:3];
+    [descripcionObra addObject:[oo getAudio]];
+    [descripcionObra addObject:[oo getVideo]];
+    [descripcionObra addObject:[oo getTexto]];
+    self.texto.text = [descripcionObra objectAtIndex:6];
+    [descripcionObra addObject:[oo getModelo]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:0]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:1]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:2]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:3]];
+    [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:4]];
+    if([descripcionObra objectAtIndex:12] != NULL){
+        [actInd stopAnimating];
+        [self.imagenObra setHidden:NO];
+        [self.autor setHidden:NO];
+        [self.autor setTextAlignment:UITextAlignmentCenter];
+        [self.detalle setHidden:NO];
+        [self.start setEnabled:YES];
+        [self.AR setEnabled:YES];
+        [self.tw setEnabled:YES];
+        if(![[descripcionObra objectAtIndex:6] isEqualToString:@"null"])
+            [self.texto setHidden:NO];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -284,7 +346,7 @@
     if (click!=0) {
         [self.audioPlayer stop];
         click=0;
-        [self.start setTitle:@"Start" forState:UIControlStateNormal];
+        [self.start setTitle:@"Start"/* forState:UIControlStateNormal*/];
     }
 }
 
@@ -302,7 +364,7 @@
         VistaViewController *ARVistaViewController =
         [segue destinationViewController];
         
-       
+       /*
         NSString *filePath = [self.descripcionObra objectAtIndex:5];
         NSData* textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
         NSString* text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
@@ -318,7 +380,7 @@
         text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
         ARVistaViewController.ARObj=text;
     
-        
+        */
     }
 }
 
