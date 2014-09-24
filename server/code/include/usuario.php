@@ -35,7 +35,7 @@ function funCantidadObrasJuego($id_juego) {
 
 function funBusquedaPista($idObra,$idjuego) {
     mensaje_log("FUNCION BUSQUEDA DE PISTAS (USUARIO)");    
-    mensaje_log("BUSCANDO PISTAS PARA LA OBRA=".$id_obra." Y EL JUEGO=".$id_juego,1);
+    mensaje_log("BUSCANDO PISTAS PARA LA OBRA=".$idObra." Y EL JUEGO=".$idjuego,1);
     $u = "0";
  	try {
 		$query = mysql_query("SELECT id_proxima, pista FROM Pista WHERE id_juego='$idjuego' and id_obra='$idObra'") or die(mysql_error());
@@ -64,6 +64,7 @@ function funObraPerteneceAJuego($idObra) {
 		$query2 = mysql_query("SELECT idjuego FROM Juego, Pista WHERE id_juego= idjuego AND activo=1  AND borrado=0 AND ciclico=1 AND id_obra='$idObra' GROUP BY idjuego") or die(mysql_error());
 		$res2 = mysql_fetch_assoc($query2);
 		if ($res2 != NULL) {
+            mensaje_log("Se encontro un juego");
 	      	$u = $res2['idjuego'] ;
 		}
 		else{

@@ -224,12 +224,13 @@ function fungetDataSalaId($id_sala) {
 function fungetDataSalaId2($id_sala){   
     global $ini_array;
     mensaje_log("FUNCION GET DATA SALA ID2 (SALA)");    
+    mensaje_log("INFORMACION DE LA SALA:".$id_sala);
     $u = "-1";
 	//$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
-
+    
      $query = mysql_query("SELECT * FROM sala WHERE id_sala='$id_sala'") or die(mysql_error());
      $row = mysql_fetch_array($query);
      if ($row != NULL) {
