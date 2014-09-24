@@ -73,7 +73,7 @@ function funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_
             chmod($dir, 0777);
             $reg = $row2['id_obra'];
             $query3 = mysql_query("INSERT INTO contenido_obra (id_obra) VALUES ('$id')") or die(mysql_error());
-            mensaje_log("SE CREO UNA NUEVA OBRA CON ID".$id_sala);
+            mensaje_log("SE CREO UNA NUEVA OBRA CON ID".$id);
         } catch (Exception $e) {
             $reg = -1;
         }
