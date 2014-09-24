@@ -59,16 +59,18 @@ function funObraPerteneceAJuego($idObra) {
 	$res = mysql_fetch_assoc($query);
 	if ($res != NULL) {
       	$u = $res['idjuego'] ;
+        mensaje_log("Se encontro un juego activo de id: ".$u,2);
     }
 	else {	//AGREGADO EL 24/03/14
 		$query2 = mysql_query("SELECT idjuego FROM Juego, Pista WHERE id_juego= idjuego AND activo=1  AND borrado=0 AND ciclico=1 AND id_obra='$idObra' GROUP BY idjuego") or die(mysql_error());
 		$res2 = mysql_fetch_assoc($query2);
 		if ($res2 != NULL) {
-            mensaje_log("Se encontro un juego");
 	      	$u = $res2['idjuego'] ;
+            mensaje_log("Se encontro un juego activo y ciclico de id: ".$u,2);
 		}
 		else{
 		  $u="0";
+            mensaje_log("No se encontro ningun juego",2);
 		}
 	}
     return $u;
@@ -467,6 +469,7 @@ function fungethora() {
 }
 
 function fungetalgo($nombre,$nomProx,$idjuego,$pista) {
+    mensaje_log("FUNCION GET ALGO (USUARIO/JUEGO)");
 	$query1 = mysql_query("SELECT id_obra FROM obra WHERE nombre_obra = '$nombre'")or die(mysql_error());
 	$query2 = mysql_query("SELECT id_obra FROM obra WHERE nombre_obra = '$nomProx'")or die(mysql_error());
 	//$query1 = mysql_query("SELECT O1.id_obra, O2.id_obra FROM obra as O1, obra as O2 WHERE O1.nombre_obra = '$nombre' and O2.nombre_obra = '$nomProx'")or die(mysql_error());   //Aguante mi consulta
@@ -476,10 +479,12 @@ function fungetalgo($nombre,$nomProx,$idjuego,$pista) {
     $row2 = mysql_fetch_assoc($query2);
 	$r2=$row2['id_obra'];
 	$r1=$row['id_obra'];
+    mensaje_log("IDOBRA: ".$r1." ID_SIGIENTE: ".$r2." ID_JUEGO: ".$idjuego." PISTA: ".$pista);
 	//$reg = 'error';
     if ($r1 != NULL and $r2!= NULL) {
 		$query2 = mysql_query("INSERT INTO Pista (id_obra, id_juego, id_proxima, pista) VALUES ($r1,$idjuego,$r2,'$pista')") or die(mysql_error());
 		$reg = 'insertado todo';
+        mensaje_log("INSERTANDO PISTAS EN BD");
 	}
 	return $r2.$r1;
 }
