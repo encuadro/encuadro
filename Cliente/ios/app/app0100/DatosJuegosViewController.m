@@ -185,9 +185,9 @@ BOOL *elementFound;
                                                                   dateStyle:NSDateFormatterShortStyle
                                                                   timeStyle:NSDateFormatterFullStyle];
             
-            _HoraFinJuego = [dateString substringFromIndex:9];
+            _HoraFinJuego = [dateString substringFromIndex:8];
             _HoraFinJuego = [_HoraFinJuego substringToIndex:8];
-            NSLog(@"%@",_HoraFinJuego);
+            NSLog(@"Hora fin de juego: %@",_HoraFinJuego);
             //hora inicio
             NSString *HoraInicio = [_HoraComienzo substringWithRange:NSMakeRange(0,2)];
             int HoraI = [HoraInicio integerValue];

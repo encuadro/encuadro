@@ -10,6 +10,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define VERBOSE
+
 #ifdef QNM_USE_XML_OUTPUT
 #include "llibertat.h"
 #endif

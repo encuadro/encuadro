@@ -7,7 +7,7 @@
 //
 
 #import "ObraCompletaViewController.h"
-
+#include "xml_log.h"
 @interface ObraCompletaViewController ()
 
 @end
@@ -60,7 +60,7 @@
 @synthesize HoraJuego;
 @synthesize AuxTipoRecorridoOCVC;
 @synthesize Auxiliar;
-
+@synthesize pedidoActual;
 
 
 
@@ -433,7 +433,7 @@ BOOL *elementFound;
     }
     //probando
     AyudaPista = self.obra.text=[descripcionObra objectAtIndex:1];
-    NSLog(@"que es ayuda pista ---> %@",AyudaPista);
+    NSLog(@"AyudaPista: %@",AyudaPista);
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -442,7 +442,7 @@ BOOL *elementFound;
                              "<nombre_obra>%@</nombre_obra>"
                              "</getDataObra>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", AyudaPista];
+                             "</soap:Envelope>\n", AyudaPista]; //FIXME: buscar por ID y no por nombre
 	NSLog(soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -527,7 +527,7 @@ BOOL *elementFound;
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    
+    XML_IN;
     if ([[segue identifier] isEqualToString:@"AR"])
     {
         if (click!=0) {
@@ -570,7 +570,7 @@ BOOL *elementFound;
         if ([[segue identifier] isEqualToString:@"DatosJuego"])
     {
         DatosJuegosViewController *vista = [segue destinationViewController];
-               // NSLog(@"hora hora hora a pasar pasar pasar : %@",HoraJuego);
+        NSLog(@"hora hora hora a pasar pasar pasar : %@",HoraJuego);
         //[vista setVariablePasar1:[NSString stringWithFormat:@"label label"]];
         [vista setVariablePasarIdJuego:[NSString stringWithFormat:@"%@",txtJuego.text]];
         [vista setVariablePasarIdObra:[NSString stringWithFormat:@"%@",txtPista.text]];
@@ -584,8 +584,8 @@ BOOL *elementFound;
             NSString *dateString = [NSDateFormatter localizedStringFromDate:[NSDate date]
                                                                   dateStyle:NSDateFormatterShortStyle
                                                                   timeStyle:NSDateFormatterFullStyle];
-            NSLog(@"%@",dateString);
-            HoraJuego = [dateString substringFromIndex:9];
+            NSLog(@"XXX: %@",dateString);
+            HoraJuego = [dateString substringFromIndex:8];
             HoraJuego = [HoraJuego substringToIndex:8];
         }
         [vista setHoraComienzo:[NSString stringWithFormat:@"%@",HoraJuego]];
@@ -596,7 +596,7 @@ BOOL *elementFound;
         
     }
     
-        
+    XML_OUT;
 }
 
 - (IBAction)btnPista:(id)sender {
@@ -746,7 +746,7 @@ BOOL *elementFound;
                              "</BusquedaPista>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",txtPista.text, txtJuego.text];
-    NSLog(soapMessage);
+    NSLog(@"soapMessage: %@",soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
     [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -793,7 +793,7 @@ BOOL *elementFound;
 {
 	NSLog(@"DONE. Received Bytes: %d", [webData length]);
 	NSString *theXML = [[NSString alloc] initWithBytes: [webData mutableBytes] length:[webData length] encoding:NSUTF8StringEncoding];
-	NSLog(theXML);
+	NSLog(@"Received XML: %@",theXML);
 	[theXML release];
 	
 	if (xmlParser)
@@ -814,6 +814,11 @@ didStartElement:(NSString *) elementName
  qualifiedName:(NSString *) qName
     attributes:(NSDictionary *) attributeDict {
     
+    NSLog(@"start elementName: %@",elementName);
+    if( [elementName containsString:@"ns1"])
+    {
+        pedidoActual=elementName;
+    }
     if( [elementName isEqualToString:@"return"])
     {
         if (!soapResults)
@@ -838,10 +843,14 @@ didEndElement:(NSString *)elementName
  namespaceURI:(NSString *)namespaceURI
 qualifiedName:(NSString *)qName
 {
+    XML_IN;
+
+        NSLog(@"end elementName: %@",elementName);
     if ([elementName isEqualToString:@"return"])
     {
+        NSLog(@"pedidoActual: %@",pedidoActual);
         //---displays the country---
-        NSLog(@"%@",soapResults);
+        NSLog(@"soapResults: %@",soapResults);
         //Nan = [AyudaPista substringToIndex:3];
         //int len = [myString length];
         int caracteres = [soapResults length];
@@ -851,26 +860,32 @@ qualifiedName:(NSString *)qName
         AyudaJuego = soapResults;
         
         auxidpista = soapResults;
+        //auxpista = soapResults;
         //BusquedaPista = soapResults;
-        NSLog(@"%d Caracteres: ",caracteres);
+        NSLog(@"Caracteres: %d",caracteres);
         
         //
-        if (caracteres > (100)) {
-            txtPista.text = [soapResults substringToIndex:3];
+        if (caracteres > (100)) { // datos obra
+            NSLog(@"Estado:%d",1);
+            txtPista.text = [soapResults substringToIndex:3];   //FIXME: obtiene id de obra
             auxpista = soapResults;
         }
-        if( caracteres > (3)){
+        if( caracteres > (3)){ //aca entra si trae datos normales de obra o si trae pista
+            NSLog(@"Estado:%d",2);
             //BusquedaPista = txtPista.text;
             //int number = [[myTextField text] intValue];
             //txtPista.text = [soapResults substringToIndex:3];
             txtObtenerPista.text = [auxpista substringFromIndex:5];
             idsiguiente = [auxidpista substringToIndex:3];
+            NSLog(@"txtObtenerPista: %@",txtObtenerPista.text);
             NSLog(@"siguiente...:%@",idsiguiente);
             txtObraSiguiente.text = idsiguiente;
             //pis1 = [BusquedaPista intValue];
             //txtJuego.text = auxidpista;
 
-            if ([pis3 isEqual: @"1"]) {
+            if ([pis3 isEqual: @"1"])   //si hay pista previa o no
+            {
+                NSLog(@"Estado:%d",3);
                 IdPistaSiguiente = idsiguiente;
                 //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
                 UIAlertView *Mensaje = [[UIAlertView alloc]
@@ -888,23 +903,23 @@ qualifiedName:(NSString *)qName
                                        otherButtonTitles:nil];
                 [alert1 show];
                 [alert1 release];
-                
-                
             }
-
         }
-        else
+        else    //entro aca cuando recibo el estado del juego
         {
-
+            NSLog(@"Estado:%d",4);
             //if ([auxidpista isEqual: @"0"]) {// Esta obra SI esta asociada a un Juego! Si presiona boton Obtener Pista, va a comenzar a jugar..
                     //|| [IdPistaSiguiente isEqualToString:txtPista.text]
             if ([TxtComparar.text isEqualToString:txtPista.text]) {
                 AyudaJuego = txtPista.text;
+                NSLog(@"Estado:%d",5);
             }
-            if ([AyudaJuego isEqual: @"0"]) {
-            txtJuego.text = auxidpista;
-                NSLog(@"%@ IdPistaSiguiente: ",IdPistaSiguiente);
-                NSLog(@"%@ idsiguiente: ",idsiguiente);
+            if ([AyudaJuego isEqual: @"0"])
+            {
+                NSLog(@"Estado:%d",6);
+                txtJuego.text = auxidpista;
+                NSLog(@"IdPistaSiguiente: %@",IdPistaSiguiente);
+                NSLog(@"idsiguiente: %@",idsiguiente);
                 UIAlertView *alertNoJuego = [[UIAlertView alloc]
                                              initWithTitle:@"Esta obra"
                                              message:@"NO esta asociada a un Juego!"
@@ -914,9 +929,11 @@ qualifiedName:(NSString *)qName
                 [alertNoJuego show];
                 [alertNoJuego release];
             } else {
+                NSLog(@"Estado:%d",7);
                 if ([auxidpista isEqualToString:@"0"] && [txtPista.text isEqualToString:(AuxIdPistaSiguiente)]) {
                     auxidpista = AuxJuegoId;
                     pis3=@"1";
+                    NSLog(@"Estado:%d",8);
                 }
                 btnObtPista.hidden = false;
                 txtJuego.text = auxidpista;
@@ -939,6 +956,7 @@ qualifiedName:(NSString *)qName
         [soapResults setString:@""];
         elementFound = FALSE;
     }
+    XML_OUT;
 }
 
 

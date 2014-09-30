@@ -119,6 +119,8 @@ NSMutableArray *descripcionObra;
 //
 @property (retain, nonatomic) NSString *Auxiliar;
 
+
+@property(nonatomic, retain) NSString *pedidoActual;
 @end
 
 
