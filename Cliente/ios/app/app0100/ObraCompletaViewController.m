@@ -8,6 +8,9 @@
 
 #import "ObraCompletaViewController.h"
 #include "xml_log.h"
+
+#include "Configuracion.h"
+
 @interface ObraCompletaViewController ()
 
 @end
@@ -62,7 +65,9 @@
 @synthesize Auxiliar;
 @synthesize pedidoActual;
 
-
+@synthesize juego;
+@synthesize parserFIX;
+@synthesize nombreObra;
 
 BOOL *elementFound;
 
@@ -105,11 +110,16 @@ BOOL *elementFound;
     //_AuxSuma = [defaults integerForKey:@"1"];
     //txtPista.text = AuxIdObra;
     // int value = [string intValue];
-    if (AuxJuegoId != NULL) {
+    if (juego.idJuego!=0){//AuxJuegoId != NULL) {
         ContarObras = [AuxContarO intValue];
+        //[juego setContar:[AuxContarO intValue]];
+    }else{
+        juego = [[EstadoJuego alloc] init];
+
+        NSLog(@"INICIALIZANDO JUEGO");
     }
-        
-    TxtComparar.text = AuxIdPistaSiguiente;
+    parserFIX = [[Parser alloc] init];
+    //TxtComparar.text = AuxIdPistaSiguiente;
     btnPista.hidden = true;
     btnObtPista.hidden = true;
     btnRepetirPista.hidden = true;
@@ -135,7 +145,10 @@ BOOL *elementFound;
     //    [_lblIdJuego setText:[NSString stringWithFormat:@"%@",_VariablePasarIdJuego]];
    // [txtPista setText:[NSString stringWithFormat:@"%@",Cantidad]];
    
-    pis3=@"0";
+    if(juego.idJuego!=0)
+        pis3=@"1";
+    else
+        pis3=@"0";
     
 	// Do any additional setup after loading the view.
     conUpsi=true;
@@ -216,7 +229,6 @@ BOOL *elementFound;
     //                             [self UpsiAppear];
     //                         }];
     //    }
-    
     
     
     
@@ -419,6 +431,8 @@ BOOL *elementFound;
     [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:2]];
     [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:3]];
     [descripcionObra addObject:[[oo getAnimaciones] objectAtIndex:4]];
+    if(oo.nombreObra!=nil)
+        nombreObra = [NSString stringWithString:oo.nombreObra];
     if([descripcionObra objectAtIndex:12] != NULL){
         [actInd stopAnimating];
         [self.imagenObra setHidden:NO];
@@ -432,9 +446,9 @@ BOOL *elementFound;
             [self.texto setHidden:NO];
     }
     //probando
-    AyudaPista = self.obra.text=[descripcionObra objectAtIndex:1];
-    NSLog(@"AyudaPista: %@",AyudaPista);
-    NSString *soapMessage = [NSString stringWithFormat:
+    /*AyudaPista = self.obra.text=[descripcionObra objectAtIndex:1];
+    NSLog(@"AyudaPista: %@",AyudaPista);*/
+ /*   NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -442,15 +456,34 @@ BOOL *elementFound;
                              "<nombre_obra>%@</nombre_obra>"
                              "</getDataObra>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", AyudaPista]; //FIXME: buscar por ID y no por nombre
-	NSLog(soapMessage);
+                             "</soap:Envelope>\n", nombreObra];*/
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<getDataObra xmlns=\"http://%@/server_php/server_php.php/getDataObra\">\n"
+                             "<nombre_obra>%@</nombre_obra>"
+                             "</getDataObra>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n",IPSERVER, nombreObra];
+    /*NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<getDataObraId xmlns=\"http://10.0.2.109/server_php/server_php.php/getDataObraId\">\n"
+                             "<nombre_obra>%@</nombre_obra>"
+                             "</getDataObraId>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", [NSString stringWithFormat:@"%d",juego.idObraActual]];
+    NSLog(soapMessage);*/
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/getDataObra" forHTTPHeaderField:@"SOAPAction"];
+	//[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/getDataObraId" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -462,7 +495,7 @@ BOOL *elementFound;
 		NSLog(@"theConnection is NULL");
 	}
     //IdObraPista = [soapResults substringToIndex:3];
-    AuxIdObra = txtPista.text;
+   // AuxIdObra = txtPista.text;
 //    NSLog(@"mostrar txt %@",AuxIdObra);
 //    if ([txtPista.text isEqual:(AuxIdPistaSiguiente)]) {
 //        ContarObras =@"1";
@@ -478,19 +511,36 @@ BOOL *elementFound;
 
 - (void) viewDidAppear :(BOOL)animated
 {
-    if (TxtComparar.text == NULL && txtJuego.text !=NULL) {
+    if (juego.idobraSig == juego.idObraActual && juego.idJuego !=0){//TxtComparar.text == NULL && txtJuego.text !=NULL) {
         ContarObras = 1;
+        //[juego setContar:juego.contar+1];
     }
-        aux = txtPista.text;
+        //aux = txtPista.text;
+/*    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+                             "<id_Obra>%@</id_Obra>"
+                             "</ObraPerteneceAJuego>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+ */
+    /*NSString * parameters = [NSString stringWithFormat:(@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+    "<id_Obra>%@</id_Obra>"
+    "</ObraPerteneceAJuego>\n",IPSERVER ,[[NSString stringWithFormat:@"%d",juego.idObraActual]])];
+    
+    NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];
+    */
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
-                             "<ObraPerteneceAJuego xmlns=\"http://10.0.2.109/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+                             "<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
                              "<id_Obra>%@</id_Obra>"
                              "</ObraPerteneceAJuego>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", aux];
+                             "</soap:Envelope>\n", IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
 	NSLog(soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -498,7 +548,7 @@ BOOL *elementFound;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/ObraPerteneceAJuego" forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -570,16 +620,18 @@ BOOL *elementFound;
         if ([[segue identifier] isEqualToString:@"DatosJuego"])
     {
         DatosJuegosViewController *vista = [segue destinationViewController];
-        NSLog(@"hora hora hora a pasar pasar pasar : %@",HoraJuego);
+        //NSLog(@"hora hora hora a pasar pasar pasar : %@",HoraJuego);
         //[vista setVariablePasar1:[NSString stringWithFormat:@"label label"]];
-        [vista setVariablePasarIdJuego:[NSString stringWithFormat:@"%@",txtJuego.text]];
-        [vista setVariablePasarIdObra:[NSString stringWithFormat:@"%@",txtPista.text]];
-        [vista setIdPistaSiguiente:[NSString stringWithFormat:@"%@",txtObraSiguiente.text]];
+        //[vista setVariablePasarIdJuego:[NSString stringWithFormat:@"%d",juego.idJuego]];//,txtJuego.text]];
+        //[vista setVariablePasarIdObra:[NSString stringWithFormat:@"%d",juego.idObraActual]];//txtPista.text]];
+        //[vista setIdPistaSiguiente:[NSString stringWithFormat:@"%d",juego.idobraSig]];//txtObraSiguiente.text]];
+        //NSLog(@"DATOS JUEGO::CONTAR :%d%@%d",ContarObras,@" Estado juego: ",juego.contar);
         //setValue:[NSNumber numberWithInt:200] forKey:@"jCode"];
         //[vista setAuxContarObras:[NSString stringWithString:ContarObras]];
-        [vista setAuxContarObras:[NSString stringWithFormat:@"%i",ContarObras]];
-        [vista setAuxTipoRecorridoDJVC:[NSString stringWithFormat:@"%@",AuxTipoRecorridoOCVC]];
-        if (TxtComparar.text == NULL){
+        //[vista setAuxContarObras:[NSString stringWithFormat:@"%i",ContarObras]];
+        //[vista setAuxTipoRecorridoDJVC:[NSString stringWithFormat:@"%@",AuxTipoRecorridoOCVC]];
+        [vista setJuego: juego];
+        if (juego.idObraActual==juego.idObraPrimera &&  juego.contar==0){//[TxtComparar.text isEqualToString:@""]){//== NULL){
             //NSDate *hoy = [NSDate date];
             NSString *dateString = [NSDateFormatter localizedStringFromDate:[NSDate date]
                                                                   dateStyle:NSDateFormatterShortStyle
@@ -587,8 +639,18 @@ BOOL *elementFound;
             NSLog(@"XXX: %@",dateString);
             HoraJuego = [dateString substringFromIndex:8];
             HoraJuego = [HoraJuego substringToIndex:8];
+            [juego setHoraInicio:HoraJuego];
+            NSDateFormatter *hoy = [[NSDateFormatter alloc]init];
+            [hoy setDateFormat:@"yyyy/mm/dd"];
+            NSLog(@"PRUEBA FECHA HOY: ",hoy);
+            NSDate * hora_inicio = [[NSDate alloc]init];
+            NSString *stringFromDate = [hoy stringFromDate:hora_inicio];
+            CFTimeInterval startTime = CACurrentMediaTime();
+            [juego setStart:startTime];
+            
         }
-        [vista setHoraComienzo:[NSString stringWithFormat:@"%@",HoraJuego]];
+        //[vista setHoraComienzo:[NSString stringWithFormat:@"%@",HoraJuego]];
+        
         NSLog(@" mostrando Tipo Recorrido a pasar --> %@",AuxTipoRecorridoOCVC);
        // [vista setFechaJuego:[NSDate date]];
         
@@ -601,7 +663,7 @@ BOOL *elementFound;
 
 - (IBAction)btnPista:(id)sender {
     
-     if (TxtComparar.text == NULL && txtJuego.text !=NULL) {
+    if (juego.idobraSig == 0 && juego.idJuego!=0){//TxtComparar.text == NULL && txtJuego.text !=NULL) {
      ContarObras = 1;
      }
     /*
@@ -623,7 +685,7 @@ BOOL *elementFound;
    // }
     //NSLog(@"Mostrando Contar --> %@",ContarObras);
     
-    aux = txtPista.text;
+    //YO aux = txtPista.text;
     
     //FTPUpload *fu = [[FTPUpload alloc]initWithString:self.filePath];
     //    Pista *Obtener = [[Pista alloc] init];
@@ -646,7 +708,7 @@ BOOL *elementFound;
     //    [alert release];
     
     
-    NSString *soapMessage = [NSString stringWithFormat:
+    /*NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -654,15 +716,31 @@ BOOL *elementFound;
                              "<id_Obra>%@</id_Obra>"
                              "</ObraPerteneceAJuego>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", aux];
-	NSLog(soapMessage);
+                             "</soap:Envelope>\n", [NSString stringWithFormat:@"%d",juego.idObraActual]];*/
+    /*NSString * parameters = @"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+    "<id_Obra>%@</id_Obra>"
+    "</ObraPerteneceAJuego>\n",*IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual];
+     
+      NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];*/
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+                             "<id_Obra>%@</id_Obra>"
+                             "</ObraPerteneceAJuego>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", IPSERVER,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+   
+    
+	NSLog(@"soapMessage: %@",soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/ObraPerteneceAJuego" forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -694,9 +772,9 @@ BOOL *elementFound;
     btnObtPista.hidden = true;
     btnRepetirPista.hidden = false;
     btnEstadoJuego.hidden = false;
-    if ([txtPista.text isEqualToString:(AuxIdPistaSiguiente)]) {
+    /*if ([juego.pistaActual isEqualToString:(juego.)]){//txtPista.text isEqualToString:(AuxIdPistaSiguiente)]) {
         ContarObras = ContarObras + 1;
-    }
+    }*/
     
     //Instanciamos la variable de las preferencias de la aplicación
     //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -735,8 +813,8 @@ BOOL *elementFound;
     //[ObtPista ObtPistaTexto:txtPista.text IdPista:txtJuego.text];
     //-(Pista *)ObtPistaTexto: (NSString*)IdObra IdPista:(NSString*)idjuego
     //recordResults = FALSE;
-    //pis3=@"1";
-    NSString *soapMessage = [NSString stringWithFormat:
+    pis3=@"1";
+    /*NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -745,7 +823,17 @@ BOOL *elementFound;
                              "<id_Juego>%@</id_Juego>"
                              "</BusquedaPista>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",txtPista.text, txtJuego.text];
+                             "</soap:Envelope>\n",[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];*///txtPista.text, txtJuego.text];
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<BusquedaPista xmlns=\"http://%@/server_php/server_php.php/BusquedaPista\">\n"
+                             "<id_Obra>%@</id_Obra>"
+                             "<id_Juego>%@</id_Juego>"
+                             "</BusquedaPista>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n",IPSERVER,[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];
     NSLog(@"soapMessage: %@",soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
     [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -753,7 +841,7 @@ BOOL *elementFound;
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
     [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/BusquedaPista" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: (@"http://%@/server_php/server_php.php/BusquedaPista",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
     [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [theRequest setHTTPMethod:@"POST"];
     [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -843,6 +931,7 @@ didEndElement:(NSString *)elementName
  namespaceURI:(NSString *)namespaceURI
 qualifiedName:(NSString *)qName
 {
+    
     XML_IN;
 
         NSLog(@"end elementName: %@",elementName);
@@ -851,32 +940,102 @@ qualifiedName:(NSString *)qName
         NSLog(@"pedidoActual: %@",pedidoActual);
         //---displays the country---
         NSLog(@"soapResults: %@",soapResults);
-        //Nan = [AyudaPista substringToIndex:3];
-        //int len = [myString length];
-        int caracteres = [soapResults length];
+        parserFIX.soapResult = soapResults;
+        [parserFIX parsing:pedidoActual];
+        /*NSString *AyudaJuego; // ARRANCAR
         
-        NSString *AyudaJuego;
+        AyudaJuego = soapResults; // ARRANCAR
         
-        AyudaJuego = soapResults;
+        auxidpista = soapResults; // ARRANCAR
+        */
+        //<NUEVO>
+        if([pedidoActual isEqualToString:@"ns1:getDataObraResponse"]){
+            [juego setIdObraActual:[[parserFIX getParameter:(@"idObra")]intValue]];
+        }
+        if([pedidoActual isEqualToString:@"ns1:BusquedaPistaResponse"]){
+            NSLog(@"CASO 2");
+            NSLog(@"Estado:%d",2);
+            //txtObtenerPista.text = [auxpista substringFromIndex:5]; //EN CASO OBT PISTA OBTIENE PISTA
+            [juego setEstado:1];
+            [juego setPistaActual:[parserFIX getParameter:(@"pista")]];//ESTADOJUEGO
+            //idsiguiente = [auxidpista substringToIndex:3];
+            //[juego setIdobraSig:[[parserFIX getParameter:(@"idObraSiguiente")] intValue]];
+            //txtObraSiguiente.text = idsiguiente;
+            
+            if ([pis3 isEqual: @"1"])   //si hay pista previa o no
+            {
+                NSLog(@"Estado:%d",3);
+                //IdPistaSiguiente = idsiguiente; //ID OBRA SIGUIENTE
+                if(juego.idObraActual==juego.idobraSig)
+                    juego.contar = juego.contar+1;
+                [juego setIdobraSig:[[parserFIX getParameter:(@"idObraSiguiente")] intValue]];//[auxidpista substringToIndex:3]];
+                //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
+                UIAlertView *Mensaje = [[UIAlertView alloc]
+                                        initWithTitle:@"Pista!!!!!!"
+                                        message:@"Puede volver a leer la pista, seleccionando Repetir Pista. Para continuar, seleccione Estado Juego"
+                                        delegate:self
+                                        cancelButtonTitle:@"Continuar"
+                                        otherButtonTitles:nil];
+                [Mensaje show];
+                UIAlertView *alert1 = [[UIAlertView alloc]
+                                       initWithTitle:@"Pista:"
+                                       message:juego.pistaActual//txtObtenerPista.text
+                                       delegate:self
+                                       cancelButtonTitle:@"Continuar"
+                                       otherButtonTitles:nil];
+                [alert1 show];
+                [alert1 release];
+            }
+        }
+        if([pedidoActual isEqualToString:@"ns1:ObraPerteneceAJuegoResponse"]){//else    //entro aca cuando recibo el estado del juego
+            if ([[parserFIX getParameter:(@"idJuego")] isEqualToString:@"0"] && juego.idobraSig!=juego.idObraActual) //AyudaJuego isEqual: @"0"])
+            {
+                txtJuego.text = auxidpista;
+                UIAlertView *alertNoJuego = [[UIAlertView alloc]
+                                             initWithTitle:@"Esta obra"
+                                             message:@"NO esta asociada a un Juego!"
+                                             delegate:self
+                                             cancelButtonTitle:@"Continuar"
+                                             otherButtonTitles:nil];
+                [alertNoJuego show];
+                [alertNoJuego release];
+            } else {
+                NSLog(@"Estado:%d",7);
+                btnObtPista.hidden = false;
+                if(![[parserFIX getParameter:(@"idJuego")] isEqualToString:@"0"]){
+                    if(juego.idJuego==0){
+                        [juego setIdJuego:[[parserFIX getParameter:(@"idJuego")] intValue]];
+                        [juego setIdObraPrimera:[[parserFIX getParameter:(@"idObra")]intValue]];
+                    }
+                }
+                pis3=@"1";
+                UIAlertView *alertSiJuego = [[UIAlertView alloc]
+                                             initWithTitle:@"Esta obra SI esta asociada a un Juego!"
+                                             message:@"Ya esta jugando. Para leer la pista Seleccione Obtener Pista"
+                                             delegate:self
+                                             cancelButtonTitle:@"Continuar"
+                                             otherButtonTitles:nil];
+                [alertSiJuego show];
+                [alertSiJuego release];
+                btnPista.hidden = false;
+            }//llave del else
+        }
+
+        //</NUEVO>
         
-        auxidpista = soapResults;
-        //auxpista = soapResults;
-        //BusquedaPista = soapResults;
-        NSLog(@"Caracteres: %d",caracteres);
         
         //
-        if (caracteres > (100)) { // datos obra
+        /*if ([pedidoActual isEqualToString:@"ns1:getDataObraResponse"]){//caracteres > (100)) { // datos obra
+            NSLog(@"CASO 1");
             NSLog(@"Estado:%d",1);
             txtPista.text = [soapResults substringToIndex:3];   //FIXME: obtiene id de obra
             auxpista = soapResults;
-        }
-        if( caracteres > (3)){ //aca entra si trae datos normales de obra o si trae pista
             NSLog(@"Estado:%d",2);
             //BusquedaPista = txtPista.text;
             //int number = [[myTextField text] intValue];
             //txtPista.text = [soapResults substringToIndex:3];
-            txtObtenerPista.text = [auxpista substringFromIndex:5];
-            idsiguiente = [auxidpista substringToIndex:3];
+            txtObtenerPista.text = [auxpista substringFromIndex:5]; //EN CASO OBT PISTA OBTIENE PISTA
+            //idsiguiente = [auxidpista substringToIndex:3];
             NSLog(@"txtObtenerPista: %@",txtObtenerPista.text);
             NSLog(@"siguiente...:%@",idsiguiente);
             txtObraSiguiente.text = idsiguiente;
@@ -886,7 +1045,8 @@ qualifiedName:(NSString *)qName
             if ([pis3 isEqual: @"1"])   //si hay pista previa o no
             {
                 NSLog(@"Estado:%d",3);
-                IdPistaSiguiente = idsiguiente;
+                IdPistaSiguiente = idsiguiente; //ID OBRA SIGUIENTE
+                
                 //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
                 UIAlertView *Mensaje = [[UIAlertView alloc]
                                                initWithTitle:@"Pista!!!!!!"
@@ -904,9 +1064,50 @@ qualifiedName:(NSString *)qName
                 [alert1 show];
                 [alert1 release];
             }
-        }
-        else    //entro aca cuando recibo el estado del juego
+        }*//*
+        if([pedidoActual isEqualToString:@"ns1:BusquedaPistaResponse"]){
+            NSLog(@"CASO 2");
+            NSLog(@"Estado:%d",2);
+            //BusquedaPista = txtPista.text;
+            //int number = [[myTextField text] intValue];
+            //txtPista.text = [soapResults substringToIndex:3];
+            txtObtenerPista.text = [auxpista substringFromIndex:5]; //EN CASO OBT PISTA OBTIENE PISTA
+
+            [juego setPistaActual:[auxpista substringFromIndex:5]];//ESTADOJUEGO
+            idsiguiente = [auxidpista substringToIndex:3];
+            [juego setIdobraSig:[auxidpista substringToIndex:3]];
+            NSLog(@"txtObtenerPista: %@",txtObtenerPista.text);
+            NSLog(@"siguiente...:%@",idsiguiente);
+            txtObraSiguiente.text = idsiguiente;
+            //pis1 = [BusquedaPista intValue];
+            //txtJuego.text = auxidpista;
+            
+            if ([pis3 isEqual: @"1"])   //si hay pista previa o no
+            {
+                NSLog(@"Estado:%d",3);
+                IdPistaSiguiente = idsiguiente; //ID OBRA SIGUIENTE
+                [juego setIdobraSig:[auxidpista substringToIndex:3]];
+                //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
+                UIAlertView *Mensaje = [[UIAlertView alloc]
+                                        initWithTitle:@"Pista!!!!!!"
+                                        message:@"Puede volver a leer la pista, seleccionando Repetir Pista. Para continuar, seleccione Estado Juego"
+                                        delegate:self
+                                        cancelButtonTitle:@"Continuar"
+                                        otherButtonTitles:nil];
+                [Mensaje show];
+                UIAlertView *alert1 = [[UIAlertView alloc]
+                                       initWithTitle:@"Pista:"
+                                       message:txtObtenerPista.text
+                                       delegate:self
+                                       cancelButtonTitle:@"Continuar"
+                                       otherButtonTitles:nil];
+                [alert1 show];
+                [alert1 release];
+            }
+        }/*
+        if([pedidoActual isEqualToString:@"ns1:ObraPerteneceAJuegoResponse"])//else    //entro aca cuando recibo el estado del juego
         {
+            NSLog(@"CASO 3");
             NSLog(@"Estado:%d",4);
             //if ([auxidpista isEqual: @"0"]) {// Esta obra SI esta asociada a un Juego! Si presiona boton Obtener Pista, va a comenzar a jugar..
                     //|| [IdPistaSiguiente isEqualToString:txtPista.text]
@@ -918,6 +1119,7 @@ qualifiedName:(NSString *)qName
             {
                 NSLog(@"Estado:%d",6);
                 txtJuego.text = auxidpista;
+                [juego setPistaActual:auxidpista];
                 NSLog(@"IdPistaSiguiente: %@",IdPistaSiguiente);
                 NSLog(@"idsiguiente: %@",idsiguiente);
                 UIAlertView *alertNoJuego = [[UIAlertView alloc]
@@ -937,6 +1139,7 @@ qualifiedName:(NSString *)qName
                 }
                 btnObtPista.hidden = false;
                 txtJuego.text = auxidpista;
+                [juego setIdJuego:[auxidpista intValue]];
                 pis3=@"1";
                 UIAlertView *alertSiJuego = [[UIAlertView alloc]
                                              initWithTitle:@"Esta obra SI esta asociada a un Juego!"
@@ -952,7 +1155,7 @@ qualifiedName:(NSString *)qName
                 btnPista.hidden = false;
                 //
             }//llave del else
-        }
+        }*/
         [soapResults setString:@""];
         elementFound = FALSE;
     }
@@ -992,7 +1195,7 @@ qualifiedName:(NSString *)qName
     
     UIAlertView *MostrarPista = [[UIAlertView alloc]
                                  initWithTitle:@"Pista!!!!!!"
-                                 message:txtObtenerPista.text 
+                                 message:juego.pistaActual//txtObtenerPista.text
                                  delegate:self
                                  cancelButtonTitle:@"Continuar"
                                  otherButtonTitles:nil];

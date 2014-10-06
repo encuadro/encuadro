@@ -9,8 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AutorTableViewController.h"
-
-#define kPostURL @"http://10.0.2.109/server_php/server_php.php"
+#import "conn.h"
 
 @interface EncuestaViewController : UIViewController
 {

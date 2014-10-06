@@ -8,6 +8,7 @@
 
 #import "DatosJuegosViewController.h"
 
+
 @interface DatosJuegosViewController ()
 
 @end
@@ -40,7 +41,7 @@
 @synthesize HoraFinJuego = _HoraFinJuego;
 @synthesize TotalJuego = _TotalJuego;
 @synthesize AuxTipoRecorridoDJVC = _AuxTipoRecorridoDJVC;
-
+@synthesize juego;
 
 
 @synthesize greeting, nameInput, webData, soapResults, xmlParser;
@@ -85,16 +86,15 @@ BOOL *elementFound;
     }
     
     
-    NSLog(@"mostrando hora que pasa %@",_HoraComienzo);
-    [_lblIdObra setText:[NSString stringWithFormat:@"%@",_VariablePasarIdObra]];
-    [_lblIdJuego setText:[NSString stringWithFormat:@"%@",_VariablePasarIdJuego]];
-    [_lblObraSiguiente setText:[NSString stringWithFormat:@"%@",_IdPistaSiguiente]];
-    [_lblContarObra setText:[NSString stringWithFormat:@"%@",_AuxContarObras]];
+    [_lblIdObra setText:[NSString stringWithFormat:@"%d",juego.idObraActual]];//_VariablePasarIdObra]];
+    [_lblIdJuego setText:[NSString stringWithFormat:@"%d",juego.idJuego]];//_VariablePasarIdJuego]];
+    [_lblObraSiguiente setText:[NSString stringWithFormat:@"%d",juego.idobraSig]];//_IdPistaSiguiente]];
+    [_lblContarObra setText:[NSString stringWithFormat:@"%d",juego.contar]];//_AuxContarObras]];
     //if (_HoraComienzo == NULL) {
       //  [_lblFechaJuego setText:[NSString stringWithFormat:@"%@",_auxHora]];
     //}
-    [_lblFechaJuego setText:[NSString stringWithFormat:@"%@",_HoraComienzo]];
-      NSLog(@"mostrando AUXILIAR %@",_HoraComienzo);
+    [_lblFechaJuego setText:[NSString stringWithFormat:@"%@",juego.horaInicio]];//_HoraComienzo]];
+    NSLog(@"mostrando AUXILIAR %@",juego.horaInicio);//_HoraComienzo);
     
     
     //[_lblFechaJuego NSArray: _FechaJuego];
@@ -127,11 +127,11 @@ BOOL *elementFound;
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
-                             "<CantidadObrasJuego xmlns=\"http://10.0.2.109/server_php/server_php.php/CantidadObrasJuego\">\n"
+                             "<CantidadObrasJuego xmlns=\"http://%@/server_php/server_php.php/CantidadObrasJuego\">\n"
                              "<id_juego>%@</id_juego>"
                              "</CantidadObrasJuego>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",_VariablePasarIdJuego];
+                             "</soap:Envelope>\n",IPSERVER,[NSString stringWithFormat:@"%d",juego.idJuego]];//_VariablePasarIdJuego];
     NSLog(soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
     // [u appendString:[NSString stringWithFormat:@"/borrarUsuario?idUsuario=%d",13]];
@@ -142,7 +142,7 @@ BOOL *elementFound;
     NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
     
     [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/CantidadObrasJuego" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: [NSString stringWithFormat:@"http://%@/server_php/server_php.php/CantidadObrasJuego",IPSERVER] forHTTPHeaderField:@"SOAPAction"];
     [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [theRequest setHTTPMethod:@"POST"];
     [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -166,22 +166,17 @@ BOOL *elementFound;
     // Do any additional setup after loading the view.
 - (IBAction)btnCantidadObras:(id)sender {
     _btnCantidadObras.hidden = TRUE;
-    NSLog(@"AuxSuma = %i y AuxContarObras = %@",AuxSuma,_AuxContarObras);
-    if (_lblContarObra != NULL) {
-        
-        int aux2 = [_AuxContarObras intValue];
-        
+    if (juego.contar!=0){//_lblContarObra != NULL) {
+        int aux2 = juego.contar;//[_AuxContarObras intValue];
         //int resta = AuxSuma - aux2;
-        
         AuxSuma = AuxSuma - aux2;
         NSLog(@"aux2 = %i",aux2);
         NSLog(@"Resta da resultado de = %i",AuxSuma);
         //unique = [NSString stringWithFormat:@"%d",mynumber];
         //[NSString stringWithFormat:@"%i",ContarObras]
-        if (AuxSuma == 0) {
-            _AuxObrasJuego = [NSString stringWithFormat:@"%d",AuxSuma];
+        if (juego.juegoTerminado){//AuxSuma == 0) {
             
-            NSString *dateString = [NSDateFormatter localizedStringFromDate:[NSDate date]
+           /* NSString *dateString = [NSDateFormatter localizedStringFromDate:[NSDate date]
                                                                   dateStyle:NSDateFormatterShortStyle
                                                                   timeStyle:NSDateFormatterFullStyle];
             
@@ -214,27 +209,25 @@ BOOL *elementFound;
                 TotalMinutos = TotalMinutos * 60;
                 
                  _TotalJuego = TotalSegundos + TotalMinutos;
-                
-            }
-           
+            }*/
             
-            
+            int endTimeSeg = juego.tiempoTotal;
             UIAlertView *alertFinJuego = [[UIAlertView alloc]
                                       initWithTitle:@"Juego terminado..."
-                                      message:[NSString stringWithFormat:@"Tiempo Total --> %i Segundos", _TotalJuego]
+                                      message:[NSString stringWithFormat:@"Tiempo Total --> %d Segundos", endTimeSeg]
                                       delegate:self
                                       cancelButtonTitle:@"Continuar"
                                       otherButtonTitles:nil];
             [alertFinJuego show];
             [alertFinJuego release];
-            
+            juego = [[EstadoJuego alloc]init];
 
             
         } else {
-            _AuxObrasJuego = [NSString stringWithFormat:@"%d",AuxSuma];
+            //_AuxObrasJuego = [NSString stringWithFormat:@"%d",AuxSuma];
             UIAlertView *alertSuma = [[UIAlertView alloc]
                                       initWithTitle:@"Faltan..."
-                                      message:_AuxObrasJuego
+                                      message:[NSString stringWithFormat:@"%d",AuxSuma]//_AuxObrasJuego
                                       delegate:self
                                       cancelButtonTitle:@"Continuar"
                                       otherButtonTitles:nil];
@@ -349,14 +342,14 @@ qualifiedName:(NSString *)qName
 //        /int n = [s intValue];
         //ContarObras = [AuxContarO intValue]
         _ObrasTotal = soapResults;
-        AuxSuma = [soapResults intValue];
-        [_lblObrasTotal setText:[NSString stringWithFormat:@"%@",_ObrasTotal]];
+        [juego setCantObras:[soapResults intValue]];
+        AuxSuma = juego.cantObras;
+        [_lblObrasTotal setText:[NSString stringWithFormat:@"%d",juego.cantObras]];//_ObrasTotal]];
         
-        NSLog(@"%i",AuxSuma);
         
         UIAlertView *alert = [[UIAlertView alloc]
                               initWithTitle:@"Obras Totales"
-                              message:(@"Obras totales %@",soapResults)
+                              message:(@"Obras totales %@",[NSString stringWithFormat:@"%d",juego.cantObras])//soapResults)
                               delegate:self
                               cancelButtonTitle:@"Continuar"
                               otherButtonTitles:nil];
@@ -368,7 +361,7 @@ qualifiedName:(NSString *)qName
 }
 -(void)Juego:(NSString *)VariablePasarIdJuego
 {
-    [_lblJuego setText:[NSString stringWithFormat:@"%@",_VariablePasarIdJuego]];
+    [_lblJuego setText:[NSString stringWithFormat:@"%d",juego.idJuego]];
 }
 /*
  - (void)metodoQueRecibeUnParametro:(NSString *)parametro
@@ -390,10 +383,11 @@ qualifiedName:(NSString *)qName
          [vista setVariablePasarIdJuego:[NSString stringWithFormat:@"%@",txtJuego.text]];
          */
         AutorTableViewController *VistaAutor = [segue destinationViewController];
-        [VistaAutor setAuxSiguienteP:[NSString stringWithString:_IdPistaSiguiente]];
+        /*[VistaAutor setAuxSiguienteP:[NSString stringWithString:_IdPistaSiguiente]];
         [VistaAutor setAuxJ:[NSString stringWithString:_VariablePasarIdJuego]];
         [VistaAutor setAuxContarJ:[NSString stringWithString:_AuxContarObras]];
-        [VistaAutor setAuxHoraJ:[NSString stringWithString:_HoraComienzo]];
+        [VistaAutor setAuxHoraJ:[NSString stringWithString:_HoraComienzo]];*/
+        [VistaAutor setJuego: juego];
     }
     if ([[segue identifier] isEqualToString:@"IrEscanear"])
     {
@@ -403,14 +397,17 @@ qualifiedName:(NSString *)qName
          //[vista setVariablePasar1:[NSString stringWithFormat:@"label label"]];
          [vista setVariablePasarIdJuego:[NSString stringWithFormat:@"%@",txtJuego.text]];
          */
-         ReaderSampleViewController *VistaEscanear = [segue destinationViewController];
-        [VistaEscanear setAuxSiguientePEscanear:[NSString stringWithString:_IdPistaSiguiente]];
+        
+        ReaderSampleViewController *VistaEscanear = [segue destinationViewController];
+        [VistaEscanear setJuego: juego];
+        /*[VistaEscanear setAuxSiguientePEscanear:[NSString stringWithString:_IdPistaSiguiente]];
         [VistaEscanear setAuxJEscanear:[NSString stringWithString:_VariablePasarIdJuego]];
         [VistaEscanear setAuxContarJEscanear:[NSString stringWithString:_AuxContarObras]];
-        [VistaEscanear setAuxHoraJEscanear:[NSString stringWithString:_HoraComienzo]];
+        [VistaEscanear setAuxHoraJEscanear:[NSString stringWithString:_HoraComienzo]];*/
         
     }
 }
+
 
 
 @end

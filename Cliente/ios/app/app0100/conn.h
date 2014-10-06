@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#define kPostURL @"http://10.0.2.109/server_php/server_php.php"
+#import "Configuracion.h"
+#define kPostURL @"http://192.168.10.185/server_php/server_php.php"
+
 BOOL finish,worked;
 @interface conn : NSObject{
     NSString *funcion;

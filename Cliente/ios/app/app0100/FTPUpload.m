@@ -7,7 +7,7 @@
 //
 
 #import "FTPUpload.h"
-
+#import "Configuracion.h"
 
 @implementation FTPUpload
 
@@ -63,7 +63,7 @@
     
     // First get and check the URL.
     
-    url = [[NetworkManager sharedInstance] smartURLForString:@"obras:12345678@10.0.2.109"];
+    url = [[NetworkManager sharedInstance] smartURLForString:[NSString stringWithFormat:@"obras:12345678@%@",IPSERVER]];
     success = (url != nil);
     
     if (success) {

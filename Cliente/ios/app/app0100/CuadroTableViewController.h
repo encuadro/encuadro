@@ -10,8 +10,9 @@
 #import "CuadroTableViewCell.h"
 #import "ObraCompletaViewController.h"
 #import "AutorTableViewController.h"
-//
-#define kPostURL @"http://10.0.2.109/server_php/server_php.php"
+#import "EstadoJuego.h"
+#import "Configuracion.h"
+#import "conn.h"
 //#import "Global.h"
 
 NSString *opcionAutor;
@@ -64,6 +65,6 @@ else-->Todos los autores
 @property (nonatomic, retain) NSString *AuxTipoRecorridoCTVC;
 @property (nonatomic, retain) NSString *auxobrita;
 
-
+@property (nonatomic, retain) EstadoJuego * juego;
 
 @end

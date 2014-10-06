@@ -37,14 +37,14 @@ BOOL *elementFound;
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
-                             "<Altavisita xmlns=\"http://10.0.2.109/server_php/server_php.php/Altavisita\">\n"
+                             "<Altavisita xmlns=\"http://%@/server_php/server_php.php/Altavisita\">\n"
                              "<nacionalidad>%@</nacionalidad>"
                              "<sexo>%@</sexo>"
                              "<tipo_visita>%@</tipo_visita>"
                              "<rango_edad>%@</rango_edad>"
                              "</Altavisita>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", txtNacionalidad.text, txtSexo.text, txtTipoVisita.text,txtRangoEdad.text];
+                             "</soap:Envelope>\n",IPSERVER, txtNacionalidad.text, txtSexo.text, txtTipoVisita.text,txtRangoEdad.text];
 	NSLog(soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
     // [u appendString:[NSString stringWithFormat:@"/borrarUsuario?idUsuario=%d",13]];
@@ -55,7 +55,7 @@ BOOL *elementFound;
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/Altavisita" forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: [NSString stringWithFormat:@"http://%@/server_php/server_php.php/Altavisita",IPSERVER] forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];

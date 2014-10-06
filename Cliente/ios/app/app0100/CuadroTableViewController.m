@@ -7,7 +7,7 @@
 //
 
 #import "CuadroTableViewController.h"
-
+#import "Configuracion.h"
 
 
 @interface CuadroTableViewController ()
@@ -34,6 +34,9 @@
 @synthesize AuxHoraJuego = _AuxHoraJuego;
 @synthesize AuxTipoRecorridoCTVC = _AuxTipoRecorridoCTVC;
 @synthesize auxobrita = _auxobrita;
+
+@synthesize juego;
+
 BOOL *elementFound;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -678,11 +681,11 @@ BOOL *elementFound;
                                  @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                                  "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                                  "<soap:Body>\n"
-                                 "<getDataObra xmlns=\"http://10.0.2.109/server_php/server_php.php/getDataObra\">\n"
+                                 "<getDataObra xmlns=\"http://%@/server_php/server_php.php/getDataObra\">\n"
                                  "<nombre_obra>%@</nombre_obra>"
                                  "</getDataObra>\n"
                                  "</soap:Body>\n"
-                                 "</soap:Envelope>\n", nombre];
+                                 "</soap:Envelope>\n",IPSERVER, nombre];
         NSLog(soapMessage);
         NSMutableString *u = [NSMutableString stringWithString:kPostURL];
         [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -690,7 +693,7 @@ BOOL *elementFound;
         NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
         NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
         [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-        [theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/getDataObra" forHTTPHeaderField:@"SOAPAction"];
+        [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
         [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
         [theRequest setHTTPMethod:@"POST"];
         [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -721,17 +724,21 @@ BOOL *elementFound;
         //NSLog(@"Llega hasta aca? y muestra esto %@",_AyudaIdObra);
         ObraCompletaViewController *VistaObra = [segue destinationViewController];
         //[VistaObra setAuxPistaSig:[NSString stringWithString:_IdPistaSiguiente]];
-        [VistaObra setAuxTipoRecorridoOCVC:[NSString stringWithString:_AuxTipoRecorridoCTVC]];
-        NSLog(@" obra obra %@",_auxobrita);
+        [VistaObra setNombreObra:[NSString stringWithString:(nombre)]];
+        [VistaObra setAuxTipoRecorridoOCVC:[NSString stringWithString:_AuxTipoRecorridoCTVC]];        
+        
+        [VistaObra setJuego:juego];
+        
+        //NSLog(@" obra obra %@",_auxobrita);
         //[VistaObra setAuxiliar:[NSString stringWithString:AyudaPista]];
-        if (_AuxIdJuego != NULL) {
+        /*if (juego.idJuego!= 0) {
             [VistaObra setAuxJuegoId:[NSString stringWithString:_AuxIdJuego]];
             [VistaObra setAuxIdPistaSiguiente:[NSString stringWithString:_AuxPistaSig]];
-            [VistaObra setAuxContarO:[NSString stringWithString:_AuxSumaJ]];
+            [VistaObra setAuxContarO:[NSString stringWithString:_AuxSumaJ]]; 
             [VistaObra setHoraJuego:[NSString stringWithString:_AuxHoraJuego]];
             
             
-        }
+        }*/
 
       
         [tableView setUserInteractionEnabled:YES];

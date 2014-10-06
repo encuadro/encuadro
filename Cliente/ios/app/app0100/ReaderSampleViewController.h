@@ -14,6 +14,8 @@
 #import "ImagenServerViewController.h"
 #import "DatosJuegosViewController.h"
 
+#import "EstadoJuego.h"
+
 int click;
 NSString *room;
 NSString *cad;
@@ -52,5 +54,6 @@ NSString *cad;
 @property (nonatomic, retain) NSString *AuxContarJEscanear;
 @property (nonatomic, retain) NSString *AuxHoraJEscanear;
 
+@property (retain,nonatomic) EstadoJuego * juego;
 
 @end

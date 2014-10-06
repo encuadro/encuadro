@@ -14,6 +14,9 @@
 #import "FTPUpload.h"
 #import "ReaderSampleViewController.h"
 #import "obtObras.h"
+
+#import "EstadoJuego.h"
+
 NSString *returnString;
 @interface ImagenServerViewController : UIViewController<UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
@@ -48,6 +51,6 @@ NSString *returnString;
 @property (nonatomic, retain) NSString * AuxContarJImagen;
 @property (nonatomic, retain) NSString * AuxHoraJImagen;
 
-
+@property (retain,nonatomic) EstadoJuego * juego;
 
 @end

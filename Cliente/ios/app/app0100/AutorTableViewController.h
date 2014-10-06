@@ -11,7 +11,7 @@
 #import "CuadroTableViewController.h"
 #import "obtObras.h"
 #import "obtSalas.h"
-
+#import "EstadoJuego.h"
 
 obtObras *oo;
 @interface AutorTableViewController : UITableViewController{
@@ -34,6 +34,8 @@ obtObras *oo;
 @property (nonatomic, retain) NSString *AuxJ;
 @property (nonatomic, retain) NSString *AuxContarJ;
 @property (nonatomic, retain) NSString *AuxHoraJ;
+
+@property (nonatomic, retain) EstadoJuego * juego;
 //
 
 @end

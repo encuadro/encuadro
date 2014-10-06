@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ObraCompletaViewController.h"
 #import "ReaderSampleViewController.h"
-#define kPostURL @"http://10.0.2.109/server_php/server_php.php"
+#import "conn.h"
+
+#import "EstadoJuego.h"
 
 @interface DatosJuegosViewController : UIViewController
 {
@@ -82,5 +84,7 @@
 @property (retain, nonatomic) IBOutlet UIButton *btnCantidadObras;
 @property (retain, nonatomic) IBOutlet UIButton *btnIrSalas;
 @property (retain, nonatomic) IBOutlet UIButton *btnEscanearObras;
+
+@property (retain,nonatomic) EstadoJuego * juego;
 
 @end

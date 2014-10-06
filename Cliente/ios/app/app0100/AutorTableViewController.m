@@ -26,6 +26,7 @@
 @synthesize AuxJ;
 @synthesize AuxContarJ;
 @synthesize AuxHoraJ;
+@synthesize juego;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -147,13 +148,15 @@
          */
          
         CuadroTableViewController *ObrasV = [segue destinationViewController];
+        [ObrasV setJuego: juego];
         
-        if (AuxSiguienteP != NULL) {
-        [ObrasV setAuxPistaSig:[NSString stringWithString:AuxSiguienteP]];
-        [ObrasV setAuxIdJuego:[NSString stringWithString:AuxJ]];
-        [ObrasV setAuxSumaJ:[NSString stringWithString:AuxContarJ]];
-        [ObrasV setAuxHoraJuego:[NSString stringWithString:AuxHoraJ]];
-        }
+        /*if (AuxSiguienteP != NULL) {
+            [ObrasV setAuxPistaSig:[NSString stringWithString:AuxSiguienteP]];
+            [ObrasV setAuxIdJuego:[NSString stringWithString:AuxJ]];
+            [ObrasV setAuxSumaJ:[NSString stringWithString:AuxContarJ]];
+            [ObrasV setAuxHoraJuego:[NSString stringWithString:AuxHoraJ]];
+            
+        }*/
       }
 }
 

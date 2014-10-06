@@ -21,6 +21,11 @@
 //#import "Pista.h"
 #import "DatosJuegosViewController.h"
 
+#import "EstadoJuego.h"
+#import "Parser.h"
+#import "conn.h"
+
+
 int click;
 bool justLoaded;
 bool manual;
@@ -119,6 +124,9 @@ NSMutableArray *descripcionObra;
 //
 @property (retain, nonatomic) NSString *Auxiliar;
 
+@property(retain,nonatomic) EstadoJuego *juego;
+@property(retain,nonatomic) Parser * parserFIX;
+@property (retain,nonatomic) NSString * nombreObra;
 
 @property(nonatomic, retain) NSString *pedidoActual;
 @end

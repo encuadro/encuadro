@@ -28,6 +28,8 @@
 @synthesize AuxJImagen = _AuxJImagen;
 @synthesize AuxSiguientePImagen = _AuxSiguientePImagen;
 
+@synthesize juego;
+
 -(IBAction)tomarFoto:(id)sender{
     
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -239,13 +241,14 @@
     [tomarFoto setHidden:NO];
     [enviar setHidden:NO];
     //juego y recorrido
+    [obracompletaViewController setJuego:juego];
     
-    if (_AuxJImagen != NULL) {
-        [obracompletaViewController setAuxJuegoId:[NSString stringWithString:_AuxJImagen]];
-        [obracompletaViewController setAuxIdPistaSiguiente:[NSString stringWithString:_AuxSiguientePImagen]];
-        [obracompletaViewController setAuxContarO:[NSString stringWithString:_AuxContarJImagen]];
-        [obracompletaViewController setHoraJuego:[NSString stringWithString:_AuxHoraJImagen]];
-    }
+    //if (_AuxJImagen != NULL) {
+        //[obracompletaViewController setAuxJuegoId:[NSString stringWithString:_AuxJImagen]];
+        //[obracompletaViewController setAuxIdPistaSiguiente:[NSString stringWithString:_AuxSiguientePImagen]];
+        //[obracompletaViewController setAuxContarO:[NSString stringWithString:_AuxContarJImagen]];
+        //[obracompletaViewController setHoraJuego:[NSString stringWithString:_AuxHoraJImagen]];
+    //}
     /*
     if ([[segue identifier] isEqualToString:@"Detalle2"])
     {

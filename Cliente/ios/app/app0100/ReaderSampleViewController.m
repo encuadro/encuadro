@@ -17,6 +17,8 @@
 @synthesize AuxContarJEscanear = _AuxContarJEscanear;
 @synthesize AuxHoraJEscanear = _AuxHoraJEscanear;
 
+@synthesize juego;
+
 - (IBAction) scanButtonTapped
 {
 
@@ -260,11 +262,13 @@ NSLog(@"IMAGE ANTES");
 {
     
     ImagenServerViewController *VistaImagen = [segue destinationViewController];
+    [VistaImagen setJuego: juego];
     if (_AuxJEscanear != NULL) {
-        [VistaImagen setAuxSiguientePImagen:[NSString stringWithString:_AuxSiguientePEscanear]];
+        /*[VistaImagen setAuxSiguientePImagen:[NSString stringWithString:_AuxSiguientePEscanear]];
         [VistaImagen setAuxJImagen:[NSString stringWithString:_AuxJEscanear]];
         [VistaImagen setAuxContarJImagen:[NSString stringWithString:_AuxContarJEscanear]];
-        [VistaImagen setAuxHoraJImagen:[NSString stringWithString:_AuxHoraJEscanear]];
+        [VistaImagen setAuxHoraJImagen:[NSString stringWithString:_AuxHoraJEscanear]];*/
+        
         NSLog(@"Mostrando valores a pasar: _AuxSiguientePEscanear = %@ /n _AuxJEscanear = %@ /n _AuxContarJEscanear = %@ /n _AuxHoraJEscanear = %@ ",_AuxSiguientePEscanear, _AuxJEscanear, _AuxContarJEscanear, _AuxHoraJEscanear);
     }
     
@@ -282,10 +286,10 @@ NSLog(@"IMAGE ANTES");
     {
         ImagenServerViewController *VistaImagen = [segue destinationViewController];
         if (_AuxJEscanear != NULL) {
-            [VistaImagen setAuxSiguientePImagen:[NSString stringWithString:_AuxSiguientePEscanear]];
+            /*[VistaImagen setAuxSiguientePImagen:[NSString stringWithString:_AuxSiguientePEscanear]];
             [VistaImagen setAuxJImagen:[NSString stringWithString:_AuxJEscanear]];
             [VistaImagen setAuxContarJImagen:[NSString stringWithString:_AuxContarJEscanear]];
-            [VistaImagen setAuxHoraJImagen:[NSString stringWithString:_AuxHoraJEscanear]];
+            [VistaImagen setAuxHoraJImagen:[NSString stringWithString:_AuxHoraJEscanear]];*/
             NSLog(@"Mostrando valores a pasar: _AuxSiguientePEscanear = %@ /n _AuxJEscanear = %@ /n _AuxContarJEscanear = %@ /n _AuxHoraJEscanear = %@ ",_AuxSiguientePEscanear, _AuxJEscanear, _AuxContarJEscanear, _AuxHoraJEscanear);
         }
          }
