@@ -21,7 +21,7 @@ function fungetAllDataSalas() {
             $u = "";
         $variable = "ftp://".$usu.":".$pass."@".$servidor."/" . $row['id_sala'] . "/imagen/";
         $u = $u . $row['id_sala'] . "=>" . $row['nombre_sala'] . "=>" . $row['descripcion_sala'] . "=>" .$variable.$row['imagen'] . "=>";
-		$json[$indice++]= array('id_sala'=>$row['id_sala'], 'nombre_sala' =>utf8_encode($row['nombre_sala'])=>'descripcion'=>utf8_encode($row['descripcion_sala'])
+		$json[$indice++]= array('id_sala'=>$row['id_sala'], 'nombre_sala' =>utf8_encode($row['nombre_sala']),'descripcion'=>utf8_encode($row['descripcion_sala']),
 				'imagen'=>utf8_encode($variable.$row['imagen']));
     }
     return json_encode($json);
@@ -34,7 +34,7 @@ function fungetListImgSalas() {
     $query = mysql_query("SELECT * FROM sala,contenido_sala WHERE sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
     while ($row = mysql_fetch_assoc($query)) {
         $u = $row['nombre_sala'] . "=>" .$row['imagen'] . "=>";
-		$json[$indice++] = array('nombre_sala' => utf8_encode($row['nombre_sala']), 'imagen'=>utf8_encode($row['imagen']);
+		$json[$indice++] = array('nombre_sala' => utf8_encode($row['nombre_sala']), 'imagen'=>utf8_encode($row['imagen']));
     }
     return json_encode($json);
 }
@@ -77,7 +77,7 @@ function funAltaSala($nombre_sala, $descripcion_sala) {
         }
     }
     
-    return json_encode(array('id_sala'=>$reg);
+    return json_encode(array('id_sala'=>$reg));
 }
 
 function funborrarSala($id_sala) {
@@ -136,7 +136,7 @@ function funborrarSala($id_sala) {
             $bor = -2;
         }
     }
-    return json_encode(array('return'=>$bor);
+    return json_encode(array('return'=>$bor));
 }
 
 function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
@@ -155,7 +155,7 @@ function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
             $mod = -1;
         }
     }
-    return json_encode(array('return'=>$mod);
+    return json_encode(array('return'=>$mod));
 }
 
 function funsetQr($id_sala, $qr) {
@@ -178,7 +178,7 @@ function funsetQr($id_sala, $qr) {
             $mod = -1;
         }
     }
-    return json_encode(array('return'=>$mod);
+    return json_encode(array('return'=>$mod));
 }
 
 function fungetSalas() {
@@ -424,7 +424,7 @@ function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
             $mod = -1;
         }
     }
-    return json_encode(array('ret'=>$mod);
+    return json_encode(array('ret'=>$mod));
 }
 
 function fungetContenidoSala($id) {

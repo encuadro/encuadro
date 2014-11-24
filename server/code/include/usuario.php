@@ -243,7 +243,7 @@ function funGetCuestionarios() {
     while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['id_cuestionario'] . "=>". $row['nom_cuestionario'] . "=>". 				$row ['descripcion'] . "=>" . $row['nick'] . "=>". $row['fecha_creacion'] . 			"=>" . $row['fecha_desactivacion'] . "=>";
 		$json[$indice] = array('id_cuestionario' => $row['id_cuestionario'], 'nom_cuestionario'=>utf8_encode($row['nom_cuestionario']),
-								'descripcion' =>,utf8_encode($row ['descripcion']), 'nick' =>utf8_encode($row['nick']),
+								'descripcion' =>utf8_encode($row ['descripcion']), 'nick' =>utf8_encode($row['nick']),
 								'fecha_creacion'=>$row['fecha_creacion'],'fecha_desactivacion'=>$row['fecha_desactivacion']);
 		$indice = $indice + 1;
 	  }
@@ -588,7 +588,7 @@ where mi_puntaje.id_visitante =$id_visitante)") or die(mysql_error());
 		if ($res != NULL) {
 		    $u = $res['Posicion'];
         	}
-    return json_encode($array('posicion'=>u);
+    return json_encode(array('posicion'=>$u));
 }
 
 
@@ -738,7 +738,7 @@ function fungetDataUsuario($nick) {
 		$json = array('nombre' =>utf8_encode($row['nombre']), 'apellido' =>utf8_encode($row['apellido']), 'cedula'=>$row['cedula'], 'email'=>utf8_encode($row['email']), 
 					'tipo'=>$row['tipoUs'], 'nick' =>utf8_encode($row['nick']), 'pass'=>utf8_encode($row['pass']), 'id_usuario'=>$row['id_usuario']);
 	}
-    return $u;
+    return json_encode($json);
 }
 
 function funpasswd($nick, $pass) {

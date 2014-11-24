@@ -21,7 +21,7 @@ $u = exec($sift." ".$obras.$nombre_archivo.".pgm ".$id_sala." ".$host." ".$usern
 
 //exec("rm /var/www/obras/".$nombre_archivo." /var/www/obras/".$nombre_archivo.".pgm");
 //exec("rm ".$obras.$nombre_archivo." ".$obras.$nombre_archivo.".pgm");
-return json_encode(array($'ret'=>u));
+return json_encode(array('ret'=>$u));
 
 }
 

@@ -148,7 +148,7 @@ function funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $
             $mod = -1;
         }
     }
-    return json_encode(array('ret' => $mod);
+    return json_encode(array('ret' => $mod));
 }
 
 function fungetObras() {

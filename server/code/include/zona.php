@@ -38,7 +38,7 @@ function funAltaZona($largo, $ancho, $x, $y, $nombre_obra) {
             $reg = -1;
         }
     }
-    return json_encode(array('id_zona'=>$reg);
+    return json_encode(array('id_zona'=>$reg));
 }
 
 function funborrarZona($id_zona) {
@@ -60,7 +60,7 @@ function funborrarZona($id_zona) {
             $bor = -1;
         }
     }
-    return json_encode(array('id_zona'=>$bor);
+    return json_encode(array('id_zona'=>$bor));
 }
 
 function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
@@ -78,7 +78,7 @@ function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
             $mod = -1;
         }
     }
-    return json_encode(array('id_zona'=>$mod);
+    return json_encode(array('id_zona'=>$mod));
 }
 
 function funagregarContenidoZona($id_zona, $tipo, $nombre) {
@@ -104,7 +104,7 @@ function funagregarContenidoZona($id_zona, $tipo, $nombre) {
             $mod = -1;
         }
     }
-    return json_encode(array('contenido_zona'=>utf8_encode($mod));
+    return json_encode(array('contenido_zona'=>utf8_encode($mod)));
 }
 
 function fungetContenidoZona($id_zona) {
