@@ -21,7 +21,7 @@ $u = exec($sift." ".$obras.$nombre_archivo.".pgm ".$id_sala." ".$host." ".$usern
 
 //exec("rm /var/www/obras/".$nombre_archivo." /var/www/obras/".$nombre_archivo.".pgm");
 //exec("rm ".$obras.$nombre_archivo." ".$obras.$nombre_archivo.".pgm");
-return json_encode(array('ret'=>$u));
+return $u;//return tojson($u);
 
 }
 
@@ -47,7 +47,7 @@ $res = -1;
 //$res=exec("/home/encuadro/proyecto/prueba_binario/encuadroSift /var/www/obras/".$id_obra."/imagen/".$recortado.".pgm ".$id_obra." ".$host." ".$username." ".$userpass." ".$name." generar");
 $res=exec($sift." ".$obras.$id_obra."/imagen/".$recortado.".pgm ".$id_obra." ".$host." ".$username." ".$userpass." ".$name." generar");
 
-	return json_encode(array('ret'=>$res));
+	return $u;//return tojson($res);
 
 
 }

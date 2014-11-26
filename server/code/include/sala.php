@@ -24,7 +24,7 @@ function fungetAllDataSalas() {
 		$json[$indice++]= array('id_sala'=>$row['id_sala'], 'nombre_sala' =>utf8_encode($row['nombre_sala']),'descripcion'=>utf8_encode($row['descripcion_sala']),
 				'imagen'=>utf8_encode($variable.$row['imagen']));
     }
-    return json_encode($json);
+    return tojson($json,2);
 }
 function fungetListImgSalas() {  
     $u = "-1";
@@ -36,7 +36,7 @@ function fungetListImgSalas() {
         $u = $row['nombre_sala'] . "=>" .$row['imagen'] . "=>";
 		$json[$indice++] = array('nombre_sala' => utf8_encode($row['nombre_sala']), 'imagen'=>utf8_encode($row['imagen']));
     }
-    return json_encode($json);
+    return tojson($json,2);
 }
 
 function funAltaSala($nombre_sala, $descripcion_sala) {
@@ -77,7 +77,7 @@ function funAltaSala($nombre_sala, $descripcion_sala) {
         }
     }
     
-    return json_encode(array('id_sala'=>$reg));
+    return tojson($reg);
 }
 
 function funborrarSala($id_sala) {
@@ -136,7 +136,7 @@ function funborrarSala($id_sala) {
             $bor = -2;
         }
     }
-    return json_encode(array('return'=>$bor));
+    return tojson($bor);
 }
 
 function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
@@ -155,7 +155,7 @@ function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
             $mod = -1;
         }
     }
-    return json_encode(array('return'=>$mod));
+    return tojson($mod);
 }
 
 function funsetQr($id_sala, $qr) {
@@ -178,7 +178,7 @@ function funsetQr($id_sala, $qr) {
             $mod = -1;
         }
     }
-    return json_encode(array('return'=>$mod));
+    return tojson($mod);
 }
 
 function fungetSalas() {
@@ -199,7 +199,7 @@ function fungetSalas() {
 			$json[$indice++]=array('id_sala' => $res['id_sala'], 'nombre_sala' => utf8_encode($res['nombre_sala']));
         }
     }
-    return json_encode($json);
+    return tojson($json,2);
 }
 
 function fungetNombreSalas() {
@@ -217,7 +217,7 @@ function fungetNombreSalas() {
 			$json[$indice++]=array('nombre_sala' => utf8_encode($res['nombre_sala']));
         }
     }
-    return json_encode($json);
+    return tojson($json,2);
 }
 
 function fungetDataSalaId($id_sala) {
@@ -232,7 +232,7 @@ function fungetDataSalaId($id_sala) {
         mensaje_log("RETORNANDO DATOS DE SALA DE ID=".$id_sala,1);
 		$json = array('nombre_sala' => utf8_encode($row['nombre_sala']), 'descripcion_sala'=>utf8_encode($row['descripcion_sala']));
     }
-    return json_encode($json);
+    return tojson($json,1);
 }
 
 
@@ -265,7 +265,7 @@ function fungetDataSalaId2($id_sala){
         $u = $u.$variable.$row['imagen']."=>"; 
 		$json['imagen']= utf8_encode($variable);
       }
-    return json_encode($json);     
+    return tojson($json,1);     
  }
 
 function fungetDataSalaNombre($nombre) {
@@ -280,7 +280,7 @@ function fungetDataSalaNombre($nombre) {
 		$json = array('id_sala'=> $row['id_sala'], 'descripcion'=>utf8_encode($row['descripcion_sala']));
         mensaje_log("RETORNANDO DATOS DE SALA DE NOMBRE=".$nombre,1);
     }
-    return json_encode($json);
+    return tojson($json,1);
 }
 
 function fungetDataSalaNombreImagen($nombre){
@@ -303,7 +303,7 @@ function fungetDataSalaNombreImagen($nombre){
             $u = "PHP se la come=>";
         }
 
-    return json_encode($json);     
+    return tojson($json,1);     
  }
 
 function fungetDataSalaIdImagen($id){
@@ -326,7 +326,7 @@ function fungetDataSalaIdImagen($id){
             $u = "PHP se la come=>".$e;
         }
 
-    return json_encode($json);     
+    return tojson($json,1);     
  }
 function fungetVideoSalaId($id){
      //conectar();
@@ -347,7 +347,7 @@ function fungetVideoSalaId($id){
           $u = "-1".$e;
         }
 
-    return json_encode($json);     
+    return tojson($json,1);     
  }
 //-----------------------------------------------------NUEVO----------------------------
 function fungetSalasl($nombre) {
@@ -363,7 +363,7 @@ function fungetSalasl($nombre) {
         }
     mensaje_log("SALAS ENCONTRADAS= ".$u,1);    
 
-    return json_encode($json);
+    return tojson($json,2);
 
 }
 
@@ -403,7 +403,7 @@ function funagregarContenidoSala($id_sala, $tipo, $nombre) {
         }
             
     }
-    return json_encode($json);
+    return tojson($json,1);
 }
 
 function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
@@ -424,7 +424,7 @@ function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
             $mod = -1;
         }
     }
-    return json_encode(array('ret'=>$mod));
+    return tojson($mod);
 }
 
 function fungetContenidoSala($id) {
@@ -463,7 +463,7 @@ function fungetContenidoSala($id) {
 	$json = array('audio'=> $audio, 'video' => $video, 'texto'=> $texto, 'modelo' => $modelo, 'imagen'=> 'imagen');
     }
     mensaje_log("RETORNANDO EL CONTENIDO DE LA SALA ID=".$id,1);    
-    return $json_encode($json);
+    return tojson($json,1);
 }
 
 function funexisteSala($id) {
@@ -476,7 +476,7 @@ function funexisteSala($id) {
         $u = 1;
         mensaje_log("LA SALA DE ID =".$id." EXISTE",1);
     }else {mensaje_log("LA SALA DE ID =".$id." NO EXISTE",1);}
-    return json_encode(array('id_sala'=>$u));
+    return tojson($u);
 }
 
 ?>
