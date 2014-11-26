@@ -85,7 +85,8 @@ SharedPreferences prefs=null;
 		    	Consumirws ws = new Consumirws();
 		    	res = ws.getpuntajes();
 		    	String aux = ws.getPosicion(id_visitante);
-		    	posicion_jugador = Integer.parseInt(aux);
+		    	Parser parser = new Parser(aux);		    	
+		    	posicion_jugador = Integer.parseInt(parser.getParameter("ret"));
 			} catch (Exception e) {
 				System.out.println("Error: " + e);
 			}
