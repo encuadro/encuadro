@@ -10,15 +10,17 @@
 
 @interface Parser : NSObject
 {
-    NSMutableDictionary * dictionary;
+     NSMutableArray * dictionary;
 }
 
 - (id) init;
 - (id) initWhitString:(NSString * )result;
 
 - (NSString*) getParameter:(NSString *)parameter;
-- (void) parsing: (NSString *)request;
-
+- (NSString*) getParameter:(NSString *) parameter:(int)row;
+- (void) parsing: (NSString *) request;
+- (void) parsingJson;
+- (int) length;
 @property(retain,nonatomic) NSString * soapResult;
 
 @end
