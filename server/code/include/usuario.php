@@ -17,7 +17,7 @@ function funAltaJuego($nombre) {
 	} catch (Exception $e) {
 		$reg = -1;
 	}
-    return $reg;
+    return json_encode(array('id_juego'=>$reg));
 }
 
 function funCantidadObrasJuego($id_juego) {
@@ -30,23 +30,24 @@ function funCantidadObrasJuego($id_juego) {
 	} catch (Exception $e) {
 		$reg = -1;
 	}
-    return $u;
+    return json_encode(array('cantidad'=>$u));
 }
 
 function funBusquedaPista($idObra,$idjuego) {
     mensaje_log("FUNCION BUSQUEDA DE PISTAS (USUARIO)");    
     mensaje_log("BUSCANDO PISTAS PARA LA OBRA=".$idObra." Y EL JUEGO=".$idjuego,1);
     $u = "0";
+	$json = array();
  	try {
 		$query = mysql_query("SELECT id_proxima, pista FROM Pista WHERE id_juego='$idjuego' and id_obra='$idObra'") or die(mysql_error());
 		$res = mysql_fetch_assoc($query);
 		if ($res != NULL) {
-		    $u = $res['id_proxima'] . "=>". $res['pista'] . "=>";
+		    $json = array('id_proxima' =>$res['id_proxima'], 'pista' =>  utf8_encode($res['pista']));
 		}
 	} catch (Exception $e) {
             $reg = -1;
-        }
-    return $u;
+    }
+    return json_encode($json);
 }
 
 
@@ -73,9 +74,9 @@ function funObraPerteneceAJuego($idObra) {
             mensaje_log("No se encontro ningun juego",2);
 		}
 	}
-    return $u;
+    return json_encode(array('id_juego' => $u));
 }
-function funAgregarPista($nomObra) {
+function funAgregarPista($nomObra) {//FIXME FUNCION QUE NO HACE NADA.
     //$reg = -1;
     $res1 ='nada';
     //$query = mysql_query("SELECT o1.id_obra, o2.id_obra FROM obra as o1, obra as o2 WHERE o1.nombre_obra = '$nomObra' AND o2.nombre_obra='$nomProx' ") or die(mysql_error());
@@ -102,7 +103,7 @@ function funAgregarPista($nomObra) {
             //$reg = -1;
        // }
    // }
-    return $res1;
+    return json_encode(array('nombre_obra'=>$res1));
 }
 
 /*
@@ -129,13 +130,18 @@ function funmodificarUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick
 $query = mysql_query("INSERT INTO Pista (id_obra, id_juego, id_proxima, pista) VALUES ($row['o1.id_obra'],'$idJuego',$row['o2.id_obra'],'$pista')") or die(mysql_error());
 */
 
-function funGetPistas($id_juego) {
+function funGetPistas($id_juego) {//FIXME PROBAR LAS MATRICES
     $u = "";
+	$json = array(array());
     $query2 = mysql_query("select p.id_obra as ido, o1.nombre_obra as ob, pista, o2.nombre_obra as obr from obra o1, Pista p, obra o2 where id_juego = $id_juego and p.id_obra = o1.id_obra and p.id_proxima = o2.id_obra") or die (mysql_error());
+	$indice = 0;
 	while ($row = mysql_fetch_assoc($query2)) {
 		$u = $u . $row['ido'] . "=>". $row['ob'] . "=>". $row['pista'] . "=>". $row['obr'] . "=>";
+		$json[$indice] = array('id_obra'=>$row['ido'], 'nombre_obra'=> utf8_encode($row['ob']), 
+							'pista' => utf8_encode($row['pista']), 'nombre_siguiente' => utf8_encode($row['obr']));
+		$indice = $indice + 1;
 	}
-    return $u;
+    return $json_endode($json);
 }
 
 function funModificarPista($id_Obra,$id_Juego,$Pista) {
@@ -151,7 +157,7 @@ function funModificarPista($id_Obra,$id_Juego,$Pista) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('ret' => $mod));
 }
 
 function funGetNombreJuegoActivo() {
@@ -160,7 +166,7 @@ function funGetNombreJuegoActivo() {
 				or die(mysql_error());
     $row2 = mysql_fetch_assoc($query1);
 	$r2=$row2['nombre'];
-	return $r2;
+	return json_encode(array('nombre_juego' => utf8_encode($row['nombre'])));
 }
 
 function funAgregarCuestionarioo($nombre, $descripcion, $fecha_creacion, $id_creador) {
@@ -173,7 +179,7 @@ function funAgregarCuestionarioo($nombre, $descripcion, $fecha_creacion, $id_cre
         } catch (Exception $e) {
             $reg = -1;
         }
-    return $reg;
+    return json_encode(array("id_cuestionario" => $res['id_cuestionario']));
 }
 
 function funAgregarValorOpcion($descripcion) {
@@ -191,7 +197,7 @@ function funAgregarValorOpcion($descripcion) {
         } catch (Exception $e) {
             $reg = -1;
         }
-    return $reg;
+    return json_encode(array("id_valor" => $res['id_val_op']));
 }
 
 function funAgregarPregunta($descripcion, $tipo) {
@@ -204,7 +210,7 @@ function funAgregarPregunta($descripcion, $tipo) {
         } catch (Exception $e) {
             $reg = -1;
         }
-    return $reg;
+    return json_encode(array('id_pregunta'=>$res['id_pregunta']));
 }
 
 function funAsociarPreguntaConOpcion($id_preg, $id_op) {
@@ -215,7 +221,7 @@ function funAsociarPreguntaConOpcion($id_preg, $id_op) {
         } catch (Exception $e) {
             $reg = -1;
         }
-    return $reg;
+    return json_encode(array('return' => $reg));
 }
 
 function funAsociarPreguntaConCuestionario($id_preg, $id_cuest, $indice) {
@@ -226,16 +232,22 @@ function funAsociarPreguntaConCuestionario($id_preg, $id_cuest, $indice) {
         } catch (Exception $e) {
             $reg = -1;
         }
-    return $reg;
+    return json_encode(array('return' => $reg));
 }
 
 function funGetCuestionarios() {
     $u = "";
+	$json = array();
+	$indice = 0;
     $query2 = mysql_query("SELECT cuestionario.*, nick FROM usuario, cuestionario WHERE id_usuario=usuario_creador") or die (mysql_error());
     while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['id_cuestionario'] . "=>". $row['nom_cuestionario'] . "=>". 				$row ['descripcion'] . "=>" . $row['nick'] . "=>". $row['fecha_creacion'] . 			"=>" . $row['fecha_desactivacion'] . "=>";
-        }
-    return $u;
+		$json[$indice] = array('id_cuestionario' => $row['id_cuestionario'], 'nom_cuestionario'=>utf8_encode($row['nom_cuestionario']),
+								'descripcion' =>,utf8_encode($row ['descripcion']), 'nick' =>utf8_encode($row['nick']),
+								'fecha_creacion'=>$row['fecha_creacion'],'fecha_desactivacion'=>$row['fecha_desactivacion']);
+		$indice = $indice + 1;
+	  }
+    return json_encode($json);
 }
 
 function funGetPreguntas($id_cuest) {
@@ -247,11 +259,17 @@ function funGetPreguntas($id_cuest) {
 	AND cp.id_pregunta = o.id_pregunta
 	AND o.id_valor_opcion = vo.id_val_op
 	AND cp.id_cuestionario = $id_cuest ") or die (mysql_error());
+	$json = array(array());
+	$indice = 0;
 	while ($row = mysql_fetch_assoc($query2)) {
 		$u = $u . $row['idcuest'] . "=>". $row['idpreg'] . "=>". $row ['indice'] . "=>" . 
 		$row['txtpreg'] . "=>". $row['txtopc'] . "=>" ;
+		$json[$indice] = array('id_cuestionario' => $row['idcuest'], 'id_pregunta' =>$row['idpreg'], 
+								'indice' =>$row ['indice'], 'pregunta'=> utf8_encode($row['txtpreg']),
+								'opcion' =>utf8_encode($row['txtopc']));
+		$indice = $indice + 1 ;
 	}
-    return $u;
+    return json_encode($json);
 }
 
 //AGREGADO 25/03/14  registro de respuestas desde movil
@@ -267,13 +285,12 @@ function funSetPreguntas($id_cuest) {
 	AND cp.id_pregunta = o.id_pregunta
 	AND o.id_valor_opcion = vo.id_val_op
 	AND cp.id_cuestionario = $id_cuest ") or die (mysql_error());
-    return $u;
 }
 
 
 function frutamadre(){
 	$u = "";
-
+	
 $query = mysql_query("SELECT p.id_pregunta AS Id_Pregunta, p.descripcion AS Contenido_Pregunta, vo.id_val_op AS ID_Opcion, vo.descripcion AS 				Contenido_Respuesta, cp.indice_preg AS Indice_Preg
 			FROM cuestionario AS c, cuest_pregunta AS cp, preguntas AS p, opciones AS o, opciones_valorOpc AS ovo, valor_opcion AS vo
 			WHERE c.activo =1
@@ -298,7 +315,8 @@ $query = mysql_query("SELECT p.id_pregunta AS Id_Pregunta, p.descripcion AS Cont
 	
 	$idpregunta="";
 	$posicion="";
-	
+	$json = array(array());
+	$indice = 0;
 	while ($row = mysql_fetch_assoc($query)) {
 		$posicion=$row['Indice_Preg'];
 		while ($row2 = mysql_fetch_assoc($query2)) {
@@ -331,6 +349,8 @@ function funAgregarValorOpcion($descripcion) {
 
 function funGetTextPreguntas($id_cuest) {
     $u = "";
+	$json = array(array());
+	$indice = 0;
     $query2 = mysql_query("SELECT cp.id_cuestionario AS idcuest, 
 		cp.indice_preg AS indice, 
 		p.id_pregunta as idpreg,
@@ -343,9 +363,12 @@ function funGetTextPreguntas($id_cuest) {
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['idcuest'] . "=>". $row['idpreg'] . "=>". $row ['indice'] . "=>" . 
 		$row['txtpreg'] . "=>". $row['tipop'] . "=>" ;
-        }
+		$json[$indice] = array('id_cuestionario' => $row['idcuest'], 'id_pregunta' =>$row['idpreg'], 
+						'indice' =>$row ['indice'], 'pregunta'=>utf8_encode($row['txtpreg']), 'tipo' =>$row['tipop']);
+			$indice = $indice + 1; 
+		}
 
-    return $u;
+    return json_encode($json);
 }
 
 
@@ -359,16 +382,18 @@ function funGetRespPreguntas($id_preg) {
 	o.id_opcion=ovo.id_opcion") or die (mysql_error());
 
 	$row = mysql_fetch_assoc($query2);
-    	
+    $json = array(array());
+	$indice = 0;	
 	if ($row !=null){
 		$u="";
 		$u = $u . $row['descripcion'] . "=>" ;
 	}
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['descripcion'] . "=>" ;
+			$json[$indice] = array('descripcion' => utf8_encode($row[descripcion]));
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 
@@ -389,7 +414,7 @@ function funSetOpcion($descripcion) {
             $reg = -1;
         }
     
-    return $reg;
+    return json_encode(array('id_opcion' => $reg));
 }
 
 function funAsociarOpcionesConValores($id_opc,$id_valor) {
@@ -404,7 +429,7 @@ function funAsociarOpcionesConValores($id_opc,$id_valor) {
             $reg = -1;
         }
     
-    return $reg;
+    return json_encode(array('id_opcion' => $reg));
 }
 
 function funAgregarPregunta2($descripcion, $tipo, $id_opciones){
@@ -422,18 +447,21 @@ function funAgregarPregunta2($descripcion, $tipo, $id_opciones){
             $reg = -1;
         }
     
-    return $reg;
+    return json_encode(array('id_opcion' => $reg));
 }
 
 function funGetOpciones() {
     $u = "";
     $query2 = mysql_query("select id_opcion, descripcion from opciones") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['id_opcion'] . "=>" . $row['descripcion'] . "=>" ;
+			$json[$indice] = array('id_opcion' => $row['id_opcion'], 'descripcion' => utf8($row['descripcion']));
+			$indice = $indice + 1 ;
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 
@@ -442,23 +470,29 @@ function funGetValoresDeOpcion($id_opcion) {
     $query2 = mysql_query("select id_val_op, descripcion from valor_opcion, opciones_valorOpc
 		where id_opcion=$id_opcion and 
 		id_val_op=id_valorOpcion") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['id_val_op'] . "=>" . $row['descripcion'] . "=>" ;
+			$json[$indice] = array('id_valor' => $row['id_val_op'], 'descripcion' => utf8($row['descripcion']));
+			$indice = $indice + 1 ;
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 function funGetValoresDeOpciones() {
     $u = "";
     $query2 = mysql_query("select id_val_op, descripcion from valor_opcion") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;    
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['id_val_op'] . "=>" . $row['descripcion'] . "=>" ;
+			$json[$indice] = array('id_valor' => $row['id_val_op'], 'descripcion' => utf8($row['descripcion']));
+			$indice = $indice + 1 ;
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 
@@ -486,7 +520,7 @@ function fungetalgo($nombre,$nomProx,$idjuego,$pista) {
 		$reg = 'insertado todo';
         mensaje_log("INSERTANDO PISTAS EN BD");
 	}
-	return $r2.$r1;
+	return json_encode(array('id_obra_siguiente'=>$r2, 'id_obra' =>$r1));
 }
 
 function fungetPuntaje($id_visitante,$idjuego) {
@@ -496,7 +530,7 @@ function fungetPuntaje($id_visitante,$idjuego) {
 	if ($res != NULL) {
 		$u = $res['puntaje'];
 	}
-    return $u;
+    return json_encode(array('puntaje'=>$u));
 }
 
 function fungetPuntajes() {
@@ -504,14 +538,17 @@ function fungetPuntajes() {
 	try{
 		$query = mysql_query("SELECT puntaje, nick_name FROM Juego_visitante order by puntaje desc") or die(mysql_error());
 		//$res = mysql_fetch_assoc($query);
-		
+		$json = array(array());
+		$indice = 0;
 		while ($res = mysql_fetch_assoc($query)) {
             		$u = $u . $res['puntaje'] . "=>". $res['nick_name'] . "=>";
+					$json[$indice] = array('puntaje' => $res['puntaje'], 'nickname' => $res['nickname']);
+					$indice = $indice + 1;
        		}
 	}catch(Exception $e){
 		$u="-1";
 	}
-    return $u;
+    return json_encode($json);
 }
 function funfinJuego($id_visitante,$id_juego,$puntajes,$nick_name) {
 
@@ -523,7 +560,7 @@ function funfinJuego($id_visitante,$id_juego,$puntajes,$nick_name) {
 		$u="-1";
 	}
 		
-    return $u;
+    return json_encode(array($u));
 }
 /*
 function fungetJuegos() {
@@ -551,7 +588,7 @@ where mi_puntaje.id_visitante =$id_visitante)") or die(mysql_error());
 		if ($res != NULL) {
 		    $u = $res['Posicion'];
         	}
-    return $u;
+    return json_encode($array('posicion'=>u);
 }
 
 
@@ -571,7 +608,7 @@ function funlogin($user, $pass) {
     } else {
         $log = $row['id_usuario'];
     }
-    return $log;
+    return json_encode(array('login' =>$log));
 }
 
 function funAltaUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass) {
@@ -586,7 +623,7 @@ function funAltaUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pa
             $reg = -1;
         }
     }
-    return $reg;
+    return json_encode(array('return'=>$reg));
 }
 function funAltavisita($nacionalidad, $sexo, $tipo_visita, $rango_edad) {
 
@@ -599,7 +636,7 @@ function funAltavisita($nacionalidad, $sexo, $tipo_visita, $rango_edad) {
         } catch (Exception $e) {
             $reg = "-1";
         }
-    return $reg;
+    return json_encode(array('return'=>$reg));
 }
 
 function funmodificarUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass, $idUsuario) {
@@ -616,7 +653,7 @@ function funmodificarUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('return'=>$mod));
 }
 
 function funborrarUsuario($idUsuario) {
@@ -631,11 +668,13 @@ function funborrarUsuario($idUsuario) {
             $bor = -1;
         }
     }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 function fungetUsuarios() {
     $u = "";
+	$json = array(array());
+	$indice = 0;
     $query = mysql_query("SELECT nick FROM usuario") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
@@ -644,48 +683,61 @@ function fungetUsuarios() {
 
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nick'] . "=>";
+			$json[$indice] = array('nick' => utf8_encode($res['nick']));
+			$indice = $indice + 1; 
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetUsuariosAdmin() {
     $u = "";
     $query = mysql_query("SELECT nick FROM usuario WHERE tipoUs= 2") or die(mysql_error());
     $row = mysql_fetch_array($query);
+	$json = array(array());
+	$indice = 0;
     if ($row != NULL) {
 
         $query2 = mysql_query("SELECT nick FROM usuario WHERE tipoUs= 2") or die(mysql_error());
 
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nick'] . "=>";
+			$json[$indice] = array('nick' => utf8_encode($res['nick']));
+			$indice = $indice + 1; 
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetUsuariosEmpleado() {
     $u = "";
     $query = mysql_query("SELECT nick FROM usuario WHERE tipoUs= 1") or die(mysql_error());
     $row = mysql_fetch_array($query);
+    $json = array(array());
+	$indice = 0;
     if ($row != NULL) {
 
         $query2 = mysql_query("SELECT nick FROM usuario WHERE tipoUs= 1") or die(mysql_error());
 
         while ($res = mysql_fetch_assoc($query2)) {
-            $u = $u . $res['nick'] . "=>";
+            $u = $u . $res['nick'] . "=>";			
+			$json[$indice] = array('nick' => utf8_encode($res['nick']));
+			$indice = $indice + 1; 
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetDataUsuario($nick) {
     $u = "";
+	$json = array();
     $query = mysql_query("SELECT * FROM usuario WHERE nick='$nick'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = $row['nombre'] . "=>" . $row['apellido'] . "=>" . $row['cedula'] . "=>" . $row['email'] . "=>" . $row['tipoUs'] . "=>" . $row['nick'] . "=>" . $row['pass'] . "=>" . $row['id_usuario'] . "=>";
-    }
+		$json = array('nombre' =>utf8_encode($row['nombre']), 'apellido' =>utf8_encode($row['apellido']), 'cedula'=>$row['cedula'], 'email'=>utf8_encode($row['email']), 
+					'tipo'=>$row['tipoUs'], 'nick' =>utf8_encode($row['nick']), 'pass'=>utf8_encode($row['pass']), 'id_usuario'=>$row['id_usuario']);
+	}
     return $u;
 }
 
@@ -701,7 +753,7 @@ function funpasswd($nick, $pass) {
             $u = -1;
         }
     }
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funtipoUsuario($nick) {
@@ -711,7 +763,7 @@ function funtipoUsuario($nick) {
     if ($row != NULL) {//no exite
         $u = $row['tipoUs'];
     }
-    return $u;
+    return json_encode(array('tipo'=>$u));
 }
 
 //----------------------------- nuevo----------------
@@ -766,10 +818,11 @@ $row8 = mysql_fetch_array($query18m);
 	
 	$u = $row1['Masculino'] . "=>" . $row2['Femenino'] . "=>". $row3['Uruguaya'] . "=>". $row4['Extranjera'] . "=>". $row5['0a12'] . "=>". $row6['13a15'] . "=>". $row7['16a18'] . "=>". $row8['de18'] . "=>";
 
+	$json = array('masculino'=>$row['Masculino'],'femenino'=>$row2['Femenino'], 'uruguaya'=>$row3['Uruguaya'], 'extranjera'=>$row4['Extranjera'],
+				  '0a12'=>$row5['0a12'],'13a15'=>$row6['13a15'],'16a18'=>$row7['16a18'],'de18'=>$row8['de18']);
 
 
-
-    return $u;
+    return json_encode($json);
 }
 
 //////////////////////NUEVAS JUEGO Y CUESTIONARIO
@@ -802,7 +855,7 @@ function funsetCuestionarioVisitante($id_visitante,$string_result){
 	}catch (Exception $e){
 		$u="0";
 	}
-	return $u;
+	return json_encode(array('return'=>$u));
 }
 
 function funPrimeraDeJuego($id_juego, $nom_obra) {
@@ -822,41 +875,51 @@ function funPrimeraDeJuego($id_juego, $nom_obra) {
         } catch (Exception $e) {
             $u = -1;
         }
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function fungetJuegos() {
     $u = "";
     $query = mysql_query("SELECT nombre, idjuego, nombre_obra, activo,ciclico FROM Juego, obra where id_obra1 = id_obra and borrado = 0") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;
     
         while ($row = mysql_fetch_assoc($query)) {
             $u = $u . $row['idjuego'] . "=>" . $row['nombre'] . "=>" .  $row['nombre_obra'] . "=>"
 			.  $row['activo'] . "=>".  $row['ciclico'] . "=>";
+			$json[$indice] = array('id_juego' => $row['idjuego'], 'nombre' =>$row['nombre'], 'nombre_obra'=>$row['nombre_obra'], 
+			'activo'=> $row['activo'], 'ciclico'=>$row['ciclico']);
+			$indice = $indice + 1;
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 
 function funresp($id) {
     $u = "";
     $query = mysql_query("SELECT respuesta_abierta from cuestionario_visitante where id_pregunta= '$id'") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;
         while ($row = mysql_fetch_assoc($query)) {
             $u = $u . $row['respuesta_abierta'] . "=>";
+			$json[$indice]=array('respuesta_abierta' => $row['respuesta_abierta']);
+			$indice = $indice + 1;
         }
-    return $u;
+    return json_encode($json);
 }
 
 function funrespcerrada($id) {
     $u = "";
     $query = mysql_query("SELECT descripcion from cuestionario_visitante as cv,valor_opcion as vo where vo.id_val_op=cv.respuesta_cerrada and cv.id_pregunta= '$id'") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;
         while ($row = mysql_fetch_assoc($query)) {
             $u = $u . $row['descripcion'] . "=>";
+			$json[$indice] = array('descripcion'=> $row['descripcion']);
+			$indice = $indice + 1;
         }
-    return $u;
+    return json_encode($json);
 }
 
 function funAgregarCuestionario($nombre, $descripcion) {
@@ -871,7 +934,7 @@ function funAgregarCuestionario($nombre, $descripcion) {
             $reg = -1;
         }
     
-    return $reg;
+    return json_encode(array('id_cuestionario'=>$reg));
 }
 
 function funActivarJuego($id_juego) {
@@ -892,7 +955,7 @@ function funActivarJuego($id_juego) {
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 
@@ -908,7 +971,7 @@ function funRecorridoJuego($id_juego, $recorrido) {
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funSetJuegoBorrado($id_juego) {
@@ -923,19 +986,22 @@ function funSetJuegoBorrado($id_juego) {
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funGetObrasDeJuego($id_juego) {
     $u = "";
     $query = mysql_query("SELECT nombre_obra FROM obra o, Pista p where o.id_obra = p.id_obra and id_juego=$id_juego") or die (mysql_error());
-    
+    $json = array(array());
+	$indice = 0;
     
         while ($row = mysql_fetch_assoc($query)) {
             $u = $u . $row['nombre_obra'] . "=>";
+			$json[$indice] = array('nombre_obra'=> $row['nombre_obra']);
+			$indice = $indice + 1;
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 function funSetJuego($id_juego, $nombre,$recorrido) {
@@ -950,7 +1016,7 @@ function funSetJuego($id_juego, $nombre,$recorrido) {
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funSetValorOpcc($id_val, $descripcion) {
@@ -964,7 +1030,7 @@ id_val_op = $id_val") or die(mysql_error());
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funIsValorAsociadoAOpcion($id_valor) {
@@ -975,7 +1041,7 @@ function funIsValorAsociadoAOpcion($id_valor) {
         
 	$u = $row['count(*)'] ;
         
-    return $u;
+    return json_encode(array('count'=>$u));
 }
 
 function funBorrarValorOpc($idValor) {
@@ -986,7 +1052,7 @@ function funBorrarValorOpc($idValor) {
         } catch (Exception $e) {
             $bor = -1;
         }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 
@@ -1001,7 +1067,7 @@ id_opcion = $id_opc") or die(mysql_error());
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funIsGrupoOpcAsociadoAPreguntas($id_grupo) {
@@ -1012,7 +1078,7 @@ function funIsGrupoOpcAsociadoAPreguntas($id_grupo) {
         
 	$u = $row['count(*)'] ;
         
-    return $u;
+    return json_encode(array('count'=>$u));
 }
 
 
@@ -1024,7 +1090,7 @@ function funBorrarOpcion($idOpcion) {
         } catch (Exception $e) {
             $bor = -1;
         }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 function funIsPreguntaAsociadaACuestionario($id_preg) {
@@ -1035,7 +1101,7 @@ function funIsPreguntaAsociadaACuestionario($id_preg) {
         
 	$u = $row['count(*)'] ;
         
-    return $u;
+    return json_encode(array('count'=>$u));
 }
 
 function funBorrarPregunta($idPreg) {
@@ -1046,7 +1112,7 @@ function funBorrarPregunta($idPreg) {
         } catch (Exception $e) {
             $bor = -1;
         }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 
@@ -1055,10 +1121,10 @@ function funGetDatosPregunta($id_cuest) {
     $query2 = mysql_query("select nom_cuestionario, descripcion from cuestionario where id_cuestionario=$id_cuest") or die (mysql_error());
     
         $row = mysql_fetch_assoc($query2);
-        
+    $json = array();    
 	$u = $row['nom_cuestionario']. "=>". $row['descripcion'] ;
-        
-    return $u;
+    $json = array('nom_cuestionario' => utf8_encode($row['nom_cuestionario']), 'descripcion'=>utf8_encode($row['descripcion']));    
+    return json_encode($json);
 }
 
 
@@ -1074,7 +1140,7 @@ id_cuestionario = $id_cuest") or die(mysql_error());
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funBorrarRelacionPreguntasCuestionario($idCuest) {
@@ -1085,7 +1151,7 @@ function funBorrarRelacionPreguntasCuestionario($idCuest) {
         } catch (Exception $e) {
             $bor = -1;
         }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 function funIsCuestionarioEnUso($id_cuest) {
@@ -1096,7 +1162,7 @@ function funIsCuestionarioEnUso($id_cuest) {
         
 	$u = $row['count(*)'] ;
         
-    return $u;
+    return json_encode(array('count'=>$u));
 }
 
 function funBorrarCuestionario($idCuest) {
@@ -1107,7 +1173,7 @@ function funBorrarCuestionario($idCuest) {
         } catch (Exception $e) {
             $bor = -1;
         }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 
@@ -1120,12 +1186,15 @@ function funGetDatosOpcion($id_opcion) {
 		where vo.id_val_op=ovo.id_valorOpcion and ovo.id_opcion=$id_opcion") 
 
 or die (mysql_error());
-    
+    $json =array(array());
+	$indice = 0;
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['id'] . "=>". $row['descr'] . "=>";
+			$json[$indice] = array('id'=>$row['id'], 'descripcion'=> $row['descr']);
+			$indice = $indice + 1;
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 function funBorrarRelacionOpcionesValor($idOpc) {
@@ -1136,7 +1205,7 @@ function funBorrarRelacionOpcionesValor($idOpc) {
         } catch (Exception $e) {
             $bor = -1;
         }
-    return $bor;
+    return json_encode(array('return'=>$bor));
 }
 
 function funGetDataPregunta($id_preg) {
@@ -1144,11 +1213,12 @@ function funGetDataPregunta($id_preg) {
     $query2 = mysql_query("select id_pregunta, descripcion, tipo, id_opciones from preguntas where id_pregunta=$id_preg") or die (mysql_error());
     
         $row = mysql_fetch_assoc($query2);
-        
+    $json = array();    
 	$u = $row['id_pregunta']. "=>". $row['descripcion'] . "=>". $row['tipo'] . "=>". $row['id_opciones'] ;
-        
+    $json = array('id_pregunta' => $row['id_pregunta'], 'descripcion'=>$row['descripcion'],
+					'tipo'=>$row['tipo'], 'id_opciones'=>$row['id_opciones']);    
 
-    return $u;
+    return json_encode($json);
 }
 
 function funSetPregunta($id_preg, $id_op, $descripcion) {
@@ -1161,11 +1231,13 @@ function funSetPregunta($id_preg, $id_op, $descripcion) {
             $u = -1;
         }	
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 function funGetTextAllPreguntas() {
     $u = "";
+	$json = array(array());
+	$indice = 0;
     $query2 = mysql_query("SELECT p.id_pregunta as idpreg,
 
 		p.descripcion as txtpreg,
@@ -1177,9 +1249,10 @@ function funGetTextAllPreguntas() {
         while ($row = mysql_fetch_assoc($query2)) {
             $u = $u . $row['idpreg'] . "=>". $row['idpreg'] . "=>". $row ['idpreg']. "=>" . 
 		$row['txtpreg'] . "=>". $row['tipop'] . "=>" ;
+			$json[$indice++]=array('id_pregunta' => $row['idpreg'], 'pregunta' => utf8_encode($row['txtpreg']), 'tipo' =>$row['tipop']);
         }
 
-    return $u;
+    return json_encode($json);
 }
 
 function funGetOpcPregunta($id_preg) {
@@ -1195,10 +1268,10 @@ function funGetOpcPregunta($id_preg) {
 	$row = mysql_fetch_assoc($query2);
     	
 	if ($row !=null){
-		$u = $row['descripcion'];
+		$u = utf8_encode($row['descripcion']);
 	}
 
-    return $u;
+    return json_encode(array('return'=>$u));
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

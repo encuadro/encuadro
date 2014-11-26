@@ -8,5 +8,4 @@ function mensaje_log($mensaje, $nivel=0)
     if($enable_log>=$nivel) error_log($mensaje);
     return;
 }
-
 ?>

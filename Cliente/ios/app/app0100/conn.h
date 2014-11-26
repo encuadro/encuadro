@@ -8,8 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "Configuracion.h"
+<<<<<<< HEAD
 #import "Parser.h"
 #define kPostURL @"http://192.168.10.185/server_php/server_php.php"
+=======
+//#define kPostURL @"http://192.168.10.185/server_php/server_php.php"
+static NSString*  kPostURL=@"http://192.168.10.185/server_php/server_php.php";
+>>>>>>> bbd60890a0ca46eff0ba2ed0711c198479145559
 
 BOOL finish,worked;
 @interface conn : NSObject{

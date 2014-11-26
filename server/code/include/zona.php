@@ -38,7 +38,7 @@ function funAltaZona($largo, $ancho, $x, $y, $nombre_obra) {
             $reg = -1;
         }
     }
-    return $reg;
+    return json_encode(array('id_zona'=>$reg);
 }
 
 function funborrarZona($id_zona) {
@@ -60,7 +60,7 @@ function funborrarZona($id_zona) {
             $bor = -1;
         }
     }
-    return $bor;
+    return json_encode(array('id_zona'=>$bor);
 }
 
 function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
@@ -78,7 +78,7 @@ function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('id_zona'=>$mod);
 }
 
 function funagregarContenidoZona($id_zona, $tipo, $nombre) {
@@ -104,7 +104,7 @@ function funagregarContenidoZona($id_zona, $tipo, $nombre) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('contenido_zona'=>utf8_encode($mod));
 }
 
 function fungetContenidoZona($id_zona) {
@@ -119,6 +119,7 @@ function fungetContenidoZona($id_zona) {
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
 
+	$json = array();
         try {
             $id = $row['id_zona'];
             $query2 = mysql_query("SELECT * FROM contenido_zona WHERE id_zona='$id'") or die(mysql_error());
@@ -145,44 +146,53 @@ function fungetContenidoZona($id_zona) {
 		
                 
                 $u = $id . "=>" .$audio . "=>" .$video . "=>" . $row2['texto'] . "=>" .$modelo. "=>" .$imagen. "=>" . $row['largo'] . "=>" . $row['ancho'] . "=>" . $row['x'] . "=>" . $row['y'] . "=>";
-            }
+            
+			$josn=array('id'=>$id,'audio'=>$audio,'video'=>$video,'texto'=>utf8_encode($row2['texto']),'modelo'=>utf8_encode($modelo),'imagen' => utf8_encode($imagen),
+						'largo' => $row['largo'],'ancho' => $row['ancho'], 'x'=>$row['x'],'y'=>$row['y']);
+			}
         } catch (Exception $e) {
             $u = -1;
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetContenidoZonaNombre($nombre) {
 	
 	mensaje_log("FUNCION GET CONTENIDO ZONA POR NOMBRE (ZONA)");        
 	$u = "";
+	$json = array();
 	try {
             $query = mysql_query("SELECT * FROM zona, contenido_zona WHERE zona.id_zona=contenido_zona.id_zona AND zona.nombre_zona='$nombre'") or die(mysql_error());
             $row = mysql_fetch_array($query2);
 
             if ($row != NULL) {
                 $u = $row["audio"] . "=>" .$row["video"] . "=>" .$row["modelo"]. "=>" .$row["imagen"]. "=>";
+				$json = array('audio'=>utf8_encode($row["audio"]),'video'=>utf8_encode($row["video"]),
+								'modelo'=>utf8_encode($row["modelo"]),'imagen' => utf8_encode($row["imagen"]));
             }
         } catch (Exception $e) {
             $u = -1;
         }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetZonaObra($nombre_obra) {
     $u = "";
     $query = mysql_query("SELECT * FROM zona WHERE nombre_obra='$nombre_obra'") or die(mysql_error());
     $row = mysql_fetch_array($query);
+	$json = array(array());
+	$indice = 0;
     if ($row != NULL) {
 
         $query2 = mysql_query("SELECT * FROM zona WHERE nombre_obra='$nombre_obra'") or die(mysql_error());
 
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['id_zona'] . "=>";
+			$json[$indice++]=array('id_zona'=>$res['id_zona']);
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 //---------------------------------------------------NUEVO-------------------------------------------------------------
@@ -190,12 +200,15 @@ function fungetZonas() {
 	
 	mensaje_log("FUNCION GET ZONAS (ZONA)");    
 	$u = "";
+	$json = array(array());
+	$indice = 0;    
     $query = mysql_query("SELECT nombre_zona FROM zona") or die(mysql_error());
         while ($res = mysql_fetch_assoc($query)) {
             $u = $u . $res['nombre_zona'] . "=>";
+			$json[$indice++]=array('nombre_zona'=>utf8_encode($res['nombre_zona']));
         }
 
-    return $u;
+    return json_encode($json);
 }
 //---------------------------------------------------NUEVO---------------------------------------------------------------
 ?>

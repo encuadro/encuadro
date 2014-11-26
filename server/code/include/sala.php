@@ -8,6 +8,8 @@ mensaje_log('SALAS');
 function fungetAllDataSalas() {	    
     global $ini_array;    
     $u = "-1";
+	$json = array(array());
+	$indice = 0;
     //$ini_array = parse_ini_file($ini_file, true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -19,17 +21,22 @@ function fungetAllDataSalas() {
             $u = "";
         $variable = "ftp://".$usu.":".$pass."@".$servidor."/" . $row['id_sala'] . "/imagen/";
         $u = $u . $row['id_sala'] . "=>" . $row['nombre_sala'] . "=>" . $row['descripcion_sala'] . "=>" .$variable.$row['imagen'] . "=>";
+		$json[$indice++]= array('id_sala'=>$row['id_sala'], 'nombre_sala' =>utf8_encode($row['nombre_sala'])=>'descripcion'=>utf8_encode($row['descripcion_sala'])
+				'imagen'=>utf8_encode($variable.$row['imagen']));
     }
-    return $u;
+    return json_encode($json);
 }
 function fungetListImgSalas() {  
     $u = "-1";
+	$json = array(array());
+	$indice = 0;
     mensaje_log("QUERY LISTA DE IMAGENES DE SALA");
     $query = mysql_query("SELECT * FROM sala,contenido_sala WHERE sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
     while ($row = mysql_fetch_assoc($query)) {
         $u = $row['nombre_sala'] . "=>" .$row['imagen'] . "=>";
+		$json[$indice++] = array('nombre_sala' => utf8_encode($row['nombre_sala']), 'imagen'=>utf8_encode($row['imagen']);
     }
-    return $u;
+    return json_encode($json);
 }
 
 function funAltaSala($nombre_sala, $descripcion_sala) {
@@ -70,7 +77,7 @@ function funAltaSala($nombre_sala, $descripcion_sala) {
         }
     }
     
-    return $reg;
+    return json_encode(array('id_sala'=>$reg);
 }
 
 function funborrarSala($id_sala) {
@@ -129,7 +136,7 @@ function funborrarSala($id_sala) {
             $bor = -2;
         }
     }
-    return $bor;
+    return json_encode(array('return'=>$bor);
 }
 
 function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
@@ -148,7 +155,7 @@ function funmodificarSala($id_sala, $nombre_sala, $descripcion_sala) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('return'=>$mod);
 }
 
 function funsetQr($id_sala, $qr) {
@@ -171,13 +178,15 @@ function funsetQr($id_sala, $qr) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('return'=>$mod);
 }
 
 function fungetSalas() {
     
     mensaje_log("FUNCION GET SALAS (SALA)");    
     $u = "";
+	$json = array(array());
+	$indice = 0;
     $query = mysql_query("SELECT * FROM sala") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
@@ -187,37 +196,43 @@ function fungetSalas() {
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['id_sala'] . "=>";
             $u = $u . $res['nombre_sala'] . "=>";
+			$json[$indice++]=array('id_sala' => $res['id_sala'], 'nombre_sala' => utf8_encode($res['nombre_sala']));
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetNombreSalas() {
      ;
     mensaje_log("FUNCION GET NOMBRE SALAS (SALA)");    
     $u = "";
+    $json = array(array());
+	$indice = 0;
     $query = mysql_query("SELECT nombre_sala FROM sala") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $query2 = mysql_query("SELECT nombre_sala FROM sala") or die(mysql_error());
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nombre_sala'] . "=>";
+			$json[$indice++]=array('nombre_sala' => utf8_encode($res['nombre_sala']));
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetDataSalaId($id_sala) {
     
     mensaje_log("FUNCION GET DATA SALA ID (SALA)");
     $u = "";
+	$json = array();
     $query = mysql_query("SELECT * FROM sala WHERE id_sala='$id_sala'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = $row['nombre_sala'] . "=>" . $row['descripcion_sala'] . "=>";
         mensaje_log("RETORNANDO DATOS DE SALA DE ID=".$id_sala,1);
+		$json = array('nombre_sala' => utf8_encode($row['nombre_sala']), 'descripcion_sala'=>utf8_encode($row['descripcion_sala']));
     }
-    return $u;
+    return json_encode($json);
 }
 
 
@@ -226,6 +241,7 @@ function fungetDataSalaId2($id_sala){
     mensaje_log("FUNCION GET DATA SALA ID2 (SALA)");    
     mensaje_log("INFORMACION DE LA SALA:".$id_sala);
     $u = "-1";
+	$json = array();
 	//$ini_array = parse_ini_file("/var/include/confi.ini", true);
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
@@ -237,6 +253,7 @@ function fungetDataSalaId2($id_sala){
 	if($u=="-1")
 	    $u="";
         $u = $row['nombre_sala']."=>".$row['descripcion_sala']."=>";
+		$json = array('nombre_sala'=> utf8_encode($row['nombre_sala']), 'descripcion'=>utf8_encode($row['descripcion_sala']), 'imagen'=>"");
         mensaje_log("RETORNANDO DATOS DE SALA DE ID=".$id_sala,1);
       }
      $query = mysql_query("SELECT * FROM contenido_sala WHERE id_sala='$id_sala'") or die(mysql_error());
@@ -246,21 +263,24 @@ function fungetDataSalaId2($id_sala){
 	     $u="";
          $variable = "ftp://".$usu.":".$pass."@".$servidor."/" .$id_sala . "/imagen/";
         $u = $u.$variable.$row['imagen']."=>"; 
+		$json['imagen']= utf8_encode($variable);
       }
-    return $u;     
+    return json_encode($json);     
  }
 
 function fungetDataSalaNombre($nombre) {
      
     mensaje_log("FUNCION GET DATA SALA NOMBRE (SALA)");
     $u = "";
+	$json = array();
     $query = mysql_query("SELECT * FROM sala WHERE nombre_sala='$nombre'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = $row['id_sala'] . "=>" . $row['descripcion_sala'] . "=>";
+		$json = array('id_sala'=> $row['id_sala'], 'descripcion'=>utf8_encode($row['descripcion_sala']));
         mensaje_log("RETORNANDO DATOS DE SALA DE NOMBRE=".$nombre,1);
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetDataSalaNombreImagen($nombre){
@@ -268,11 +288,14 @@ function fungetDataSalaNombreImagen($nombre){
      ;
     mensaje_log("FUNCION GET DATA SALA NOMBRE IMAGEN (SALA)");
      $u = "";
+	 $json = array();
 	try{
 	    $query = mysql_query("SELECT sala.id_sala, sala.nombre_sala, sala.descripcion_sala, contenido_sala.imagen FROM sala, contenido_sala WHERE  sala.nombre_sala='$nombre' AND sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
      	    $row = mysql_fetch_array($query);
             if ($row != NULL) {
                 $u = $row['id_sala']."=>".$row['nombre_sala']."=>".$row['descripcion_sala']."=>".$row['imagen']."=>"; 
+				$json = array('id_sala' => $row['id_sala'], 'nombre_sala'=> utf8_encode($row['nombre_sala']), 
+								'descripcion'=>utf8_encode($row['descripcion_sala']), 'imagen' => utf8_encode($row['imagen']));
                 mensaje_log("RETORNANDO DATOS DE SALA DE NOMBRE=".$nombre,1);       
             }
 	} catch (Exception $e) {
@@ -280,19 +303,22 @@ function fungetDataSalaNombreImagen($nombre){
             $u = "PHP se la come=>";
         }
 
-    return $u;     
+    return json_encode($json);     
  }
 
 function fungetDataSalaIdImagen($id){
      //conectar();
     
     mensaje_log("FUNCION GET DATA SALA ID IMAGEN (SALA)");
-     $u = "";
+    $u = "";
+	$json = array();
 	try{
 	    $query = mysql_query("SELECT sala.id_sala, sala.nombre_sala, sala.descripcion_sala, contenido_sala.imagen FROM sala, contenido_sala WHERE  sala.id_sala='$id' AND sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
      	    $row = mysql_fetch_array($query);
             if ($row != NULL) {
                 $u = $row['id_sala']."=>".$row['nombre_sala']."=>".$row['descripcion_sala']."=>".$row['imagen']."=>"; 
+				$json = array('id_sala' => $row['id_sala'], 'nombre_sala'=> utf8_encode($row['nombre_sala']), 
+				'descripcion'=>utf8_encode($row['descripcion_sala']), 'imagen' => utf8_encode($row['imagen']));
                 mensaje_log("RETORNANDO DATOS DE SALA ID=".$id,1);
             }
 	} catch (Exception $e) {
@@ -300,18 +326,20 @@ function fungetDataSalaIdImagen($id){
             $u = "PHP se la come=>".$e;
         }
 
-    return $u;     
+    return json_encode($json);     
  }
 function fungetVideoSalaId($id){
      //conectar();
      
     mensaje_log("FUNCION GET VIDEO SALA ID (SALA)");
      $u = "0";
+	 $json = array();
 	try{
 	    $query = mysql_query("SELECT contenido_sala.video FROM sala, contenido_sala WHERE  sala.id_sala='$id' AND sala.id_sala=contenido_sala.id_sala") or die(mysql_error());
      	    $row = mysql_fetch_array($query);
             if ($row != NULL) {
                 $u = $row['video']; 
+				$json = array(utf8_encode($row['video']));
                 mensaje_log("RETORNANDO VIDEO DE SALA ID=".$id,1);
             }
 	} catch (Exception $e) {
@@ -319,21 +347,23 @@ function fungetVideoSalaId($id){
           $u = "-1".$e;
         }
 
-    return $u;     
+    return json_encode($json);     
  }
 //-----------------------------------------------------NUEVO----------------------------
 function fungetSalasl($nombre) {
      
     mensaje_log("FUNCION GET SALAS LIKE (SALA)");
-
+	$json = array(array());
+	$indice = 0;
 	$u = "";
         $query2 = mysql_query("SELECT nombre_sala FROM sala WHERE nombre_sala LIKE '$nombre%'") or die(mysql_error());
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nombre_sala'] . "=>";
+			$json[$indice++] = array('nombre_sala'=> $res['nombre_sala']);
         }
     mensaje_log("SALAS ENCONTRADAS= ".$u,1);    
 
-    return $u;
+    return json_encode($json);
 
 }
 
@@ -345,6 +375,7 @@ function funagregarContenidoSala($id_sala, $tipo, $nombre) {
     $usu = $ini_array['ftpsala']['usu'];
     $pass = $ini_array['ftpsala']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
+	$json = array();
     $mod = "-2";
     $query = mysql_query("SELECT id_sala FROM sala WHERE id_sala = '$id_sala'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -359,17 +390,20 @@ function funagregarContenidoSala($id_sala, $tipo, $nombre) {
                 $variable = "ftp://".$usu.":".$pass."@".$servidor."/" . $id . "/" . $tipo . "/" . $nombre;
             }
             if ($tipo == "texto") {
+				$json = array('ret' => "1");
                 $mod = "1";
             } else {
                 $mod = $variable;
+				$json = array('ret' => utf8_encode($variable));				
             }
         } catch (Exception $e) {
            mensaje_log($e->getMessage(),3);
            $mod = "-1";
+		   $json = array('ret' => "-1");
         }
             
     }
-    return $mod;
+    return json_encode($json);
 }
 
 function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
@@ -390,7 +424,7 @@ function funagregarContenidoSala2($id_sala, $tipo, $nombre) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('ret'=>$mod);
 }
 
 function fungetContenidoSala($id) {
@@ -401,6 +435,7 @@ function fungetContenidoSala($id) {
     $pass = $ini_array['ftpsala']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
     $variable = "ftp://".$usu.":".$pass."@".$servidor."/" . $id . "/";
+	$json = array();
     $u = "";
     $query = mysql_query("SELECT * FROM contenido_sala WHERE id_sala='$id'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -425,10 +460,10 @@ function fungetContenidoSala($id) {
 		else
 			$imagen = $row['imagen'];
 	$u = $audio . "=>" .$video . "=>" . $row['texto'] . "=>" .$modelo. "=>" .$imagen. "=>";
-
+	$json = array('audio'=> $audio, 'video' => $video, 'texto'=> $texto, 'modelo' => $modelo, 'imagen'=> 'imagen');
     }
     mensaje_log("RETORNANDO EL CONTENIDO DE LA SALA ID=".$id,1);    
-    return $u;
+    return $json_encode($json);
 }
 
 function funexisteSala($id) {
@@ -441,7 +476,7 @@ function funexisteSala($id) {
         $u = 1;
         mensaje_log("LA SALA DE ID =".$id." EXISTE",1);
     }else {mensaje_log("LA SALA DE ID =".$id." NO EXISTE",1);}
-    return $u;
+    return json_encode(array('id_sala'=>$u));
 }
 
 ?>

@@ -78,7 +78,7 @@ function funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_
             $reg = -1;
         }
     }
-    return $reg;
+    return json_encode(array('ret'=>$reg));
 }
 
 function funborrarObra($id_obra) {
@@ -108,25 +108,30 @@ function funborrarObra($id_obra) {
             $query = mysql_query("DELETE FROM zona WHERE id_zona = '$id_zona'") or die(mysql_error());
             $query = mysql_query("DELETE FROM contenido_zona WHERE id_zona = '$id_zona'") or die(mysql_error());
 
-            $dir = $ini_array['RUTA']['zona']. $id_zona;function fungetObrasl($nombre) {
-
-$u = "";
-    $query = mysql_query("SELECT nombre_obra FROM obra LIMIT 1") or die(mysql_error());
-    $row = mysql_fetch_array($query);
-    if ($row != NULL) {
-        $query2 = mysql_query("SELECT * FROM obra WHERE nombre_obra LIKE '$nombre%'") or die(mysql_error());
-        while ($res = mysql_fetch_assoc($query2)) {
-            $u = $u . $res['nombre_obra'] . "=>";
-        }
-    }
-    return $u;
-
-}
+            $dir = $ini_array['RUTA']['zona']. $id_zona;
 
             rrmdir($dir);
         }
     }
-    return $bor;
+    return json_encode(array('ret'=>$bor));
+}
+
+function fungetObrasl($nombre) {
+
+	$u = "";
+	$json = array(array());
+	$indice = 0;
+		$query = mysql_query("SELECT nombre_obra FROM obra LIMIT 1") or die(mysql_error());
+		$row = mysql_fetch_array($query);
+		if ($row != NULL) {
+			$query2 = mysql_query("SELECT * FROM obra WHERE nombre_obra LIKE '$nombre%'") or die(mysql_error());
+			while ($res = mysql_fetch_assoc($query2)) {
+				$u = $u . $res['nombre_obra'] . "=>";
+				$json[$indice++] = array('nombre_obra' => utf8_encode($res['nombre_obra']));
+			}
+		}
+		return json_encode($json);
+
 }
 
 function funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $autor_obra) {
@@ -143,36 +148,25 @@ function funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('ret' => $mod);
 }
-
-
-function fungetObrasl($nombre) {
-    
-    mensaje_log("FUNCION GET NOMBRE OBRAS (OBRA)");
-	$u = "";
-        $query2 = mysql_query("SELECT nombre_obra FROM obra WHERE nombre_obra LIKE '$nombre%'") or die(mysql_error());
-        while ($res = mysql_fetch_assoc($query2)) {
-            $u = $u . $res['nombre_obra'] . "=>";
-        }
-    return $u;
-
-}
-
 
 function fungetObras() {
     
     mensaje_log("FUNCION GET OBRAS (OBRA)");    
     $u = "";
+	$json = array(array());
+	$indice = 0;
     $query = mysql_query("SELECT nombre_obra FROM obra LIMIT 1") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $query2 = mysql_query("SELECT nombre_obra FROM obra") or die(mysql_error());
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nombre_obra'] . "=>";
+			$json[$indice++] = array('nombre_obra' => utf8_encode($res['nombre_obra']));
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 
@@ -180,7 +174,7 @@ function fungetDataObra($nombre_obra) {
     global $ini_array;
     mensaje_log("FUNCION GET DATA OBRA (OBRA)");    
     $u = "";
-    
+    $json = array();
     $query = mysql_query("SELECT * FROM obra WHERE nombre_obra='$nombre_obra'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
@@ -191,20 +185,22 @@ function fungetDataObra($nombre_obra) {
 	   $variable = "ftp://".$usu.":".$pass."@".$servidor."/" .$row['id_obra'] . "/imagen/";
 
         $u = $row['id_obra'] . "=>" . $row['nombre_obra'] . "=>" . $row['descripcion_obra'] . "=>" . $row['descriptor'] . "=>" .  $variable. $row['imagen'] . "=>" . $row['id_sala'] . "=>" . $row['autor'] . "=>";
+		$json = array('id_obra' => $row['id_obra'], 'nombre_obra' =>utf8_encode($row['nombre_obra']), 'descripcion_obra'=>utf8_encode($row['descripcion_obra']), 'descriptor' => $row['descriptor'], 'imagen' => utf8_encode($variable. $row['imagen']), 'id_sala' => $row['id_sala'], 'autor' => utf8_encode($row['autor']));
     }
-    return $u;
+    return json_encode($json);
 }
 function fungetDataObraId($id) {
     
     mensaje_log("FUNCION GET DATA OBRA ID (OBRA)");    
     $u = "";
     $query = mysql_query("SELECT * FROM obra WHERE id_obra='$id'") or die(mysql_error());
-
+	$json = array(array());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
         $u = $row['id_obra'] . "=>" . $row['nombre_obra'] . "=>" . $row['descripcion_obra'] . "=>" . $row['descriptor'] . "=>" . $row['imagen'] . "=>" . $row['id_sala'] . "=>" . $row['autor'] . "=>";
+		$json = array('id_obra' => $row['id_obra'], 'nombre_obra' =>utf8_encode($row['nombre_obra']), 'descripcion_obra'=>utf8_encode($row['descripcion_obra']), 'descriptor' => $row['descriptor'], 'imagen' => utf8_encode($variable. $row['imagen']), 'id_sala' => $row['id_sala'], 'autor' => utf8_encode($row['autor']));
     }
-    return $u;
+    return json_encode($json);
 }
 function funagregarContenidoObra($id_obra,$tipo,$nombre){ 
         global $ini_array ;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
@@ -251,7 +247,7 @@ function funagregarContenidoObra($id_obra,$tipo,$nombre){
 	 }
 	
 	//funconvertirvideo($id_obra);
-	 return $mod; 
+	 return json_encode(array('ret'=>$mod)); 
 }
 
 // nuevo 2013 convertir imagen y video---------------------------------------------------------------------------------------------
@@ -280,7 +276,7 @@ function funconvertirvideo($id_obra)
 	shell_exec("ffmpeg -i $u -s 640x480 -acodec aac -ac 2 -strict experimental -vcodec libx264 -level 30 -ab 128k $salida2 ");
 	mensaje_log("TERMINO LA FUNCION DE CONVERTIR ");
 	//echo "Done.\n";
-	return $id_obra;
+	return json_encode(array('id_obra'=>$id_obra));
 }
 
 function funconvertirimagen($id_obra)
@@ -295,7 +291,8 @@ function funconvertirimagen($id_obra)
 	$rutasinext=substr($u,0,$temp);	
 	$salida=$rutasinext.'-mini'.'.jpg';
 	shell_exec("convert $u -resize 50x50 $salida");
-	return $id_obra;
+	
+	return json_encode(array('id_obra'=>$id_obra));
 }
 
 
@@ -316,7 +313,7 @@ function funmodificarContenidoObra($id_obra, $tipo) {
             $mod = -1;
         }
     }
-    return $mod;
+    return json_encode(array('ret'=> $mod));
 }
 
 function fungetContenidoObra($nombre) {
@@ -325,7 +322,7 @@ function fungetContenidoObra($nombre) {
     $usu = $ini_array['ftpobra']['usu'];
     $pass = $ini_array['ftpobra']['pass'];
     $servidor = $ini_array['ftp']['servidor'];
-   
+    $json =array();
     $u = "";
     $query = mysql_query("SELECT * FROM obra WHERE nombre_obra = '$nombre'") or die(mysql_error());
     $row = mysql_fetch_array($query);
@@ -367,18 +364,21 @@ function fungetContenidoObra($nombre) {
 			$imagen = $row2['imagen'];
 			
                 $u = $id . "=>" .$audio . "=>" .$video . "=>" . $row2['texto'] . "=>" .$modelo. "=>" .$imagen. "=>" . $descripcion . "=>" . $autor . "=>" .$anim;
-            }
+				$json = array('id_obra' => $id, 'audio' =>utf8_encode($audio), 'video'=>utf8_encode($video), 'texto'=>utf8_encode($row2['texto']), 'modelo'=>utf8_encode($modelo),'imagen'=>utf8_encode($imagen), 'descripcion'=>$descripcion, 'autor'=>$autor, 'anim'=>utf8_encode($anim));
+			}
         } catch (Exception $e) {
             $u = -1;
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetObraSala($id) {
     
     mensaje_log("FUNCION GET OBRA SALA (OBRA)");    
     $u = "";    
+	$json = array(array());
+	$indice = 0;
     $query = mysql_query("SELECT * FROM obra WHERE id_sala='$id'") or die(mysql_error());
     $row = mysql_fetch_array($query);
     if ($row != NULL) {
@@ -387,9 +387,10 @@ function fungetObraSala($id) {
 
         while ($res = mysql_fetch_assoc($query2)) {
             $u = $u . $res['nombre_obra'] . "=>";
+			$json[$indice++] = array('nombre_obra' => utf8_encode($res['nombre_obra']));
         }
     }
-    return $u;
+    return json_encode($json);
 }
 
 function fungetAllDataObraSala($id) {
@@ -399,6 +400,7 @@ function fungetAllDataObraSala($id) {
     $pass = $ini_array['ftpobra']['pass'];
     $servidor = $ini_array['ftp']['servidor'];   
     $u = "-1";
+	$json = array();
     $query = mysql_query("SELECT * FROM obra,contenido_obra WHERE obra.id_obra=contenido_obra.id_obra and obra.id_sala='$id'") or die(mysql_error());
     while ($row = mysql_fetch_assoc($query)) {
         if ($u == "-1")
@@ -408,9 +410,10 @@ function fungetAllDataObraSala($id) {
 	else
 		$variable = $row['imagen']; 
         $u = $u . $row['id_obra'] . "=>" . $row['nombre_obra'] . "=>" . $row['autor'] . "=>" . $row['descripcion_obra'] . "=>" . $variable . "=>";
+		$json = array('id_obra' => $row['id_obra'], 'nombre_obra'=>utf8_encode($row['nombre_obra']), 'autor'=>utf8_encode( $row['autor']), 'descripcion'=> utf8_encode($row['descripcion_obra']), 'imagen'=> utf8_encode($variable));
     }
 
-    return $u;
+    return json_encode($json);
 }
 
 
