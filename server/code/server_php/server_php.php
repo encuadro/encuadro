@@ -63,20 +63,18 @@ $server->register('finJuego', array('id_visitante' => 'xsd:int', 'id_juego' => '
 //////////////////////////////////////////////////////////////////////
 
 //////usuario
-$server->register('login', array('user' => 'xsd:string', 'pass' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('login', array('user' => 'xsd:string', 'pass' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 $server->register('AltaUsuario', array('nombre' => 'xsd:string', 'apellido' => 'xsd:string', 'cedula' => 'xsd:string', 'email' => 'xsd:string', 'tipoUs' => 'xsd:int', 'nick' => 'xsd:string', 'pass' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+    'xsd:string'), $ns);
 
 $server->register('modificarUsuario', array('nombre' => 'xsd:string', 'apellido' => 'xsd:string', 'cedula' => 'xsd:string', 'email' => 'xsd:string', 'tipoUs' => 'xsd:int', 'nick' => 'xsd:string', 'pass' => 'xsd:string', 'idUsuario' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+    'xsd:string'), $ns);
 
-$server->register('borrarUsuario', array('idUsuario' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('borrarUsuario', array('idUsuario' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('passwd', array('nick' => 'xsd:string', 'pass' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+    'xsd:string'), $ns);
 
 $server->register('getUsuarios', array(), array('return' =>
     'xsd:string'), $ns);
@@ -90,28 +88,24 @@ $server->register('getUsuariosEmpleado', array(), array('return' =>
 $server->register('getDataUsuario', array('nick' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
 
-$server->register('tipoUsuario', array('nick' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('tipoUsuario', array('nick' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 $server->register('temporal', array('nick' => 'xsd:string'), array('return' => // borrameeeeeeeeeeeee
-    'xsd:int'), $ns);
+    'xsd:string'), $ns);
 
 ////////////////////////////////////////////////////////////////////////////////////// SALAS 
 
 $server->register('getAllDataSalas', array(), array('return' => 'xsd:string'), $ns);
 
 
-$server->register('AltaSala', array('nombre_sala' => 'xsd:string', 'descripcion_sala' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('AltaSala', array('nombre_sala' => 'xsd:string', 'descripcion_sala' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 $server->register('agregarContenidoSala', array('id_sala' => 'xsd:int', 'tipo' => 'xsd:string', 'nombre' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
 
-$server->register('borrarSala', array('id_sala' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('borrarSala', array('id_sala' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('modificarSala', array('id_sala' => 'xsd:int', 'nombre_sala' => 'xsd:string', 'descripcion_sala' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('modificarSala', array('id_sala' => 'xsd:int', 'nombre_sala' => 'xsd:string', 'descripcion_sala' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 $server->register('getSalas', array(), array('return' => 'xsd:string'), $ns);
 
@@ -140,25 +134,21 @@ $server->register('getContenidoSalaNombre', array('nombre' => 'xsd:int'), array(
 $server->register('setQr', array('id_sala' => 'xsd:int', 'qr' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
 
-$server->register('existeSala', array('id' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('existeSala', array('id' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 
 /* OBRAS =================================================================================================== OBRAS */
 
-$server->register('AltaObra', array('nombre_sala' => 'xsd:string', 'descripcion_sala' => 'xsd:string', 'imagen' => 'xsd:string', 'id_sala' => 'xsd:string', 'autor_obra' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('AltaObra', array('nombre_sala' => 'xsd:string', 'descripcion_sala' => 'xsd:string', 'imagen' => 'xsd:string', 'id_sala' => 'xsd:string', 'autor_obra' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('modificarObra', array('id_obra' => 'xsd:int', 'nombre_obra' => 'xsd:string', 'descripcion_obra' => 'xsd:string', 'id_sala' => 'xsd:int', 'autor_obra' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('modificarObra', array('id_obra' => 'xsd:int', 'nombre_obra' => 'xsd:string', 'descripcion_obra' => 'xsd:string', 'id_sala' => 'xsd:int', 'autor_obra' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('borrarObra', array('id_obra' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('borrarObra', array('id_obra' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('agregarContenidoObra', array('id_obra' => 'xsd:int', 'tipo' => 'xsd:string', 'nombre' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
 
-$server->register('modificarContenidoObra', array('id_obra' => 'xsd:int', 'tipo' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('modificarContenidoObra', array('id_obra' => 'xsd:int', 'tipo' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 $server->register('getContenidoObra', array('nombre' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
@@ -169,6 +159,9 @@ $server->register('getObraSala', array('id' => 'xsd:int'), array('return' =>
 $server->register('getDataObra', array('nombre_obra' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
 
+//test json
+$server->register('getDataObra2', array('nombre_obra' => 'xsd:string'), array('return' =>
+    'xsd:string'), $ns);
 //-------------------------------------------NUEVO------------------------------------------
 $server->register('resp', array('id' => 'xsd:int'), array('return' =>
     'xsd:string'), $ns);
@@ -201,13 +194,11 @@ $server->register('getObrasl', array('nombre_obra' => 'xsd:string'), array('retu
 
 /* ZONA ===================================================================================================== ZONA */
 
-$server->register('AltaZona', array('largo' => 'xsd:int', 'ancho' => 'xsd:int', 'x' => 'xsd:int', 'y' => 'xsd:int', 'nombre_obra' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('AltaZona', array('largo' => 'xsd:int', 'ancho' => 'xsd:int', 'x' => 'xsd:int', 'y' => 'xsd:int', 'nombre_obra' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('modificarZona', array('id_zona' => 'xsd:int', 'largo' => 'xsd:int', 'ancho' => 'xsd:int', 'x' => 'xsd:int', 'y' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('modificarZona', array('id_zona' => 'xsd:int', 'largo' => 'xsd:int', 'ancho' => 'xsd:int', 'x' => 'xsd:int', 'y' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('borrarZona', array('id_zona' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('borrarZona', array('id_zona' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('agregarContenidoZona', array('id_zona' => 'xsd:int', 'tipo' => 'xsd:string', 'nombre' => 'xsd:string'), array('return' =>
     'xsd:string'), $ns);
@@ -222,55 +213,49 @@ $server->register('getZonaObra', array('nombre_obra' => 'xsd:string'), array('re
 
 /* DESCRIPTORES ========================================================================================	DESCRIPTORES */
 
-$server->register('getNombreObra', array('id_sala' => 'xsd:int', 'nombre_archivo' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
-$server->register('getNombreObra2', array('nombre_archivo' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('getNombreObra', array('id_sala' => 'xsd:int', 'nombre_archivo' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
+$server->register('getNombreObra2', array('nombre_archivo' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('generarDescriptor', array('id_sala' => 'xsd:int', 'id_obra' => 'xsd:int', 'nombre_archivo' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('generarDescriptor', array('id_sala' => 'xsd:int', 'id_obra' => 'xsd:int', 'nombre_archivo' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////NUEVAS JUEGO Y CUESTIONARIO
-$server->register('PrimeraDeJuego', array('id_juego' => 'xsd:int', 'nom_obra' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('PrimeraDeJuego', array('id_juego' => 'xsd:int', 'nom_obra' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
 $server->register('getJuegos', array(), array('return' =>'xsd:string'), $ns);
 
 
-$server->register('AgregarCuestionario', array('nombre' => 'xsd:string', 'descripcion' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('AgregarCuestionario', array('nombre' => 'xsd:string', 'descripcion' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('ActivarJuego', array('id_juego' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('ActivarJuego', array('id_juego' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 
-$server->register('RecorridoJuego', array('id_juego' => 'xsd:int', 'recorrido' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('RecorridoJuego', array('id_juego' => 'xsd:int', 'recorrido' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('SetJuegoBorrado', array('id_juego' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('SetJuegoBorrado', array('id_juego' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetObrasDeJuego', array('id_juego' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('SetJuego', array('id_juego' => 'xsd:int', 'nombre' => 'xsd:string','recorrido' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('SetJuego', array('id_juego' => 'xsd:int', 'nombre' => 'xsd:string','recorrido' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetPistas', array('id_juego' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetNombreJuegoActivo', array(), array('return' =>
     'xsd:string'), $ns);
 
-$server->register('AgregarCuestionarioo', array('nombre' => 'xsd:string', 'descripcion' => 'xsd:string' , 'fecha_creacion' => 'xsd:string', 'id_creador' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('AgregarCuestionarioo', array('nombre' => 'xsd:string', 'descripcion' => 'xsd:string' , 'fecha_creacion' => 'xsd:string', 'id_creador' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 
-$server->register('AgregarValorOpcion', array('descripcion' => 'xsd:string'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('AgregarValorOpcion', array('descripcion' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('AgregarPregunta', array('descripcion' => 'xsd:string', 'tipo' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('AgregarPregunta', array('descripcion' => 'xsd:string', 'tipo' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('AsociarPreguntaConOpcion', array('id_preg' => 'xsd:int', 'id_op' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('AsociarPreguntaConOpcion', array('id_preg' => 'xsd:int', 'id_op' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('AsociarPreguntaConCuestionario', array('id_preg' => 'xsd:int', 'id_cuest' => 'xsd:int', 'indice' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('AsociarPreguntaConCuestionario', array('id_preg' => 'xsd:int', 'id_cuest' => 'xsd:int', 'indice' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetCuestionarios', array(), array('return' => 'xsd:string'), $ns);
 
@@ -285,58 +270,52 @@ $server->register('GetTextPreguntas', array('id_cuest' => 'xsd:int'), array('ret
 
 $server->register('GetRespPreguntas', array('id_preg' => 'xsd:int'), array('return' => 'xsd:string'),$ns);
 
-$server->register('SetOpcion', array('descripcion' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('SetOpcion', array('descripcion' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('AsociarOpcionesConValores', array('id_opc' => 'xsd:int', 'valor' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('AsociarOpcionesConValores', array('id_opc' => 'xsd:int', 'valor' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('AgregarPregunta2', array('descripcion' => 'xsd:string', 'tipo' => 'xsd:int', 'id_opciones' => 'xsd:int'), array('return' => 'xsd:int'), $ns);
+$server->register('AgregarPregunta2', array('descripcion' => 'xsd:string', 'tipo' => 'xsd:int', 'id_opciones' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetOpciones', array(), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetValoresDeOpcion', array('id_opcion' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetValoresDeOpciones', array(), array('return' => 'xsd:string'), $ns);
-$server->register('SetValorOpcc', array('id_val' => 'xsd:string', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:int'), $ns);
+$server->register('SetValorOpcc', array('id_val' => 'xsd:string', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:string'), $ns);
 
 
-$server->register('IsValorAsociadoAOpcion', array('id_valor' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('IsValorAsociadoAOpcion', array('id_valor' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('BorrarValorOpc', array('idValor' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
-
-
-$server->register('IsGrupoOpcAsociadoAPreguntas', array('id_grupo' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('BorrarValorOpc', array('idValor' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 
-$server->register('SetOpcionn', array('id_opc' => 'xsd:string', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:int'), $ns);
+$server->register('IsGrupoOpcAsociadoAPreguntas', array('id_grupo' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('BorrarOpcion', array('idOpcion' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
 
-$server->register('IsPreguntaAsociadaACuestionario', array('id_preg' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('SetOpcionn', array('id_opc' => 'xsd:string', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:string'), $ns);
 
-$server->register('BorrarPregunta', array('idpreg' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('BorrarOpcion', array('idOpcion' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
+
+$server->register('IsPreguntaAsociadaACuestionario', array('id_preg' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
+
+$server->register('BorrarPregunta', array('idpreg' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetDatosPregunta', array('id_cuest' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('SetCuestionariio', array('id_cuest' => 'xsd:int', 'nombre' => 'xsd:string', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:int'), $ns);
-$server->register('BorrarRelacionPreguntasCuestionario', array('idCuest' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('SetCuestionariio', array('id_cuest' => 'xsd:int', 'nombre' => 'xsd:string', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:string'), $ns);
+$server->register('BorrarRelacionPreguntasCuestionario', array('idCuest' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('IsCuestionarioEnUso', array('id_cuest' => 'xsd:string'), array('return' => 'xsd:int'), $ns);
+$server->register('IsCuestionarioEnUso', array('id_cuest' => 'xsd:string'), array('return' => 'xsd:string'), $ns);
 
-$server->register('BorrarCuestionario', array('idCuest' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('BorrarCuestionario', array('idCuest' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetDatosOpcion', array('id_opcion' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('BorrarRelacionOpcionesValor', array('idOpc' => 'xsd:int'), array('return' =>
-    'xsd:int'), $ns);
+$server->register('BorrarRelacionOpcionesValor', array('idOpc' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
 $server->register('GetDataPregunta', array('id_preg' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
 
-$server->register('SetPregunta', array('id_preg' => 'xsd:int', 'id_op' => 'xsd:int', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:int'), $ns);
+$server->register('SetPregunta', array('id_preg' => 'xsd:int', 'id_op' => 'xsd:int', 'descripcion' => 'xsd:string' ), array('return' => 'xsd:string'), $ns);
 $server->register('GetTextAllPreguntas', array(), array('return' => 'xsd:string'),$ns);
 
 $server->register('GetOpcPregunta', array('id_preg' => 'xsd:int'), array('return' => 'xsd:string'), $ns);
@@ -457,7 +436,7 @@ function PrimeraDeJuego($id_juego, $nom_obra) {
 conectar();
     $u = funPrimeraDeJuego($id_juego, $nom_obra);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function getJuegos() {
@@ -482,7 +461,7 @@ function AgregarCuestionario($nombre, $descripcion) {
 conectar();
     $u = funAgregarCuestionario($nombre, $descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 
@@ -490,7 +469,7 @@ function ActivarJuego($id_juego) {
 conectar();
     $u = funActivarJuego($id_juego);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 
@@ -498,14 +477,14 @@ function RecorridoJuego($id_juego, $recorrido){
 conectar();
     $u = funRecorridoJuego($id_juego, $recorrido);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function SetJuegoBorrado($id_juego){
 conectar();
     $u = funSetJuegoBorrado($id_juego);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function GetObrasDeJuego($id_juego){
@@ -520,7 +499,7 @@ function SetJuego($id_juego, $nombre,$recorrido){
 conectar();
     $u = funSetJuego($id_juego, $nombre,$recorrido);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function GetPistas($id_juego){
@@ -540,21 +519,21 @@ function AgregarCuestionarioo($nombre, $descripcion, $fecha_creacion, $id_creado
 conectar();
     $u = funAgregarCuestionarioo($nombre, $descripcion, $fecha_creacion, $id_creador);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function AgregarValorOpcion($descripcion) {
 conectar();
     $u = funAgregarValorOpcion($descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function AgregarPregunta($descripcion, $tipo) {
 conectar();
     $u = funAgregarPregunta($descripcion, $tipo);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 
@@ -562,14 +541,14 @@ function AsociarPreguntaConOpcion($id_preg, $id_op) {
 conectar();
     $u = funAsociarPreguntaConOpcion($id_preg, $id_op);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function AsociarPreguntaConCuestionario($id_preg, $id_cuest, $indice){
 conectar();
     $u = funAsociarPreguntaConCuestionario($id_preg, $id_cuest, $indice);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function GetCuestionarios(){
@@ -618,21 +597,21 @@ function SetOpcion($descripcion) {
 conectar();
     $u = funSetOpcion($descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function AsociarOpcionesConValores($id_opc, $id_valor){
 conectar();
     $u = funAsociarOpcionesConValores($id_opc, $id_valor);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function AgregarPregunta2($descripcion, $tipo, $id_opciones) {
 conectar();
     $u = funAgregarPregunta2($descripcion, $tipo, $id_opciones);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function GetOpciones(){
@@ -660,27 +639,27 @@ function SetValorOpcc($id_val, $descripcion){
 conectar();
     $u = funSetValorOpcc($id_val, $descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function IsValorAsociadoAOpcion($id_valor){
 conectar();
     $u = funIsValorAsociadoAOpcion($id_valor);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function BorrarValorOpc($idValor) {
     conectar();
     $bor = funBorrarValorOpc($idValor);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 function SetOpcionn($id_opc, $descripcion){
 conectar();
     $u = funSetOpcionn($id_opc, $descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 
@@ -688,26 +667,26 @@ function IsGrupoOpcAsociadoAPreguntas($id_grupo){
 conectar();
     $u = funIsGrupoOpcAsociadoAPreguntas($id_grupo);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function BorrarOpcion($idOpcion) {
     conectar();
     $bor = funBorrarOpcion($idOpcion);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 function IsPreguntaAsociadaACuestionario($id_preg){
 conectar();
     $u = funIsPreguntaAsociadaACuestionario($id_preg);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function BorrarPregunta($idPreg) {
     conectar();
     $bor = funBorrarPregunta($idPreg);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 
@@ -722,26 +701,26 @@ function SetCuestionariio($id_cuest, $nombre, $descripcion){
 conectar();
     $u = funSetCuestionariio($id_cuest, $nombre, $descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function BorrarRelacionPreguntasCuestionario($idCuest) {
     conectar();
     $bor = funBorrarRelacionPreguntasCuestionario($idCuest);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 function IsCuestionarioEnUso($id_cuest){
 conectar();
     $u = funIsCuestionarioEnUso($id_cuest);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function BorrarCuestionario($idCuest) {
     conectar();
     $bor = funBorrarCuestionario($idCuest);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 function GetDatosOpcion($id_opcion){
@@ -756,7 +735,7 @@ conectar();
 function BorrarRelacionOpcionesValor($idOpc) {
     conectar();
     $bor = funBorrarRelacionOpcionesValor($idOpc);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 
@@ -771,7 +750,7 @@ function SetPregunta($id_preg, $id_op, $descripcion){
 conectar();
     $u = funSetPregunta($id_preg, $id_op, $descripcion);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 function GetTextAllPreguntas(){
@@ -805,13 +784,13 @@ function getNombreObra($id_sala, $nombre_archivo) {
     mensaje_log("FUNCION GET NOMBRE OBRA DE SERVER PHP");
     $u = fungetNombreObra($id_sala, $nombre_archivo);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 //--------------------------- nuevo--------------
 function getNombreObra2($nombre_archivo) {
     $u = fungetNombreObra2($nombre_archivo);
 
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 //-------------------------------NUEVO-------------------------------------------------
@@ -835,7 +814,7 @@ function Altavisita($nacionalidad, $sexo, $tipo_visita, $rango_edad) {
 
 function generarDescriptor($id_sala, $id_obra, $nombre_archivo) {
    	$u =  fungenerarDescriptor ($id_sala,$id_obra,$nombre_archivo);
-        return new soapval('return', 'xsd:int', $u);
+        return new soapval('return', 'xsd:string', $u);
    
 }
 ////////////////funciones comunes
@@ -860,12 +839,12 @@ function conectar() {
 function tipoUsuario($nick) {
     conectar();
     $u = funtipoUsuario($nick);
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 function temporal($nick) {
     conectar();
     $u = funtipoUsuario($nick);
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 /**
@@ -876,7 +855,7 @@ function temporal($nick) {
 function login($user, $pass) {
     conectar();
     $log = funlogin($user, $pass);
-    return new soapval('return', 'xsd:int', $log);
+    return new soapval('return', 'xsd:string', $log);
 }
 
 /**
@@ -888,7 +867,7 @@ function login($user, $pass) {
 function AltaUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass) {
     conectar();
     $reg = funAltaUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass);
-    return new soapval('return', 'xsd:int', $reg);
+    return new soapval('return', 'xsd:string', $reg);
 }
 
 /**
@@ -900,7 +879,7 @@ function AltaUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass)
 function modificarUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass, $idUsuario) {
     conectar();
     $mod = funmodificarUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $pass, $idUsuario);
-    return new soapval('return', 'xsd:int', $mod);
+    return new soapval('return', 'xsd:string', $mod);
 }
 
 /**
@@ -911,7 +890,7 @@ function modificarUsuario($nombre, $apellido, $cedula, $email, $tipoUs, $nick, $
 function borrarUsuario($idUsuario) {
     conectar();
     $bor = funborrarUsuario($idUsuario);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 /**
@@ -958,7 +937,7 @@ function getDataUsuario($nick) {
 function passwd($nick, $pass) {
     conectar();
     $u = funpasswd($nick, $pass);
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////// SALAS
@@ -980,7 +959,7 @@ function getAllDataSalas() {
 function AltaSala($nombre_sala, $descripcion_sala) {
     conectar();
     $reg = funAltaSala($nombre_sala, $descripcion_sala);
-    return new soapval('return', 'xsd:int', $reg);
+    return new soapval('return', 'xsd:string', $reg);
 }
 
 /**
@@ -992,7 +971,7 @@ function AltaSala($nombre_sala, $descripcion_sala) {
 function borrarSala($id_sala) {
     conectar();
     $bor = funborrarSala($id_sala);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 /**
@@ -1003,7 +982,7 @@ function borrarSala($id_sala) {
 function modificarSala($id_sala, $nombre_sala, $descripcion_sala) {
     conectar();
     $mod = funmodificarSala($id_sala, $nombre_sala, $descripcion_sala);
-    return new soapval('return', 'xsd:int', $mod);
+    return new soapval('return', 'xsd:string', $mod);
 }
 
 /**
@@ -1105,7 +1084,7 @@ function agregarContenidoSala($id_sala, $tipo, $nombre) {
 function agregarContenidoSala2($id_sala, $tipo, $nombre) {
     conectar();
     $mod = funagregarContenidoSala2($id_sala, $tipo, $nombre);
-    return new soapval('return', 'xsd:int', $mod);
+    return new soapval('return', 'xsd:string', $mod);
 }
 
 /**
@@ -1132,7 +1111,7 @@ function getContenidoSalaNombre($nombre) {
 function existeSala($id) {
     conectar();
     $u = funexisteSala($id);
-    return new soapval('return', 'xsd:int', $u);
+    return new soapval('return', 'xsd:string', $u);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////// OBRAS
@@ -1147,7 +1126,7 @@ function existeSala($id) {
 function AltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_obra) {
     conectar();
     $reg = funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_obra);
-    return new soapval('return', 'xsd:int', $reg);
+    return new soapval('return', 'xsd:string', $reg);
 }
 
 /**
@@ -1158,7 +1137,7 @@ function AltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_obr
 function borrarObra($id_obra) {
     conectar();
     $bor = funborrarObra($id_obra);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 /**
@@ -1169,7 +1148,7 @@ function borrarObra($id_obra) {
 function modificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $autor_obra) {
     conectar();
     $mod = funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $autor_obra);
-    return new soapval('return', 'xsd:int', $mod);
+    return new soapval('return', 'xsd:string', $mod);
 }
 
 /**
@@ -1194,7 +1173,12 @@ function getDataObra($nombre_obra) {
     $u = fungetDataObra($nombre_obra);
     return new soapval('return', 'xsd:string', $u);
 }
-
+//funcion prueba json
+function getDataObra2($nombre_obra) {
+    conectar();
+    $u = fungetDataObra2($nombre_obra);
+    return new soapval('return', 'xsd:string', $u);
+}
 //---------------------------------NUEVO-----------------------------
 
 function getObrasl($nombre) {
@@ -1220,7 +1204,7 @@ function agregarContenidoObra($id_obra, $tipo, $nombre) {
 function modificarContenidoObra($id_obra, $tipo) {
     conectar();
     $mod = funmodificarContenidoObra($id_obra, $tipo);
-    return new soapval('return', 'xsd:int', $mod);
+    return new soapval('return', 'xsd:string', $mod);
 }
 
 /**
@@ -1257,19 +1241,19 @@ function getDatosVisita() {
 function AltaZona($largo, $ancho, $x, $y, $nombre_obra) {
     conectar();
     $reg = funAltaZona($largo, $ancho, $x, $y, $nombre_obra);
-    return new soapval('return', 'xsd:int', $reg);
+    return new soapval('return', 'xsd:string', $reg);
 }
 
 function borrarZona($id_zona) {
     conectar();
     $bor = funborrarZona($id_zona);
-    return new soapval('return', 'xsd:int', $bor);
+    return new soapval('return', 'xsd:string', $bor);
 }
 
 function modificarZona($id_zona, $largo, $ancho, $x, $y) {
     conectar();
     $mod = funmodificarZona($id_zona, $largo, $ancho, $x, $y);
-    return new soapval('return', 'xsd:int', $mod);
+    return new soapval('return', 'xsd:string', $mod);
 }
 
 function agregarContenidoZona($id_zona, $tipo, $nombre) {

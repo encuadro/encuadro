@@ -96,7 +96,7 @@
                              "<%@>%@</%@>"
                              "</%@>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",IPSERVER,nomFuncion,nomFuncion,nombreParam2,nombreDato2,nombreParam2,nombreParametro,nombreDato,nombreParametro,nomFuncion];
+                             "</soap:Envelope>\n",nomFuncion,IPSERVER,nomFuncion,nombreParam2,nombreDato2,nombreParam2,nombreParametro,nombreDato,nombreParametro,nomFuncion];
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -180,6 +180,10 @@
 
 -(NSMutableString *)getSoap{
     return soapResults;
+}
+-(void) setParser{
+    parser = [[Parser alloc] init];
+    [parser parsing:soapResults];
 }
 
 @end

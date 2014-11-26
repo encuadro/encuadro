@@ -38,7 +38,7 @@ function funAltaZona($largo, $ancho, $x, $y, $nombre_obra) {
             $reg = -1;
         }
     }
-    return json_encode(array('id_zona'=>$reg);
+    return tojson($reg);
 }
 
 function funborrarZona($id_zona) {
@@ -60,7 +60,7 @@ function funborrarZona($id_zona) {
             $bor = -1;
         }
     }
-    return json_encode(array('id_zona'=>$bor);
+    return tojson($bor);
 }
 
 function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
@@ -78,7 +78,7 @@ function funmodificarZona($id_zona, $largo, $ancho, $x, $y) {
             $mod = -1;
         }
     }
-    return json_encode(array('id_zona'=>$mod);
+    return tojson($mod);
 }
 
 function funagregarContenidoZona($id_zona, $tipo, $nombre) {
@@ -104,7 +104,7 @@ function funagregarContenidoZona($id_zona, $tipo, $nombre) {
             $mod = -1;
         }
     }
-    return json_encode(array('contenido_zona'=>utf8_encode($mod));
+    return tojson(utf8_encode($mod));
 }
 
 function fungetContenidoZona($id_zona) {
@@ -154,7 +154,7 @@ function fungetContenidoZona($id_zona) {
             $u = -1;
         }
     }
-    return json_encode($json);
+    return json_encode($json,1);
 }
 
 function fungetContenidoZonaNombre($nombre) {
@@ -174,7 +174,7 @@ function fungetContenidoZonaNombre($nombre) {
         } catch (Exception $e) {
             $u = -1;
         }
-    return json_encode($json);
+    return json_encode($json,1);
 }
 
 function fungetZonaObra($nombre_obra) {
@@ -192,7 +192,7 @@ function fungetZonaObra($nombre_obra) {
 			$json[$indice++]=array('id_zona'=>$res['id_zona']);
         }
     }
-    return json_encode($json);
+    return json_encode($json,2);
 }
 
 //---------------------------------------------------NUEVO-------------------------------------------------------------
@@ -208,7 +208,7 @@ function fungetZonas() {
 			$json[$indice++]=array('nombre_zona'=>utf8_encode($res['nombre_zona']));
         }
 
-    return json_encode($json);
+    return json_encode($json,2);
 }
 //---------------------------------------------------NUEVO---------------------------------------------------------------
 ?>

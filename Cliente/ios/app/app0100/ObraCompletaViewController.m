@@ -66,7 +66,7 @@
 @synthesize pedidoActual;
 
 @synthesize juego;
-@synthesize parserFIX;
+@synthesize parsed;
 @synthesize nombreObra;
 
 BOOL *elementFound;
@@ -118,7 +118,7 @@ BOOL *elementFound;
 
         NSLog(@"INICIALIZANDO JUEGO");
     }
-    parserFIX = [[Parser alloc] init];
+    parsed = [[Parser alloc] init];
     //TxtComparar.text = AuxIdPistaSiguiente;
     btnPista.hidden = true;
     btnObtPista.hidden = true;
@@ -476,6 +476,8 @@ BOOL *elementFound;
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", [NSString stringWithFormat:@"%d",juego.idObraActual]];
     NSLog(soapMessage);*/
+ 
+    
     NSMutableString *u = [NSMutableString stringWithString:kPostURL];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -937,11 +939,18 @@ qualifiedName:(NSString *)qName
         NSLog(@"end elementName: %@",elementName);
     if ([elementName isEqualToString:@"return"])
     {
+        
+        /*
+        NSData *jsonData = [soapResults dataUsingEncoding:NSUTF8StringEncoding];
+        NSError *e = nil;
+        NSMutableDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&e];
+        NSLog(@"%@", json);*/
+        
         NSLog(@"pedidoActual: %@",pedidoActual);
         //---displays the country---
         NSLog(@"soapResults: %@",soapResults);
-        parserFIX.soapResult = soapResults;
-        [parserFIX parsing:pedidoActual];
+        parsed.soapResult = soapResults;
+        [parsed parsing:pedidoActual];
         /*NSString *AyudaJuego; // ARRANCAR
         
         AyudaJuego = soapResults; // ARRANCAR
@@ -950,16 +959,16 @@ qualifiedName:(NSString *)qName
         */
         //<NUEVO>
         if([pedidoActual isEqualToString:@"ns1:getDataObraResponse"]){
-            [juego setIdObraActual:[[parserFIX getParameter:(@"idObra")]intValue]];
+            [juego setIdObraActual:[[parsed getParameter:(@"id_obra")]intValue]];
         }
         if([pedidoActual isEqualToString:@"ns1:BusquedaPistaResponse"]){
             NSLog(@"CASO 2");
             NSLog(@"Estado:%d",2);
             //txtObtenerPista.text = [auxpista substringFromIndex:5]; //EN CASO OBT PISTA OBTIENE PISTA
             [juego setEstado:1];
-            [juego setPistaActual:[parserFIX getParameter:(@"pista")]];//ESTADOJUEGO
+            [juego setPistaActual:[parsed getParameter:(@"pista"):2]];//ESTADOJUEGO
             //idsiguiente = [auxidpista substringToIndex:3];
-            //[juego setIdobraSig:[[parserFIX getParameter:(@"idObraSiguiente")] intValue]];
+            //[juego setIdobraSig:[[parsed getParameter:(@"idObraSiguiente")] intValue]];
             //txtObraSiguiente.text = idsiguiente;
             
             if ([pis3 isEqual: @"1"])   //si hay pista previa o no
@@ -968,7 +977,7 @@ qualifiedName:(NSString *)qName
                 //IdPistaSiguiente = idsiguiente; //ID OBRA SIGUIENTE
                 if(juego.idObraActual==juego.idobraSig)
                     juego.contar = juego.contar+1;
-                [juego setIdobraSig:[[parserFIX getParameter:(@"idObraSiguiente")] intValue]];//[auxidpista substringToIndex:3]];
+                [juego setIdobraSig:[[parsed getParameter:(@"id_proxima"):2] intValue]];//[auxidpista substringToIndex:3]];
                 //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
                 UIAlertView *Mensaje = [[UIAlertView alloc]
                                         initWithTitle:@"Pista!!!!!!"
@@ -988,7 +997,7 @@ qualifiedName:(NSString *)qName
             }
         }
         if([pedidoActual isEqualToString:@"ns1:ObraPerteneceAJuegoResponse"]){//else    //entro aca cuando recibo el estado del juego
-            if ([[parserFIX getParameter:(@"idJuego")] isEqualToString:@"0"] && juego.idobraSig!=juego.idObraActual) //AyudaJuego isEqual: @"0"])
+            if ([[parsed getParameter:(@"ret"):1] isEqualToString:@"0"] && juego.idobraSig!=juego.idObraActual ) //AyudaJuego isEqual: @"0"])
             {
                 txtJuego.text = auxidpista;
                 UIAlertView *alertNoJuego = [[UIAlertView alloc]
@@ -1002,10 +1011,10 @@ qualifiedName:(NSString *)qName
             } else {
                 NSLog(@"Estado:%d",7);
                 btnObtPista.hidden = false;
-                if(![[parserFIX getParameter:(@"idJuego")] isEqualToString:@"0"]){
+                if(![[parsed getParameter:(@"ret"):1] isEqualToString:@"0"]){
                     if(juego.idJuego==0){
-                        [juego setIdJuego:[[parserFIX getParameter:(@"idJuego")] intValue]];
-                        [juego setIdObraPrimera:[[parserFIX getParameter:(@"idObra")]intValue]];
+                        [juego setIdJuego:[[parsed getParameter:(@"ret"):1] intValue]];
+                        [juego setIdObraPrimera:[[parsed getParameter:(@"id_obra")]intValue]];
                     }
                 }
                 pis3=@"1";

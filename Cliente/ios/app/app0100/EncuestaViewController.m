@@ -31,6 +31,16 @@ BOOL *elementFound;
 
 -(IBAction)buttonClick:(id)sender
 {
+    /*test json
+    NSLog(@"entro...");
+    NSString *jsonString = @"[{\"id\": \"1\", \"name\":\"Aaa\"},{\"id\": \"2\", \"name\":\"Bbb\"}]";
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *e = nil;
+    NSMutableArray *json = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&e];
+    NSMutableArray * axux = [[NSMutableArray alloc]init];
+    [axux addObjectsFromArray:json];
+    NSLog(@"%@", json);
+    test json*/
 	recordResults = FALSE;
     
 	NSString *soapMessage = [NSString stringWithFormat:

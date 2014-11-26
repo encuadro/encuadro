@@ -14,46 +14,49 @@
 -(id) init{
     self = [super init];
     if(self){
-        dictionary = [[NSMutableDictionary alloc] init];
+        dictionary = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
 - (id) initWhitString:(NSString *)result{
     self = [super init];
-    if(self)
+    if(self){
+        dictionary = [[NSMutableArray alloc] init];
         self.soapResult = result;
+        [self parsing:soapResult];
+    }
     return self;
 }
 
 - (NSString *)getParameter:(NSString *)parameter{
-    return dictionary[parameter];
+        return dictionary[0][parameter];
+}
+- (NSString *) getParameter:(NSString *)parameter :(int)row{
+    return dictionary[row][parameter];
+}
+- (void) parsing:(NSString *)request{
+    if(soapResult==nil)
+        soapResult = request;
+    NSString * comp = [soapResult substringWithRange:NSMakeRange(0,1)];
+    if([comp isEqualToString:@"["] || [comp isEqualToString:@"{"])
+        [self parsingJson];
+       
 }
 
-- (void) parsing:(NSString *) request{
-    NSArray * array = [self.soapResult componentsSeparatedByString:@"=>"];
-    if([request isEqualToString:@"ns1:getDataObraResponse"]){
-        [dictionary setObject:array[0] forKey:@"idObra"];
-        [dictionary setObject:array[1] forKey:@"nombreObra"];
-        [dictionary setObject:array[2] forKey:@"descripcion"];
-        [dictionary setObject:array[3] forKey:@"descriptor"];
-        [dictionary setObject:array[4] forKey:@"imagen"];
-        [dictionary setObject:array[5] forKey:@"idSala"];
-        [dictionary setObject:array[6] forKey:@"nombreSala"];
-    }
-    if([request isEqualToString:@"ns1:ObraPerteneceAJuegoResponse"]){
-        [dictionary setObject:array[0] forKey:@"idJuego"];
-    }
-    if([request isEqualToString:@"ns1:BusquedaPistaResponse"]){
-        [dictionary setObject:array[0] forKey:@"idObraSiguiente"];
-        [dictionary setObject:array[1] forKey:@"pista"];
-    }
+- (void) parsingJson{
+    NSData *jsonData = [soapResult dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *e = nil;
+    NSMutableArray *dic = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&e];
+    [dictionary addObjectsFromArray:(dic)];
+}
 
-
+- (int) length{
+    return [dictionary count];
 }
 
 @end
-                        
+
                         
                         
                         

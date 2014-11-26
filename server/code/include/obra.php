@@ -78,7 +78,7 @@ function funAltaObra($nombre_obra, $descripcion_obra, $imagen, $id_sala, $autor_
             $reg = -1;
         }
     }
-    return json_encode(array('ret'=>$reg));
+    return tojson($reg);
 }
 
 function funborrarObra($id_obra) {
@@ -113,7 +113,7 @@ function funborrarObra($id_obra) {
             rrmdir($dir);
         }
     }
-    return json_encode(array('ret'=>$bor));
+    return tojson($bor);
 }
 
 function fungetObrasl($nombre) {
@@ -130,7 +130,7 @@ function fungetObrasl($nombre) {
 				$json[$indice++] = array('nombre_obra' => utf8_encode($res['nombre_obra']));
 			}
 		}
-		return json_encode($json);
+		return tojson($json,2);
 
 }
 
@@ -148,7 +148,7 @@ function funmodificarObra($id_obra, $nombre_obra, $descripcion_obra, $id_sala, $
             $mod = -1;
         }
     }
-    return json_encode(array('ret' => $mod);
+    return tojson($mod);
 }
 
 function fungetObras() {
@@ -166,7 +166,7 @@ function fungetObras() {
 			$json[$indice++] = array('nombre_obra' => utf8_encode($res['nombre_obra']));
         }
     }
-    return json_encode($json);
+    return tojson($json,2);
 }
 
 
@@ -187,7 +187,7 @@ function fungetDataObra($nombre_obra) {
         $u = $row['id_obra'] . "=>" . $row['nombre_obra'] . "=>" . $row['descripcion_obra'] . "=>" . $row['descriptor'] . "=>" .  $variable. $row['imagen'] . "=>" . $row['id_sala'] . "=>" . $row['autor'] . "=>";
 		$json = array('id_obra' => $row['id_obra'], 'nombre_obra' =>utf8_encode($row['nombre_obra']), 'descripcion_obra'=>utf8_encode($row['descripcion_obra']), 'descriptor' => $row['descriptor'], 'imagen' => utf8_encode($variable. $row['imagen']), 'id_sala' => $row['id_sala'], 'autor' => utf8_encode($row['autor']));
     }
-    return json_encode($json);
+    return tojson($json,1);
 }
 function fungetDataObraId($id) {
     
@@ -200,7 +200,7 @@ function fungetDataObraId($id) {
         $u = $row['id_obra'] . "=>" . $row['nombre_obra'] . "=>" . $row['descripcion_obra'] . "=>" . $row['descriptor'] . "=>" . $row['imagen'] . "=>" . $row['id_sala'] . "=>" . $row['autor'] . "=>";
 		$json = array('id_obra' => $row['id_obra'], 'nombre_obra' =>utf8_encode($row['nombre_obra']), 'descripcion_obra'=>utf8_encode($row['descripcion_obra']), 'descriptor' => $row['descriptor'], 'imagen' => utf8_encode($variable. $row['imagen']), 'id_sala' => $row['id_sala'], 'autor' => utf8_encode($row['autor']));
     }
-    return json_encode($json);
+    return tojson($json,1);
 }
 function funagregarContenidoObra($id_obra,$tipo,$nombre){ 
         global $ini_array ;//$ini_array = parse_ini_file("/var/include/confi.ini", true);
@@ -247,7 +247,7 @@ function funagregarContenidoObra($id_obra,$tipo,$nombre){
 	 }
 	
 	//funconvertirvideo($id_obra);
-	 return json_encode(array('ret'=>$mod)); 
+	 return tojson($mod); 
 }
 
 // nuevo 2013 convertir imagen y video---------------------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ function funconvertirvideo($id_obra)
 	shell_exec("ffmpeg -i $u -s 640x480 -acodec aac -ac 2 -strict experimental -vcodec libx264 -level 30 -ab 128k $salida2 ");
 	mensaje_log("TERMINO LA FUNCION DE CONVERTIR ");
 	//echo "Done.\n";
-	return json_encode(array('id_obra'=>$id_obra));
+	return tojson($id_obra);
 }
 
 function funconvertirimagen($id_obra)
@@ -292,7 +292,7 @@ function funconvertirimagen($id_obra)
 	$salida=$rutasinext.'-mini'.'.jpg';
 	shell_exec("convert $u -resize 50x50 $salida");
 	
-	return json_encode(array('id_obra'=>$id_obra));
+	return tojson($id_obra);
 }
 
 
@@ -313,7 +313,7 @@ function funmodificarContenidoObra($id_obra, $tipo) {
             $mod = -1;
         }
     }
-    return json_encode(array('ret'=> $mod));
+    return tojson($mod);
 }
 
 function fungetContenidoObra($nombre) {
@@ -364,13 +364,14 @@ function fungetContenidoObra($nombre) {
 			$imagen = $row2['imagen'];
 			
                 $u = $id . "=>" .$audio . "=>" .$video . "=>" . $row2['texto'] . "=>" .$modelo. "=>" .$imagen. "=>" . $descripcion . "=>" . $autor . "=>" .$anim;
-				$json = array('id_obra' => $id, 'audio' =>utf8_encode($audio), 'video'=>utf8_encode($video), 'texto'=>utf8_encode($row2['texto']), 'modelo'=>utf8_encode($modelo),'imagen'=>utf8_encode($imagen), 'descripcion'=>$descripcion, 'autor'=>$autor, 'anim'=>utf8_encode($anim));
+				$json = array('id_obra' => $id, 'audio' =>utf8_encode($audio), 'video'=>utf8_encode($video), 'texto'=>utf8_encode($row2['texto']), 'modelo'=>utf8_encode($modelo),'imagen'=>utf8_encode($imagen), 'descripcion'=>utf8_encode($descripcion), 'autor'=>utf8_encode($autor), 'anim'=>utf8_encode($anim));
 			}
         } catch (Exception $e) {
             $u = -1;
         }
     }
-    return json_encode($json);
+    mensaje_log("return = ".tojson($json,1));	
+    return tojson($json,1);
 }
 
 function fungetObraSala($id) {
@@ -390,7 +391,7 @@ function fungetObraSala($id) {
 			$json[$indice++] = array('nombre_obra' => utf8_encode($res['nombre_obra']));
         }
     }
-    return json_encode($json);
+    return tojson($json,2);
 }
 
 function fungetAllDataObraSala($id) {
@@ -400,7 +401,8 @@ function fungetAllDataObraSala($id) {
     $pass = $ini_array['ftpobra']['pass'];
     $servidor = $ini_array['ftp']['servidor'];   
     $u = "-1";
-	$json = array();
+	$json = array(array());
+    $indice = 0;
     $query = mysql_query("SELECT * FROM obra,contenido_obra WHERE obra.id_obra=contenido_obra.id_obra and obra.id_sala='$id'") or die(mysql_error());
     while ($row = mysql_fetch_assoc($query)) {
         if ($u == "-1")
@@ -410,10 +412,11 @@ function fungetAllDataObraSala($id) {
 	else
 		$variable = $row['imagen']; 
         $u = $u . $row['id_obra'] . "=>" . $row['nombre_obra'] . "=>" . $row['autor'] . "=>" . $row['descripcion_obra'] . "=>" . $variable . "=>";
-		$json = array('id_obra' => $row['id_obra'], 'nombre_obra'=>utf8_encode($row['nombre_obra']), 'autor'=>utf8_encode( $row['autor']), 'descripcion'=> utf8_encode($row['descripcion_obra']), 'imagen'=> utf8_encode($variable));
-    }
+		$json[$indice++] = array('id_obra' => $row['id_obra'], 'nombre_obra'=>utf8_encode($row['nombre_obra']), 'autor'=>utf8_encode( $row['autor']), 'descripcion'=> utf8_encode($row['descripcion_obra']), 'imagen'=> utf8_encode($variable));
 
-    return json_encode($json);
+    }
+    mensaje_log(tojson($json,2));	
+    return  tojson($json,2);
 }
 
 
