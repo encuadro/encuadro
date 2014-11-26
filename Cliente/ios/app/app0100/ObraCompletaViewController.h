@@ -125,7 +125,7 @@ NSMutableArray *descripcionObra;
 @property (retain, nonatomic) NSString *Auxiliar;
 
 @property(retain,nonatomic) EstadoJuego *juego;
-@property(retain,nonatomic) Parser * parserFIX;
+@property(retain,nonatomic) Parser * parsed;
 @property (retain,nonatomic) NSString * nombreObra;
 
 @property(nonatomic, retain) NSString *pedidoActual;

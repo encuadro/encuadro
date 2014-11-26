@@ -1,4 +1,4 @@
-//
+    //
 //  obtSalas.m
 //  app0100
 //
@@ -17,6 +17,7 @@
 
 -(obtSalas*)init{
     finSal = NO;
+    Parser * parser;
     self.datos2 = [[NSMutableArray alloc] init];
     self.autorNombre = [[NSMutableArray alloc]init];
     self.autorDescripcion = [[NSMutableArray alloc]init];
@@ -34,7 +35,28 @@
             [self.autorImagen addObject:@"-1"];
         }
         else{
-            NSArray *datos = [n componentsSeparatedByString:@"=>"];
+            parser = [[Parser alloc]initWhitString:n];
+            NSLog(@"parser soap %@",parser.soapResult);
+            NSLog(@"parser length%d",parser.length);
+            for(int x=0;x<[parser length];x++){
+                [self.datos2 addObject:[parser getParameter:@"id_sala":x]];
+                [self.autorNombre addObject:[parser getParameter:@"nombre_sala":x]];
+                [self.autorDescripcion addObject:[parser getParameter:@"descripcion":x]];
+                if(![[parser getParameter:@"imagen":x] isEqualToString:@"null"]){
+                    rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
+                    FTP *f = [[FTP alloc]initWithString:rutita yotroString:[parser getParameter:@"imagen":x]];
+                    while(!finiteFTP) {
+                        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+                    }
+                    if(anduvo == NO)
+                        [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
+                    else
+                        [self.autorImagen addObject:rutita];
+                }
+                else
+                    [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
+            }
+            /*NSArray *datos = [n componentsSeparatedByString:@"=>"];
             int size1 = [datos count];
             for(int i=0; i<size1-1; i = i+4){
                 [self.datos2 addObject:[datos objectAtIndex:i]];
@@ -59,8 +81,10 @@
                 }
                 else
                     [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-            }
+            }*/
+        
         }
+        
     }
     else{
         [self.datos2 addObject:@"-1"];
@@ -84,7 +108,21 @@
     if(worked == YES){
         NSMutableString *n2 = [c2 getSoap];
         if(![n2 isEqualToString:@"-1"]){
-            NSArray *d = [n2 componentsSeparatedByString:@"=>"];
+            Parser * parser = [[Parser alloc]initWhitString:n2];
+            [self.autorNombre addObject:[parser getParameter:@"nombre_sala"]];
+            [self.autorDescripcion addObject:[parser getParameter:@"descripcion"]];
+            rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
+            FTP *f = [[FTP alloc]initWithString:rutita yotroString:[parser getParameter:@"imagen"]];
+            while(!finiteFTP) {
+                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+            }
+            if(anduvo == NO)
+                [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
+            else
+                [self.autorImagen addObject:rutita];
+            
+
+            /*NSArray *d = [n2 componentsSeparatedByString:@"=>"];
             [self.autorNombre addObject:[d objectAtIndex:0]];
             [self.autorDescripcion addObject:[d objectAtIndex:1]];
             rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
@@ -95,7 +133,7 @@
             if(anduvo == NO)
                 [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
             else
-                [self.autorImagen addObject:rutita];
+                [self.autorImagen addObject:rutita];*/
 
         }
         else{

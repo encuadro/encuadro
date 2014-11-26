@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "Configuracion.h"
+#import "Parser.h"
 #define kPostURL @"http://192.168.10.185/server_php/server_php.php"
 
 BOOL finish,worked;
@@ -18,6 +19,7 @@ BOOL finish,worked;
     NSXMLParser *xmlParser;
     BOOL *elementFound;
     BOOL *threadGoing;
+    Parser *parser;
 }
 @property(nonatomic, retain) NSMutableData *webData;
 @property(nonatomic, retain) NSMutableString *soapResults;
@@ -26,4 +28,5 @@ BOOL finish,worked;
 -(conn *)initconFunc:(NSString*)string yNomParam:(NSString*)string2 yParam:(NSString*)inti;
 -(conn*)initConFuncion:(NSString*)nomFuncion NombreParametro:(NSString*)nombreParametro yNombreIma:(NSString*)nombreDato yNombreSegParam:(NSString*)nombreParam2 yIdSala:(NSString*)nombreDato2;
 -(NSMutableString *)getSoap;
+-(void) setParser;
 @end

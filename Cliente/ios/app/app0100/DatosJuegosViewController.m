@@ -212,9 +212,11 @@ BOOL *elementFound;
             }*/
             
             int endTimeSeg = juego.tiempoTotal;
+            int min = endTimeSeg/60;
+            int seg = endTimeSeg%60;
             UIAlertView *alertFinJuego = [[UIAlertView alloc]
                                       initWithTitle:@"Juego terminado..."
-                                      message:[NSString stringWithFormat:@"Tiempo Total --> %d Segundos", endTimeSeg]
+                                      message:[NSString stringWithFormat:@"Tiempo Total: %d Minutos, \n\t %d Segundos", min,seg]
                                       delegate:self
                                       cancelButtonTitle:@"Continuar"
                                       otherButtonTitles:nil];
@@ -341,8 +343,9 @@ qualifiedName:(NSString *)qName
         //[NSNumberFormatter numberFromString:soapResults];
 //        /int n = [s intValue];
         //ContarObras = [AuxContarO intValue]
-        _ObrasTotal = soapResults;
-        [juego setCantObras:[soapResults intValue]];
+        Parser * parser = [[Parser alloc] initWhitString:(soapResults)];
+        _ObrasTotal = [[parser getParameter:@"ret"]intValue];
+        [juego setCantObras:[[parser getParameter:@"ret"] intValue]];
         AuxSuma = juego.cantObras;
         [_lblObrasTotal setText:[NSString stringWithFormat:@"%d",juego.cantObras]];//_ObrasTotal]];
         
