@@ -1,5 +1,9 @@
 package com.Encuadro;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.example.qr.R;
 
 import android.app.Activity;
@@ -97,7 +101,13 @@ public class ListaObras extends Activity {
         protected void onPostExecute(String result) {
         	pDialog.dismiss();
         	
-    		String[] separated = result.split("=>");
+    		//String[] separated = result.split("=>");
+    		//cambio
+        	List<String> separated = new ArrayList<String>();
+    		Parser parser = new Parser(result);
+    		for(Map<String,String> it:parser.getMap()){    			
+    			separated.add(it.get("nombre_obra"));
+    		}
     		ArrayAdapter <String> adapter = new ArrayAdapter<String>(ListaObras.this,android.R.layout.simple_list_item_1,separated );
     	    lv1.setAdapter(adapter);
     	    adapter.notifyDataSetChanged();
@@ -167,8 +177,12 @@ public class ListaObras extends Activity {
 		@Override
 		protected void onPostExecute(String result) {
 			pDialog.dismiss();
-			
-			String[] separated = result.split("=>");
+			//cambio
+    		List<String> separated = new ArrayList<String>();
+    		Parser p = new Parser(result);
+    		for(Map<String,String> it:p.getMap()){    			
+    			separated.add(it.get("nombre_obra"));
+    		}
 			ArrayAdapter <String> adapter = new ArrayAdapter<String>(ListaObras.this,android.R.layout.simple_list_item_1,separated );
 			lv1.setAdapter(adapter);
 		}

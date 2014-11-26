@@ -3,10 +3,13 @@ package com.Encuadro;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.Respuesta.Multiple_Opcion;
 import com.Respuesta.Respuesta;
 import com.Respuesta.Respuesta_Abierta;
 import com.example.qr.R;
+import com.google.gson.JsonObject;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -45,8 +48,6 @@ public class CuetionarioFinal extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_cuetionario_final);
-		
-		
 		ll = (LinearLayout) findViewById(R.id.linearlayout1);
 //		final ViewGroup vg = (ViewGroup) findViewById(R.id.scrollView1);
 		

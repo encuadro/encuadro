@@ -62,23 +62,24 @@ public class ContenidoSalas extends Activity {
 		btnVideo = (Button) findViewById(R.id.btnVideo);
 		
 		Bundle extras = getIntent().getExtras();		
-		String[] separated = extras.getString("result").split("=>");
+		Parser parser = new Parser(extras.getString("result"));
+		//String[] separated = extras.getString("result").split("=>");
 		
 		//Directorio donde guardaremos la foto
 		dirFoto = Environment.getExternalStorageDirectory() + "/foto.jpg";
 		dirFotoaux = Environment.getExternalStorageDirectory() + "/foto2.jpg";
 		nomFoto = "foto.jpg";
 		
-		idsala = separated[0];
-		nombre = separated[1];
+		idsala = parser.getParameter("id_sala");//separated[0];
+		nombre = parser.getParameter("nombre_sala");//separated[1];
   	    
-		tv1.setText("Nombre: \n" + separated[1]);
-		tv2.setText("Descripción: \n" + separated[2]);
+		tv1.setText("Nombre: \n" + parser.getParameter("nombre_sala"));//separated[1]);
+		tv2.setText("Descripción: \n" + parser.getParameter("descripcion"));//separated[2]);
 		
 		btnPlay.setText("Audio");
 		
 		FtpExecute ftp = new FtpExecute();
-  	    String[] sala = {idsala,separated[(separated.length-1)]};	
+  	    String[] sala = {idsala,parser.getParameter("imagen")};//separated[(separated.length-1)]};	
   	    ftp.execute(sala);
 		
 		//Para listar las obras de esta sala
@@ -95,11 +96,22 @@ public class ContenidoSalas extends Activity {
 		btnRec.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				try{
+					
+				System.out.println("INGRESO A LA FUNCION ON CLICK");
                 Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);   
+                System.out.println("INTENT");
                 Uri output = Uri.fromFile(new File(dirFoto));
+                System.out.println("CREA EL FILE");
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+                System.out.println("INTENT PUT EXTRA  "+ MediaStore.EXTRA_OUTPUT);
                 int code = TAKE_PICTURE;
                 startActivityForResult(intent, code);
+                System.out.println("START ACTIVITY FOR RESULT  "+code);
+				
+				}catch(Exception e){
+					System.out.println(e.getMessage());
+				}
 			}
 		});
 		
@@ -146,15 +158,17 @@ public class ContenidoSalas extends Activity {
 				 		
 			     		//Tomo la la imagen en bitmap
 			     		Bitmap bm = bf.decodeFile(dirFoto);
+			     		System.out.println("TOMA LA IMAGEN EN BITMAP");
 			     		//Modifico su tamaño
 						bm = getResizedBitmap(bm,600,600);
-					
+						System.out.println("MODIFICA SU TAMAÑO");
 						
 						FileOutputStream fos;
 						fos = new FileOutputStream(dirFoto);
 						bm.compress(Bitmap.CompressFormat.JPEG, 100, fos);
 						
 			     		//llamo al hilo para subir la imagen
+						System.out.println("SUBIENDO IMAGEN");
 			     		ReconocimientoImg ftpImg = new ReconocimientoImg();
 				    	String[] obra = {nomFoto,dirFoto,idsala};
 				    	ftpImg.execute(obra);
@@ -162,7 +176,7 @@ public class ContenidoSalas extends Activity {
 				    	
 				    	
 					} catch (Exception e) {
-						System.out.print(e.toString());
+						System.out.print("ERROOOOR");//e.toString());
 						Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
 					}   
 				}
@@ -225,13 +239,16 @@ public class ContenidoSalas extends Activity {
         		MyFTP ftp = new MyFTP(getApplicationContext());
         		Consumirws ws = new Consumirws();
 		    	if(ftp.LoginObras()){	
+		    		System.out.print("LOGIN OBRAS");
 		    		if(ftp.subirImgObra(nombre,directorio)){
+		    			System.out.print("SUBIR IMAGEN"+nombre+"  "+directorio);
 		    			idObra = ws.getNombreObraDescriptor(Integer.parseInt(idDeSala), nombre);
-		    			
+		    			System.out.println("ID DE OBRA RETURN::"+idObra);
 		    			if(idObra.equals("0")){
 		    				result = "0";
 		    			}else{
 		    				result = ws.getDataObraId(Integer.parseInt(idObra));
+		    				System.out.println("RESULTADO DE OBRA::"+result);
 		    			}
 		    		}
 		    	}
@@ -267,6 +284,8 @@ public class ContenidoSalas extends Activity {
  
         @Override
         protected String doInBackground(String... params) {
+        	if(ws == null)
+        		ws = new Consumirws();
         	String result="Audio..";
         	String nombre=params[1];
         	String idSala=params[0];
@@ -274,11 +293,11 @@ public class ContenidoSalas extends Activity {
         	try {
         		MyFTP ftp = new MyFTP(getApplicationContext());
 		    	if(ftp.LoginSalas()){
+		    		int id = Integer.parseInt(idSala);
+                    result = ws.getContenidoSalaId(id);
 		    		
-                    result = ws.getContenidoSalaId(Integer.parseInt(idSala));
-		    		
-		    		String separatedaux[] = result.split("=>");
-		    		String separatedaudio[] = separatedaux[0].split("/");
+		    		Parser parser = new Parser(result);//String separatedaux[] = result.split("=>");
+		    		String separatedaudio[] = parser.getParameter("audio").split("/");//separatedaux[0].split("/");
 		    		audio = separatedaudio[separatedaudio.length-1];
 		    		
 		    		if(audio!=null){
@@ -323,6 +342,7 @@ public class ContenidoSalas extends Activity {
 			}catch(NullPointerException n){
 				result = "Sala sin audio ";
 			}catch (Exception e) {
+				System.err.println(e);
 				result = "Sala sin audio ";
 			}
         	return result;
@@ -360,6 +380,8 @@ public class ContenidoSalas extends Activity {
 	    @Override
 	    protected void onPostExecute(String video) {
 	    	pDialog.dismiss();
+	    	Parser parser = new Parser(video);
+	    	video = parser.getParameter("video");
 	    	if(video.equals("0") || video.equals("null") || video.equals("") || video.length()<=1){
 				Toast.makeText(getApplicationContext(), "Sala sin video", Toast.LENGTH_SHORT).show();
 			}

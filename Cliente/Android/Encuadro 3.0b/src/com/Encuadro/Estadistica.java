@@ -4,6 +4,7 @@ import org.apache.http.impl.client.TunnelRefusedException;
 
 import com.example.qr.R;
 
+import android.R.string;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -208,8 +209,8 @@ public class Estadistica extends Activity {
  
         @Override
         protected void onPostExecute(String v) {
-        	
-        	int id = Integer.parseInt(v);
+        	Parser parser = new Parser(v);        	
+        	int id = Integer.parseInt(parser.getParameter("ret"));
         	if(id>0){
         		editor.putInt("idvisitante", id);
         		editor.commit();
@@ -221,7 +222,7 @@ public class Estadistica extends Activity {
         		}else if(id==-2){
         			Toast.makeText(getApplicationContext(), "No tenemos respuesta del Servidor", Toast.LENGTH_LONG).show();
         		}else{
-        			Toast.makeText(getApplicationContext(), "Error interno del server " + v, Toast.LENGTH_LONG).show();
+        			Toast.makeText(getApplicationContext(), "Error interno del server " + id, Toast.LENGTH_LONG).show();
                 	}
 //        	
 			

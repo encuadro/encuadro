@@ -67,18 +67,19 @@ public class ContenidoObras extends Activity {
  		idProximaObra= prefs.getInt("obrasig",0); 
 		
 		Bundle extras = getIntent().getExtras();
-		String[] separated = extras.getString("result").split("=>");
-		String[] separatedImg = separated[4].split("/");
+		Parser parser = new Parser(extras.getString("result"));//String[] separated = extras.getString("result").split("=>");
+		System.out.println("result-->"+extras.getString("result"));
+		String [] img = parser.getParameter("imagen").split("/");//separated[4].split("/");
 		
 		FtpExecute ftp = new FtpExecute();
-    	String[] obra = {separated[0],separatedImg[(separatedImg.length-1)]};
+    	String[] obra = {parser.getParameter("id_obra"),img[img.length-1]};//{separated[0],separatedImg[(separatedImg.length-1)]};
     	ftp.execute(obra);
 		
-    	idObra = separated[0];
-    	nombre = separated[1];
-    	tv1.setText(separated[1]);
-		tv2.setText("Autor: " + separated[6]);
-		tv3.setText("Descripcion Obra: \n" + separated[2]);
+    	idObra = parser.getParameter("id_obra");//separated[0];
+    	nombre = parser.getParameter("nombre_obra");//separated[1];
+    	tv1.setText(parser.getParameter("nombre_obra"));//separated[1]);
+		tv2.setText("Autor: " + parser.getParameter("autor"));//separated[6]);
+		tv3.setText("Descripcion Obra: \n" + parser.getParameter("descripcion_obra"));//separated[2]);
 		btnPlay.setText("Audio");
 		
 		//EJECUTA EL OBRAPERTENECEAJUEGO CON EL idObra
@@ -137,7 +138,7 @@ public class ContenidoObras extends Activity {
 				// TODO Auto-generated method stub
 				if(btnPlay.getText().toString()=="Audio"){
 					FtpAudio ftpaudio = new FtpAudio();
-					ftpaudio.execute(idObra,nombre);				
+					ftpaudio.execute(idObra,nombre);	
 					btnPlay.setText("Stop");
 				}else{
 					btnPlay.setText("Audio");
@@ -178,6 +179,7 @@ public class ContenidoObras extends Activity {
         		MyFTP ftp = new MyFTP(getApplicationContext());
 		    	if(ftp.LoginObras()){
 		    		bitmap = ftp.GetImgObra(params[0],params[1],true,0);
+		    		System.out.println("-->"+params[0]+params[1]);
 		    	}
 			} catch (Exception e) {
 				System.out.println("Error: " + e);
@@ -208,6 +210,8 @@ public class ContenidoObras extends Activity {
  
         @Override
         protected String doInBackground(String... params) {
+        	if(ws == null)
+        		ws = new Consumirws();
         	String result="Audio..";
         	String nombre=params[1];
         	String idObra=params[0];
@@ -216,10 +220,12 @@ public class ContenidoObras extends Activity {
         		MyFTP ftp = new MyFTP(getApplicationContext());
 		    	if(ftp.LoginObras()){
 		    		result = ws.getContenidoObra(nombre);
-		    		String separatedaux[] = result.split("=>");
-		    		String separatedAudio[] = separatedaux[1].split("/");
+		    		//String separatedaux[] = result.split("=>");
+		    		Parser parser = new Parser(result);
+		    		String separatedAudio[] = parser.getParameter("audio").split("/");
 		    		audio = separatedAudio[separatedAudio.length-1];
 		    		result = "Audio : " + audio + " ID: " + idObra;
+		    		System.out.println(result);
 		    		if(audio!=null){
 			    		if(ftp.getAudioObra(idObra, audio, true, 0)){
 			    			File fil = new File(ContenidoObras.this.getCacheDir() + "/" + audio );
@@ -227,6 +233,7 @@ public class ContenidoObras extends Activity {
 			    			if(fil.exists()){
 				    			mp = new MediaPlayer();
 				    			mp.setDataSource(fis.getFD());
+				    		
 				    	        if(mp == null) {            
 				    	           result = "Create() on MediaPlayer failed";       
 				    	        } 
@@ -291,8 +298,8 @@ public class ContenidoObras extends Activity {
     }
 
 	private void descargarVideo(){
-//		System.out.print( "Entro a descargarVideo\n");
 		obtenerNombreVideo name = new obtenerNombreVideo();
+		System.out.print( "Entro a descargarVideo"+name);
 		name.execute();
 		
 	}
@@ -312,8 +319,9 @@ public class ContenidoObras extends Activity {
 	    	String video="";
 	    	try {
 	    		String consulta =ws.getContenidoObra(nombre);
-	    		String[] separated = consulta.split("=>");
-				video= separated[2];
+	    		//String[] separated = consulta.split("=>");
+	    		Parser parser = new Parser(consulta);
+				video= parser.getParameter("video");
 			} catch (Exception e) {
 				System.out.println("Error: " + e);
 			}
@@ -323,22 +331,28 @@ public class ContenidoObras extends Activity {
 	    @Override
 	    protected void onPostExecute(String video) {
 	    	pDialog.dismiss();
-	    	
 			if (video.equals("null") || video.equals("") || video.length()<=1){
 		    	Toast.makeText(getApplicationContext(), "Obra sin video", Toast.LENGTH_LONG).show();
 			}
 			else {
 //		    	Toast.makeText(getApplicationContext(), "El video es: "+ nombre, Toast.LENGTH_LONG).show();
-				
+				try{
 				String[] nombrevideo = video.split("/");
 				String videoconformato= nombrevideo[5];
 				String[] videosinformato = videoconformato.split("\\.");
 				
 				
 				String url="http://"+MyFTP._HOST+"/obras/"+idObra+"/video/"+videosinformato[0]+".mp4";
+				//String url = "ftp://obras:12345678@10.0.2.109"+idObra+"/video/"+videosinformato[0]+".mp4";
 				Intent i= new Intent(ContenidoObras.this, ReproducirVideo.class);
+				System.out.println("Contenido Obras, reproduciendo video...");
 				i.putExtra("video",url);
+				System.out.println("i put extra...");
 				startActivity(i);
+				System.out.println("start activity...");
+				}catch(Exception e){
+					System.err.println("Error::"+e.getMessage());
+				}
 			}
 	    	pDialog.dismiss();
 	    }
@@ -368,7 +382,8 @@ public class ContenidoObras extends Activity {
         protected void onPostExecute(String result) {
         	pDialog.dismiss();
         	String[] separated = result.split("=>");
-        	idjuego=Integer.parseInt(separated[0]);
+        	Parser parser = new Parser(separated[0]);
+        	idjuego=Integer.parseInt(parser.getParameter("ret"));
         	idObra=separated[1];
 			Jugar(idjuego);										//Llamo a la función jugar para que el async termine sus funciones antes.
         }
@@ -403,13 +418,14 @@ public class ContenidoObras extends Activity {
         @Override
         protected void onPostExecute(String result) {
         	pDialog.dismiss();
-        	String[] separated = result.split("=>");
-        	editor.putInt("obrasig", Integer.parseInt(separated[0]));
-        	editor.putString("pista", separated[1]);
+        	//String[] separated = result.split("=>");
+        	Parser parser = new Parser(result);
+        	editor.putInt("obrasig", Integer.parseInt(parser.getParameter("id_proxima")));
+        	editor.putString("pista", parser.getParameter("pista"));
         	editor.commit();
 			AlertDialog.Builder builder = new AlertDialog.Builder(ContenidoObras.this);
 			builder.setTitle("Pista");
-			builder.setMessage("Pista: "+ separated[1]);
+			builder.setMessage("Pista: "+ parser.getParameter("pista"));
 			builder.setPositiveButton("OK",null);
 			builder.create();
 			builder.show();
@@ -425,7 +441,7 @@ public class ContenidoObras extends Activity {
         	String result ="";
         	try {
         		Consumirws ws = new Consumirws();
-        		result =ws.CantidadObrasJuego(Integer.parseInt(params[0]));
+        		result = ws.CantidadObrasJuego(Integer.parseInt(params[0]));
 			} catch (Exception e) {
 				System.out.println("errorbuscarpista: " + "result: "+ result);
 			}
@@ -434,7 +450,8 @@ public class ContenidoObras extends Activity {
  
         @Override
         protected void onPostExecute(String result) {
-        	editor.putInt("cantidadobras", Integer.parseInt(result));
+        	Parser parser = new Parser(result);
+        	editor.putInt("cantidadobras", Integer.parseInt(parser.getParameter("ret")));
         	editor.putInt("progreso", 1);
         	editor.commit();
         }

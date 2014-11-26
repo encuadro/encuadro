@@ -13,7 +13,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class MyFTP {
-	public static String _HOST = "10.0.2.109"; 
+	public static String _HOST = "192.168.10.185"; 
 	private boolean isObraLogin = false, isSalaLogin = false, isZonaLogin = false;
 	public FTPClient salaClient = null, obraClient = null, zonaClient = null;
 	String host = _HOST;//"10.0.2.109";
@@ -586,7 +586,7 @@ public class MyFTP {
 				try {
 				file = new File(path);
 				if(file.exists()){
-					System.out.println("Existe");
+					System.out.println("Existe file");
 					result =subirImg(name, obraClient, path);
 					file.delete();
 				}
@@ -628,18 +628,22 @@ public class MyFTP {
 	}
 
 	public boolean subirImg(String name, FTPClient cliente, String path){
+		System.out.println("FUNCION SUBIR IMG");
 		boolean result = false;
 		File file = null;
 		try{				
+			System.out.println("FUNCION SUBIR IMG");
 			file = new File(path);
+			System.out.println("FUNCION SUBIR IMG");
 			FileInputStream srcFileStream = new FileInputStream(file);
-			System.out.print("cojio la imagen");
-			result = cliente.storeFile("/" + name, srcFileStream);  
-			System.out.print("subio la imagen");
+			System.out.println("cojio la imagen::"+name+" - "+path);
+			result = cliente.storeFile("/" + name, srcFileStream); 		
+			System.out.println("subio la imagen");
+			System.out.println("resultado::"+String.valueOf(result));
 			srcFileStream.close();
 		}catch(Exception e){
 			result = false;
-			System.out.print(" Error: "+e.toString());
+			System.err.print(" Error: "+e.toString());
 		}
 		return result;
 	}

@@ -27,18 +27,23 @@ public class ReproducirVideo extends Activity {
 		VideoView videoView = (VideoView)findViewById(R.id.videoView1);
 		
 		try {
-		    
+		    System.out.println("Reproduciendo video...");
 			MediaController mc = new MediaController(this);
+			System.out.println("Reproduciendo video...2");
 		    videoView.setMediaController(mc);
-		    
-		    
+		    System.out.println("String del video:  "+ video);
 		    Uri uri = Uri.parse(video);
+		    System.out.println("PAth de uri::  "+ uri.getPath());
 		    videoView.setVideoURI(uri);
+		    System.out.println("Reproduciendo video...5");
 		    videoView.requestFocus();
-		    
+
+		    System.out.println("Reproduciendo video...6");
 		    videoView.start();
-		    
+
+		    System.out.println("Reproduciendo video...out");
 		} catch (Exception e) {
+			System.err.println("ERROR:"+e.getMessage());
 			Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
 			super.finish();
 		}

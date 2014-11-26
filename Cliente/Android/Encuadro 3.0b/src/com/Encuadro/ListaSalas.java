@@ -1,5 +1,9 @@
 package com.Encuadro;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.example.qr.R;
 
 import android.app.Activity;
@@ -101,7 +105,12 @@ public class ListaSalas extends Activity {
         protected void onPostExecute(String result) {
         	pDialog.dismiss();
         	
-    		String[] separated = result.split("=>");
+    		//String[] separated = result.split("=>");
+    		List<String> separated = new ArrayList<String>();
+    		Parser p = new Parser(result);
+    		for(Map<String,String> it:p.getMap()){    			
+    			separated.add(it.get("nombre_sala"));
+    		}
     		ArrayAdapter <String> adapter = new ArrayAdapter<String>(ListaSalas.this,android.R.layout.simple_list_item_1,separated );
     	    lv1.setAdapter(adapter);
         }
@@ -131,9 +140,9 @@ public class ListaSalas extends Activity {
         @Override
         protected void onPostExecute(String result) {
         	pDialog.dismiss();
-    		String[] separated = result.split("=>");
+        	Parser parser = new Parser(result);
     		Intent intent = new Intent(ListaSalas.this, ListaObras.class);
-    		intent.putExtra("idSala", separated[0]);
+    		intent.putExtra("idSala", parser.getParameter("id_sala"));//separated[0]
     		startActivity(intent);
         }
     }
@@ -199,7 +208,14 @@ public class ListaSalas extends Activity {
         protected void onPostExecute(String result) {
         	pDialog.dismiss();
         	
-        	String[] separated = result.split("=>");
+    		List<String> separated = new ArrayList<String>();
+    		Parser p = new Parser(result);
+    		String parameter = "nombre_obra";
+    		if(p.getMap().get(0).containsKey("nombre_sala"))
+    			parameter = "nombre_sala";    			
+    		for(Map<String,String> it:p.getMap()){    			
+    				separated.add(it.get(parameter));
+    		}
     		ArrayAdapter <String> adapter = new ArrayAdapter<String>(ListaSalas.this,android.R.layout.simple_list_item_1,separated );
     	    lv1.setAdapter(adapter);
 		}

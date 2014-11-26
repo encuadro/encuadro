@@ -10,7 +10,6 @@ import org.ksoap2.transport.HttpTransportSE;
 
 
 
-
 public class Consumirws {	 
      
 	 private static String _PATH =  "http://"+MyFTP._HOST+"/server_php/";
