@@ -432,15 +432,20 @@ public class ListarObra2 extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ListaObrasValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_ListaObrasValueChanged
-        // TODO add your handling code here:
+         // TODO add your handling code here:
         prc.setVisible(true);
         LabNomObra.setText(ListaObras.getSelectedValue().toString());
         String cont = getContenidoObra(ListaObras.getSelectedValue().toString());
+        Parser p = null;
+        if(Parser.isJson(cont)){
+            p = new Parser(cont);
+        }
         sep = cont.split("=>");
         File path = null;
         path = new File(Global.directorioTemporal + "/imatmp.jpg");
         try {
-            FileUpload.download(sep[5], path);
+            //FileUpload.download(sep[5], path);
+            FileUpload.download(p.getParameter("imagen"), path);
         } catch (MalformedURLException ex) {
             prc.dispose();
             Logger.getLogger(ListarObra2.class.getName()).log(Level.SEVERE, null, ex);
@@ -452,28 +457,37 @@ public class ListarObra2 extends javax.swing.JFrame {
         //cambiar imagen de la obra
         CambiarImagenLabel(path, LabImagen);
         
-        LabDesc2.setText(sep[6]);
-        mostrarContenido(LabAudio2, sep[1], BotAudio);
-        mostrarContenido(LabVideo2, sep[2], BotVideo);
-        mostrarContenido(LabMod3D2, sep[4], BotModelo);
-        
-        if(sep[3].equals("null")){
+        //LabDesc2.setText(sep[6]);
+        //mostrarContenido(LabAudio2, sep[1], BotAudio);
+        //mostrarContenido(LabVideo2, sep[2], BotVideo);
+        //mostrarContenido(LabMod3D2, sep[4], BotModelo);
+        LabDesc2.setText(p.getParameter("descripcion"));
+        mostrarContenido(LabAudio2, p.getParameter("audio"), BotAudio);
+        mostrarContenido(LabVideo2, p.getParameter("video"), BotVideo);
+        mostrarContenido(LabMod3D2, p.getParameter("modelo"), BotModelo);
+        if(p.getParameter("texto").equals("null")){//if(sep[3].equals("null")){
             LabText2.setText("No existe contenido.");
         }else{
-            LabText2.setText(sep[3]);
+            LabText2.setText(p.getParameter("texto"));//LabText2.setText(sep[3]);
         }
-         if(sep[8].equals("null") || sep[9].equals("null") || sep[10].equals("null") || sep[11].equals("null") || sep[12].equals("null") ){
+         if(p.getParameter("animacion").contains("null")){//sep[8].equals("null") || sep[9].equals("null") || sep[10].equals("null") || sep[11].equals("null") || sep[12].equals("null") ){
         laba1.setText("No existe contenido.");
         laba2.setText("No existe contenido.");
         laba3.setText("No existe contenido.");
         laba4.setText("No existe contenido.");
         laba5.setText("No existe contenido.");
         }else{
-        laba1.setText(sep[8]);
-        laba2.setText(sep[9]);
-        laba3.setText(sep[10]);
-        laba4.setText(sep[11]);
-        laba5.setText(sep[12]);
+//        laba1.setText(sep[8]);
+//        laba2.setText(sep[9]);
+//        laba3.setText(sep[10]);
+//        laba4.setText(sep[11]);
+//        laba5.setText(sep[12]);
+             String []split = p.getParameter("animacion").split("=>");
+            laba1.setText(split[0]);
+            laba2.setText(split[0]);
+            laba3.setText(split[0]);
+            laba4.setText(split[0]);
+            laba5.setText(split[0]);
         }
         prc.dispose();
         //labVisi(true);
