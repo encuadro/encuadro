@@ -398,8 +398,9 @@ bool touched;
 		 Matriz.m33 = 1;
 #endif
 
+#ifdef ENABLE_3D
         angles = im4ToEulerAngles(&Matriz);
-
+#endif
         //        printf("\nisgl3d solucion\n");
         //        printf("psi1: %f\ntheta1: %f\nphi1: %f\n",angles.x,angles.y,angles.z);
         

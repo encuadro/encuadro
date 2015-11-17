@@ -6,16 +6,18 @@
 //  Copyright 2012 __MyCompanyName__. All rights reserved.
 //
 
+
+#import <AVFoundation/AVFoundation.h>
+#import "isgl3d.h"
+//#import "VistaViewController.h"
+//#import "claseDibujar.h"
+
 #ifdef __cplusplus
 extern "C"{
 #endif
     
-#import "isgl3d.h"
 #include "vvector.h"
-#import <AVFoundation/AVFoundation.h>
-//#import "VistaViewController.h"
-    //#import "claseDibujar.h"
-    
+	
 #ifdef __cplusplus
 }
 #endif

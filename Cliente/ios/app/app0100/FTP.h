@@ -10,7 +10,7 @@
 #import "NetworkManager.h"
 #import "Configuracion.h"
 
-#define kContrayIp @":12345678@192.168.10.185"
+#define kContrayIp @":12345678@192.168.0.127"
 BOOL finiteFTP,anduvo;
 @interface FTP : NSObject{
     NSURLConnection *connection;

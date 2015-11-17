@@ -123,6 +123,7 @@ void kalman_sensors_update(kalman_state_3* state, float* measurement,float** A, 
     /*kalman gain*/
     //    printf("\nARRANCA KALMAN GAIN\n");
     float Htrsp[3][6];
+#ifdef ENABLE_3D
     TRANSPOSE_MATRIX_6X3(Htrsp, H);
     //    MAT_PRINT_3X6(Htrsp);
     MATRIX_PRODUCT_3X3x3X6(auxMat3x6, state->p, Htrsp);
@@ -154,7 +155,7 @@ void kalman_sensors_update(kalman_state_3* state, float* measurement,float** A, 
     MATRIX_PRODUCT_6X3x3X3(auxMat6x3, H, state->p);
     MATRIX_PRODUCT_3X6x6X3(auxMat3x3, state->k, auxMat6x3);
     ACCUM_SCALE_MATRIX_3X3(state->p, -1.0, auxMat3x3);
-    
+#endif
     for (int i=0; i<6; i++) {
         free(S[i]);
         free(Sinv[i]);
