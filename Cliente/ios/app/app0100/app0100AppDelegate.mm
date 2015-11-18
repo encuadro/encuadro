@@ -11,6 +11,7 @@
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
 #import "InicioViewController.h"
+#import "conn.h"
 
 @implementation app0100AppDelegate
 
@@ -21,7 +22,9 @@
     /*Lo primero que se corre es este metodo*/
     
     printf("applicationDidFinishLaunching (AppDelegate)\n");
-    
+	NSLog(@"prueba vale: %@",[Configuracion kPostURL]);
+	
+	
 	// Create the UIWindow
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     

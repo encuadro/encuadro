@@ -63,7 +63,7 @@
     
     // First get and check the URL.
     
-    url = [[NetworkManager sharedInstance] smartURLForString:[NSString stringWithFormat:@"obras:12345678@%@",IPSERVER]];
+    url = [[NetworkManager sharedInstance] smartURLForString:[NSString stringWithFormat:@"obras:12345678@%@",[Configuracion ipserver]]];
     success = (url != nil);
     
     if (success) {

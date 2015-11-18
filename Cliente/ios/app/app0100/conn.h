@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Configuracion.h"
 #import "Parser.h"
-//#define kPostURL @"http://192.168.10.185/server_php/server_php.php"
+
 static NSString*  kPostURL=@"http://192.168.0.127/server_php/server_php.php";
 
 BOOL finish,worked;

@@ -12,6 +12,8 @@
 
 @implementation conn
 
+
+
 -(conn *)initconFunc:(NSString *)string{
     finish = NO;
     worked = NO;
@@ -22,14 +24,14 @@
                              "<%@ xmlns=\"http://%@/server_php/server_php.php/%@\">\n"
                              "</%@>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",string,IPSERVER,string,string];
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+                             "</soap:Envelope>\n",string,[Configuracion ipserver],string,string];
+    NSMutableString *u = [NSMutableString stringWithString: [Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    NSString *s = [NSString stringWithFormat:@"http://%@/server_php/server_php.php/%@",IPSERVER, string];
+    NSString *s = [NSString stringWithFormat:@"http://%@/server_php/server_php.php/%@",[Configuracion ipserver], string];
 	[theRequest addValue: s  forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
@@ -58,15 +60,15 @@
                              "<%@>%@</%@>"
                              "</%@>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",string,IPSERVER,string,string2,inti,string2,string];
+                             "</soap:Envelope>\n",string,[Configuracion ipserver],string,string2,inti,string2,string];
     NSLog(soapMessage);
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+    NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    NSString *s = [NSString stringWithFormat:@"http://%@/server_php/server_php.php/%@",IPSERVER, string];
+    NSString *s = [NSString stringWithFormat:@"http://%@/server_php/server_php.php/%@",[Configuracion ipserver], string];
 	[theRequest addValue: s  forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
@@ -96,14 +98,14 @@
                              "<%@>%@</%@>"
                              "</%@>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",nomFuncion,IPSERVER,nomFuncion,nombreParam2,nombreDato2,nombreParam2,nombreParametro,nombreDato,nombreParametro,nomFuncion];
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+                             "</soap:Envelope>\n",nomFuncion,[Configuracion ipserver],nomFuncion,nombreParam2,nombreDato2,nombreParam2,nombreParametro,nombreDato,nombreParametro,nomFuncion];
+    NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    NSString *s = [NSString stringWithFormat:@"http://%@/server_php/server_php.php/%@",IPSERVER, nomFuncion];
+    NSString *s = [NSString stringWithFormat:@"http://%@/server_php/server_php.php/%@",[Configuracion ipserver], nomFuncion];
 	[theRequest addValue: s  forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];

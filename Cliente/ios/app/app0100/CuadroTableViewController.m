@@ -685,15 +685,15 @@ BOOL *elementFound;
                                  "<nombre_obra>%@</nombre_obra>"
                                  "</getDataObra>\n"
                                  "</soap:Body>\n"
-                                 "</soap:Envelope>\n",IPSERVER, nombre];
+                                 "</soap:Envelope>\n",[Configuracion ipserver], nombre];
         NSLog(soapMessage);
-        NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+        NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
         [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         NSURL *url = [NSURL URLWithString:u];
         NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
         NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
         [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-        [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
+        [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
         [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
         [theRequest setHTTPMethod:@"POST"];
         [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];

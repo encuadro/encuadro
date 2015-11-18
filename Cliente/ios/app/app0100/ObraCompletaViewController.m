@@ -465,7 +465,7 @@ BOOL *elementFound;
                              "<nombre_obra>%@</nombre_obra>"
                              "</getDataObra>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",IPSERVER, nombreObra];
+                             "</soap:Envelope>\n",[Configuracion ipserver], nombreObra];
     /*NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -478,14 +478,14 @@ BOOL *elementFound;
     NSLog(soapMessage);*/
  
     
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+    NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
 	//[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/getDataObraId" forHTTPHeaderField:@"SOAPAction"];
-    [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -528,13 +528,13 @@ BOOL *elementFound;
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
  */
-    /*NSString * parameters = [NSString stringWithFormat:(@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+	
+    NSString * parameters = [NSString stringWithFormat:@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
     "<id_Obra>%@</id_Obra>"
-    "</ObraPerteneceAJuego>\n",IPSERVER ,[[NSString stringWithFormat:@"%d",juego.idObraActual]])];
-    
-    NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];
-    */
-    NSString *soapMessage = [NSString stringWithFormat:
+    "</ObraPerteneceAJuego>\n",[Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+
+	
+    NSString *soapMessage2 = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -542,15 +542,21 @@ BOOL *elementFound;
                              "<id_Obra>%@</id_Obra>"
                              "</ObraPerteneceAJuego>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+                             "</soap:Envelope>\n", [Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+	
+	
+	NSString * parameters2 = [Configuracion soapMethodInvocation:@"ObraPerteneceAJuego" elemento:@"id_Obra" identificador:juego.idObraActual];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters2)];
+	
+	
 	NSLog(soapMessage);
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+    NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -732,17 +738,17 @@ BOOL *elementFound;
                              "<id_Obra>%@</id_Obra>"
                              "</ObraPerteneceAJuego>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", IPSERVER,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+                             "</soap:Envelope>\n", [Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idObraActual]];
    
     
 	NSLog(@"soapMessage: %@",soapMessage);
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+    NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -835,15 +841,15 @@ BOOL *elementFound;
                              "<id_Juego>%@</id_Juego>"
                              "</BusquedaPista>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",IPSERVER,[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];
+                             "</soap:Envelope>\n",[Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];
     NSLog(@"soapMessage: %@",soapMessage);
-    NSMutableString *u = [NSMutableString stringWithString:kPostURL];
+    NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
     [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
     [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [theRequest addValue: (@"http://%@/server_php/server_php.php/BusquedaPista",IPSERVER) forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: (@"http://%@/server_php/server_php.php/BusquedaPista",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
     [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [theRequest setHTTPMethod:@"POST"];
     [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
