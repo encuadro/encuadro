@@ -8,10 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-//static NSString * IPSERVER = @"192.168.0.127";
-
 //static (NSString*) soapMensaje(NSString*)parameters;
-
 
 @interface Configuracion : NSObject{
 	
@@ -20,6 +17,8 @@
 + (NSString*) SOAPMESSAGE: (NSString*) parameters;
 + (NSString*) kPostURL;
 + (NSString*) ipserver;
-+ (NSString*) soapMethodInvocation:(NSString *)param1 elemento:(NSString *)param2 identificador:(int)param3;
+//+ (NSString*) soapMethodInvocationInt:(NSString *)method par1name:(NSString *)p1n par1value:(int)p1v;
+//+ (NSString*) soapMethodInvocationStr:(NSString *)method par1name:(NSString *)p1n par1value:(NSString *)p1v;
++ (NSString*) soapMethodInvocationVariable:(NSString *)arg1,...;
 
 @end

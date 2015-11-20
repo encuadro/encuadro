@@ -10,7 +10,7 @@
 #import "Configuracion.h"
 #import "Parser.h"
 
-static NSString*  kPostURL=@"http://192.168.0.127/server_php/server_php.php";
+//static NSString*  kPostURL=@"http://192.168.0.127/server_php/server_php.php";
 
 BOOL finish,worked;
 @interface conn : NSObject{
@@ -27,7 +27,7 @@ BOOL finish,worked;
 @property(nonatomic, retain) NSXMLParser *xmlParser;
 -(conn *)initconFunc:(NSString*)string;
 -(conn *)initconFunc:(NSString*)string yNomParam:(NSString*)string2 yParam:(NSString*)inti;
--(conn*)initConFuncion:(NSString*)nomFuncion NombreParametro:(NSString*)nombreParametro yNombreIma:(NSString*)nombreDato yNombreSegParam:(NSString*)nombreParam2 yIdSala:(NSString*)nombreDato2;
+-(conn *)initConFuncion:(NSString*)nomFuncion NombreParametro:(NSString*)nombreParametro yNombreIma:(NSString*)nombreDato yNombreSegParam:(NSString*)nombreParam2 yIdSala:(NSString*)nombreDato2;
 -(NSMutableString *)getSoap;
 -(void) setParser;
 @end

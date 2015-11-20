@@ -122,7 +122,7 @@ BOOL *elementFound;
     
     //[_lblSuma setTag:_Suma];
     recordResults = FALSE;
-    
+    /*
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -133,6 +133,18 @@ BOOL *elementFound;
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",[Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idJuego]];//_VariablePasarIdJuego];
     NSLog(soapMessage);
+	*/
+	/*
+	NSString *parameters = [Configuracion soapMethodInvocationInt:@"CantidadObrasJuego" par1name:@"id_juego" par1value:juego.idJuego];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:parameters];
+	NSLog(@"\n**********---- DatosJuegoViewController: %@", soapMessage);
+	*/
+	
+	//prueba metodo variable
+	NSString *idJuego = [NSString stringWithFormat:@"%d", juego.idJuego];
+	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"CantidadObrasJuego", @"id_juego", idJuego, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
+	
     NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
     // [u appendString:[NSString stringWithFormat:@"/borrarUsuario?idUsuario=%d",13]];
     [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];

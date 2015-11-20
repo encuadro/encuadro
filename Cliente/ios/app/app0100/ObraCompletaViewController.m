@@ -457,7 +457,7 @@ BOOL *elementFound;
                              "</getDataObra>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", nombreObra];*/
-    NSString *soapMessage = [NSString stringWithFormat:
+    /*NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -465,7 +465,7 @@ BOOL *elementFound;
                              "<nombre_obra>%@</nombre_obra>"
                              "</getDataObra>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n",[Configuracion ipserver], nombreObra];
+                             "</soap:Envelope>\n",[Configuracion ipserver], nombreObra];*/
     /*NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -476,8 +476,16 @@ BOOL *elementFound;
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", [NSString stringWithFormat:@"%d",juego.idObraActual]];
     NSLog(soapMessage);*/
- 
-    
+	/*
+	NSString *arguments = [Configuracion soapMethodInvocationStr:@"getDataObra" par1name:@"nombre_obra" par1value:nombreObra];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:arguments];
+	NSLog(@"\n**********---- ObraCompletaViewController: %@", soapMessage);
+	*/
+	
+	//prueba metodo variable
+	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"getDataObra", @"nombre_obra", nombreObra, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];	
+	
     NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -528,11 +536,10 @@ BOOL *elementFound;
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
  */
-	
+	/*
     NSString * parameters = [NSString stringWithFormat:@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
     "<id_Obra>%@</id_Obra>"
     "</ObraPerteneceAJuego>\n",[Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
-
 	
     NSString *soapMessage2 = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
@@ -543,13 +550,18 @@ BOOL *elementFound;
                              "</ObraPerteneceAJuego>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", [Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+		*/
+	/*
+	NSString *parameters = [Configuracion soapMethodInvocationInt:@"ObraPerteneceAJuego" par1name:@"id_Obra" par1value:juego.idObraActual];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];
 	
+	NSLog(@"\n************** ObraCompletaViewController: %@", soapMessage);
+*/
+	//prueba metodo variable
+	NSString *idObraActual = [NSString stringWithFormat:@"%d", (juego.idObraActual)];
+	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"ObraPerteneceAJuego", @"id_Obra", idObraActual, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
 	
-	NSString * parameters2 = [Configuracion soapMethodInvocation:@"ObraPerteneceAJuego" elemento:@"id_Obra" identificador:juego.idObraActual];
-	NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters2)];
-	
-	
-	NSLog(soapMessage);
     NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -730,7 +742,8 @@ BOOL *elementFound;
     "</ObraPerteneceAJuego>\n",*IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual];
      
       NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];*/
-    NSString *soapMessage = [NSString stringWithFormat:
+	/*
+	NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -741,7 +754,13 @@ BOOL *elementFound;
                              "</soap:Envelope>\n", [Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idObraActual]];
    
     
-	NSLog(@"soapMessage: %@",soapMessage);
+	NSLog(@"\n**********---+ ObraCompletaViewController: %@", soapMessage);
+	*/
+	//prueba metodo variable
+	NSString *idObraActual = [NSString stringWithFormat:@"%d", (juego.idObraActual)];
+	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"ObraPerteneceAJuego", @"id_Obra", idObraActual, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
+	
     NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
@@ -832,7 +851,8 @@ BOOL *elementFound;
                              "</BusquedaPista>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];*///txtPista.text, txtJuego.text];
-    NSString *soapMessage = [NSString stringWithFormat:
+	/*
+	NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -842,7 +862,15 @@ BOOL *elementFound;
                              "</BusquedaPista>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",[Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];
-    NSLog(@"soapMessage: %@",soapMessage);
+    NSLog(@"\n************** ObraCompletaViewController: %@",soapMessage);
+	*/
+	
+	//prueba metodo variable
+	NSString *idObraActual = [NSString stringWithFormat:@"%d",juego.idObraActual];
+	NSString *idJuego = [NSString stringWithFormat:@"%d",juego.idJuego];
+	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"BusquedaPista", @"id_Obra", idObraActual, @"id_Juego", idJuego, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
+		
     NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
     [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];

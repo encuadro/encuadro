@@ -676,17 +676,37 @@ BOOL *elementFound;
         [descripcionObra addObject:imagen];
         [descripcionObra addObject:descripcion];
         oo = [[obtObras alloc] initConNombreObraParaContenidos:nombre];
-        //
+        /*
         NSString *soapMessage = [NSString stringWithFormat:
                                  @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                                  "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                                  "<soap:Body>\n"
+											
                                  "<getDataObra xmlns=\"http://%@/server_php/server_php.php/getDataObra\">\n"
                                  "<nombre_obra>%@</nombre_obra>"
                                  "</getDataObra>\n"
+											
                                  "</soap:Body>\n"
-                                 "</soap:Envelope>\n",[Configuracion ipserver], nombre];
-        NSLog(soapMessage);
+                                 "</soap:Envelope>\n",[Configuracion ipserver], nombre];*/
+		 //NSString *soapMessage = [NSString
+		 /*NSString * parameters = [NSString stringWithFormat:@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
+										  "<id_Obra>%@</id_Obra>"
+										  "</ObraPerteneceAJuego>\n",[Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
+		 */
+		 
+		 
+		 //NSString *parameters = [Configuracion soapMethodInvocationStr:@"getDataObra" par1name:@"nombre_obra" par1value:nombre];
+		 //NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];
+		 
+		 //NSLog(@"\n************** CuadroTableViewController: %@", soapMessage);
+		 //NSLog(@"\n************** CuadroTableViewController: %@", soapMessage);
+		 
+		 
+		 //prueba metodo variable
+		 NSString *parameters = [Configuracion soapMethodInvocationVariable:@"getDataObra", @"nombre_obra", nombre, nil];
+		 NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
+		 
+		 
         NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
         [u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         NSURL *url = [NSURL URLWithString:u];

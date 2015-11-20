@@ -22,8 +22,14 @@
     /*Lo primero que se corre es este metodo*/
     
     printf("applicationDidFinishLaunching (AppDelegate)\n");
-	NSLog(@"prueba vale: %@",[Configuracion kPostURL]);
+	//NSLog(@"prueba vale: %@",[Configuracion kPostURL]);
 	
+	/*
+	 //prueba metodo variable
+	[Configuracion soapMethodInvocationVariable:@"ab",@"cd",nil];
+	[Configuracion soapMethodInvocationVariable:nil];
+	[Configuracion soapMethodInvocationVariable:@"123",nil];
+	*/
 	
 	// Create the UIWindow
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

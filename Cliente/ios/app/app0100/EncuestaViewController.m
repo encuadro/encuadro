@@ -42,7 +42,8 @@ BOOL *elementFound;
     NSLog(@"%@", json);
     test json*/
 	recordResults = FALSE;
-    
+	
+ /*
 	NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -55,12 +56,18 @@ BOOL *elementFound;
                              "</Altavisita>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",[Configuracion ipserver], txtNacionalidad.text, txtSexo.text, txtTipoVisita.text,txtRangoEdad.text];
-	NSLog(soapMessage);
+	
+	NSLog(@"\n**********---- EncuestaViewController: %@", soapMessage);
+	*/
+	
+	//prueba metodo variable
+	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"Altavisita", @"nacionalidad", txtNacionalidad.text, @"sexo", txtSexo.text, @"tipo_visita", txtTipoVisita.text, @"rango_edad", txtRangoEdad.text, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
+	
     NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
     // [u appendString:[NSString stringWithFormat:@"/borrarUsuario?idUsuario=%d",13]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
-    //
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	

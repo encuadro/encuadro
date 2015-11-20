@@ -17,7 +17,8 @@
 -(conn *)initconFunc:(NSString *)string{
     finish = NO;
     worked = NO;
-    NSString *soapMessage = [NSString stringWithFormat:
+	/*
+	NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                              "<soap:Body>\n"
@@ -25,6 +26,12 @@
                              "</%@>\n"
                              "</soap:Body>\n"
                              "</soap:Envelope>\n",string,[Configuracion ipserver],string,string];
+	NSLog(@"\n\n***************** conn: %@",soapMessage);
+	*/
+	//prueba metodo variable
+	NSString *arguments = [Configuracion soapMethodInvocationVariable:string, nil];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:arguments];
+	
     NSMutableString *u = [NSMutableString stringWithString: [Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURL *url = [NSURL URLWithString:u];
