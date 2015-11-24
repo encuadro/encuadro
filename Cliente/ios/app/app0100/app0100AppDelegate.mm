@@ -11,7 +11,7 @@
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
 #import "InicioViewController.h"
-#import "conn.h"
+//#import "conn.h"
 
 @implementation app0100AppDelegate
 

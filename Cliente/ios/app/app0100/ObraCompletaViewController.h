@@ -23,7 +23,7 @@
 
 #import "EstadoJuego.h"
 #import "Parser.h"
-#import "conn.h"
+//#import "conn.h"
 
 
 int click;

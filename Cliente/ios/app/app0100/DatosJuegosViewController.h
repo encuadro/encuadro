@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ObraCompletaViewController.h"
 #import "ReaderSampleViewController.h"
-#import "conn.h"
+//#import "conn.h"
 
 #import "EstadoJuego.h"
 

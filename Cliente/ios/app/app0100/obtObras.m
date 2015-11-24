@@ -7,7 +7,8 @@
 //
 
 #import "obtObras.h"
-
+#import "Parser.h"
+#import "conn.h"
 
 @implementation obtObras
 @synthesize autorNombre = _autorNombre;

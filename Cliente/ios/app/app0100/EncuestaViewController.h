@@ -9,7 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AutorTableViewController.h"
-#import "conn.h"
+//#import "conn.h"
 
 @interface EncuestaViewController : UIViewController
 {

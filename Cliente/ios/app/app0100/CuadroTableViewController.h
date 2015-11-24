@@ -12,7 +12,7 @@
 #import "AutorTableViewController.h"
 #import "EstadoJuego.h"
 #import "Configuracion.h"
-#import "conn.h"
+//#import "conn.h"
 //#import "Global.h"
 
 NSString *opcionAutor;
