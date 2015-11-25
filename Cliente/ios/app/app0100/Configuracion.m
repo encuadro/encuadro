@@ -27,7 +27,7 @@ static NSString * TAILMENSAJE = @"</soap:Body>\n"
 }
 
 + (NSString*) ipserver {
-	NSString *ret=@"192.168.0.127";
+	NSString *ret=@"192.168.0.101";
 	return ret;
 }
 /*
