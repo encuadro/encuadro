@@ -81,8 +81,8 @@ BOOL *elementFound;
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSLog(@"TOUCH OBRA ");
-    NSLog(@"TOUCH OBRA ");
-    NSLog(@"TOUCH OBRA ");
+	//NSLog(@"TOUCH OBRA ");
+	//NSLog(@"TOUCH OBRA ");
     
     if (self.vistaTouch.touchman) {
         //call segue
@@ -906,10 +906,11 @@ BOOL *elementFound;
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
 	[webData appendData:data];
+	NSLog(@"OCVC > didReceiveData");
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	NSLog(@"ERROR with theConenction");
+	NSLog(@"ERROR with theConnection");
 	[connection release];
 	[webData release];
 }

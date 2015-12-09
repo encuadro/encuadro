@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-NSString *ip = @"192.168.0.101";
+NSString *ip = @"164.73.57.5";
 
 @interface ViewController ()
 @end

@@ -94,6 +94,7 @@
 #pragma unused(response)
     assert(theConnection == connection);
     assert(response != nil);
+	//NSLog(@"FTP > didReceiveResponse");
 }
 
 -(void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)data{
@@ -127,6 +128,7 @@
     assert(theConnection == connection);
     
     [self stopReceiveWithStatus:@"Connection failed"];
+	NSLog(@"Error de FTP > no se pudo descargar un elemento");
     
 }
 
@@ -135,11 +137,13 @@
     assert(theConnection == connection);
     
     [self stopReceiveWithStatus:nil];
+	//NSLog(@"FTP > didFinishLoading");
 }
 
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+	//NSLog(@"FTP > viewDidLoad");
     //imageview.image=image;
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -147,6 +151,7 @@
 -(void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+	//NSLog(@"FTP > didReceiveMemoryWarning");
     // Dispose of any resources that can be recreated.
 }
 
