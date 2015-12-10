@@ -8,7 +8,6 @@
 
 #import "DatosJuegosViewController.h"
 
-
 @interface DatosJuegosViewController ()
 
 @end
@@ -53,7 +52,6 @@ BOOL *elementFound;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
         // Custom initialization
     }
     return self;
@@ -85,7 +83,6 @@ BOOL *elementFound;
         _btnIrSalas.hidden = FALSE;
     }
     
-    
     [_lblIdObra setText:[NSString stringWithFormat:@"%d",juego.idObraActual]];//_VariablePasarIdObra]];
     [_lblIdJuego setText:[NSString stringWithFormat:@"%d",juego.idJuego]];//_VariablePasarIdJuego]];
     [_lblObraSiguiente setText:[NSString stringWithFormat:@"%d",juego.idobraSig]];//_IdPistaSiguiente]];
@@ -95,7 +92,6 @@ BOOL *elementFound;
     //}
     [_lblFechaJuego setText:[NSString stringWithFormat:@"%@",juego.horaInicio]];//_HoraComienzo]];
     NSLog(@"mostrando AUXILIAR %@",juego.horaInicio);//_HoraComienzo);
-    
     
     //[_lblFechaJuego NSArray: _FechaJuego];
     
@@ -122,25 +118,7 @@ BOOL *elementFound;
     
     //[_lblSuma setTag:_Suma];
     recordResults = FALSE;
-    /*
-    NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<CantidadObrasJuego xmlns=\"http://%@/server_php/server_php.php/CantidadObrasJuego\">\n"
-                             "<id_juego>%@</id_juego>"
-                             "</CantidadObrasJuego>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n",[Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idJuego]];//_VariablePasarIdJuego];
-    NSLog(soapMessage);
-	*/
-	/*
-	NSString *parameters = [Configuracion soapMethodInvocationInt:@"CantidadObrasJuego" par1name:@"id_juego" par1value:juego.idJuego];
-	NSString *soapMessage = [Configuracion SOAPMESSAGE:parameters];
-	NSLog(@"\n**********---- DatosJuegoViewController: %@", soapMessage);
-	*/
 	
-	//prueba metodo variable
 	NSString *idJuego = [NSString stringWithFormat:@"%d", juego.idJuego];
 	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"CantidadObrasJuego", @"id_juego", idJuego, nil];
 	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
@@ -154,7 +132,7 @@ BOOL *elementFound;
     NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
     
     [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [theRequest addValue: [NSString stringWithFormat:@"http://%@/server_php/server_php.php/CantidadObrasJuego",[Configuracion ipserver]] forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: [Configuracion soapMethodInvocationVariable: @"CantidadObrasJuego", nil] forHTTPHeaderField:@"SOAPAction"];
     [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [theRequest setHTTPMethod:@"POST"];
     [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -172,7 +150,6 @@ BOOL *elementFound;
     }
     //[_lblContarObra setText:[NSString stringWithFormat:@"%@",_AuxContarObras]];
     //[_lblObrasTotal setText:[NSString stringWithFormat:@"%@",_ObrasTotal]];
-    
 }
 	
     // Do any additional setup after loading the view.
@@ -248,16 +225,9 @@ BOOL *elementFound;
             [alertSuma show];
             [alertSuma release];
         }
-        
-        
-        
     }
-    
     [nameInput resignFirstResponder];
-    
 }
-
-
 
 - (void)didReceiveMemoryWarning
 {
@@ -273,6 +243,7 @@ BOOL *elementFound;
     //[_lblTexto release];
     //[super dealloc];
 }
+
 - (void)viewDidUnload {
     [self setBtnEscanearObras:nil];
     [self setBtnIrSalas:nil];
@@ -282,22 +253,23 @@ BOOL *elementFound;
     //[super viewDidUnload];
 }
 
-
-
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
 	[webData setLength: 0];
 }
+
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
 	[webData appendData:data];
 }
+
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
 	NSLog(@"ERROR with theConenction");
 	[connection release];
 	[webData release];
 }
+
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 	NSLog(@"DONE. Received Bytes: %d", [webData length]);
@@ -360,8 +332,7 @@ qualifiedName:(NSString *)qName
         [juego setCantObras:[[parser getParameter:@"ret"] intValue]];
         AuxSuma = juego.cantObras;
         [_lblObrasTotal setText:[NSString stringWithFormat:@"%d",juego.cantObras]];//_ObrasTotal]];
-        
-        
+		 
         UIAlertView *alert = [[UIAlertView alloc]
                               initWithTitle:@"Obras Totales"
                               message:(@"Obras totales %@",[NSString stringWithFormat:@"%d",juego.cantObras])//soapResults)
@@ -422,7 +393,5 @@ qualifiedName:(NSString *)qName
         
     }
 }
-
-
 
 @end

@@ -22,7 +22,13 @@
     self.autorNombre = [[NSMutableArray alloc]init];
     self.autorDescripcion = [[NSMutableArray alloc]init];
     self.autorImagen = [[NSMutableArray alloc]init];
-    c = [[conn alloc] initconFunc:@"getAllDataSalas"];
+	//c = [[conn alloc] initconFunc:@"getAllDataSalas"];
+	
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getAllDataSalas", nil];
+	NSString *message = [Configuracion SOAPMESSAGE:arguments];
+	c = [[conn alloc] initGenerico:message Invocacion:arguments];
+	NSLog(@"PRUEBA_6");
+	
     while(!finish){
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
@@ -56,35 +62,7 @@
                 else
                     [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
             }
-            /*NSArray *datos = [n componentsSeparatedByString:@"=>"];
-            int size1 = [datos count];
-            for(int i=0; i<size1-1; i = i+4){
-                [self.datos2 addObject:[datos objectAtIndex:i]];
-            }
-            for(int i=1;i<size1;i=i+4){
-                [self.autorNombre addObject:[datos objectAtIndex:i]];
-            }
-            for(int i=2;i<size1;i=i+4){
-                [self.autorDescripcion addObject:[datos objectAtIndex:i]];
-            }
-            for(int i=3;i<size1;i=i+4){
-                if(![[datos objectAtIndex:i] isEqualToString:@"null"]){
-                    rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                    FTP *f = [[FTP alloc]initWithString:rutita yotroString:[datos objectAtIndex:i]];
-                    while(!finiteFTP) {
-                        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                    }
-                    if(anduvo == NO)
-                        [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-                    else
-                        [self.autorImagen addObject:rutita];
-                }
-                else
-                    [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-            }*/
-        
         }
-        
     }
     else{
         [self.datos2 addObject:@"-1"];
@@ -101,7 +79,13 @@
     self.autorNombre = [[NSMutableArray alloc]init];
     self.autorDescripcion = [[NSMutableArray alloc]init];
     self.autorImagen = [[NSMutableArray alloc]init];
-    c2 = [[conn alloc]initconFunc:@"getDataSalaId2" yNomParam:@"id_sala" yParam:idSala];
+	//c2 = [[conn alloc]initconFunc:@"getDataSalaId2" yNomParam:@"id_sala" yParam:idSala];
+	
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getDataSalaId2", @"id_sala", idSala, nil];
+	NSString *message = [Configuracion SOAPMESSAGE:arguments];
+	c2 = [[conn alloc] initGenerico:message Invocacion:arguments];
+	NSLog(@"PRUEBA_5");
+	
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
@@ -120,21 +104,6 @@
                 [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
             else
                 [self.autorImagen addObject:rutita];
-            
-
-            /*NSArray *d = [n2 componentsSeparatedByString:@"=>"];
-            [self.autorNombre addObject:[d objectAtIndex:0]];
-            [self.autorDescripcion addObject:[d objectAtIndex:1]];
-            rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-            FTP *f = [[FTP alloc]initWithString:rutita yotroString:[d objectAtIndex:2]];
-            while(!finiteFTP) {
-                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-            }
-            if(anduvo == NO)
-                [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-            else
-                [self.autorImagen addObject:rutita];*/
-
         }
         else{
             [self.datos2 addObject:@"-1"];

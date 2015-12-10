@@ -351,7 +351,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    NSLog(@"shouldAutorotateToInterfaceOrientation BOOL IMAGEN SERVER");
+	//NSLog(@"shouldAutorotateToInterfaceOrientation BOOL IMAGEN SERVER");
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
@@ -362,19 +362,19 @@
 
 -(BOOL)shouldAutorotate
 {
-    NSLog(@"shouldAutorotate IMAGEN SERVER");
+	//NSLog(@"shouldAutorotate IMAGEN SERVER");
     return NO;
 }
 
 -(NSUInteger)supportedInterfaceOrientations
 {
-    NSLog(@"supportedInterfaceOrientations NSUInteger IMAGEN SERVER");
+	//NSLog(@"supportedInterfaceOrientations NSUInteger IMAGEN SERVER");
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    NSLog(@"preferredInterfaceOrientationForPresentation IMAGEN SERVER");
+	//NSLog(@"preferredInterfaceOrientationForPresentation IMAGEN SERVER");
     return UIInterfaceOrientationLandscapeRight;
 }
 

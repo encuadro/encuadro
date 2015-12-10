@@ -37,13 +37,13 @@
 
 -(BOOL)shouldAutorotate
 {
-    NSLog(@"shouldAutorotate NAVIGATION");
+	//NSLog(@"shouldAutorotate NAVIGATION");
     return YES;
 }
 
 -(NSUInteger)supportedInterfaceOrientations
 {
-    NSLog(@"supportedInterfaceOrientations NAVIGATION");
+	//NSLog(@"supportedInterfaceOrientations NAVIGATION");
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 

@@ -16,7 +16,6 @@
 
 @synthesize greeting, nameInput, webData, soapResults, xmlParser, txtTipoVisita, txtNacionalidad, txtSexo, txtRangoEdad, segRangoEdad, segSexo, segNacionalidad, SegTipoVisita;
 
-
 BOOL *elementFound;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -27,7 +26,6 @@ BOOL *elementFound;
     }
     return self;
 }
-
 
 -(IBAction)buttonClick:(id)sender
 {
@@ -43,24 +41,6 @@ BOOL *elementFound;
     test json*/
 	recordResults = FALSE;
 	
- /*
-	NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<Altavisita xmlns=\"http://%@/server_php/server_php.php/Altavisita\">\n"
-                             "<nacionalidad>%@</nacionalidad>"
-                             "<sexo>%@</sexo>"
-                             "<tipo_visita>%@</tipo_visita>"
-                             "<rango_edad>%@</rango_edad>"
-                             "</Altavisita>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n",[Configuracion ipserver], txtNacionalidad.text, txtSexo.text, txtTipoVisita.text,txtRangoEdad.text];
-	
-	NSLog(@"\n**********---- EncuestaViewController: %@", soapMessage);
-	*/
-	
-	//prueba metodo variable
 	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"Altavisita", @"nacionalidad", txtNacionalidad.text, @"sexo", txtSexo.text, @"tipo_visita", txtTipoVisita.text, @"rango_edad", txtRangoEdad.text, nil];
 	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
 	
@@ -72,7 +52,7 @@ BOOL *elementFound;
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: [NSString stringWithFormat:@"http://%@/server_php/server_php.php/Altavisita",[Configuracion ipserver]] forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: [Configuracion soapMethodInvocationVariable: @"Altavisita", nil] forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -82,15 +62,12 @@ BOOL *elementFound;
 	if( theConnection )
 	{
 		webData = [[NSMutableData data] retain];
-        
 	}
 	else
 	{
 		NSLog(@"theConnection is NULL");
 	}
-	
 	[nameInput resignFirstResponder];
-	
 }
 
 
@@ -98,16 +75,19 @@ BOOL *elementFound;
 {
 	[webData setLength: 0];
 }
+
 -(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
 	[webData appendData:data];
 }
+
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-	NSLog(@"ERROR with theConenction");
+	NSLog(@"ERROR with theConnection");
 	[connection release];
 	[webData release];
 }
+
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 	NSLog(@"DONE. Received Bytes: %d", [webData length]);
@@ -180,7 +160,6 @@ qualifiedName:(NSString *)qName
  }
  */
 
-
 //Implement viewDidLoad if you need to do additional setup after loading the view.
 - (void)viewDidLoad {
 	[super viewDidLoad];
@@ -246,6 +225,7 @@ qualifiedName:(NSString *)qName
 //            break;
 //    }
 //}
+
 -(IBAction)segmentedControlIndexTipoVisita{
     switch (self.SegTipoVisita.selectedSegmentIndex) {
         case 0:
@@ -259,7 +239,6 @@ qualifiedName:(NSString *)qName
     }
     
 }
-
 
 -(IBAction)segmentedControlIndexSexo{
     switch (self.segSexo.selectedSegmentIndex) {
@@ -306,7 +285,6 @@ qualifiedName:(NSString *)qName
     }
 }
 
-
 //- (IBAction)btnVista2 {
 //    self.view = vista2;
 //}
@@ -320,7 +298,6 @@ qualifiedName:(NSString *)qName
 }
 
 - (void)alertView:(UIAlertView *)alert clickedButtonAtIndex: (NSInteger)buttonIndex
-
 { NSString *title = [alert buttonTitleAtIndex:buttonIndex];
     if([title isEqualToString:@"Si"]) {
         NSLog(@"Si");

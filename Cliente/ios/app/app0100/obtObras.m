@@ -36,7 +36,13 @@
     self.autorAutor = [[NSMutableArray alloc] init];
     self.autorDesc = [[NSMutableArray alloc] init];
     self.autorImagen = [[NSMutableArray alloc] init];
-    conn *c = [[conn alloc] initconFunc:@"getAllDataObraSala" yNomParam:@"id" yParam:idSala];
+	
+	//conn *c = [[conn alloc] initconFunc:@"getAllDataObraSala" yNomParam:@"id" yParam:idSala];
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getAllDataObraSala", @"id", idSala, nil];
+	NSString *message = [Configuracion SOAPMESSAGE:arguments];
+	conn *c = [[conn alloc] initGenerico:message Invocacion:arguments];
+	NSLog(@"PRUEBA_1");
+	
     while(!finish){
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
@@ -67,32 +73,6 @@
             else
                 [self.autorImagen addObject:rutita];
             }
-            /*NSArray *h2 = [h componentsSeparatedByString:@"=>"];
-            int sized = [h2 count];
-            int cont = 0;
-            for(int i=0;i<sized-1;i=i+5){
-                [self.obras addObject:[h2 objectAtIndex:i]];
-            }
-            for(int i=1;i<sized;i=i+5){
-                [self.autorNombre addObject:[h2 objectAtIndex:i]];
-            }
-            for(int i=2;i<sized;i=i+5){
-                [self.autorAutor addObject:[h2 objectAtIndex:i]];
-            }
-            for(int i=3;i<sized;i=i+5){
-                [self.autorDesc addObject:[h2 objectAtIndex:i]];
-            }
-            for(int i=4;i<sized;i=i+5){
-                NSString *rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                FTP *f = [[FTP alloc] initWithString:rutita yotroString:[h2 objectAtIndex:i]];
-                while(!finiteFTP) {
-                    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                }
-                if(anduvo == NO)
-                    [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-                else
-                    [self.autorImagen addObject:rutita];
-            }*/
         }
     }
     else{
@@ -106,6 +86,7 @@
     return self;
 }
 
+
 -(obtObras*)initConNombreObraParaContenidos:(NSString *)idObra{
     Parser *parser;
     finOb = NO;
@@ -118,7 +99,15 @@
     self.anim3 = [[NSString alloc]init];
     self.anim4 = [[NSString alloc]init];
     self.anim5 = [[NSString alloc]init];
-    conn *c = [[conn alloc]initconFunc:@"getContenidoObra" yNomParam:@"nombre" yParam:idObra];
+	
+	//conn *c = [[conn alloc]initconFunc:@"getContenidoObra" yNomParam:@"nombre" yParam:idObra];
+	
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getContenidoObra", @"nombre", idObra, nil];
+	NSString *message = [Configuracion SOAPMESSAGE:arguments];
+	conn *c = [[conn alloc] initGenerico:message Invocacion:arguments];
+	NSLog(@"PRUEBA_2");
+	
+	
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
@@ -201,133 +190,7 @@
         self.anim4 = animaciones[3];
         self.anim5 = animaciones[4];
         }
-        //parse
-        /*NSArray *datos = [contenidos componentsSeparatedByString:@"=>"];
-        for(int f=1;f<=12;f++){
-            if(f == 1){
-                if(![[datos objectAtIndex:f] isEqualToString:@"null"]){
-                    NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                    FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                    while(!finiteFTP) {
-                        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                    }
-                    if(anduvo == NO)
-                        self.audio = @"null";
-                    else
-                        self.audio = ruta;
-                }
-                else
-                    self.audio = @"null";
             }
-            if (f == 2){
-                if(![[datos objectAtIndex:f] isEqualToString:@"null"]){
-                    NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                    FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                    while(!finiteFTP) {
-                        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                    }
-                    if(anduvo == NO)
-                        self.video = @"null";
-                    else
-                        self.video = ruta;
-                }
-                else{
-                    self.video = @"null";
-                }
-            }
-            if (f == 3){
-                self.texto = [datos objectAtIndex:f];
-            }
-            if (f == 4){
-                if(![[datos objectAtIndex:f] isEqualToString:@"null"]){
-                    NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                    FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                    while(!finiteFTP) {
-                        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                    }
-                    if(anduvo == NO)
-                        self.modelo3d = @"null";
-                    else
-                        self.modelo3d = ruta;
-                }
-                else{
-                    self.modelo3d = @"null";
-                }
-            }
-            if(f == 8 || f > 8){
-                if([[datos objectAtIndex:f] isEqualToString:@"null"]){
-                    self.anim1 = @"null";
-                    self.anim2 = @"null";
-                    self.anim3 = @"null";
-                    self.anim4 = @"null";
-                    self.anim5 = @"null";
-                    break;
-                }
-                else{
-                    if(f == 8){
-                        NSLog(@"%@", [datos objectAtIndex:f]);
-                        NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                        while(!finiteFTP) {
-                            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                        }
-                        if(anduvo == NO)
-                            self.anim1 = @"null";
-                        else
-                            self.anim1 = ruta;
-                    }
-                    if(f==9){
-                        NSLog(@"%@", [datos objectAtIndex:f]);
-                        NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                        while(!finiteFTP) {
-                            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                        }
-                        if(anduvo == NO)
-                            self.anim2 = @"null";
-                        else
-                            self.anim2 = ruta;
-                    }
-                    if(f==10){
-                        NSLog(@"%@", [datos objectAtIndex:f]);
-                        NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                        while(!finiteFTP) {
-                            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                        }
-                        if(anduvo == NO)
-                            self.anim3 = @"null";
-                        else
-                            self.anim3 = ruta;
-                    }
-                    if(f==11){
-                        NSLog(@"%@", [datos objectAtIndex:f]);
-                        NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                        while(!finiteFTP) {
-                            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                        }
-                        if(anduvo == NO)
-                            self.anim4 = @"null";
-                        else
-                            self.anim4 = ruta;
-                    }
-                    if(f==12){
-                        NSLog(@"%@", [datos objectAtIndex:f]);
-                        NSString *ruta = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-                        FTP *ft = [[FTP alloc] initWithString:ruta yotroString:[datos objectAtIndex:f]];
-                        while(!finiteFTP) {
-                            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-                        }
-                        if(anduvo == NO)
-                            self.anim5 = @"null";
-                        else
-                            self.anim5 = ruta;
-                    }
-                }
-            }
-        }*/
-    }
     else{
         self.audio = @"null";
         self.video = @"null";
@@ -343,7 +206,6 @@
     return self;
 }
 
-
 -(obtObras*)initNombreIma:(NSString *)nombreImagen yIdSala:(NSString*)idSala{
     finOb = NO;
     self.autorNombre = [[NSMutableArray alloc] init];
@@ -351,20 +213,27 @@
     self.autorDesc = [[NSMutableArray alloc] init];
     self.autorImagen = [[NSMutableArray alloc] init];
     self.idObra = [NSString stringWithFormat:@"%@",@"-1"];
-    conn *c = [[conn alloc]initConFuncion:@"getNombreObra" NombreParametro:@"nombre_archivo" yNombreIma:nombreImagen yNombreSegParam:@"id_sala" yIdSala:idSala];
-    while(!finish) {
+	
+	//conn *c = [[conn alloc]initConFuncion:@"getNombreObra" NombreParametro:@"nombre_archivo" yNombreIma:nombreImagen yNombreSegParam:@"id_sala" yIdSala:idSala];
+	
+	NSString *arguments1 = [Configuracion soapMethodInvocationVariable: @"getNombreObra", @"nombre_archivo", nombreImagen, @"id_sala", idSala, nil];
+	NSString *message1 = [Configuracion SOAPMESSAGE:arguments1];
+	conn *c = [[conn alloc] initGenerico:message1 Invocacion:arguments1];
+	NSLog(@"PRUEBA_3");
+	
+	while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
     NSMutableString *ms = [c getSoap];
     self.idObra = ms;
-    /*do{
-        conn *c2 = [[conn alloc] initconFunc:@"terminoDescriptor" yNomParam:@"id_descriptor" yParam:nms];
-        while(!finish) {
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-        }
-        self.idObra = [c2 getSoap];
-    }while([self.idObra isEqualToString:@"-1"] || !(self.idObra));*/
-    conn *c3 = [[conn alloc] initconFunc:@"getNombreObraApartirDelID" yNomParam:@"id_obra" yParam:self.idObra];
+	
+	//conn *c3 = [[conn alloc] initconFunc:@"getNombreObraApartirDelID" yNomParam:@"id_obra" yParam:self.idObra];
+	
+	NSString *arguments2 = [Configuracion soapMethodInvocationVariable: @"getNombreObraApartirDelID", @"id_obra", self.idObra, nil];
+	NSString *message2 = [Configuracion SOAPMESSAGE:arguments2];
+	conn *c3 = [[conn alloc] initGenerico:message2 Invocacion:arguments2];
+	NSLog(@"PRUEBA_4");
+	
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
@@ -375,6 +244,7 @@
     return self;
 }
 
+/*
 -(void)obtDatosObraConNombreObra:(NSString *)nombreObra{
     Parser *parser;
     conn *c = [[conn alloc] initconFunc:@"getDataObra" yNomParam:@"nombre_obra" yParam:nombreObra];
@@ -396,20 +266,7 @@
             [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
         else
             [self.autorImagen addObject:rutita];
-        /*NSArray *datosObra = [cmas componentsSeparatedByString:@"=>"];
-        [self.autorNombre addObject:[datosObra objectAtIndex:1]];
-        [self.autorAutor addObject:[datosObra objectAtIndex:6]];
-        [self.autorDesc addObject:[datosObra objectAtIndex:2]];
-        NSString *rutita = [[NetworkManager sharedInstance] pathForTemporaryFileWithPrefix:@"Get"];
-        FTP *f = [[FTP alloc] initWithString:rutita yotroString:[datosObra objectAtIndex:4]];
-        while(!finiteFTP) {
-            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-        }
-        if(anduvo == NO)
-            [self.autorImagen addObject:[[NSBundle mainBundle] pathForResource:@"enCuadroIcon" ofType:@"png"]];
-        else
-            [self.autorImagen addObject:rutita];*/
-    }
+			}
     else{
         [self.obras addObject:@"-1"];
         [self.autorNombre addObject:@"-1"];
@@ -417,7 +274,7 @@
         [self.autorDesc addObject:@"-1"];
         [self.autorImagen addObject:@"-1"];
     }
-}
+}*/
 
 -(NSMutableArray*)getNombre{
     return self.autorNombre;

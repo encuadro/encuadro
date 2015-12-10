@@ -8,7 +8,6 @@
 
 #import "ObraCompletaViewController.h"
 #include "xml_log.h"
-
 #include "Configuracion.h"
 
 @interface ObraCompletaViewController ()
@@ -81,8 +80,6 @@ BOOL *elementFound;
 }
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     NSLog(@"TOUCH OBRA ");
-	//NSLog(@"TOUCH OBRA ");
-	//NSLog(@"TOUCH OBRA ");
     
     if (self.vistaTouch.touchman) {
         //call segue
@@ -92,8 +89,6 @@ BOOL *elementFound;
         //[self performSegueWithIdentifier: @"todraw" sender: self];
         //[self presentViewController:drawS animated:YES completion:NO];
     }
-    
-    
 }
 - (void)viewDidLoad
 {
@@ -137,7 +132,6 @@ BOOL *elementFound;
        // ContarObras = [NSMutableString stringWithString:@"1"];
      //   NSLog(@"contar obras --> %@",ContarObras);
    // }
-
     
     //[_lblPista setText:[NSString stringWithFormat:@"%@",_Cantidad]];
     // [_lblIdJuego setText:[NSString stringWithFormat:@"%@",_VariablePasarIdJuego]];
@@ -167,9 +161,7 @@ BOOL *elementFound;
     //
     //    }else {
     //CAMINO AUTOMATICO
-    
-    
-    
+	
     /*NSString *filePath = [self.descripcionObra objectAtIndex:0];
      NSData* textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];
      NSString* text = [[NSString alloc] initWithData:textData encoding:NSUTF8StringEncoding];
@@ -229,25 +221,17 @@ BOOL *elementFound;
     //                             [self UpsiAppear];
     //                         }];
     //    }
-    
-    
-    
-    
 }
 
 - (void)UpsiAppear
 {
-    
     //upsi.center=CGPointMake(950,1000);
     if (conUpsi) {
         [UIView animateWithDuration:2
                               delay:0.6
                             options: UIViewAnimationCurveEaseOut
                          animations:^{
-                             
                              upsi.center=CGPointMake(950,700);
-                             
-                             
                          }
                          completion:^(BOOL finished){
                              NSLog(@"Done!");
@@ -255,22 +239,16 @@ BOOL *elementFound;
                              // [self UpsiUpMoveLeft];
                          }];
     }
-    
 }
-
 
 - (void)UpsiUpMoveLeft
 {
-    
     [UIView animateWithDuration:1
                           delay:0.6
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
-                         
                          //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
-                         
                          upsi.center=CGPointMake(400,700);
-                         
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
@@ -282,16 +260,12 @@ BOOL *elementFound;
 
 - (void)UpsiDownMoveLeft
 {
-    
     [UIView animateWithDuration:1
                           delay:0
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
-                         
                          //upsi.transform=CGAffineTransformRotate(upsi.transform, M_PI);
-                         
                          upsi.center=CGPointMake(950,1500);
-                         
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
@@ -303,15 +277,11 @@ BOOL *elementFound;
 
 - (void)UpsiDisAppear
 {
-    
     [UIView animateWithDuration:1
                           delay:1
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
-                         
                          upsi.center=CGPointMake(400,340);
-                         
-                         
                      }
                      completion:^(BOOL finished){
                          NSLog(@"Done!");
@@ -319,8 +289,6 @@ BOOL *elementFound;
                          [self UpsiAppear];
                      }];
 }
-
-
 
 - (void)viewDidUnload
 {
@@ -338,14 +306,12 @@ BOOL *elementFound;
     [super viewDidUnload];
 
     // Release any retained subviews of the main view.
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
-
 
 - (IBAction) play{
     if([[descripcionObra objectAtIndex:4] isEqualToString:@"null"]){
@@ -448,41 +414,7 @@ BOOL *elementFound;
     //probando
     /*AyudaPista = self.obra.text=[descripcionObra objectAtIndex:1];
     NSLog(@"AyudaPista: %@",AyudaPista);*/
- /*   NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<getDataObra xmlns=\"http://10.0.2.109/server_php/server_php.php/getDataObra\">\n"
-                             "<nombre_obra>%@</nombre_obra>"
-                             "</getDataObra>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", nombreObra];*/
-    /*NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<getDataObra xmlns=\"http://%@/server_php/server_php.php/getDataObra\">\n"
-                             "<nombre_obra>%@</nombre_obra>"
-                             "</getDataObra>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n",[Configuracion ipserver], nombreObra];*/
-    /*NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<getDataObraId xmlns=\"http://10.0.2.109/server_php/server_php.php/getDataObraId\">\n"
-                             "<nombre_obra>%@</nombre_obra>"
-                             "</getDataObraId>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", [NSString stringWithFormat:@"%d",juego.idObraActual]];
-    NSLog(soapMessage);*/
-	/*
-	NSString *arguments = [Configuracion soapMethodInvocationStr:@"getDataObra" par1name:@"nombre_obra" par1value:nombreObra];
-	NSString *soapMessage = [Configuracion SOAPMESSAGE:arguments];
-	NSLog(@"\n**********---- ObraCompletaViewController: %@", soapMessage);
-	*/
 	
-	//prueba metodo variable
 	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"getDataObra", @"nombre_obra", nombreObra, nil];
 	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];	
 	
@@ -492,8 +424,7 @@ BOOL *elementFound;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	//[theRequest addValue: @"http://10.0.2.109/server_php/server_php.php/getDataObraId" forHTTPHeaderField:@"SOAPAction"];
-    [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: ([Configuracion soapMethodInvocationVariable:@"getDataObra", nil]) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -526,38 +457,7 @@ BOOL *elementFound;
         //[juego setContar:juego.contar+1];
     }
         //aux = txtPista.text;
-/*    NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-                             "<id_Obra>%@</id_Obra>"
-                             "</ObraPerteneceAJuego>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
- */
-	/*
-    NSString * parameters = [NSString stringWithFormat:@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-    "<id_Obra>%@</id_Obra>"
-    "</ObraPerteneceAJuego>\n",[Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
-	
-    NSString *soapMessage2 = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-                             "<id_Obra>%@</id_Obra>"
-                             "</ObraPerteneceAJuego>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", [Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
-		*/
-	/*
-	NSString *parameters = [Configuracion soapMethodInvocationInt:@"ObraPerteneceAJuego" par1name:@"id_Obra" par1value:juego.idObraActual];
-	NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];
-	
-	NSLog(@"\n************** ObraCompletaViewController: %@", soapMessage);
-*/
-	//prueba metodo variable
+
 	NSString *idObraActual = [NSString stringWithFormat:@"%d", (juego.idObraActual)];
 	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"ObraPerteneceAJuego", @"id_Obra", idObraActual, nil];
 	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
@@ -568,7 +468,7 @@ BOOL *elementFound;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: ([Configuracion soapMethodInvocationVariable:@"ObraPerteneceAJuego", nil]) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -667,17 +567,12 @@ BOOL *elementFound;
             NSString *stringFromDate = [hoy stringFromDate:hora_inicio];
             CFTimeInterval startTime = CACurrentMediaTime();
             [juego setStart:startTime];
-            
         }
         //[vista setHoraComienzo:[NSString stringWithFormat:@"%@",HoraJuego]];
         
         NSLog(@" mostrando Tipo Recorrido a pasar --> %@",AuxTipoRecorridoOCVC);
        // [vista setFechaJuego:[NSDate date]];
-        
-         
-        
     }
-    
     XML_OUT;
 }
 
@@ -726,37 +621,7 @@ BOOL *elementFound;
     //                          otherButtonTitles:nil];
     //    [alert show];
     //    [alert release];
-    
-    
-    /*NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<ObraPerteneceAJuego xmlns=\"http://10.0.2.109/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-                             "<id_Obra>%@</id_Obra>"
-                             "</ObraPerteneceAJuego>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", [NSString stringWithFormat:@"%d",juego.idObraActual]];*/
-    /*NSString * parameters = @"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-    "<id_Obra>%@</id_Obra>"
-    "</ObraPerteneceAJuego>\n",*IPSERVER ,[NSString stringWithFormat:@"%d",juego.idObraActual];
-     
-      NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];*/
-	/*
-	NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-                             "<id_Obra>%@</id_Obra>"
-                             "</ObraPerteneceAJuego>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", [Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idObraActual]];
-   
-    
-	NSLog(@"\n**********---+ ObraCompletaViewController: %@", soapMessage);
-	*/
-	//prueba metodo variable
+	
 	NSString *idObraActual = [NSString stringWithFormat:@"%d", (juego.idObraActual)];
 	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"ObraPerteneceAJuego", @"id_Obra", idObraActual, nil];
 	NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
@@ -767,7 +632,7 @@ BOOL *elementFound;
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: (@"http://%@/server_php/server_php.php/ObraPerteneceAJuego",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: ([Configuracion soapMethodInvocationVariable:@"ObraPerteneceAJuego", nil]) forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -841,31 +706,7 @@ BOOL *elementFound;
     //-(Pista *)ObtPistaTexto: (NSString*)IdObra IdPista:(NSString*)idjuego
     //recordResults = FALSE;
     pis3=@"1";
-    /*NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<BusquedaPista xmlns=\"http://10.0.2.109/server_php/server_php.php/BusquedaPista\">\n"
-                             "<id_Obra>%@</id_Obra>"
-                             "<id_Juego>%@</id_Juego>"
-                             "</BusquedaPista>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n",[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];*///txtPista.text, txtJuego.text];
-	/*
-	NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<BusquedaPista xmlns=\"http://%@/server_php/server_php.php/BusquedaPista\">\n"
-                             "<id_Obra>%@</id_Obra>"
-                             "<id_Juego>%@</id_Juego>"
-                             "</BusquedaPista>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n",[Configuracion ipserver],[NSString stringWithFormat:@"%d",juego.idObraActual],[NSString stringWithFormat:@"%d",juego.idJuego]];
-    NSLog(@"\n************** ObraCompletaViewController: %@",soapMessage);
-	*/
-	
-	//prueba metodo variable
+
 	NSString *idObraActual = [NSString stringWithFormat:@"%d",juego.idObraActual];
 	NSString *idJuego = [NSString stringWithFormat:@"%d",juego.idJuego];
 	NSString *parameters = [Configuracion soapMethodInvocationVariable:@"BusquedaPista", @"id_Obra", idObraActual, @"id_Juego", idJuego, nil];
@@ -877,7 +718,7 @@ BOOL *elementFound;
     NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
     NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
     [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-    [theRequest addValue: (@"http://%@/server_php/server_php.php/BusquedaPista",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: ([Configuracion soapMethodInvocationVariable:@"BusquedaPista", nil]) forHTTPHeaderField:@"SOAPAction"];
     [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
     [theRequest setHTTPMethod:@"POST"];
     [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
@@ -1015,7 +856,7 @@ qualifiedName:(NSString *)qName
                 [juego setIdobraSig:[[parsed getParameter:(@"id_proxima"):2] intValue]];//[auxidpista substringToIndex:3]];
                 //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
                 UIAlertView *Mensaje = [[UIAlertView alloc]
-                                        initWithTitle:@"Pista!!!!!!"
+                                        initWithTitle:@"Pista!"
                                         message:@"Puede volver a leer la pista, seleccionando Repetir Pista. Para continuar, seleccione Estado Juego"
                                         delegate:self
                                         cancelButtonTitle:@"Continuar"
@@ -1229,7 +1070,7 @@ qualifiedName:(NSString *)qName
     //NSLog(@"Pista Siguiente !!!! --> %@",IdPistaSiguiente);
     
     UIAlertView *MostrarMensaje = [[UIAlertView alloc]
-                                   initWithTitle:@"Pista!!!!!!"
+                                   initWithTitle:@"Pista!"
                                    message:@"Para continuar, seleccione Estado Juego"
                                    delegate:self
                                    cancelButtonTitle:@"Continuar"
@@ -1238,7 +1079,7 @@ qualifiedName:(NSString *)qName
     
     
     UIAlertView *MostrarPista = [[UIAlertView alloc]
-                                 initWithTitle:@"Pista!!!!!!"
+                                 initWithTitle:@"Pista!"
                                  message:juego.pistaActual//txtObtenerPista.text
                                  delegate:self
                                  cancelButtonTitle:@"Continuar"

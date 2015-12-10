@@ -17,8 +17,6 @@
 + (NSString*) SOAPMESSAGE: (NSString*) parameters;
 + (NSString*) kPostURL;
 + (NSString*) ipserver;
-//+ (NSString*) soapMethodInvocationInt:(NSString *)method par1name:(NSString *)p1n par1value:(int)p1v;
-//+ (NSString*) soapMethodInvocationStr:(NSString *)method par1name:(NSString *)p1n par1value:(NSString *)p1v;
 + (NSString*) soapMethodInvocationVariable:(NSString *)arg1,...;
 
 @end

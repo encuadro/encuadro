@@ -9,7 +9,6 @@
 #import "CuadroTableViewController.h"
 #import "Configuracion.h"
 
-
 @interface CuadroTableViewController ()
 
 @end
@@ -25,7 +24,6 @@
 @synthesize ARObj = _ARObj;
 @synthesize actInd, tableView;
 
-//
 @synthesize greeting, nameInput, webData, soapResults, xmlParser, AyudaPista;
 @synthesize AuxPistaSig = _AuxPistaSig;
 @synthesize AuxIdJuego = _AuxIdJuego;
@@ -92,8 +90,6 @@ BOOL *elementFound;
                                   @"Retrato de la Sra. Carlota F. de R., c.1883. Óleo sobre tela. 130 x 100 cm",
                                   nil];
          
-         
-         
          self.nombre_audio = [[NSArray alloc]
                               initWithObjects:
                               @"Blanes_atardecer.mp3",
@@ -125,9 +121,6 @@ BOOL *elementFound;
                               @"artigas",
                               @"artigas",
                               nil];
-         
-         
-         
    
      }else if (opcionAutor==2) {//2--> Figari
          
@@ -170,10 +163,8 @@ BOOL *elementFound;
                                    @"Pericón en el patio de la estancia, c.1925. Óleo sobre cartón. 70 x 100 cm",
                                    @"Pique nique, c.1925. Oleo sobre cartón. 65 x 88 cm",
                                    @"Toque de oración, c.1925. Óleo sobre cartón. 69 x 99 cm",
-                                   nil];
-         
-         
-         
+                                   nil];  
+			
          self.nombre_audio = [[NSArray alloc]
                               initWithObjects:
                               @"Figari_cambacua.mp3",
@@ -194,7 +185,6 @@ BOOL *elementFound;
                       [NSNumber numberWithInt:10],
                       nil];
          
-         
          self.ARType = [[NSArray alloc]
                         initWithObjects:
                         @"modelo",
@@ -214,9 +204,6 @@ BOOL *elementFound;
                        @"chihuahua",
                        @"chihuahua",
                        nil];
-         
-         
-         
      } else if (opcionAutor==3) {//3--> Torres Garcia
          NSLog(@"OPCION AUTOR ES 3---TORRES GARCIA");
         self.cuadroAutor = [[NSArray alloc]
@@ -255,7 +242,6 @@ BOOL *elementFound;
                                   @"Arte universal, 1943. Óleo sobre tela. 106 x 75 cm",
                                   nil];
          
-         
          self.nombre_audio = [[NSArray alloc]
                               initWithObjects:
                               @"Torres_constructiva.mp3",
@@ -283,7 +269,6 @@ BOOL *elementFound;
                         @"video",
                         nil];
          
-         
          self.ARObj = [[NSArray alloc]
                        initWithObjects:
                        @"videoplayback",
@@ -292,9 +277,6 @@ BOOL *elementFound;
                        @"GangnamStyle",
                        @"GangnamStyle",
                        nil];
-         
-         
-         
         
      }else if(opcionAutor==4){
          NSLog(@"OPCION AUTOR ES 4---ESCULTURAS DIGITALES");
@@ -317,9 +299,7 @@ BOOL *elementFound;
                                    initWithObjects:
                                    @"Escultura digital de José Gervacio Artigas",
                                    nil];
-         
-         
-         
+			
          self.nombre_audio = [[NSArray alloc]
                               initWithObjects:
                               @"Blanes_atardecer.mp3",
@@ -335,14 +315,10 @@ BOOL *elementFound;
                         @"animacion",
                         nil];
          
-         
          self.ARObj = [[NSArray alloc]
                        initWithObjects:
                        @"artigas",
                        nil];
-         
-         
-     
      }
     
      else {//else-->Todos los autores
@@ -427,7 +403,6 @@ BOOL *elementFound;
                                   @"Retrato de José Gervacio Artigas",
                                   nil];
         
-        
 //        self.nombre_audio = [[NSArray alloc]
 //                               initWithObjects:
 //                             @"Adele - Rolling In The Deep.mp3",nil];
@@ -452,7 +427,6 @@ BOOL *elementFound;
                              @"Blanes_atardecer.mp3",
                              nil];
         
-        
         self.ARid = [[NSArray alloc]
                      initWithObjects:
                      [NSNumber numberWithInt:1],
@@ -472,7 +446,6 @@ BOOL *elementFound;
                      [NSNumber numberWithInt:15],
                      [NSNumber numberWithInt:16],
                      nil];
-         
          
          self.ARType = [[NSArray alloc]
                         initWithObjects:
@@ -494,7 +467,6 @@ BOOL *elementFound;
                         @"animacion",
                         nil];
          
-         
          self.ARObj = [[NSArray alloc]
                        initWithObjects:
                        @"artigas",
@@ -514,10 +486,6 @@ BOOL *elementFound;
                        @"GangnamStyle",
                        @"artigas",
                        nil];
-         
-        
-        
-        
     }    
    */
                           
@@ -577,7 +545,6 @@ BOOL *elementFound;
     // Return the number of sections.
    
     return 1;
-   
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -602,19 +569,14 @@ BOOL *elementFound;
     // Configure the cell...
     cell.autorLabel.text = [self.cuadroAutor 
                            objectAtIndex: [indexPath row]];
-
-  
-    
+	
     cell.obraLabel.text = [self.cuadroObra 
                             objectAtIndex:[indexPath row]];
-
-    
+	
     UIImage *cuadroPhoto = [UIImage imageWithContentsOfFile:[self.cuadroImages objectAtIndex:[indexPath row]]];
-    
-    
+	
     cell.cuadroImage.image = cuadroPhoto;
-
-    
+	
     return cell;
 }
 
@@ -676,33 +638,7 @@ BOOL *elementFound;
         [descripcionObra addObject:imagen];
         [descripcionObra addObject:descripcion];
         oo = [[obtObras alloc] initConNombreObraParaContenidos:nombre];
-        /*
-        NSString *soapMessage = [NSString stringWithFormat:
-                                 @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                                 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                                 "<soap:Body>\n"
-											
-                                 "<getDataObra xmlns=\"http://%@/server_php/server_php.php/getDataObra\">\n"
-                                 "<nombre_obra>%@</nombre_obra>"
-                                 "</getDataObra>\n"
-											
-                                 "</soap:Body>\n"
-                                 "</soap:Envelope>\n",[Configuracion ipserver], nombre];*/
-		 //NSString *soapMessage = [NSString
-		 /*NSString * parameters = [NSString stringWithFormat:@"<ObraPerteneceAJuego xmlns=\"http://%@/server_php/server_php.php/ObraPerteneceAJuego\">\n"
-										  "<id_Obra>%@</id_Obra>"
-										  "</ObraPerteneceAJuego>\n",[Configuracion ipserver] ,[NSString stringWithFormat:@"%d",juego.idObraActual]];
-		 */
-		 
-		 
-		 //NSString *parameters = [Configuracion soapMethodInvocationStr:@"getDataObra" par1name:@"nombre_obra" par1value:nombre];
-		 //NSString *soapMessage = [Configuracion SOAPMESSAGE: (parameters)];
-		 
-		 //NSLog(@"\n************** CuadroTableViewController: %@", soapMessage);
-		 //NSLog(@"\n************** CuadroTableViewController: %@", soapMessage);
-		 
-		 
-		 //prueba metodo variable
+
 		 NSString *parameters = [Configuracion soapMethodInvocationVariable:@"getDataObra", @"nombre_obra", nombre, nil];
 		 NSString *soapMessage = [Configuracion SOAPMESSAGE:(parameters)];
 		 
@@ -713,8 +649,9 @@ BOOL *elementFound;
         NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
         NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
         [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-        [theRequest addValue: (@"http://%@/server_php/server_php.php/getDataObra",[Configuracion ipserver]) forHTTPHeaderField:@"SOAPAction"];
-        [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+        [theRequest addValue: ([Configuracion soapMethodInvocationVariable:@"getDataObra", nil]) forHTTPHeaderField:@"SOAPAction"];
+		 
+		 [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
         [theRequest setHTTPMethod:@"POST"];
         [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
         NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];

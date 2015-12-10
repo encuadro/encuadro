@@ -619,13 +619,13 @@ UIImageOrientation orientation;
 
 -(BOOL)shouldAutorotate
 {
-    NSLog(@"shouldAutorotate ISGL");
+	//NSLog(@"shouldAutorotate ISGL");
     return NO;
 }
 
 -(NSUInteger)supportedInterfaceOrientations
 {
-    NSLog(@"supportedInterfaceOrientations ISGL");
+	//NSLog(@"supportedInterfaceOrientations ISGL");
     return UIInterfaceOrientationMaskLandscape;
 }
 

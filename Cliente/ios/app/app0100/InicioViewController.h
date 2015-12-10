@@ -12,15 +12,9 @@
 int click;
 @interface InicioViewController : UIViewController
 
-@property (nonatomic, retain) AVAudioPlayer *audioPlayer;
-@property (nonatomic, retain) IBOutlet UIButton *start;
+	@property (nonatomic, retain) AVAudioPlayer *audioPlayer;
+	@property (nonatomic, retain) IBOutlet UIButton *start;
 
-
-
-
-- (IBAction) play;
-
-
-
+	- (IBAction) play;
 
 @end

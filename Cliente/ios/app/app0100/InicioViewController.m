@@ -15,9 +15,6 @@
 @implementation InicioViewController
 @synthesize audioPlayer,start;
 
-
-
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -26,7 +23,6 @@
     }
     return self;
 }
-
 
 - (IBAction) play{
     
@@ -47,8 +43,6 @@
         click=0;
         [start setTitle:@"Instrucciones" forState:UIControlStateNormal];
     }
-    
-    
 }
 
 
@@ -56,48 +50,38 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
 }
 
 -(BOOL)shouldAutorotate
 {
-    NSLog(@"shouldAutorotate INICIO");
+	//NSLog(@"shouldAutorotate INICIO");
     return NO;
 }
 
 -(NSUInteger)supportedInterfaceOrientations
 {
-    NSLog(@"supportedInterfaceOrientations INICIO");
+	//NSLog(@"supportedInterfaceOrientations INICIO");
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
 {
-    NSLog(@"preferredInterfaceOrientationForPresentation INICIO");
+	//NSLog(@"preferredInterfaceOrientationForPresentation INICIO");
     return UIInterfaceOrientationLandscapeRight;
 }
 
-
-
 //REIMPLEMENTED
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-
-    NSLog(@"WILL ROTATE INICIO");
-
-
+	//NSLog(@"WILL ROTATE INICIO");
 }
 
 //REIMPLEMENTED
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
-
-    NSLog(@"DID ROTATE INICIO");
-
+	//NSLog(@"DID ROTATE INICIO");
 }
-
 
 - (void)viewDidUnload
 {
-    
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -106,6 +90,7 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationLandscapeLeft);
 }
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     //if ([[segue identifier] isEqualToString:@"Fow"])
@@ -116,6 +101,5 @@
         
 // }
 }
-
 
 @end

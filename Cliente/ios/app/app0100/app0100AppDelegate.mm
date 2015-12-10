@@ -24,26 +24,20 @@
     printf("applicationDidFinishLaunching (AppDelegate)\n");
 	//NSLog(@"prueba vale: %@",[Configuracion kPostURL]);
 	
-	/*
-	 //prueba metodo variable
-	[Configuracion soapMethodInvocationVariable:@"ab",@"cd",nil];
-	[Configuracion soapMethodInvocationVariable:nil];
-	[Configuracion soapMethodInvocationVariable:@"123",nil];
-	*/
-	
 	// Create the UIWindow
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     
     // Instantiate the Isgl3dDirector and set background color
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000";
 
-#ifdef OLD_ISGL3D
+	#ifdef OLD_ISGL3D
 	// Set the device orientation
  	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;   //TOUCH//
     
 	// Set the director to display the FPS
 	[Isgl3dDirector sharedInstance].displayFPS = YES;
-#endif
+	#endif
+	
 	// Create the UIViewController
     /*El init que se esta invocando es el del padre UIViewController*/
 	_viewController = [[Isgl3dViewController alloc] initWithNibName:nil bundle:nil];
@@ -53,8 +47,6 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPadStoryboard" bundle:nil];
 	InicioViewController *inicioController = [storyboard instantiateInitialViewController];
     [self.window setRootViewController:inicioController];
-    
-    
     
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
@@ -70,7 +62,8 @@
     [Isgl3dDirector sharedInstance].autoRotationStrategy = Isgl3dAutoRotationByUIViewController;
     [Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsAll;//TOUCH
 	//[Isgl3dDirector sharedInstance].allowedAutoRotations = Isgl3dAllowedAutoRotationsAll;
-#endif
+	#endif
+	
 	// Set the animation frame rate
 	[[Isgl3dDirector sharedInstance] setAnimationInterval:1.0/60];
     
@@ -103,26 +96,18 @@
     printf("%f \t %f\n",fullScreenRect.size.width, fullScreenRect.size.height);
     [vistaImg setCenter:CGPointMake(fullScreenRect.size.width/2, fullScreenRect.size.height/2)];
     [vistaImg setBounds:fullScreenRect];
-    
-    
-    
+	
     //    [vistaImg setNeedsDisplay];
-    
-    
+	
     [self.window addSubview:vistaImg];
 	[self.window sendSubviewToBack:vistaImg];
-    
-    
-    
-    
+	
     _viewController.videoView = vistaImg;
-    
-    
+	
 	// Make the opengl view transparent
 	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
 	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
-    
-    
+	
     _viewController.videoView.frame=CGRectMake(0, 0,fullScreenRect.size.height, fullScreenRect.size.width);
     glView.frame=CGRectMake(0, 0,fullScreenRect.size.height, fullScreenRect.size.width);
     

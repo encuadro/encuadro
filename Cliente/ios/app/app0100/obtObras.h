@@ -34,7 +34,7 @@ BOOL finOb;
 -(obtObras*)initConId:(NSString*)idSala;
 -(obtObras*)initConNombreObraParaContenidos:(NSString*)idObra;
 -(obtObras*)initNombreIma:(NSString*)nombreImagen yIdSala:(NSString*)idSala;
--(void)obtDatosObraConNombreObra:(NSString*)nombreObra;
+//-(void)obtDatosObraConNombreObra:(NSString*)nombreObra;
 -(NSMutableArray*)getNombre;
 -(NSMutableArray*)getAutor;
 -(NSMutableArray*)getDesc;
