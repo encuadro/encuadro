@@ -25,8 +25,7 @@
 	//c = [[conn alloc] initconFunc:@"getAllDataSalas"];
 	
 	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getAllDataSalas", nil];
-	NSString *message = [Configuracion SOAPMESSAGE:arguments];
-	c = [[conn alloc] initGenerico:message Invocacion:arguments];
+	c = [[conn alloc] initGenerico:arguments];
 	NSLog(@"PRUEBA_6");
 	
     while(!finish){
@@ -82,8 +81,7 @@
 	//c2 = [[conn alloc]initconFunc:@"getDataSalaId2" yNomParam:@"id_sala" yParam:idSala];
 	
 	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getDataSalaId2", @"id_sala", idSala, nil];
-	NSString *message = [Configuracion SOAPMESSAGE:arguments];
-	c2 = [[conn alloc] initGenerico:message Invocacion:arguments];
+	c2 = [[conn alloc] initGenerico:arguments];
 	NSLog(@"PRUEBA_5");
 	
     while(!finish) {

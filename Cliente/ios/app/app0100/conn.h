@@ -24,9 +24,9 @@ BOOL finish,worked;
 @property(nonatomic, retain) NSMutableString *soapResults;
 @property(nonatomic, retain) NSXMLParser *xmlParser;
 //-(conn *)initconFunc:(NSString*)string;
-//-(conn *)initconFunc:(NSString*)string yNomParam:(NSString*)string2 yParam:(NSString*)inti;
+-(conn *)initconFunc:(NSString*)string yNomParam:(NSString*)string2 yParam:(NSString*)inti;
 //-(conn *)initConFuncion:(NSString*)nomFuncion NombreParametro:(NSString*)nombreParametro yNombreIma:(NSString*)nombreDato yNombreSegParam:(NSString*)nombreParam2 yIdSala:(NSString*)nombreDato2;
--(conn *)initGenerico:(NSString *)soapMessage Invocacion:(NSString *)invocation;
+-(conn *)initGenerico:(NSString *)invocation;
 -(NSMutableString *)getSoap;
 -(void) setParser;
 @end

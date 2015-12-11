@@ -39,7 +39,7 @@
     }
     return self;
 }
-
+*/
 -(conn*)initconFunc:(NSString *)string yNomParam:(NSString *)string2 yParam:(NSString*)inti{
     finish = NO;
     worked = NO;
@@ -68,7 +68,7 @@
     }
     return self;
 }
-
+/*
 -(conn*)initConFuncion:(NSString *)nomFuncion NombreParametro:(NSString *)nombreParametro yNombreIma:(NSString *)nombreDato yNombreSegParam:(NSString *)nombreParam2 yIdSala:(NSString*)nombreDato2{
     finish = NO;
     worked = NO;
@@ -100,13 +100,12 @@
 
 */
 
-
-//////////////// prueba metodo variable
--(conn *) initGenerico:(NSString *)soapMessage Invocacion:(NSString *)invocation{
+-(conn *) initGenerico:(NSString *)invocation{
 	finish = NO;
 	worked = NO;
 	
-	NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
+	NSString *soapMessage = [Configuracion SOAPMESSAGE:invocation];
+		NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
@@ -121,10 +120,11 @@
 	NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
 	if( theConnection ){
 		webData = [[NSMutableData data] retain];
-		NSLog(@">entro (variable)");
+		//NSLog(@">entro (variable)");
 	}
 	else{
-		NSLog(@">no entro (variable)");
+		NSLog(@"theConnection is NULL");
+		//NSLog(@">no entro (variable)");
 	}
 	return self;
 }

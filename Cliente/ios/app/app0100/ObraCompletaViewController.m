@@ -435,6 +435,7 @@ BOOL *elementFound;
 	else{
 		NSLog(@"theConnection is NULL");
 	}
+	
     //IdObraPista = [soapResults substringToIndex:3];
    // AuxIdObra = txtPista.text;
 //    NSLog(@"mostrar txt %@",AuxIdObra);
