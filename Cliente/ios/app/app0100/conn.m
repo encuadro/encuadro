@@ -39,7 +39,7 @@
     }
     return self;
 }
-*/
+ *//*
 -(conn*)initconFunc:(NSString *)string yNomParam:(NSString *)string2 yParam:(NSString*)inti{
     finish = NO;
     worked = NO;
@@ -67,7 +67,7 @@
 		NSLog(@"no entro");
     }
     return self;
-}
+}*/
 /*
 -(conn*)initConFuncion:(NSString *)nomFuncion NombreParametro:(NSString *)nombreParametro yNombreIma:(NSString *)nombreDato yNombreSegParam:(NSString *)nombreParam2 yIdSala:(NSString*)nombreDato2{
     finish = NO;
@@ -100,19 +100,18 @@
 
 */
 
--(conn *) initGenerico:(NSString *)invocation{
+-(conn *) initGenerico:(NSString *)invocation functionName:(NSString *)funcName{
 	finish = NO;
 	worked = NO;
-	
+	NSLog(@"INVOCATION: %@", invocation);
 	NSString *soapMessage = [Configuracion SOAPMESSAGE:invocation];
-		NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
+	NSMutableString *u = [NSMutableString stringWithString:[Configuracion kPostURL]];
 	[u setString:[u stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	NSURL *url = [NSURL URLWithString:u];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
 	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
 	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	NSString *s = invocation;
-	[theRequest addValue: s  forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: funcName  forHTTPHeaderField:@"SOAPAction"];
 	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
 	[theRequest setHTTPMethod:@"POST"];
 	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];

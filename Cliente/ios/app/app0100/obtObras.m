@@ -38,8 +38,9 @@
     self.autorImagen = [[NSMutableArray alloc] init];
 	
 	//conn *c = [[conn alloc] initconFunc:@"getAllDataObraSala" yNomParam:@"id" yParam:idSala];
-	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getAllDataObraSala", @"id", idSala, nil];
-	conn *c = [[conn alloc] initGenerico:arguments];
+	NSString *funcName = @"getAllDataObraSala";
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: funcName, @"id", idSala, nil];
+	conn *c = [[conn alloc] initGenerico:arguments functionName:funcName];
 	NSLog(@"PRUEBA_1");
 	
     while(!finish){
@@ -101,8 +102,9 @@
 	
 	//conn *c = [[conn alloc]initconFunc:@"getContenidoObra" yNomParam:@"nombre" yParam:idObra];
 	
-	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getContenidoObra", @"nombre", idObra, nil];
-	conn *c = [[conn alloc] initGenerico:arguments];
+	NSString *funcName = @"getContenidoObra";
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: funcName, @"nombre", idObra, nil];
+	conn *c = [[conn alloc] initGenerico:arguments functionName:funcName];
 	NSLog(@"PRUEBA_2");
 	
 	
@@ -215,9 +217,10 @@
 	//conn *c = [[conn alloc]initConFuncion:@"getNombreObra" NombreParametro:@"nombre_archivo" yNombreIma:nombreImagen yNombreSegParam:@"id_sala" yIdSala:idSala];
 	
 	//NSString *arguments1 = [Configuracion soapMethodInvocationVariable: @"getNombreObra", @"nombre_archivo", nombreImagen, @"id_sala", idSala, nil];
-NSString *arguments1 = [Configuracion soapMethodInvocationVariable: @"getNombreObra", @"id_sala", idSala, @"nombre_archivo", nombreImagen, nil];
 
-	conn *c = [[conn alloc] initGenerico:arguments1];
+	NSString *funcName = @"getNombreObra";
+	NSString *arguments1 = [Configuracion soapMethodInvocationVariable: funcName, @"id_sala", idSala, @"nombre_archivo", nombreImagen, nil];
+	conn *c = [[conn alloc] initGenerico:arguments1 functionName:funcName];
 	NSLog(@"PRUEBA_3");
 	
 	while(!finish) {
@@ -228,15 +231,16 @@ NSString *arguments1 = [Configuracion soapMethodInvocationVariable: @"getNombreO
 	
 	//conn *c3 = [[conn alloc] initconFunc:@"getNombreObraApartirDelID" yNomParam:@"id_obra" yParam:self.idObra];
 	
-	NSString *arguments3 = [Configuracion soapMethodInvocationVariable: @"getNombreObraApartirDelID", @"id_obra", self.idObra, nil];
-	conn *c3 = [[conn alloc] initGenerico:arguments3];
+	NSString *funcName2 = @"getNombreObraApartirDelID";
+	NSString *arguments3 = [Configuracion soapMethodInvocationVariable: funcName2, @"id_obra", self.idObra, nil];
+	conn *c3 = [[conn alloc] initGenerico:arguments3 functionName:funcName2];
 	NSLog(@"PRUEBA_4");
-	NSLog(@"getSOAP: %@", [c3 getSoap]);
 	NSLog(@"idObra: %@", self.idObra);
 	
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
+	NSLog(@"getSOAP: %@", [c3 getSoap]);
     self.nombreObra = [c3 getSoap];
     [self obtDatosObraConNombreObra:self.nombreObra];
     [self initConNombreObraParaContenidos:self.nombreObra];
@@ -247,7 +251,11 @@ NSString *arguments1 = [Configuracion soapMethodInvocationVariable: @"getNombreO
 
 -(void)obtDatosObraConNombreObra:(NSString *)nombreObra{
     Parser *parser;
-    conn *c = [[conn alloc] initconFunc:@"getDataObra" yNomParam:@"nombre_obra" yParam:nombreObra];
+	//conn *c = [[conn alloc] initconFunc:@"getDataObra" yNomParam:@"nombre_obra" yParam:nombreObra];
+	NSString *funcName = @"getDataObra";
+	NSString *arguments = [Configuracion soapMethodInvocationVariable:funcName, @"nombre_obra", nombreObra, nil];
+	conn *c = [[conn alloc] initGenerico:arguments functionName:funcName];
+	
     while(!finish) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }

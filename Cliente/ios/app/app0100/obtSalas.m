@@ -24,8 +24,9 @@
     self.autorImagen = [[NSMutableArray alloc]init];
 	//c = [[conn alloc] initconFunc:@"getAllDataSalas"];
 	
-	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getAllDataSalas", nil];
-	c = [[conn alloc] initGenerico:arguments];
+	NSString *funcName = @"getAllDataSalas";
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: funcName, nil];
+	c = [[conn alloc] initGenerico:arguments functionName:funcName];
 	NSLog(@"PRUEBA_6");
 	
     while(!finish){
@@ -80,8 +81,9 @@
     self.autorImagen = [[NSMutableArray alloc]init];
 	//c2 = [[conn alloc]initconFunc:@"getDataSalaId2" yNomParam:@"id_sala" yParam:idSala];
 	
-	NSString *arguments = [Configuracion soapMethodInvocationVariable: @"getDataSalaId2", @"id_sala", idSala, nil];
-	c2 = [[conn alloc] initGenerico:arguments];
+	NSString *funcName = @"getDataSalaId2";
+	NSString *arguments = [Configuracion soapMethodInvocationVariable: funcName, @"id_sala", idSala, nil];
+	c2 = [[conn alloc] initGenerico:arguments functionName:funcName];
 	NSLog(@"PRUEBA_5");
 	
     while(!finish) {
