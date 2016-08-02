@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+
+#ifdef USE_ISGL
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
+#endif
+
 #import "app0100AppDelegate.h"
-#import "HelloWorldView.h"
+//#import "HelloWorldView.h"
 #import "ObraCompletaViewController.h"
 #import "TouchVista.h"
 #import <Twitter/Twitter.h>
@@ -34,10 +38,14 @@ bool Artigas;
 @property (nonatomic, retain) UIImageView* vistaImg;
 @property (nonatomic, retain) UIButton *button;
 
+#ifdef USE_ISGL
 @property (nonatomic, retain) Isgl3dViewController <AVCaptureVideoDataOutputSampleBufferDelegate> * viewController;
+
 //@property (nonatomic, retain) app0bAppDelegate *appDelegate;
 //@property (readwrite) bool AugmReal;
 @property (nonatomic,retain) Isgl3dView * HWview;
+#endif
+
 //- (IBAction)buttonClicked:(id)sender;
 @property (nonatomic, readwrite) NSNumber *ARidObra;
 @property (nonatomic, retain) NSString *ARType; //modelo, animacion, video
@@ -49,7 +57,10 @@ bool Artigas;
 //@property (nonatomic, readwrite) bool *DosCubos;
 
 @property (nonatomic, retain) TouchVista *vistaTouch;
+
+#ifdef USE_ISGL
 @property (nonatomic, retain) MPMoviePlayerController *theMovieVista;
+#endif
 
 @property (assign) IBOutlet UIImageView *backround;
 -(IBAction)TWeet:(id)sender;

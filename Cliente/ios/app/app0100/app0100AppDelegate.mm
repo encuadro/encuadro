@@ -8,9 +8,12 @@
 
 
 #import "app0100AppDelegate.h"
+#ifdef USE_ISGL
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
+#endif
 #import "InicioViewController.h"
+
 //#import "conn.h"
 
 @implementation app0100AppDelegate
@@ -26,10 +29,17 @@
 	
 	// Create the UIWindow
 	_window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
+	
+	UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPadStoryboard" bundle:nil];
+	InicioViewController *inicioController = [storyboard instantiateInitialViewController];
+	[self.window setRootViewController:inicioController];
+		[_window makeKeyAndVisible];
+#ifdef USE_ISGL
+
+	
     // Instantiate the Isgl3dDirector and set background color
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000";
-
+	
 	#ifdef OLD_ISGL3D
 	// Set the device orientation
  	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;   //TOUCH//
@@ -44,9 +54,6 @@
 	_viewController.wantsFullScreenLayout = YES;
 //    [self.window setRootViewController:_viewController];
 
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPadStoryboard" bundle:nil];
-	InicioViewController *inicioController = [storyboard instantiateInitialViewController];
-    [self.window setRootViewController:inicioController];
     
 	// Create OpenGL view (here for OpenGL ES 1.1)
 	Isgl3dEAGLView * glView = [Isgl3dEAGLView viewWithFrameForES1:[_window bounds]];
@@ -73,7 +80,7 @@
 	// Add view to window and make visible
     /* Esto es basicamente hacer el linkeo con flechitas*/
     [_window addSubview:glView];
-	[_window makeKeyAndVisible];
+
     
     // Creates the view(s) and adds them to the director
 	
@@ -81,8 +88,8 @@
     
 	[[Isgl3dDirector sharedInstance] run];
     /*-------------------------------------------------------------------------------------------------------------------------------------------*/
-    
-    
+#endif
+	
     UIImageView* vistaImg = [[UIImageView alloc] init];
     //  vistaImg.image = [UIImage imageNamed:@"Calibrar10.jpeg"];
     
@@ -102,8 +109,9 @@
     [self.window addSubview:vistaImg];
 	[self.window sendSubviewToBack:vistaImg];
 	
+	#ifdef USE_ISGL
     _viewController.videoView = vistaImg;
-	
+
 	// Make the opengl view transparent
 	[Isgl3dDirector sharedInstance].openGLView.backgroundColor = [UIColor clearColor];
 	[Isgl3dDirector sharedInstance].openGLView.opaque = NO;
@@ -116,6 +124,7 @@
     
     [_viewController reservarMemoria];
     //[_viewController viewDidLoad];
+	#endif
 }
 
 - (void) dealloc
@@ -131,22 +140,32 @@
 }
 
 - (void) applicationWillResignActive:(UIApplication *)application {
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] pause];
+	#endif
 }
 
 - (void) applicationDidBecomeActive:(UIApplication *)application {
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] resume];
+	#endif
 }
 
 - (void) applicationDidEnterBackground:(UIApplication *)application {
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] stopAnimation];
+	#endif
 }
 
 - (void) applicationWillEnterForeground:(UIApplication *)application {
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] startAnimation];
+	#endif
 }
 
 - (void) applicationWillTerminate:(UIApplication *)application {
+
+	#ifdef USE_ISGL
 	// Remove the OpenGL view from the view controller
 	[[Isgl3dDirector sharedInstance].openGLView removeFromSuperview];
 	
@@ -156,16 +175,22 @@
 	// Release
 	[_viewController release];
 	_viewController = nil;
+	#endif
+	
 	[_window release];
 	_window = nil;
 }
 
 - (void) applicationDidReceiveMemoryWarning:(UIApplication *)application {
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] onMemoryWarning];
+	#endif
 }
 
 - (void) applicationSignificantTimeChange:(UIApplication *)application {
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] onSignificantTimeChange];
+	#endif
 }
 
 - (void) createViews {
@@ -173,6 +198,8 @@
 	// Set the device orientation
 	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
 #endif
+	
+	#ifdef USE_ISGL
 	// Set the background transparent
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000";
     
@@ -180,6 +207,7 @@
 	Isgl3dView * view = [HelloWorldView view];
     _viewController.isgl3DView = view;
 	[[Isgl3dDirector sharedInstance] addView:view];
+	#endif
 }
 
 //- (NSUInteger) application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window

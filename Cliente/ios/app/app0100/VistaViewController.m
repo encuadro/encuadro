@@ -19,7 +19,9 @@
 @synthesize vistaStory = _vistaStory;
 @synthesize vistaImg =_vistaImg;
 @synthesize button = _button;
+#ifdef USE_ISGL
 @synthesize HWview = _HWview;
+#endif
 @synthesize ARidObra = _ARidObra;
 @synthesize ARType = _ARType;
 @synthesize ARObj = _ARObj;
@@ -28,11 +30,16 @@
 @synthesize ARObj4 = _ARObj4;
 @synthesize ARObj5 = _ARObj5;
 @synthesize vistaTouch = _vistaTouch;
+#ifdef USE_ISGL
 @synthesize theMovieVista = _theMovieVista;
+#endif
 
 @synthesize backround;// = _backround;
 
+#ifdef USE_ISGL
 @synthesize viewController = _viewController;
+#endif
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     NSLog(@"INIT VISTA");
@@ -88,6 +95,7 @@
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *moviePath = [bundle pathForResource:@"GangnamStyle" ofType:@"mov"];
     NSURL *movieURL = [NSURL fileURLWithPath:moviePath];
+	#ifdef USE_ISGL
     self.theMovieVista = [[MPMoviePlayerController alloc] initWithContentURL:movieURL];
    // self.theMovieVista=self.viewController.theMovie;
     //Place it in subview, else it won’t work
@@ -103,6 +111,7 @@
     //[moviePlayerWindow setTransform:CGAffineTransformMakeScale(0.9, 0.9)];
     // Play the movie.
     [self.theMovieVista play];
+#endif
 }
 
 
@@ -111,13 +120,15 @@
 - (void) hacerRender{
     NSLog(@"HACER RENDER VISTA");
     app0100AppDelegate *appDelegate = (app0100AppDelegate *)[[UIApplication sharedApplication] delegate];
-    self.viewController=(Isgl3dViewController*)appDelegate.viewController;
+	
+#ifdef USE_ISGL
+	 self.viewController=(Isgl3dViewController*)appDelegate.viewController;
     
     if ([self.ARType isEqual:@"video"]) {
         _viewController.videoPlayer=true;
         _viewController.videoName=self.ARObj;
     }
-   
+#endif
     
     [self createViews];
     
@@ -125,12 +136,14 @@
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
-    [_viewController viewDidLoad];
+#ifdef USE_ISGL
+	[_viewController viewDidLoad];
+#endif
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
     
-    
+#ifdef USE_ISGL
     self.viewController.videoView.alpha=0.0;
     self.viewController.view.alpha=0.0;
     
@@ -142,8 +155,8 @@
     [self.view addSubview:self.viewController.view];
     [self.view bringSubviewToFront:self.viewController.view];
     self.viewController.view.opaque = NO;
-    
-    
+#endif
+	
     //agrego vistaTouch
 //    self.vistaTouch = [[TouchVista alloc] init];
 //    self.vistaTouch.frame=CGRectMake(0, 0, 480, 320);
@@ -167,8 +180,10 @@
     
     [UIView animateWithDuration:5 delay:3 options: UIViewAnimationCurveEaseOut animations:^{
         backround.alpha = 0.0;
+		#ifdef USE_ISGL
         self.viewController.videoView.alpha=1.0;
         self.viewController.view.alpha=1.0;
+		#endif
     } completion:^(BOOL finished){
         [backround removeFromSuperview];
          
@@ -208,11 +223,14 @@
    
     
    // [self.view removeFromSuperview:self.HWview];
-    
+
+	#ifdef USE_ISGL
 	[[Isgl3dDirector sharedInstance] removeView:self.viewController.isgl3DView];
     _viewController.isgl3DView = nil;
     [self.viewController.view removeFromSuperview];
+	
     [self.HWview release];
+	#endif
 }
 
 
@@ -223,9 +241,12 @@
 	// Set the device orientation
 	[Isgl3dDirector sharedInstance].deviceOrientation = Isgl3dOrientationLandscapeLeft;
 #endif
+	
+#ifdef USE_ISGL
 	// Set the background transparent
 	[Isgl3dDirector sharedInstance].backgroundColorString = @"00000000"; 
-    
+#endif
+	
 	// Create view and add to Isgl3dDirector
 //    self.HWview =[[Isgl3dView alloc] init];
     NSLog(@"PRE INSTANCIA [HELLOWORLD VIEW]");
@@ -233,12 +254,13 @@
 	//self.HWview = [HelloWorldView view];
     NSLog(@"POST INSTANCIA [HELLOWORLD VIEW]");
     printf("ArID desde VISTAVIEWCTRL: %d\n",[self.ARidObra intValue]);
-    
+
+	#ifdef USE_ISGL
     _viewController.isgl3DView =  [[HelloWorldView alloc] initARType:self.ARType ARObj:self.ARObj ARObj2:self.ARObj2 ARObj3:self.ARObj3 ARObj4:self.ARObj4 ARObj5:self.ARObj5];
     
     [[Isgl3dDirector sharedInstance] addView:_viewController.isgl3DView];
-    
-    
+	#endif
+	
 }
 
 //este metodo es igual a buttonclicked
@@ -247,7 +269,8 @@ NSLog(@"BUTTON BACK");
 // _viewController.AugmReal=false;
 
     [self removeViews];
-  
+	
+#ifdef USE_ISGL
     [self.viewController.session stopRunning];
     [self.viewController.theMovie stop];
     self.viewController.theMovie=nil;
@@ -260,14 +283,17 @@ NSLog(@"BUTTON BACK");
 // applicationWillTerminate
 
 [[Isgl3dDirector sharedInstance].openGLView removeFromSuperview];
-
+#endif
+	
 // End and reset the director
 
 //[Isgl3dDirector resetInstance];
 
 // Release
-[_viewController release];
-_viewController = nil;
+#ifdef USE_ISGL
+	[_viewController release];
+	_viewController = nil;
+#endif
 [_window release];
 _window = nil;
 
@@ -277,10 +303,11 @@ _window = nil;
 // applicationWillTerminate
 
 
+#ifdef USE_ISGL
 //////////////////////////////////////////////////////    
 [[Isgl3dDirector sharedInstance] resume];
-
-
+#endif
+	
 //self.view=Nil;
 
 
@@ -433,8 +460,9 @@ _button=nil;
 - (void) willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
  
     NSLog(@"WILL Autorotate VISTA");
-    [_viewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-
+	#ifdef USE_ISGL
+	[_viewController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+	#endif
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation{
@@ -465,8 +493,9 @@ _button=nil;
         
         [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
         //[self.HWview renderInContext:UIGraphicsGetCurrentContext()];
-        [self.viewController.videoView.layer renderInContext:UIGraphicsGetCurrentContext()];
-        
+		 #ifdef USE_ISGL
+		 [self.viewController.videoView.layer renderInContext:UIGraphicsGetCurrentContext()];
+		#endif
         UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
         [controller addImage:img];
         // [controller addImage:[UIImage imageNamed:@"jessica.jpeg"]];

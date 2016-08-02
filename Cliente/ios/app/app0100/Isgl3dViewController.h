@@ -37,8 +37,9 @@ int augmID;
 }
 
 @property (readwrite, retain) UIImageView* videoView;
+#ifdef USE_ISGL
 @property (readwrite, retain) IBOutlet HelloWorldView* isgl3DView;
-
+#endif
 @property(nonatomic, retain) AVCaptureSession * session;
 @property(nonatomic, retain) AVCaptureDevice * videoDevice;
 @property(nonatomic, retain) AVCaptureDeviceInput * videoInput;

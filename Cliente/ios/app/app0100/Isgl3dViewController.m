@@ -29,7 +29,9 @@
 @synthesize frameOutput = _frameOutput;
 @synthesize context = _context;
 @synthesize videoView = _videoView;
+#ifdef USE_ISGL
 @synthesize isgl3DView = _isgl3DView;
+#endif
 @synthesize theMovie = _theMovie;
 
 @synthesize iPhone = _iPhone;
@@ -409,12 +411,14 @@ UIImageOrientation orientation;
                 RotPasa[i][j]=Rotmodern[i][j];
             }
         }
+		 #ifdef USE_ISGL
         self.isgl3DView.rotacion=RotPasa;
-        
+		#endif
         for (int i=0; i<3; i++) TrasPasa[i]=Tras[i];
-        self.isgl3DView.traslacion=TrasPasa;
-        
-        
+		 #ifdef USE_ISGL
+		 self.isgl3DView.traslacion=TrasPasa;
+		#endif
+		 
         
         /*-------------------------------------|FIN DEL PROCESAMIENTO|-------------------------------------*/
         

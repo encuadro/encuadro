@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
-#import "VistaViewController.h"
 
+#ifdef USE_ISGL
+#import "VistaViewController.h"
 #import "Isgl3dViewController.h"
 #import "Isgl3d.h"
+#endif
+
 #import "app0100AppDelegate.h"
 #import "HelloWorldView.h"
 

@@ -506,10 +506,12 @@ BOOL *elementFound;
             click=0;
             [self.start setTitle:@"Start" forState:UIControlStateNormal];
         }
-        
+		 
+#ifdef USE_ISGL
         VistaViewController *ARVistaViewController =
         [segue destinationViewController];
-        
+#endif
+		 
         /*
          NSString *filePath = [self.descripcionObra objectAtIndex:5];
          NSData* textData = [[NSData alloc]initWithContentsOfURL:[NSURL URLWithString:filePath]];

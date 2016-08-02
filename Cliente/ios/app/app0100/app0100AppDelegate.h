@@ -13,7 +13,9 @@
 @interface app0100AppDelegate : NSObject <UIApplicationDelegate> {
     
 @private
+	#ifdef USE_ISGL
 	Isgl3dViewController * _viewController;
+	#endif
 	UIWindow * _window;
 }
 
