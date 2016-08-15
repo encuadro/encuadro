@@ -53,7 +53,7 @@ abstract class PMA_List extends ArrayObject
      * missing at least one item it returns false otherwise true
      *
      * @param string  $db_name,..     one or more mysql result resources
-     * @return  boolean true if all items exists, otheriwse false
+     * @return  boolean true if all items exists, otherwise false
      */
     public function exists()
     {
